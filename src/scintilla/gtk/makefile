@@ -17,11 +17,7 @@ endif
 AR = ar
 RANLIB = touch
 
-ifdef GTK3
 GTKVERSION=gtk+-3.0
-else
-GTKVERSION=gtk+-3.0
-endif
 
 # Environment variable windir always defined on Win32
 
