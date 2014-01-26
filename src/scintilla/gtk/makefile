@@ -29,10 +29,10 @@ endif
 
 ifdef windir
 DEL = del /q
-COMPLIB=..\bin\scintilla.a
+COMPLIB=..\bin\scintilla_win.a
 else
 DEL = rm -f
-COMPLIB=../bin/scintilla.a
+COMPLIB=../bin/scintilla_linux.a
 endif
 
 vpath %.h ../src ../include ../lexlib
@@ -73,11 +73,11 @@ MARSHALLER=scintilla-marshal.o
 
 LEXOBJS:=$(addsuffix .o,$(basename $(notdir $(wildcard ../lexers/Lex*.cxx))))
 
-all: $(COMPLIB)
+all: $(COMPLIB) 
 
 clean:
 	$(DEL) *.o $(COMPLIB) *.plist
-
+	
 analyze:
 	clang --analyze $(CONFIGFLAGS) $(CXXTFLAGS) $(CXXFLAGS) *.cxx ../src/*.cxx ../lexlib/*.cxx ../lexers/*.cxx
 
@@ -92,6 +92,6 @@ $(COMPLIB): Accessor.o CharacterSet.o LexerBase.o LexerModule.o LexerSimple.o St
 	$(MARSHALLER) $(LEXOBJS)
 	$(AR) rc $@ $^
 	$(RANLIB) $@
-
+	
 # Automatically generate header dependencies with "make deps"
 include deps.mak

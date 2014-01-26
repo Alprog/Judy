@@ -1,9 +1,10 @@
 
 #include <gtk/gtk.h>
 
-#define GTK
-#include "Scintilla.h"
-#include "ScintillaWidget.h"
+#include <Scintilla.h>
+#include <SciLexer.h>
+#define PLAT_GTK 1
+#include <ScintillaWidget.h>
 
 /* This is a callback function. The data arguments are ignored
 * in this example. More on callbacks below.
@@ -20,8 +21,6 @@ on_delete_event(GtkWidget *widget,
 GdkEvent  *event,
 gpointer   data)
 {
-	GtkWidget* sci = scintilla_new();
-
 	/* If you return FALSE in the "delete_event" signal handler,
 	* GTK will emit the "destroy" signal. Returning TRUE means
 	* you don't want the window to be destroyed.
@@ -41,6 +40,8 @@ int main(int argc, char *argv[])
 	GtkWidget *window;
 	GtkWidget *button;
 
+	GtkWidget* scintilla = scintilla_new();
+	
 	/* This is called in all GTK applications. Arguments are parsed
 	* from the command line and are returned to the application.
 	*/
