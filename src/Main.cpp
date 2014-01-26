@@ -40,7 +40,6 @@ int main(int argc, char *argv[])
 	GtkWidget *window;
 	GtkWidget *button;
 
-	GtkWidget* scintilla = scintilla_new();
 	
 	/* This is called in all GTK applications. Arguments are parsed
 	* from the command line and are returned to the application.

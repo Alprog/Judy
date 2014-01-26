@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\bait.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F8AFBFCC-1F06-40FD-A147-0E4FEDAEFD4D}</ProjectGuid>
@@ -78,7 +78,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>gtk-win32-3.0.lib;gdk-win32-3.0.lib;atk-1.0.lib;gio-2.0.lib;pangowin32-1.0.lib;gdi32.lib;pangocairo-1.0.lib;gdk_pixbuf-2.0.lib;pango-1.0.lib;cairo.lib;gobject-2.0.lib;gmodule-2.0.lib;gthread-2.0.lib;glib-2.0.lib;scintilla.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtk-win32-3.0.lib;gdk-win32-3.0.lib;atk-1.0.lib;gio-2.0.lib;pangowin32-1.0.lib;gdi32.lib;pangocairo-1.0.lib;gdk_pixbuf-2.0.lib;pango-1.0.lib;cairo.lib;gobject-2.0.lib;gmodule-2.0.lib;gthread-2.0.lib;glib-2.0.lib;vs12.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ENTRY:mainCRTStartup %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>

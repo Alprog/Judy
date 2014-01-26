@@ -1,11 +1,10 @@
 #include <gtk/gtk.h>
 
-#include <Scintilla.h>
-#include <SciLexer.h>
-#define PLAT_GTK 1
-#include <ScintillaWidget.h>
+//#include <Scintilla.h>
+//#include <SciLexer.h>
+//#define PLAT_GTK 1
+//#include <ScintillaWidget.h>
 
-//void *__gxx_personality_v0;
 
 static int exit_app(GtkWidget*w, GdkEventAny*e, gpointer p) {
    //gtk_main_quit();
@@ -37,7 +36,7 @@ gpointer   data)
 	return TRUE;
 }
 
-/*
+
 int main(int argc, char *argv[])
 {
 	GtkWidget *window;
@@ -57,8 +56,9 @@ int main(int argc, char *argv[])
 	gtk_main();
 	return 0;
 }
-*/
 
+
+/*
 int main(int argc, char **argv) {
    GtkWidget *app;
    GtkWidget *editor;
@@ -72,8 +72,8 @@ int main(int argc, char **argv) {
    GType at = scintilla_get_type();
    gtk_container_add(GTK_CONTAINER(app), editor);
 
-   //gtk_signal_connect(GTK_OBJECT(app), "delete_event", GTK_SIGNAL_FUNC(exit_app), 0);
-
+   //g_signal_connect(app, "delete-event", G_CALLBACK(exit_app), 0);
+   
    scintilla_set_id(sci, 0);
    //gtk_widget_set_usize(editor, 500, 300);
 
@@ -100,3 +100,4 @@ int main(int argc, char **argv) {
 
    return 0;
 }
+*/

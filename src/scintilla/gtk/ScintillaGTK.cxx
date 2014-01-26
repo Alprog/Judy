@@ -378,7 +378,7 @@ ScintillaGTK::ScintillaGTK(_ScintillaObject *sci_) :
 	// There does not seem to be a real standard for indicating that the clipboard
 	// contains a rectangular selection, so copy Developer Studio.
 	cfColumnSelect = static_cast<CLIPFORMAT>(
-		::RegisterClipboardFormat("MSDEVColumnSelect"));
+		::RegisterClipboardFormat(L"MSDEVColumnSelect"));
 
 	// Get intellimouse parameters when running on win32; otherwise use
 	// reasonable default
