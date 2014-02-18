@@ -558,12 +558,12 @@ local function new_item_description()
                 append(description_set:get_sprite(line.sprite_idx), text_x, text_y - math.floor((line[3]-1)*height))
             end
 
+            local image = description_set:image()
             if description_texture then
-                -- explicitly release gpu handle.
-                -- not necessary, but will keep gpu memory footprint lower
-                description_texture:release()
+                description_texture:update(image)
+            else
+                description_texture = new_texture(image)
             end
-            description_texture = new_texture(description_set:image())
             texture_filter("mag","nearest")
 
             update_vao(description_buffer, buffers())
@@ -691,10 +691,13 @@ local function new_quantities()
 
         update_vao(quantity_buffer, buffers())
         quantity_buffer.shown = true
+
+        local image = quantity_set:image()
         if quantity_tex then
-            quantity_tex:release()
+            quantity_tex:update(image)
+        else
+            quantity_tex = new_texture(image)
         end
-        quantity_tex = new_texture(quantity_set:image())
         texture_filter("mag","nearest")
     end
 end
