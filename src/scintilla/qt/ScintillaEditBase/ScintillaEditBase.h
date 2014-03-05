@@ -8,7 +8,6 @@
 // Additions Copyright (c) 2011 Archaeopteryx Software, Inc. d/b/a Wingware
 // ScintillaWidget.h - Qt widget that wraps ScintillaQt and provides events and scrolling
 
-
 #ifndef SCINTILLAEDITBASE_H
 #define SCINTILLAEDITBASE_H
 
@@ -38,6 +37,12 @@ struct SCNotification;
 #else
 #define EXPORT_IMPORT_API
 #endif
+
+class EXPORT_IMPORT_API Foo
+{
+public:
+    void Bar();
+};
 
 class EXPORT_IMPORT_API ScintillaEditBase : public QAbstractScrollArea {
 	Q_OBJECT
