@@ -3,8 +3,12 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 HEADERS += \
-    Source/app.h
+    Source/App.h \
+    Source/Window.h \
+    Source/Renderer.h
 
 SOURCES += \
-    Source/app.cpp
+    Source/App.cpp \
+    Source/Window.cpp \
+    Source/Renderer.cpp
 

@@ -3,6 +3,7 @@ TEMPLATE = app
 
 INCLUDEPATH += "..\Engine\Source"
 LIBS += -L"..\Engine\release" -lEngine
+PRE_TARGETDEPS += "..\Engine\release\Engine.lib"
 
 SOURCES += \
-    Source/main.cpp
+    Source/Main.cpp

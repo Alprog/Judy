@@ -1,13 +1,20 @@
 
-#ifndef APP_H
-#define APP_H
+#pragma once
 
-class __declspec(dllexport) App
+#include "Window.h"
+#include "Renderer.h"
+
+class App
 {
 public:
+    static App* Instance();
+
+    int WindowCount;
+    void StartMainLoop();
+
+    Renderer* Renderer;
+
+private:
     App();
 
-    int a();
 };
-
-#endif // APP_H
