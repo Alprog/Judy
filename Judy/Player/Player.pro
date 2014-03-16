@@ -1,9 +1,8 @@
 
 TEMPLATE = app
 
-INCLUDEPATH += "..\Engine\Source"
-LIBS += -L"..\Engine\release" -lEngine
-PRE_TARGETDEPS += "..\Engine\release\Engine.lib"
+include(../Default.pri)
+include(../Engine/Include.pri)
 
 SOURCES += \
     Source/Main.cpp

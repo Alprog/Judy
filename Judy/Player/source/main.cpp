@@ -5,8 +5,8 @@
 int main()
 {
     App* app = App::Instance();
-    Window* window = new Window();
-    app->Renderer = new Renderer(window);
+    Window* window = Window::Create();
+    app->Rendere = new Renderer(window);
 
     app->StartMainLoop();
 
