@@ -4,17 +4,16 @@
 #include "Window.h"
 #include "Renderer.h"
 
+#include <vector>
+
 class App
 {
 public:
     static App* Instance();
 
+    std::vector<Window*> Windows;
     int WindowCount;
-    void StartMainLoop();
+    virtual void StartMainLoop() = 0;
 
-    Renderer* Renderer;
-
-private:
-    App();
-
+    Renderer* Rendere;
 };

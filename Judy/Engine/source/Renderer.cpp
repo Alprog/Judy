@@ -2,6 +2,10 @@
 #include "Renderer.h"
 #include <stdio.h>
 
+#include <windows.h>
+#include "Gl/Gl.h"
+
+
 void SetupPixelFormat(HDC hDC)
 {
     int nPixelFormat;
@@ -34,7 +38,7 @@ void SetupPixelFormat(HDC hDC)
 
 Renderer::Renderer(Window* window)
 {
-    HWND hwnd = window->hwnd;
+    /*HWND hwnd = window->hwnd;
     HDC hDC = GetDC(hwnd);
     SetupPixelFormat(hDC);
     HGLRC hRC = wglCreateContext(hDC);
@@ -43,5 +47,7 @@ Renderer::Renderer(Window* window)
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    SwapBuffers(hDC);
+    SwapBuffers(hDC);*/
 }
+
+

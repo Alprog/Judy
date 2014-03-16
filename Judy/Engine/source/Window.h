@@ -1,14 +1,11 @@
 
 #pragma once
 
-#include <windows.h>
-
 class Window
-{
+{   
 public:
-    Window();
-
+    static Window* Create();
     void show();
-
-    HWND hwnd;
 };
+
+
