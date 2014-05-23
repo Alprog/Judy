@@ -1,7 +1,7 @@
 
 win {
     INCLUDEPATH += "..\Engine\Source"
-    INCLUDEPATH += "..\Engine\Source\Windows"
+    INCLUDEPATH += "..\Engine\Source\Win"
     LIBS += -L"..\Engine\release" -lEngine
     PRE_TARGETDEPS += "..\Engine\release\Engine.lib"
 }

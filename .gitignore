@@ -1,0 +1,6 @@
+*.obj
+*.DS_Store
+*.pro.user.*
+*.manifest
+Makefile
+Makefile.*

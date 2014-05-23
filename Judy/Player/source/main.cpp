@@ -2,7 +2,7 @@
 #include "App.h"
 #include "Window.h"
 
-int main()
+int WinMain()
 {
     App* app = App::Instance();
     Window* window = Window::Create();

@@ -4,6 +4,8 @@ include(../default.pri)
 TEMPLATE = lib
 CONFIG += staticlib
 
+CONFIG -= qt
+
 INCLUDEPATH += Source
 
 HEADERS += \
