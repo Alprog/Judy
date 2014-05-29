@@ -2,12 +2,12 @@
 #include "Window.h"
 #include "Platforms.h"
 
-Window* Window::Create()
+JWindow* JWindow::Create()
 {
-    return (Window*)new PlatformWindow();
+    return (JWindow*)new PlatformWindow();
 }
 
-void Window::show()
+void JWindow::show()
 {
 }
 

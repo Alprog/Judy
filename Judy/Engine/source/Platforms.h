@@ -11,6 +11,8 @@
 
 #ifdef LINUX
     #include "Linux/LinuxWindow.h"
+    #include "Linux/LinuxApp.h"
 
-
+    typedef LinuxApp PlatformApp;
+    typedef LinuxWindow PlatformWindow;
 #endif

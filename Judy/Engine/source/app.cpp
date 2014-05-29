@@ -4,7 +4,7 @@
 
 App* App::Instance()
 {
-    static WinApp instance;
+    static PlatformApp instance;
     return &instance;
 }
 

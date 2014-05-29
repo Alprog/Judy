@@ -4,6 +4,7 @@ win {
     INCLUDEPATH += "..\Engine\Source\Win"
     LIBS += -L"..\Engine\release" -lEngine
     PRE_TARGETDEPS += "..\Engine\release\Engine.lib"
+    LIBS += -lUser32 -lGdi32 -lOpengl32
 }
 
 linux {
@@ -11,5 +12,5 @@ linux {
     INCLUDEPATH += "..\Engine\Source\Linux"
     LIBS += -L"../Engine" -lEngine
     PRE_TARGETDEPS += "../Engine/libEngine.a"
-    LIBS += -lX11
+    LIBS += -lX11 -lGL
 }

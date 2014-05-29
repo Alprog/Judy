@@ -1,7 +1,19 @@
 
 #include "App.h"
 
-int main()
+#include <QApplication>
+#include <QWidget>
+
+int main(int argc, char *argv[])
 {
-    return 0;
+    QApplication app(argc, argv);
+
+    QWidget window;
+
+    window.resize(250, 150);
+    window.setWindowTitle("Simple example");
+    window.show();
+
+    return app.exec();
+
 }

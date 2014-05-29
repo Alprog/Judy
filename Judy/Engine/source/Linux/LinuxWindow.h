@@ -1,10 +1,12 @@
 
 #pragma once
+#include "Window.h"
 
-#include <Window.h>
-
-class LinuxWindow : JudyWindow
+class LinuxWindow : JWindow
 {
 public:
     LinuxWindow();
+
+    virtual void SetContext();
+    virtual void Swap();
 };

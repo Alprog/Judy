@@ -6,5 +6,5 @@
 class Renderer
 {
 public:
-    Renderer(Window* window);
+    Renderer(JWindow* window, bool a);
 };

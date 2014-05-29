@@ -1,11 +1,16 @@
 
 #pragma once
 
-class Window
+class JWindow
 {   
 public:
-    static Window* Create();
+    static JWindow* Create();
+
     void show();
+
+    virtual void SetContext() = 0;
+    virtual void Swap() = 0;
+
 };
 
 

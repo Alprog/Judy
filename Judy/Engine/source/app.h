@@ -11,7 +11,7 @@ class App
 public:
     static App* Instance();
 
-    std::vector<Window*> Windows;
+    std::vector<JWindow*> Windows;
     int WindowCount;
     virtual void StartMainLoop() = 0;
 

@@ -2,13 +2,19 @@
 #include "App.h"
 #include "Window.h"
 
-int WinMain()
+int main()
 {
     App* app = App::Instance();
-    Window* window = Window::Create();
-    app->Rendere = new Renderer(window);
+
+    JWindow* windowA = JWindow::Create();
+    //JWindow* windowB = JWindow::Create();
+
+    app->Rendere = new Renderer(windowA, true);
+    //app->Rendere = new Renderer(windowB, false);
 
     app->StartMainLoop();
 
-    return 0;
+    while (true)
+    {
+    }
 }
