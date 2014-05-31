@@ -3,7 +3,7 @@
 #include "Window.h"
 #include <windows.h>
 
-class WinWindow : Window
+class WinWindow : JWindow
 {
 public:
     WinWindow();

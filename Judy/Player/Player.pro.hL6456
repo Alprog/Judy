@@ -1,0 +1,15 @@
+
+TEMPLATE = app
+
+CONFIG -= qt
+
+QMAKE_LFLAGS += /ENTRY:main
+
+include(../Default.pri)
+include(../Engine/Include.pri)
+
+SOURCES += \
+    Source/Main.cpp
+
+HEADERS += \
+    Windows.h

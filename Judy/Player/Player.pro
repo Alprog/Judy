@@ -11,3 +11,5 @@ SOURCES += \
 
 HEADERS += \
     Windows.h
+
+QMAKE_LFLAGS += /ENTRY:"mainCRTStartup"
