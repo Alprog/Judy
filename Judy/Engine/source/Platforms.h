@@ -16,3 +16,11 @@
     typedef LinuxApp PlatformApp;
     typedef LinuxWindow PlatformWindow;
 #endif
+
+#ifdef MAC
+    #include "Mac/MacWindow.h"
+    #include "Mac/MacApp.h"
+
+    typedef MacApp PlatformApp;
+    typedef MacWindow PlatformWindow;
+#endif

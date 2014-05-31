@@ -35,3 +35,11 @@ linux {
     HEADERS += Source/Linux/LinuxApp.h
     SOURCES += Source/Linux/LinuxApp.cpp
 }
+
+mac {
+    INCLUDEPATH += Source/Mac
+    HEADERS += Source/Mac/MacWindow.h
+    SOURCES += Source/Mac/MacWindow.cpp
+    HEADERS += Source/Mac/MacApp.h
+    SOURCES += Source/Mac/MacApp.cpp
+}
