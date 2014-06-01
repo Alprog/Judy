@@ -39,7 +39,11 @@ linux {
 mac {
     INCLUDEPATH += Source/Mac
     HEADERS += Source/Mac/MacWindow.h
-    SOURCES += Source/Mac/MacWindow.cpp
+    SOURCES +=
     HEADERS += Source/Mac/MacApp.h
-    SOURCES += Source/Mac/MacApp.cpp
+    SOURCES +=
 }
+
+OBJECTIVE_SOURCES += \
+    Source/Mac/MacWindow.mm \
+    Source/Mac/MacApp.mm

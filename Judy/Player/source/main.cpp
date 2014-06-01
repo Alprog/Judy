@@ -10,8 +10,4 @@ int main(int argc, char *argv[])
     app->Rendere = new Renderer(windowA, true);
 
     app->StartMainLoop();
-
-    while (true)
-    {
-    }
 }

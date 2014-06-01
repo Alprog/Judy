@@ -1,0 +1,19 @@
+
+TEMPLATE = app
+
+CONFIG -= qt
+
+include(../Default.pri)
+include(../Engine/Include.pri)
+
+SOURCES +=
+
+HEADERS += \
+    Windows.h
+
+win {
+    QMAKE_LFLAGS += /ENTRY:"mainCRTStartup"
+}
+
+OBJECTIVE_SOURCES += \
+    Source/Main.mm
