@@ -20,5 +20,5 @@ mac {
     INCLUDEPATH += "../Engine/Source/Mac"
     LIBS += -L"../Engine" -lEngine
     PRE_TARGETDEPS += "../Engine/libEngine.a"
-    LIBS += -framework Cocoa
+    LIBS += -framework Cocoa -framework OpenGL
 }
