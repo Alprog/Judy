@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     QWidget window;
 
     window.resize(250, 150);
-    window.setWindowTitle("Simple example");
+    window.setWindowTitle("Judy");
     window.show();
 
     return app.exec();
