@@ -13,7 +13,7 @@ namespace Judy
     public:
         static App* Instance();
 
-        std::vector<JWindow*> Windows;
+        std::vector<Window*> Windows;
         int WindowCount;
         virtual void StartMainLoop() = 0;
 

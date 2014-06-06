@@ -12,7 +12,7 @@
 namespace  Judy {
 
 
-Renderer::Renderer(JWindow* window, bool a)
+Renderer::Renderer(Window* window, bool a)
 {
     window->SetContext();
 

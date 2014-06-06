@@ -3,11 +3,9 @@
 #include "Window.h"
 #include <windows.h>
 
-using namespace Judy;
-
 namespace Judy
 {
-    class WinWindow : JWindow
+    class WinWindow : Window
     {
     public:
         WinWindow();

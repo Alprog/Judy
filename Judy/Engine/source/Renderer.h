@@ -8,6 +8,6 @@ namespace Judy
     class Renderer
     {
     public:
-        Renderer(JWindow* window, bool a);
+        Renderer(Window* window, bool a);
     };
 }

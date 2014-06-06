@@ -3,10 +3,10 @@
 
 namespace Judy
 {
-    class JWindow
+    class Window
     {
     public:
-        static JWindow* Create();
+        static Window* Create();
 
         void show();
 

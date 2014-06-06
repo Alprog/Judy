@@ -1,12 +1,13 @@
 
 #pragma once
 
+
 #ifdef WIN
     #include "Win/WinApp.h"
     #include "Win/WinWindow.h"
 
-    typedef WinApp PlatformApp;
-    typedef WinWindow PlatformWindow;
+    typedef Judy::WinApp PlatformApp;
+    typedef Judy::WinWindow PlatformWindow;
 #endif
 
 #ifdef LINUX
@@ -24,3 +25,5 @@
     typedef MacApp PlatformApp;
     typedef MacWindow PlatformWindow;
 #endif
+
+

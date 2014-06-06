@@ -2,12 +2,14 @@
 #include "Window.h"
 #include "Platforms.h"
 
-JWindow* JWindow::Create()
+using namespace Judy;
+
+Window* Window::Create()
 {
-    return (JWindow*)new PlatformWindow();
+    return (Window*)new PlatformWindow();
 }
 
-void JWindow::show()
+void Window::show()
 {
 }
 
