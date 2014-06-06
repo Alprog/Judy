@@ -2,12 +2,13 @@
 #pragma once
 #include "App.h"
 
-class WinApp : public App
+namespace Judy
 {
-public:
-    WinApp();
-    virtual void StartMainLoop();
+    class WinApp : public App
+    {
+    public:
+        WinApp();
+        virtual void StartMainLoop();
 
-};
-
-
+    };
+}

@@ -4,13 +4,15 @@
 #include <QApplication>
 #include <QWidget>
 
+#include <QMainWindow>
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QWidget window;
+    QMainWindow window;
 
-    window.resize(250, 150);
+    window.resize(600, 600);
     window.setWindowTitle("Judy");
     window.show();
 

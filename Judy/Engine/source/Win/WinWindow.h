@@ -3,15 +3,20 @@
 #include "Window.h"
 #include <windows.h>
 
-class WinWindow : JWindow
+using namespace Judy;
+
+namespace Judy
 {
-public:
-    WinWindow();
+    class WinWindow : JWindow
+    {
+    public:
+        WinWindow();
 
-    virtual void SetContext();
-    virtual void Swap();
+        virtual void SetContext();
+        virtual void Swap();
 
-private:
-    HWND hwnd;
-    HDC hDC;
-};
+    private:
+        HWND hwnd;
+        HDC hDC;
+    };
+}

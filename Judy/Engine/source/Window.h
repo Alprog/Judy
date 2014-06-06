@@ -1,16 +1,17 @@
 
 #pragma once
 
-class JWindow
-{   
-public:
-    static JWindow* Create();
+namespace Judy
+{
+    class JWindow
+    {
+    public:
+        static JWindow* Create();
 
-    void show();
+        void show();
 
-    virtual void SetContext() = 0;
-    virtual void Swap() = 0;
+        virtual void SetContext() = 0;
+        virtual void Swap() = 0;
 
-};
-
-
+    };
+}

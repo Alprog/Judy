@@ -6,14 +6,17 @@
 
 #include <vector>
 
-class App
+namespace Judy
 {
-public:
-    static App* Instance();
+    class App
+    {
+    public:
+        static App* Instance();
 
-    std::vector<JWindow*> Windows;
-    int WindowCount;
-    virtual void StartMainLoop() = 0;
+        std::vector<JWindow*> Windows;
+        int WindowCount;
+        virtual void StartMainLoop() = 0;
 
-    Renderer* Rendere;
-};
+        Renderer* Rendere;
+    };
+}

@@ -3,8 +3,11 @@
 
 #include "Window.h"
 
-class Renderer
+namespace Judy
 {
-public:
-    Renderer(JWindow* window, bool a);
-};
+    class Renderer
+    {
+    public:
+        Renderer(JWindow* window, bool a);
+    };
+}

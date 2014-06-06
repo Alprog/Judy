@@ -2,6 +2,8 @@
 #include "WinApp.h"
 #include <windows.h>
 
+using namespace Judy;
+
 WinApp::WinApp()
 {
 }

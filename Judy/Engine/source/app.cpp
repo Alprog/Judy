@@ -7,6 +7,3 @@ App* App::Instance()
     static PlatformApp instance;
     return &instance;
 }
-
-
-

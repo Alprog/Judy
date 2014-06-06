@@ -9,6 +9,9 @@
     #include <OpenGL/gl.h>
 #endif
 
+namespace  Judy {
+
+
 Renderer::Renderer(JWindow* window, bool a)
 {
     window->SetContext();
@@ -20,3 +23,4 @@ Renderer::Renderer(JWindow* window, bool a)
 }
 
 
+}
