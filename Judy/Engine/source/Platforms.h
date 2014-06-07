@@ -14,16 +14,16 @@
     #include "Linux/LinuxWindow.h"
     #include "Linux/LinuxApp.h"
 
-    typedef LinuxApp PlatformApp;
-    typedef LinuxWindow PlatformWindow;
+    typedef Judy::LinuxApp PlatformApp;
+    typedef Judy::LinuxWindow PlatformWindow;
 #endif
 
 #ifdef MAC
     #include "Mac/MacWindow.h"
     #include "Mac/MacApp.h"
 
-    typedef MacApp PlatformApp;
-    typedef MacWindow PlatformWindow;
+    typedef Judy::MacApp PlatformApp;
+    typedef Judy::MacWindow PlatformWindow;
 #endif
 
 

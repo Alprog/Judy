@@ -2,11 +2,14 @@
 #pragma once
 #include "Window.h"
 
-class LinuxWindow : JWindow
+namespace Judy
 {
-public:
-    LinuxWindow();
+    class LinuxWindow : Window
+    {
+    public:
+        LinuxWindow();
 
-    virtual void SetContext();
-    virtual void Swap();
-};
+        virtual void SetContext();
+        virtual void Swap();
+    };
+}

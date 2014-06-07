@@ -8,6 +8,9 @@
 
 #include <stdio.h>
 
+
+using namespace Judy;
+
 void DrawAQuad() {
  glClearColor(1.0, 0, 1.0, 1.0);
  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -30,10 +33,12 @@ void DrawAQuad() {
 
 LinuxWindow::LinuxWindow()
 {
+    typedef XID XWindow;
+
     GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 
     Display *display = XOpenDisplay(NULL);
-    Window root = DefaultRootWindow(display);
+    XWindow root = DefaultRootWindow(display);
 
     XVisualInfo* vi = glXChooseVisual(display, 0, att);
 
@@ -41,15 +46,13 @@ LinuxWindow::LinuxWindow()
     swa.colormap = XCreateColormap(display, root, vi->visual, AllocNone);
     swa.event_mask = ExposureMask | KeyPressMask | StructureNotifyMask;
 
-    Window win = XCreateWindow(display, root, 0, 0, 600, 600, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
+    XWindow win = XCreateWindow(display, root, 0, 0, 600, 600, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
     XMapWindow(display, win);
     XStoreName(display, win, "WINDOW");
     XFlush(display);
 
     GLXContext glc = glXCreateContext(display, vi, NULL, GL_TRUE);
     glXMakeCurrent(display, win, glc);
-
-
 
     XEvent xev;
     float a = 0;

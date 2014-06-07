@@ -2,10 +2,14 @@
 #pragma once
 #include "App.h"
 
-class LinuxApp : public App
+namespace Judy
 {
-public:
-    LinuxApp();
-    virtual void StartMainLoop();
+    class LinuxApp : public App
+    {
+    public:
+        LinuxApp();
+        virtual void StartMainLoop();
 
-};
+    };
+}
+

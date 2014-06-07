@@ -4,23 +4,24 @@
 
 #if WIN
     #include <windows.h>
-    #include "Gl/Gl.h"
-#else
-    #include <OpenGL/gl.h>
 #endif
 
-namespace  Judy {
+#if MAC
+    #include <OpenGL/gl.h>
+#else
+    #include <GL/gl.h>
+#endif
 
 
-Renderer::Renderer(Window* window, bool a)
+namespace Judy
 {
-    window->SetContext();
+    Renderer::Renderer(Window* window, bool a)
+    {
+        window->SetContext();
 
-    glClearColor(0.0f, a ? 0.0f : 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, a ? 0.0f : 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    window->Swap();
-}
-
-
+        window->Swap();
+    }
 }
