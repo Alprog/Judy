@@ -3,18 +3,15 @@
 #include "Window.h"
 #include <windows.h>
 
-namespace Judy
+class WinWindow : Window
 {
-    class WinWindow : Window
-    {
-    public:
-        WinWindow();
+public:
+    WinWindow();
 
-        virtual void SetContext();
-        virtual void Swap();
+    virtual void SetContext();
+    virtual void Swap();
 
-    private:
-        HWND hwnd;
-        HDC hDC;
-    };
-}
+private:
+    HWND hwnd;
+    HDC hDC;
+};

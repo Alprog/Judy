@@ -3,13 +3,10 @@
 
 #include "App.h"
 
-namespace Judy
+class WinApp : public App
 {
-    class WinApp : public App
-    {
-    public:
-        WinApp();
-        virtual void StartMainLoop();
+public:
+    WinApp();
+    virtual void StartMainLoop();
 
-    };
-}
+};

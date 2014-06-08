@@ -2,8 +2,6 @@
 #include "WinWindow.h"
 #include "App.h"
 
-using namespace Judy;
-
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     // sort through and find what code to run for the message given

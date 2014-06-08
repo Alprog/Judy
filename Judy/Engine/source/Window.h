@@ -1,17 +1,14 @@
 
 #pragma once
 
-namespace Judy
+class Window
 {
-    class Window
-    {
-    public:
-        static Window* Create();
+public:
+    static Window* Create();
 
-        void show();
+    void show();
 
-        virtual void SetContext() = 0;
-        virtual void Swap() = 0;
+    virtual void SetContext() = 0;
+    virtual void Swap() = 0;
 
-    };
-}
+};
