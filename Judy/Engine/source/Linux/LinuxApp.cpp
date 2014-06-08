@@ -4,8 +4,3 @@
 LinuxApp::LinuxApp()
 {
 }
-
-void LinuxApp::StartMainLoop()
-{
-
-}

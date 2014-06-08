@@ -1,19 +1,19 @@
 
 #pragma once
 
+#include <set>
 #include "Window.h"
-#include "Renderer.h"
-
-#include <vector>
 
 class App
 {
 public:
     static App* Instance();
 
-    std::vector<Window*> Windows;
-    int WindowCount;
-    virtual void StartMainLoop() = 0;
+    void StartMainLoop();
 
-    Renderer* Renderer;
+    void AddWindow(Window* window);
+    void RemoveWindow(Window* window);
+
+protected:
+    std::set<Window*> Windows;
 };

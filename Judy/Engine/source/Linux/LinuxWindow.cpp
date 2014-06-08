@@ -1,10 +1,12 @@
 
 #include "LinuxWindow.h"
 
+#define Window XWindow
 #include<X11/X.h>
 #include<X11/Xlib.h>
 #include<GL/gl.h>
 #include<GL/glx.h>
+#undef Window
 
 #include <stdio.h>
 
@@ -30,8 +32,6 @@ void DrawAQuad() {
 
 LinuxWindow::LinuxWindow()
 {
-    typedef XID XWindow;
-
     GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 
     Display *display = XOpenDisplay(NULL);
@@ -76,8 +76,6 @@ LinuxWindow::LinuxWindow()
 
     }
 
-
-
     /*XWindowAttributes gwa;
 
     //XGetWindowAttributes(display, win, &gwa);
@@ -118,6 +116,11 @@ LinuxWindow::LinuxWindow()
     printf("HEREd %i \n", a);
     fflush(stdout);
     */
+}
+
+void LinuxWindow::ProcessEvents()
+{
+
 }
 
 void LinuxWindow::SetContext()

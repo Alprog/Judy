@@ -2,6 +2,10 @@
 #include "WinWindow.h"
 #include "App.h"
 
+#include <windows.h>
+
+Window* currentEventWindow = NULL;
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     // sort through and find what code to run for the message given
@@ -9,7 +13,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     {
         // this message is read when the window is closed
         case WM_CREATE:
-            App::Instance()->WindowCount++;
+            printf("create!");
+            fflush(stdout);
             break;
 
         case WM_QUIT:
@@ -23,14 +28,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             break;
 
         case WM_DESTROY:
-            App::Instance()->WindowCount--;
+            App::Instance()->RemoveWindow(currentEventWindow);
 
-            printf("destroy!");
-            fflush(stdout);
-
-            // close the application entirely
-            PostQuitMessage(0);
-            return 0;
+            break;
     }
 
     // Handle any messages the switch statement didn't
@@ -57,8 +57,12 @@ WinWindow::WinWindow()
 
     DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_SYSMENU;
 
-    hwnd = CreateWindowEx(NULL, className, L"A Real Win App", dwStyle,
+    currentEventWindow = this;
+    hWnd = CreateWindowEx(NULL, className, L"A Real Win App", dwStyle,
                           100, 100, 400, 400, NULL, NULL, hInstance, NULL);
+    currentEventWindow = NULL;
+
+    App::Instance()->AddWindow(this);
 }
 
 void SetupPixelFormat(HDC hDC)
@@ -94,9 +98,19 @@ void SetupPixelFormat(HDC hDC)
 HGLRC hRC;
 bool a = false;
 
+void WinWindow::ProcessEvents()
+{
+    MSG msg;
+    currentEventWindow = this;
+    PeekMessage(&msg, hWnd, NULL, NULL, PM_REMOVE);
+    TranslateMessage(&msg);
+    DispatchMessage(&msg);
+    currentEventWindow = NULL;
+}
+
 void WinWindow::SetContext()
 {
-    hDC = GetDC(hwnd);
+    hDC = GetDC(hWnd);
     SetupPixelFormat(hDC);
 
     if (!a)
