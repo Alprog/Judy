@@ -17,6 +17,6 @@ namespace Judy
         int WindowCount;
         virtual void StartMainLoop() = 0;
 
-        Renderer* Rendere;
+        Renderer* Renderer;
     };
 }

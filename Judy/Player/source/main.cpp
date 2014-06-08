@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     App* app = App::Instance();
 
     Window* windowA = Window::Create();
-    app->Rendere = new Renderer(windowA, true);
+    app->Renderer = new Renderer(windowA, true);
 
     app->StartMainLoop();
 }
