@@ -40,6 +40,11 @@ MacWindow::MacWindow()
     [window makeKeyAndOrderFront:window];
 }
 
+void MacWindow::ProcessEvents()
+{
+
+}
+
 void MacWindow::SetContext()
 {
     [[view openGLContext] makeCurrentContext];

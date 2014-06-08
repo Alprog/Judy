@@ -29,9 +29,9 @@ void App::StartMainLoop()
             w->ProcessEvents();
         }*/
 
-        /*for(auto w : Windows)
+        for(auto w : Windows)
         {
             w->ProcessEvents();
-        }*/
+        }
     }
 }

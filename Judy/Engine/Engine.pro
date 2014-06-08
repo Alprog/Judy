@@ -5,6 +5,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 CONFIG -= qt
+QMAKE_CXXFLAGS += -std=c++0x
 
 INCLUDEPATH += Source
 
