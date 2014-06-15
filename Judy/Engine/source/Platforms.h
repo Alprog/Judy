@@ -5,24 +5,25 @@
     #include "Win/WinApp.h"
     #include "Win/WinWindow.h"
 
-    typedef WinApp PlatformApp;
-    typedef WinWindow PlatformWindow;
+    using PlatformApp = WinApp;
+    using PlatformWindow = WinWindow;
 #endif
 
 #ifdef LINUX
     #include "Linux/LinuxWindow.h"
     #include "Linux/LinuxApp.h"
 
-    typedef LinuxApp PlatformApp;
-    typedef LinuxWindow PlatformWindow;
+    using PlatformApp = LinuxApp;
+    using PlatformWindow = LinuxWindow;
+
 #endif
 
 #ifdef MAC
     #include "Mac/MacWindow.h"
     #include "Mac/MacApp.h"
 
-    typedef MacApp PlatformApp;
-    typedef MacWindow PlatformWindow;
+    using PlatformApp = MacApp;
+    using PlatformWindow = MacWindow;
 #endif
 
 

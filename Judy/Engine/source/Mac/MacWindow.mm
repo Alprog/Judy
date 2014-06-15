@@ -33,9 +33,6 @@ MacWindow::MacWindow()
     view = [NSOpenGLView alloc];
     [view initWithFrame:rect pixelFormat:format];
 
-
-
-
     [window setContentView: view];
     [window makeKeyAndOrderFront:window];
 }

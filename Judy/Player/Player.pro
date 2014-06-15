@@ -1,10 +1,8 @@
 
-TEMPLATE = app
-
-CONFIG -= qt
-
 include(../Default.pri)
 include(../Engine/Include.pri)
+
+TEMPLATE = app
 
 SOURCES += \
     Source/Main.cpp

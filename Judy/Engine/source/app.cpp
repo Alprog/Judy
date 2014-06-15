@@ -22,16 +22,9 @@ void App::StartMainLoop()
 {
     while(Windows.size() > 0)
     {
-        /*std::set<Window*>::iterator it;
-        for (it = Windows.begin(); it != Windows.end(); ++it)
+        for(auto window : Windows)
         {
-            Window* w = *it;
-            w->ProcessEvents();
-        }*/
-
-        for(auto w : Windows)
-        {
-            w->ProcessEvents();
+            window->ProcessEvents();
         }
     }
 }

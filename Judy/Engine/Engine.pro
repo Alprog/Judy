@@ -4,9 +4,6 @@ include(../default.pri)
 TEMPLATE = lib
 CONFIG += staticlib
 
-CONFIG -= qt
-QMAKE_CXXFLAGS += -std=c++0x
-
 INCLUDEPATH += Source
 
 HEADERS += \
@@ -39,12 +36,15 @@ linux {
 
 mac {
     INCLUDEPATH += Source/Mac
-    HEADERS += Source/Mac/MacWindow.h
-    SOURCES +=
-    HEADERS += Source/Mac/MacApp.h
-    SOURCES +=
+
+    HEADERS += \
+        Source/Mac/MacWindow.h \
+        Source/Mac/MacApp.h
+
+    OBJECTIVE_SOURCES += \
+        Source/Mac/MacWindow.mm \
+        Source/Mac/MacApp.mm
 }
 
-OBJECTIVE_SOURCES += \
-    Source/Mac/MacWindow.mm \
-    Source/Mac/MacApp.mm
+OTHER_FILES += \
+    Include.pri

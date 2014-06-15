@@ -31,7 +31,7 @@ void DrawAQuad() {
 
 
 LinuxWindow::LinuxWindow()
-{
+{    
     GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 
     Display *display = XOpenDisplay(NULL);

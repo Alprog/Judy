@@ -2,8 +2,8 @@
 win {
     INCLUDEPATH += "..\Engine\Source"
     INCLUDEPATH += "..\Engine\Source\Win"
-    LIBS += -L"..\Engine\release" -lEngine
-    PRE_TARGETDEPS += "..\Engine\release\Engine.lib"
+    LIBS += -L"..\Engine" -lEngine
+    PRE_TARGETDEPS += "..\Engine\Engine.lib"
     LIBS += -lUser32 -lGdi32 -lOpengl32
 }
 
