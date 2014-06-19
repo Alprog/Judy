@@ -1,6 +1,8 @@
 
 #include "WinWindow.h"
+
 #include "App.h"
+#include "WinContext.h"
 
 #include <windows.h>
 
@@ -8,11 +10,10 @@ Window* currentEventWindow = NULL;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // sort through and find what code to run for the message given
     switch(message)
     {
-        // this message is read when the window is closed
         case WM_CREATE:
+            App::Instance()->AddWindow(currentEventWindow);
             printf("create!");
             fflush(stdout);
             break;
@@ -29,11 +30,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
         case WM_DESTROY:
             App::Instance()->RemoveWindow(currentEventWindow);
+            delete currentEventWindow;
 
             break;
     }
 
-    // Handle any messages the switch statement didn't
     return DefWindowProc (hWnd, message, wParam, lParam);
 }
 
@@ -62,41 +63,13 @@ WinWindow::WinWindow()
                           100, 100, 400, 400, NULL, NULL, hInstance, NULL);
     currentEventWindow = NULL;
 
-    App::Instance()->AddWindow(this);
+    context = (Context*)new WinContext(hWnd);
 }
 
-void SetupPixelFormat(HDC hDC)
+WinWindow::~WinWindow()
 {
-    int nPixelFormat;
-
-    static PIXELFORMATDESCRIPTOR pfd =
-    {
-        sizeof(PIXELFORMATDESCRIPTOR),          //size of structure
-        1,                                      //default version
-        PFD_DRAW_TO_WINDOW |                    //window drawing support
-        PFD_SUPPORT_OPENGL |                    //opengl support
-        PFD_DOUBLEBUFFER,                       //double buffering support
-        PFD_TYPE_RGBA,                          //RGBA color mode
-        32,                                     //32 bit color mode
-        0, 0, 0, 0, 0, 0,                       //ignore color bits
-        0,                                      //no alpha buffer
-        0,                                      //ignore shift bit
-        0,                                      //no accumulation buffer
-        0, 0, 0, 0,                             //ignore accumulation bits
-        16,                                     //16 bit z-buffer size
-        0,                                      //no stencil buffer
-        0,                                      //no aux buffer
-        PFD_MAIN_PLANE,                         //main drawing plane
-        0,                                      //reserved
-        0, 0, 0                                 //layer masks ignored
-    };
-
-    nPixelFormat = ChoosePixelFormat(hDC, &pfd);
-    SetPixelFormat(hDC, nPixelFormat, &pfd);
+    delete context;
 }
-
-HGLRC hRC;
-bool a = false;
 
 void WinWindow::ProcessEvents()
 {
@@ -106,23 +79,4 @@ void WinWindow::ProcessEvents()
     TranslateMessage(&msg);
     DispatchMessage(&msg);
     currentEventWindow = NULL;
-}
-
-void WinWindow::SetContext()
-{
-    hDC = GetDC(hWnd);
-    SetupPixelFormat(hDC);
-
-    if (!a)
-    {
-        hRC = wglCreateContext(hDC);
-        a = true;
-    }
-
-    wglMakeCurrent(hDC, hRC);
-}
-
-void WinWindow::Swap()
-{
-    SwapBuffers(hDC);
 }

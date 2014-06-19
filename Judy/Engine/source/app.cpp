@@ -24,7 +24,11 @@ void App::StartMainLoop()
     {
         for(auto window : Windows)
         {
-            window->ProcessEvents();
+           window->ProcessEvents();
+        }
+        for(auto window : Windows)
+        {
+           window->Render();
         }
     }
 }

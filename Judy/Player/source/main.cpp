@@ -8,6 +8,6 @@ int main(int argc, char *argv[])
 
     Window* windowA = Window::Create();
     //app->Renderer = new Renderer(windowA, true);
-
+  
     app->StartMainLoop();
 }

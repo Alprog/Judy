@@ -16,6 +16,11 @@ int main(int argc, char *argv[])
     window.setWindowTitle("Judy");
     window.show();
 
+    int a = window.winId();
+
+    printf("%i", a);
+    fflush(stdout);
+
     return app.exec();
 
 }

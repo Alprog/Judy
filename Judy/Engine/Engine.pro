@@ -11,12 +11,13 @@ HEADERS += \
     Source/Renderer.h \
     Source/Window.h \
     Source/Platforms.h \
-
+    Source/Context.h \
 
 SOURCES += \
     Source/App.cpp \
     Source/Renderer.cpp \
     Source/Window.cpp \
+    Source/Context.cpp \
 
 win {
     INCLUDEPATH += Source/Windows
@@ -24,6 +25,8 @@ win {
     SOURCES += Source/Win/WinWindow.cpp
     HEADERS += Source/Win/WinApp.h
     SOURCES += Source/Win/WinApp.cpp
+    HEADERS += Source/Win/WinContext.h
+    SOURCES += Source/Win/WinContext.cpp
 }
 
 linux {

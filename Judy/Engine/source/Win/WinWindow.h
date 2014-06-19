@@ -7,11 +7,9 @@ class WinWindow : Window
 {
 public:
     WinWindow();
+    ~WinWindow();
 
-    virtual void ProcessEvents();
-
-    virtual void SetContext();
-    virtual void Swap();
+    virtual void ProcessEvents() override;
 
 private:
     HWND hWnd;
