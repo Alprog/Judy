@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Context.h"
+#include "Scene.h"
 
 class Window
 {
@@ -15,6 +16,8 @@ public:
     void Render();
 
 protected:
+
     Context* context;
+    Scene* scene;
 
 };

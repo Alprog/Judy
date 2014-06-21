@@ -40,6 +40,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 WinWindow::WinWindow()
 {
+    SetProcessDPIAware();
+
     HINSTANCE hInstance = GetModuleHandle(NULL);
 
     LPCWSTR className = L"MyClass";
@@ -59,8 +61,17 @@ WinWindow::WinWindow()
     DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_SYSMENU;
 
     currentEventWindow = this;
-    hWnd = CreateWindowEx(NULL, className, L"A Real Win App", dwStyle,
-                          100, 100, 400, 400, NULL, NULL, hInstance, NULL);
+
+    RECT rect = {0, 0, 800, 800};
+    AdjustWindowRect(&rect, dwStyle, false);
+    int width = rect.right - rect.left;
+    int height = rect.bottom - rect.top;
+
+    int x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+    int y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+
+    auto title = L"Judy Window";
+    hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, NULL, NULL, hInstance, NULL);
     currentEventWindow = NULL;
 
     context = (Context*)new WinContext(hWnd);

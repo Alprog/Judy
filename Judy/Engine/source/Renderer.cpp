@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include <stdio.h>
 
+
 #if WIN
     #include <windows.h>
 #endif
@@ -13,6 +14,3 @@
 #endif
 
 
-Renderer::Renderer(Window* window, bool a)
-{
-}

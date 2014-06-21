@@ -4,6 +4,9 @@ include(../default.pri)
 TEMPLATE = lib
 CONFIG += staticlib
 
+CONFIG -= qt
+QMAKE_CXXFLAGS += c++11
+
 INCLUDEPATH += Source
 
 HEADERS += \
@@ -11,15 +14,12 @@ HEADERS += \
     Source/Renderer.h \
     Source/Window.h \
     Source/Platforms.h \
-    Source/Context.h \
-    Source/Scene.h \
+
 
 SOURCES += \
     Source/App.cpp \
     Source/Renderer.cpp \
     Source/Window.cpp \
-    Source/Context.cpp \
-    Source/Scene.cpp \
 
 win {
     INCLUDEPATH += Source/Windows
@@ -27,8 +27,6 @@ win {
     SOURCES += Source/Win/WinWindow.cpp
     HEADERS += Source/Win/WinApp.h
     SOURCES += Source/Win/WinApp.cpp
-    HEADERS += Source/Win/WinContext.h
-    SOURCES += Source/Win/WinContext.cpp
 }
 
 linux {
@@ -41,15 +39,12 @@ linux {
 
 mac {
     INCLUDEPATH += Source/Mac
-
-    HEADERS += \
-        Source/Mac/MacWindow.h \
-        Source/Mac/MacApp.h
-
-    OBJECTIVE_SOURCES += \
-        Source/Mac/MacWindow.mm \
-        Source/Mac/MacApp.mm
+    HEADERS += Source/Mac/MacWindow.h
+    SOURCES +=
+    HEADERS += Source/Mac/MacApp.h
+    SOURCES +=
 }
 
-OTHER_FILES += \
-    Include.pri
+OBJECTIVE_SOURCES += \
+    Source/Mac/MacWindow.mm \
+    Source/Mac/MacApp.mm

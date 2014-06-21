@@ -5,6 +5,12 @@
 
 class Renderer
 {
+    enum class Type
+    {
+        DirectX,
+        OpenGL
+    };
+
 public:
-    Renderer(Window* window, bool a);
+
 };
