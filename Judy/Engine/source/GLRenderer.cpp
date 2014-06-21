@@ -18,10 +18,11 @@ void GLRenderer::Render(Scene *scene, Context *context)
 {
     context->MakeCurrent();
 
-    glViewport(0, 0, 500, 500);
+    glViewport(0, 0, 800, 800);
+    glScissor(0, 0, 400, 800);
+    glEnable(GL_SCISSOR_TEST);
 
-    static bool a = true; a = !a;
-    glClearColor(0.0f, a ? 0.0f : 1.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBegin(GL_TRIANGLES);
