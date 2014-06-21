@@ -5,12 +5,6 @@
 
 class Renderer
 {
-    enum class Type
-    {
-        DirectX,
-        OpenGL
-    };
-
 public:
-
+    virtual void Render(Scene* scene, Context* context) = 0;
 };

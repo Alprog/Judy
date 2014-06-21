@@ -13,6 +13,9 @@ HEADERS += \
     Source/Platforms.h \
     Source/Context.h \
     Source/Scene.h \
+    Source/DXRenderer.h \
+    Source/GLRenderer.h \
+    Source/RenderTarget.h \
 
 SOURCES += \
     Source/App.cpp \
@@ -20,6 +23,9 @@ SOURCES += \
     Source/Window.cpp \
     Source/Context.cpp \
     Source/Scene.cpp \
+    Source/DXRenderer.cpp \
+    Source/GLRenderer.cpp \
+    Source/RenderTarget.cpp \
 
 win {
     INCLUDEPATH += Source/Windows

@@ -11,7 +11,8 @@ public:
 
     virtual void ProcessEvents() override;
 
-private:
     HWND hWnd;
+private:
+
     HDC hDC;
 };

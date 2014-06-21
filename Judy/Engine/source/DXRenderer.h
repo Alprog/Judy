@@ -1,16 +1,18 @@
 
+#pragma once
+
 #include "Renderer.h"
-#include <stdio.h>
 
+#include <windows.h>
 
-#if WIN
-    #include <windows.h>
-#endif
+class DXRenderer : Renderer
+{
+public:
 
-#if MAC
-    #include <OpenGL/gl.h>
-#else
-    #include <GL/gl.h>
-#endif
+    DXRenderer();
 
+    void Render(Scene* scene, HWND hWnd);
+
+    void Render(Scene* scene, Context* context) override;
+};
 
