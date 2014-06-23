@@ -17,7 +17,7 @@ public:
 
 protected:
 
-    Context* context;
+    SwapChain* context;
     Scene* scene;
 
 };

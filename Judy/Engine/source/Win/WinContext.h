@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "Context.h"
 
-class WinContext : Context
+class WinContext : SwapChain
 {
 public:
     WinContext(HWND hWnd);

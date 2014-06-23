@@ -6,5 +6,5 @@
 class Renderer
 {
 public:
-    virtual void Render(Scene* scene, Context* context) = 0;
+    virtual void Render(Scene* scene, SwapChain* context) = 0;
 };

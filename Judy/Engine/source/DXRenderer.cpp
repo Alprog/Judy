@@ -2,7 +2,7 @@
 #include "DXRenderer.h"
 
 #include <d3d11.h>
-#include <DXGI.h>
+#include <DXGI1_2.h>
 #include <d3dcompiler.h>
 
 #include <stdio.h>
@@ -10,7 +10,7 @@
 
 ID3D11Device* device = nullptr;
 ID3D11DeviceContext* deviceContext = nullptr;
-IDXGISwapChain* swapChain = nullptr;
+IDXGISwapChain1* swapChain = nullptr;
 ID3D11RenderTargetView* view = nullptr;
 
 ID3D11VertexShader* vs;
@@ -19,6 +19,8 @@ ID3D11InputLayout* layout;
 
 ID3D11Buffer* vertexBuffer;
 ID3D11Buffer* constantBuffer;
+
+ID3D11Texture2D* backBuffer = nullptr;
 
 struct D3DXVECTOR3 {
   FLOAT x;
@@ -77,25 +79,24 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
 {
     if (!swapChain)
     {
-        DXGI_SWAP_CHAIN_DESC desc;
+        DXGI_SWAP_CHAIN_DESC1 desc;
         ZeroMemory(&desc, sizeof(desc));
-        desc.BufferCount = 1;
-        desc.BufferDesc.Width = 640;
-        desc.BufferDesc.Height = 480;
-        desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        desc.BufferDesc.RefreshRate.Numerator = 60;
-        desc.BufferDesc.RefreshRate.Denominator = 1;
-        desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        desc.OutputWindow = hWnd;
+        desc.Width = 400;
+        desc.Height = 800;
+        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.Stereo = false;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
-        desc.Windowed = TRUE;
+        desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        desc.BufferCount = 2;
+        desc.Scaling = DXGI_SCALING_NONE;
+        desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+        desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-        IDXGIFactory* factory;
-        CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
-        factory->CreateSwapChain(device, &desc, &swapChain);
+        IDXGIFactory2* factory;
+        CreateDXGIFactory1(__uuidof(IDXGIFactory2), (void**)&factory);
+        factory->CreateSwapChainForHwnd(device, hWnd, &desc, NULL, NULL, &swapChain);
 
-        ID3D11Texture2D* backBuffer;
         swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
         device->CreateRenderTargetView(backBuffer, NULL, &view);
 
@@ -138,9 +139,9 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         printf("%i", a); fflush(stdout);
 
         VertexType vertices[3];
-        vertices[0].position = {-1.0f, -1.0f, 0.0f};
-        vertices[1].position = {0.0f, 1.0f, 0.0f};
-        vertices[2].position = {1.0f, -1.0f, 0.0f};
+        vertices[0].position = {-0.8f, -0.8f, 0.0f};
+        vertices[1].position = {0.0f, 0.8f, 0.0f};
+        vertices[2].position = {0.8f, -0.8f, 0.0f};
         vertices[0].color = {0.0f, 1.0f, 0.0f, 1.0f};
         vertices[1].color = {0.0f, 1.0f, 0.0f, 1.0f};
         vertices[2].color = {0.0f, 1.0f, 0.0f, 1.0f};
@@ -181,12 +182,12 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         viewport.MaxDepth = 1.0f;
         deviceContext->RSSetViewports(1, &viewport);
 
-        /*D3D11_RECT rect;
-        rect.bottom = 0;
+        D3D11_RECT rect;
+        rect.left = 0;
         rect.top = 0;
         rect.right = 400;
         rect.bottom = 800;
-        deviceContext->RSSetScissorRects(1, &rect);*/
+        deviceContext->RSSetScissorRects(1, &rect);
 
 
         D3D11_RASTERIZER_DESC rsdesc;
@@ -197,7 +198,7 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         rsdesc.DepthBiasClamp = 0;
         rsdesc.SlopeScaledDepthBias = 0;
         rsdesc.DepthClipEnable = false;
-        rsdesc.ScissorEnable = false;
+        rsdesc.ScissorEnable = true;
         rsdesc.MultisampleEnable = false;
         rsdesc.AntialiasedLineEnable = false;
 
@@ -206,10 +207,33 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         printf("%i", a); fflush(stdout);
 
         deviceContext->RSSetState(rsstate);
+
+        SetFocus(hWnd);
+    }
+
+    static int a = 0; a++;
+    if (a == 100)
+    {
+        swapChain->SetFullscreenState(true, NULL);
+
+        view->Release();
+        backBuffer->Release();
+        swapChain->ResizeBuffers(2, 1366, 768, DXGI_FORMAT_UNKNOWN, 0);
+        swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+        device->CreateRenderTargetView(backBuffer, NULL, &view);
+    }
+    if (a == 1000)
+    {
+        swapChain->SetFullscreenState(false, NULL);
+
+        view->Release();
+        backBuffer->Release();
+        swapChain->ResizeBuffers(2, 400, 800, DXGI_FORMAT_UNKNOWN, 0);
+        swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+        device->CreateRenderTargetView(backBuffer, NULL, &view);
     }
 
     deviceContext->OMSetRenderTargets(1, &view, NULL);
-
 
     float color[4];
     color[0] = 0;
@@ -234,10 +258,11 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->Draw(3, 0);
 
-    swapChain->Present(0, 0);
+    HRESULT b = swapChain->Present(1, 0);
+
 }
 
-void DXRenderer::Render(Scene *scene, Context *context)
+void DXRenderer::Render(Scene *scene, SwapChain *context)
 {
 
 }

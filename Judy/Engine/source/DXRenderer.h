@@ -13,6 +13,6 @@ public:
 
     void Render(Scene* scene, HWND hWnd);
 
-    void Render(Scene* scene, Context* context) override;
+    void Render(Scene* scene, SwapChain* context) override;
 };
 

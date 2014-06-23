@@ -1,7 +1,7 @@
 
 #pragma once
 
-class Context
+class SwapChain
 {
 public:
     virtual void MakeCurrent() = 0;

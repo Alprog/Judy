@@ -6,6 +6,6 @@
 class GLRenderer : Renderer
 {
 public:
-    void Render(Scene* scene, Context* context) override;
+    void Render(Scene* scene, SwapChain* context) override;
 };
 

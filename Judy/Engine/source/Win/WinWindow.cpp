@@ -74,7 +74,13 @@ WinWindow::WinWindow()
     hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, NULL, NULL, hInstance, NULL);
     currentEventWindow = NULL;
 
-    context = (Context*)new WinContext(hWnd);
+    dwStyle = WS_CHILD | WS_VISIBLE;
+
+    hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+
+
+    context = (SwapChain*)new WinContext(hWnd2);
 }
 
 WinWindow::~WinWindow()
