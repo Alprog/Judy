@@ -1,5 +1,6 @@
 *.obj
 *.DS_Store
+*.pro.*
 *.pro.user.*
 *.manifest
 Makefile
