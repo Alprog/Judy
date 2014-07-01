@@ -10,13 +10,20 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float4 color : COLOR;
+	float2 uv : TEXCOORD;
 };
 
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+sampler2D LeftTex;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
 float4 ColorPixelShader(PixelInputType input) : SV_TARGET
 {
-    return 1;
+	return shaderTexture.Sample(SampleType, input.uv);
+
+    //return tex2D(MainTex, input.uv);
 }

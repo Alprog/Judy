@@ -12,7 +12,8 @@ public:
     DXRenderer();
 
     void Render(Scene* scene, HWND hWnd);
-
     void Render(Scene* scene, SwapChain* context) override;
+
+    void Clear(Color color) override;
 };
 

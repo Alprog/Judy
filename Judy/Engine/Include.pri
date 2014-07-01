@@ -6,6 +6,8 @@ win {
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
     LIBS += -lUser32 -lGdi32 -ld3d11 -ldxgi -lOpengl32
     LIBS += -ld3dCompiler
+
+    LIBS += -L"..\..\.." -ld3dx11
 }
 
 linux {

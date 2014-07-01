@@ -7,5 +7,7 @@ class GLRenderer : Renderer
 {
 public:
     void Render(Scene* scene, SwapChain* context) override;
+
+    void Clear(Color color) override;
 };
 

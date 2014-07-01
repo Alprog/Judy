@@ -16,6 +16,7 @@ HEADERS += \
     Source/DXRenderer.h \
     Source/GLRenderer.h \
     Source/RenderTarget.h \
+    Source/Color.h \
 
 SOURCES += \
     Source/App.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     Source/DXRenderer.cpp \
     Source/GLRenderer.cpp \
     Source/RenderTarget.cpp \
+    Source/Color.cpp \
 
 win {
     INCLUDEPATH += Source/Windows
