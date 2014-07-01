@@ -1,5 +1,5 @@
 
 TEMPLATE = subdirs
-SUBDIRS += Lua
+SUBDIRS += Lua ToLua
 
  
