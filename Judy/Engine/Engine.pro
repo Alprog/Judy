@@ -17,6 +17,8 @@ HEADERS += \
     Source/GLRenderer.h \
     Source/RenderTarget.h \
     Source/Color.h \
+    Source/Matrix.h \
+    Source/Vector.h
 
 SOURCES += \
     Source/App.cpp \

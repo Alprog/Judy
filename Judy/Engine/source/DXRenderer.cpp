@@ -1,7 +1,9 @@
 
 #include "DXRenderer.h"
 
-#include <d3d11.h>
+#include "Vector.h"
+#include "Matrix.h"
+
 #include <DXGI1_2.h>
 #include <d3dcompiler.h>
 
@@ -10,85 +12,55 @@
 
 #include <d3dx11.h>
 
-ID3D11Device* device = nullptr;
-ID3D11DeviceContext* deviceContext = nullptr;
 IDXGISwapChain1* swapChain = nullptr;
 ID3D11RenderTargetView* view = nullptr;
 
 ID3D11VertexShader* vs;
 ID3D11PixelShader* ps;
 ID3D11InputLayout* layout;
-
 ID3D11Buffer* vertexBuffer;
 ID3D11Buffer* constantBuffer;
 
 ID3D11Texture2D* backBuffer = nullptr;
 
-ID3D11ShaderResourceView* texture;
-
-
-struct D3DXVECTOR2 {
-  FLOAT x;
-  FLOAT y;
-};
-
-struct D3DXVECTOR3 {
-  FLOAT x;
-  FLOAT y;
-  FLOAT z;
-};
-
-struct D3DXVECTOR4 {
-  FLOAT x;
-  FLOAT y;
-  FLOAT z;
-  FLOAT w;
-};
-
-struct D3DMATRIX {
-    union {
-        struct {
-            float        _11, _12, _13, _14;
-            float        _21, _22, _23, _24;
-            float        _31, _32, _33, _34;
-            float        _41, _42, _43, _44;
-
-        };
-        float m[4][4];
-    };
-};
-
 struct ConstantBufferType
 {
-    D3DMATRIX world;
-    D3DMATRIX view;
-    D3DMATRIX projection;
+    Matrix world;
+    Matrix view;
+    Matrix projection;
 };
 
 
 struct VertexType
 {
-    D3DXVECTOR3 position;
-    D3DXVECTOR4 color;
-    D3DXVECTOR2 uv;
+    Vector3 position;
+    Vector4 color;
+    Vector2 uv;
 };
 
 
 DXRenderer::DXRenderer()
 {
     auto type = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
-
     auto featureLevels = D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0;
     D3D_FEATURE_LEVEL featureLevel;
-
-    HRESULT a = D3D11CreateDevice(NULL, type, NULL, 0, &featureLevels, 1, D3D11_SDK_VERSION, &device, &featureLevel, &deviceContext);
-
-
+    D3D11CreateDevice(NULL, type, NULL, 0, &featureLevels, 1, D3D11_SDK_VERSION, &device, &featureLevel, &deviceContext);
 }
 
 void DXRenderer::Clear(Color color)
 {
     deviceContext->ClearRenderTargetView(view, color.data);
+}
+
+void DXRenderer::SetTexture(std::wstring name)
+{
+    auto texture = (ID3D11ShaderResourceView*)textures[name];
+    if (texture == nullptr)
+    {
+        D3DX11CreateShaderResourceViewFromFile(device, name.c_str(), NULL, NULL, &texture, NULL);
+        textures[name] = texture;
+    }
+    deviceContext->PSSetShaderResources(0, 1, &texture);
 }
 
 void DXRenderer::Render(Scene* scene, HWND hWnd)
@@ -126,18 +98,10 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
 
         HRESULT a;
 
-        auto path = L"D:/test.png";
-        a = D3DX11CreateShaderResourceViewFromFile(device, path, NULL, NULL, &texture, NULL);
-        printf("%X", a); fflush(stdout);
-
-        //DXGI_ERROR_ACCESS_DENIED
-
         a = D3DCompileFromFile(vsfile, NULL, NULL, "ColorVertexShader", "vs_5_0", 0, 0, &vscode, &message);
         printf("VS:%X;", a); fflush(stdout);
         a = D3DCompileFromFile(psfile, NULL, NULL, "ColorPixelShader", "ps_5_0", 0, 0, &pscode, &message);
         printf("PS:%X;", a); fflush(stdout);
-
-
 
         a = device->CreateVertexShader(vscode->GetBufferPointer(), vscode->GetBufferSize(), NULL, &vs);
         printf("VS:%X; ", a); fflush(stdout);
@@ -169,7 +133,6 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         element_desc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
         element_desc[2].InstanceDataStepRate = 0;
 
-
         a = device->CreateInputLayout(element_desc, 3, vscode->GetBufferPointer(), vscode->GetBufferSize(), &layout);
         printf("%X", a); fflush(stdout);
 
@@ -178,9 +141,9 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         vertices[1].position = {0.0f, 0.8f, 0.0f};
         vertices[2].position = {0.8f, -0.8f, 0.0f};
 
-        vertices[0].uv = {-0.8f, -0.8f};
-        vertices[1].uv = {0.0f, 0.8f};
-        vertices[2].uv = {0.8f, -0.8f};
+        vertices[0].uv = {0.0f, 0.0f};
+        vertices[1].uv = {0.4f, 0.8f};
+        vertices[2].uv = {0.8f, 0.0f};
 
         vertices[0].color = {1.0f, 0.0f, 0.0f, 1.0f};
         vertices[1].color = {0.0f, 1.0f, 0.0f, 1.0f};
@@ -228,7 +191,6 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         rect.right = 400;
         rect.bottom = 800;
         deviceContext->RSSetScissorRects(1, &rect);
-
 
         D3D11_RASTERIZER_DESC rsdesc;
         rsdesc.FillMode = D3D11_FILL_SOLID;
@@ -289,12 +251,10 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
     deviceContext->VSSetShader(vs, NULL, 0);
     deviceContext->PSSetShader(ps, NULL, 0);
 
-    deviceContext->PSSetShaderResources(0, 1, &texture);
+    SetTexture(L"D:/test.png");
 
     ID3D11SamplerState* state = NULL;
     deviceContext->PSSetSamplers(0, 1, &state);
-
-    //deviceContext->DrawIndexed(indexCount, 0, 0);
 
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->Draw(3, 0);
