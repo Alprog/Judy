@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Context.h"
+#include "SwapChain.h"
 #include "Scene.h"
 
 class Window

@@ -2,7 +2,7 @@
 #include "WinWindow.h"
 
 #include "App.h"
-#include "WinContext.h"
+#include "WinGLSwapChain.h"
 
 #include <windows.h>
 

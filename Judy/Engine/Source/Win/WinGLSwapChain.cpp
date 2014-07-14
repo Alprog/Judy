@@ -1,5 +1,5 @@
 
-#include "WinContext.h"
+#include "WinGLSwapChain.h"
 
 HGLRC WinContext::hRC = nullptr;
 

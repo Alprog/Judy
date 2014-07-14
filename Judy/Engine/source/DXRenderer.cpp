@@ -12,8 +12,7 @@
 
 #include <d3dx11.h>
 
-IDXGISwapChain1* swapChain = nullptr;
-ID3D11RenderTargetView* view = nullptr;
+#include "DXSwapChain.h"
 
 ID3D11VertexShader* vs;
 ID3D11PixelShader* ps;
@@ -21,7 +20,7 @@ ID3D11InputLayout* layout;
 ID3D11Buffer* vertexBuffer;
 ID3D11Buffer* constantBuffer;
 
-ID3D11Texture2D* backBuffer = nullptr;
+DXSwapChain* swapChain = nullptr;
 
 struct ConstantBufferType
 {
@@ -49,7 +48,7 @@ DXRenderer::DXRenderer()
 
 void DXRenderer::Clear(Color color)
 {
-    deviceContext->ClearRenderTargetView(view, color.data);
+    deviceContext->ClearRenderTargetView(swapChain->view, color.data);
 }
 
 void DXRenderer::SetTexture(std::wstring name)
@@ -63,31 +62,28 @@ void DXRenderer::SetTexture(std::wstring name)
     deviceContext->PSSetShaderResources(0, 1, &texture);
 }
 
+/*void DXRenderer::SetVertexShader(std::wstring name)
+{
+    auto vs = (ID3D11VertexShader*)vertexShaders[name];
+    if (vs == nullptr)
+    {
+        ID3DBlob* vscode;
+        ID3DBlob* message;
+        D3DCompileFromFile(name, NULL, NULL, "ColorVertexShader", "vs_5_0", 0, 0, &vscode, &message);
+        device->CreateVertexShader(vscode->GetBufferPointer(), vscode->GetBufferSize(), NULL, &vs);
+    }
+}*/
+
+void DXRenderer::SetRenderTarget(DXSwapChain* swapChain)
+{
+    deviceContext->OMSetRenderTargets(1, &swapChain->view, NULL);
+}
+
 void DXRenderer::Render(Scene* scene, HWND hWnd)
 {
-    if (!swapChain)
+    if (swapChain == nullptr)
     {
-        DXGI_SWAP_CHAIN_DESC1 desc;
-        ZeroMemory(&desc, sizeof(desc));
-        desc.Width = 400;
-        desc.Height = 800;
-        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        desc.Stereo = false;
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        desc.BufferCount = 2;
-        desc.Scaling = DXGI_SCALING_NONE;
-        desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-        desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-        IDXGIFactory2* factory;
-        CreateDXGIFactory1(__uuidof(IDXGIFactory2), (void**)&factory);
-        factory->CreateSwapChainForHwnd(device, hWnd, &desc, NULL, NULL, &swapChain);
-
-        swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-        device->CreateRenderTargetView(backBuffer, NULL, &view);
-
+        swapChain = new DXSwapChain(this, hWnd);
 
         auto vsfile = L"D:\\Metroidvania\\Judy\\Engine\\source\\color.vs";
         auto psfile = L"D:\\Metroidvania\\Judy\\Engine\\source\\color.ps";
@@ -235,7 +231,7 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         device->CreateRenderTargetView(backBuffer, NULL, &view);
     }*/
 
-    deviceContext->OMSetRenderTargets(1, &view, NULL);
+    SetRenderTarget(swapChain);
 
     Color color { 0.0f, 0.0f, 1.0f, 1.0f };
     Clear(color);
@@ -259,7 +255,7 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->Draw(3, 0);
 
-    HRESULT b = swapChain->Present(1, 0);
+    swapChain->Swap();
 
 }
 

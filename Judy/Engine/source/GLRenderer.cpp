@@ -2,7 +2,7 @@
 #include "GLRenderer.h"
 
 #include "Scene.h"
-#include "Context.h"
+#include "SwapChain.h"
 
 #if WIN
     #include <windows.h>

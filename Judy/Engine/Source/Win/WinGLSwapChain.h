@@ -2,7 +2,7 @@
 #pragma once
 
 #include <windows.h>
-#include "Context.h"
+#include "SwapChain.h"
 
 class WinContext : SwapChain
 {
