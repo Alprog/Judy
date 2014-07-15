@@ -15,6 +15,8 @@
 #include "DXSwapChain.h"
 #include "Win/WinRenderTarget.h"
 
+#include "Images.h"
+
 ID3D11VertexShader* vs;
 ID3D11PixelShader* ps;
 ID3D11InputLayout* layout;
@@ -55,6 +57,9 @@ void DXRenderer::SetTexture(std::wstring name)
     auto texture = (ID3D11ShaderResourceView*)textures[name];
     if (texture == nullptr)
     {
+
+        Images::LoadPng(name);
+
         D3DX11CreateShaderResourceViewFromFile(device, name.c_str(), NULL, NULL, &texture, NULL);
         textures[name] = texture;
     }

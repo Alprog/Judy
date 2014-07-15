@@ -20,7 +20,8 @@ HEADERS += \
     Source/Vector.h \
     Source/DXSwapChain.h \
     Source/GLContext.h \
-    Source/Win/WinGLContext.h
+    Source/Win/WinGLContext.h \
+    Source/Images.h
 
 SOURCES += \
     Source/App.cpp \
@@ -33,7 +34,8 @@ SOURCES += \
     Source/Color.cpp \
     Source/DXSwapChain.cpp \
     Source/GLContext.cpp \
-    Source/Win/WinGLContext.cpp
+    Source/Win/WinGLContext.cpp \
+    Source/Images.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -41,8 +43,6 @@ win {
     SOURCES += Source/Win/WinWindow.cpp
     HEADERS += Source/Win/WinApp.h
     SOURCES += Source/Win/WinApp.cpp
-    HEADERS +=
-    SOURCES +=
     HEADERS += Source/Win/WinRenderTarget.h
     SOURCES += Source/Win/WinRenderTarget.cpp
 }
