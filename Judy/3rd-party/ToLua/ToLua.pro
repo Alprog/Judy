@@ -3,11 +3,10 @@ include(../../default.pri)
 
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG -= qt
 
 INCLUDEPATH += \
     source \
-    ../Lua/source \
+    ../lua/source \
 
 HEADERS += \
     source/lib/tolua_event.h \

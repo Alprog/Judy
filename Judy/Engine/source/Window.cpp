@@ -17,7 +17,6 @@ void Window::Render()
 {
     glRenderer->Render(scene, RenderTarget2);
     dxRenderer->Render(scene, RenderTarget1);
-
 }
 
 void Window::show()

@@ -1,5 +1,5 @@
 
 TEMPLATE = subdirs
-SUBDIRS += Lua ToLua
+SUBDIRS += lua toLua zlib
 
  

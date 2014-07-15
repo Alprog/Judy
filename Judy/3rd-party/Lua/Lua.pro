@@ -3,7 +3,6 @@ include(../../default.pri)
 
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG -= qt
 
 HEADERS += \
     source/lapi.h \
