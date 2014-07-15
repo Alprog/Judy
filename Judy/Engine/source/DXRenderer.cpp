@@ -13,14 +13,13 @@
 #include <d3dx11.h>
 
 #include "DXSwapChain.h"
+#include "Win/WinRenderTarget.h"
 
 ID3D11VertexShader* vs;
 ID3D11PixelShader* ps;
 ID3D11InputLayout* layout;
 ID3D11Buffer* vertexBuffer;
 ID3D11Buffer* constantBuffer;
-
-DXSwapChain* swapChain = nullptr;
 
 struct ConstantBufferType
 {
@@ -48,7 +47,7 @@ DXRenderer::DXRenderer()
 
 void DXRenderer::Clear(Color color)
 {
-    deviceContext->ClearRenderTargetView(swapChain->view, color.data);
+
 }
 
 void DXRenderer::SetTexture(std::wstring name)
@@ -74,16 +73,28 @@ void DXRenderer::SetTexture(std::wstring name)
     }
 }*/
 
-void DXRenderer::SetRenderTarget(DXSwapChain* swapChain)
+DXSwapChain* DXRenderer::GetSwapChain(RenderTarget* renderTarget)
 {
-    deviceContext->OMSetRenderTargets(1, &swapChain->view, NULL);
-}
-
-void DXRenderer::Render(Scene* scene, HWND hWnd)
-{
+    auto swapChain = swapChains[renderTarget];
     if (swapChain == nullptr)
     {
-        swapChain = new DXSwapChain(this, hWnd);
+        swapChain = new DXSwapChain(this, renderTarget);
+        swapChains[renderTarget] = swapChain;
+    }
+    return swapChain;
+}
+
+bool a = false;
+
+void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
+{
+    auto swapChain = GetSwapChain(renderTarget);
+    deviceContext->OMSetRenderTargets(1, &swapChain->view, NULL);
+
+
+    if (a == false)
+    {
+        a = true;
 
         auto vsfile = L"D:\\Metroidvania\\Judy\\Engine\\source\\color.vs";
         auto psfile = L"D:\\Metroidvania\\Judy\\Engine\\source\\color.ps";
@@ -206,7 +217,7 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
 
         deviceContext->RSSetState(rsstate);
 
-        SetFocus(hWnd);
+        //SetFocus(hWnd);
     }
 
     /*static int a = 0; a++;
@@ -231,10 +242,9 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
         device->CreateRenderTargetView(backBuffer, NULL, &view);
     }*/
 
-    SetRenderTarget(swapChain);
-
     Color color { 0.0f, 0.0f, 1.0f, 1.0f };
-    Clear(color);
+    //Clear(color);
+    deviceContext->ClearRenderTargetView(swapChain->view, color.data);
 
     unsigned int stride = sizeof(VertexType);
     unsigned int offset = 0;
@@ -255,11 +265,6 @@ void DXRenderer::Render(Scene* scene, HWND hWnd)
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->Draw(3, 0);
 
-    swapChain->Swap();
-
-}
-
-void DXRenderer::Render(Scene *scene, SwapChain *context)
-{
+    swapChain->swapChain->Present(1, 0);
 
 }

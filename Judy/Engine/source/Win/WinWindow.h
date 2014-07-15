@@ -1,6 +1,10 @@
 
 #pragma once
 #include "Window.h"
+
+#include "WinRenderTarget.h"
+
+
 #include <windows.h>
 
 class WinWindow : Window
@@ -12,9 +16,6 @@ public:
     virtual void ProcessEvents() override;
 
     HWND hWnd;
-
-    HWND hWnd1;
-    HWND hWnd2;
 
 private:
 

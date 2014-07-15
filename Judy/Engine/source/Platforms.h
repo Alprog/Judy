@@ -4,9 +4,11 @@
 #ifdef WIN
     #include "Win/WinApp.h"
     #include "Win/WinWindow.h"
+    #include "Win/WinRenderTarget.h"
 
     using PlatformApp = WinApp;
     using PlatformWindow = WinWindow;
+    using PlatformRenderTarget = WinRenderTarget;
 #endif
 
 #ifdef LINUX

@@ -1,8 +1,11 @@
 
 #include "DXSwapChain.h"
+#include "Win/WinRenderTarget.h"
 
-DXSwapChain::DXSwapChain(DXRenderer* renderer, HWND hWnd)
+DXSwapChain::DXSwapChain(DXRenderer* renderer, RenderTarget* renderTarget)
 {
+    auto hWnd = ((WinRenderTarget*)renderTarget)->hWnd;
+
     DXGI_SWAP_CHAIN_DESC1 desc;
     ZeroMemory(&desc, sizeof(desc));
     desc.Width = 400;
@@ -24,14 +27,4 @@ DXSwapChain::DXSwapChain(DXRenderer* renderer, HWND hWnd)
     ID3D11Texture2D* backBuffer;
     swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
     renderer->device->CreateRenderTargetView(backBuffer, NULL, &view);
-}
-
-void DXSwapChain::MakeCurrent()
-{
-
-}
-
-void DXSwapChain::Swap()
-{
-    swapChain->Present(1, 0);
 }

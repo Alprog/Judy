@@ -1,22 +1,15 @@
 
 #pragma once
 
-#include "SwapChain.h"
-
 #include "DXRenderer.h"
 #include <DXGI1_2.h>
 
-class DXSwapChain : SwapChain
+class DXSwapChain
 {
 public:
-    DXSwapChain(DXRenderer* renderer, HWND hWnd);
+    DXSwapChain(DXRenderer* renderer, RenderTarget* renderTarget);
 
-    virtual void MakeCurrent() override;
-    virtual void Swap() override;
-
-
-    ID3D11RenderTargetView* view = nullptr;
-private:
     IDXGISwapChain1* swapChain = nullptr;
+    ID3D11RenderTargetView* view = nullptr;
 
 };

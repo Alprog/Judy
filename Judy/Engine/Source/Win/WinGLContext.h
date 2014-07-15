@@ -1,13 +1,13 @@
 
 #pragma once
 
+#include "GLContext.h"
 #include <windows.h>
-#include "SwapChain.h"
 
-class WinContext : SwapChain
+class WinGLContext : GLContext
 {
 public:
-    WinContext(HWND hWnd);
+    WinGLContext(HWND hWnd);
 
     virtual void MakeCurrent() override;
     virtual void Swap() override;

@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "SwapChain.h"
 #include "Scene.h"
+#include "RenderTarget.h"
 
 class Window
 {
@@ -17,7 +17,7 @@ public:
 
 protected:
 
-    SwapChain* context;
     Scene* scene;
-
+    RenderTarget* RenderTarget1;
+    RenderTarget* RenderTarget2;
 };

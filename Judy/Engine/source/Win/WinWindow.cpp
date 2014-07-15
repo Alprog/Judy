@@ -2,7 +2,7 @@
 #include "WinWindow.h"
 
 #include "App.h"
-#include "WinGLSwapChain.h"
+#include "WinGLContext.h"
 
 #include <windows.h>
 
@@ -76,16 +76,15 @@ WinWindow::WinWindow()
 
     dwStyle = WS_CHILD | WS_VISIBLE;
 
-    hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
 
-
-    context = (SwapChain*)new WinContext(hWnd2);
+    auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
 }
 
 WinWindow::~WinWindow()
 {
-    delete context;
 }
 
 void WinWindow::ProcessEvents()

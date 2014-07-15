@@ -1,31 +1,11 @@
 
-#include "WinGLSwapChain.h"
+#include "WinGLContext.h"
 
-HGLRC WinContext::hRC = nullptr;
+HGLRC WinGLContext::hRC = nullptr;
 
-WinContext::WinContext(HWND hWnd)
+WinGLContext::WinGLContext(HWND hWnd)
 {
     hDC = GetDC(hWnd);
-    SetupPixelFormat(hDC);
-    if (hRC == nullptr)
-    {
-        hRC = wglCreateContext(hDC);
-    }
-}
-
-void WinContext::MakeCurrent()
-{
-    wglMakeCurrent(hDC, hRC);
-}
-
-void WinContext::Swap()
-{
-     SwapBuffers(hDC);
-}
-
-void WinContext::SetupPixelFormat(HDC hDC)
-{
-    int nPixelFormat;
 
     static PIXELFORMATDESCRIPTOR pfd =
     {
@@ -49,6 +29,26 @@ void WinContext::SetupPixelFormat(HDC hDC)
         0, 0, 0                                 //layer masks ignored
     };
 
-    nPixelFormat = ChoosePixelFormat(hDC, &pfd);
+    int nPixelFormat = ChoosePixelFormat(hDC, &pfd);
     SetPixelFormat(hDC, nPixelFormat, &pfd);
+
+    if (hRC == nullptr)
+    {
+        hRC = wglCreateContext(hDC);
+    }
+}
+
+void WinGLContext::MakeCurrent()
+{
+    wglMakeCurrent(hDC, hRC);
+}
+
+void WinGLContext::Swap()
+{
+    SwapBuffers(hDC);
+}
+
+void WinGLContext::SetupPixelFormat(HDC hDC)
+{
+
 }

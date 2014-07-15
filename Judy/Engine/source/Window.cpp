@@ -15,8 +15,8 @@ auto dxRenderer = new DXRenderer();
 
 void Window::Render()
 {
-    glRenderer->Render(scene, context);
-    dxRenderer->Render(scene, ((PlatformWindow*)this)->hWnd1);
+    glRenderer->Render(scene, RenderTarget2);
+    dxRenderer->Render(scene, RenderTarget1);
 
 }
 

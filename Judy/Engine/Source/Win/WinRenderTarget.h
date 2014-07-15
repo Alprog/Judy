@@ -2,9 +2,12 @@
 #pragma once
 
 #include "RenderTarget.h"
+#include <windows.h>
 
 class WinRenderTarget : RenderTarget
 {
 public:
-    WinRenderTarget();
+    WinRenderTarget(HWND hWnd);
+
+    HWND hWnd;
 };

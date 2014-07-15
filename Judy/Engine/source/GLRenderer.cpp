@@ -2,7 +2,6 @@
 #include "GLRenderer.h"
 
 #include "Scene.h"
-#include "SwapChain.h"
 
 #if WIN
     #include <windows.h>
@@ -14,14 +13,31 @@
     #include <GL/gl.h>
 #endif
 
+#include "Win/WinGLContext.h"
+#include "Win/WinRenderTarget.h"
+
 void GLRenderer::Clear(Color color)
 {
     glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GLRenderer::Render(Scene *scene, SwapChain *context)
+GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
 {
+    auto context = (GLContext*)contexts[renderTarget];
+    if (context == nullptr)
+    {
+        auto hWnd = ((WinRenderTarget*)renderTarget)->hWnd;
+        context = (GLContext*)new WinGLContext(hWnd);
+        contexts[renderTarget] = context;
+    }
+    return context;
+}
+
+void GLRenderer::Render(Scene *scene, RenderTarget* renderTarget)
+{
+    auto context = GetContext(renderTarget);
+
     context->MakeCurrent();
 
     glViewport(-400, 0, 800, 800);
