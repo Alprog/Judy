@@ -4,13 +4,14 @@ include(../../default.pri)
 TEMPLATE = lib
 CONFIG += staticlib
 
+DEFINES += Z_SOLO
+
 INCLUDEPATH += \
     source \
 
 HEADERS += \
     source/crc32.h \
     source/deflate.h \
-    source/gzguts.h \
     source/inffast.h \
     source/inffixed.h \
     source/inflate.h \
@@ -25,10 +26,6 @@ SOURCES += \
     source/compress.c \
     source/crc32.c \
     source/deflate.c \
-    source/gzclose.c \
-    source/gzlib.c \
-    source/gzread.c \
-    source/gzwrite.c \
     source/infback.c \
     source/inffast.c \
     source/inflate.c \
