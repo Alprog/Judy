@@ -1,6 +1,7 @@
 
 #include "Images.h"
 
+#include <iostream>
 #include <fstream>
 
 #include "../../3rd-Party/libpng/source/png.h"
@@ -14,12 +15,7 @@ bool validate(std::istream& source)
     png_byte pngsig[PNGSIGSIZE];
     int is_png = 0;
 
-    //source.read((char*)pngsig, PNGSIGSIZE);
-
     source >> pngsig;
-
-    //printf((char*)(pngsig[0]));
-    //fflush(stdout);
 
     auto a = source.rdstate();
 
@@ -34,7 +30,7 @@ bool validate(std::istream& source)
 
 void Images::LoadPng(std::wstring path)
 {
-    std::ifstream file {path};
+    std::ifstream file {path, std::ios::binary};
     if (file.is_open())
     {
         bool a = validate(file);
