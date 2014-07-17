@@ -48,10 +48,14 @@ void GLRenderer::Render(Scene *scene, RenderTarget* renderTarget)
     Clear(color);
 
     glBegin(GL_TRIANGLES);
-    glColor3f(1.0, 1.0, 1.0);
-    glVertex3f(-0.8f, -0.8f, 0);
-    glVertex3f(0, 0.8f, 0);
-    glVertex3f(0.8f, -0.8f, 0);
+
+    glVertex3f(-0.8f, 0.8f, 0.0f);
+    glVertex3f(0.8f, 0.8f, 0.0f);
+    glVertex3f(-0.8f, -0.8f, 0.0f);
+    glVertex3f(-0.8f, -0.8f, 0.0f);
+    glVertex3f(0.8f, 0.8f, 0.0f);
+    glVertex3f(0.8f, -0.8f, 0.0f);
+
     glEnd();
 
     context->Swap();

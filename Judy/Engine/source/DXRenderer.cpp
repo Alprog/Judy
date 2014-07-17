@@ -165,18 +165,27 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
         a = device->CreateInputLayout(element_desc, 3, vscode->GetBufferPointer(), vscode->GetBufferSize(), &layout);
         printf("%X", a); fflush(stdout);
 
-        VertexType vertices[3];
-        vertices[0].position = {-0.8f, -0.8f, 0.0f};
-        vertices[1].position = {0.0f, 0.8f, 0.0f};
-        vertices[2].position = {0.8f, -0.8f, 0.0f};
+        VertexType vertices[6];
+        vertices[0].position = {-0.8f, 0.8f, 0.0f};
+        vertices[1].position = {0.8f, 0.8f, 0.0f};
+        vertices[2].position = {-0.8f, -0.8f, 0.0f};
+        vertices[3].position = {-0.8f, -0.8f, 0.0f};
+        vertices[4].position = {0.8f, 0.8f, 0.0f};
+        vertices[5].position = {0.8f, -0.8f, 0.0f};
 
         vertices[0].uv = {0.0f, 0.0f};
-        vertices[1].uv = {0.4f, 0.8f};
-        vertices[2].uv = {0.8f, 0.0f};
+        vertices[1].uv = {1.0f, 0.0f};
+        vertices[2].uv = {0.0f, 1.0f};
+        vertices[3].uv = {0.0f, 1.0f};
+        vertices[4].uv = {1.0f, 0.0f};
+        vertices[5].uv = {1.0f, 1.0f};
 
         vertices[0].color = {1.0f, 0.0f, 0.0f, 1.0f};
         vertices[1].color = {0.0f, 1.0f, 0.0f, 1.0f};
         vertices[2].color = {0.0f, 0.0f, 1.0f, 1.0f};
+        vertices[3].color = {1.0f, 0.0f, 0.0f, 1.0f};
+        vertices[4].color = {0.0f, 1.0f, 0.0f, 1.0f};
+        vertices[5].color = {0.0f, 0.0f, 1.0f, 1.0f};
 
         D3D11_SUBRESOURCE_DATA vertexData;
         vertexData.pSysMem = vertices;
@@ -185,7 +194,7 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
 
         D3D11_BUFFER_DESC vertexBufferDesc;
         vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-        vertexBufferDesc.ByteWidth = sizeof(VertexType) * 3;
+        vertexBufferDesc.ByteWidth = sizeof(VertexType) * 6;
         vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         vertexBufferDesc.CPUAccessFlags = 0;
         vertexBufferDesc.MiscFlags = 0;
@@ -303,7 +312,7 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     deviceContext->PSSetSamplers(0, 1, &state);
 
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    deviceContext->Draw(3, 0);
+    deviceContext->Draw(6, 0);
 
     swapChain->swapChain->Present(1, 0);
 
