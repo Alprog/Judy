@@ -10,39 +10,81 @@
 
 bool validate(std::istream& source)
 {
-    auto t = source.rdstate();
-
     png_byte pngsig[PNGSIGSIZE];
-    int is_png = 0;
 
-    source >> pngsig;
+    source.read((char*)pngsig, PNGSIGSIZE);
 
-    auto a = source.rdstate();
-
-    if (!source.good())
+    if (source.good())
     {
-        return false;
+        auto cmp = png_sig_cmp(pngsig, 0, PNGSIGSIZE);
+        if (cmp == 0)
+        {
+            return true;
+        }
     }
-    is_png = png_sig_cmp(pngsig, 0, PNGSIGSIZE);
-    return (is_png == 0);
+
+    return false;
 }
 
-
-void Images::LoadPng(std::wstring path)
+void readData(png_structp pngPtr, png_bytep data, png_size_t length)
 {
-    std::ifstream file {path, std::ios::binary};
-    if (file.is_open())
+    auto stream = (std::istream*)png_get_io_ptr(pngPtr);
+    stream->read((char*)data, length);
+}
+
+Image* Images::LoadPng(std::wstring path)
+{
+    std::ifstream fstream { path, std::ios::binary };
+    if (fstream.is_open())
     {
-        bool a = validate(file);
-
-        printf("png is open");
-        fflush(stdout);
-
-        if (a)
+        if (validate(fstream))
         {
-            printf("png is valid");
-            fflush(stdout);
-        }
+            auto pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+            auto infoPtr = png_create_info_struct(pngPtr);
 
+            if (setjmp(png_jmpbuf(pngPtr)))
+            {
+                return nullptr;
+            }
+
+            png_set_read_fn(pngPtr, (png_voidp)&fstream, readData);
+
+            png_set_sig_bytes(pngPtr, PNGSIGSIZE);
+            png_read_info(pngPtr, infoPtr);
+
+            auto imgWidth = png_get_image_width(pngPtr, infoPtr);
+            auto imgHeight = png_get_image_height(pngPtr, infoPtr);
+            auto bitdepth = png_get_bit_depth(pngPtr, infoPtr);
+            auto channels = png_get_channels(pngPtr, infoPtr);
+            auto color_type = png_get_color_type(pngPtr, infoPtr);
+
+            printf("width %i, heigth %i, bitdepth %i, channels %i, type %i",
+                   imgWidth, imgHeight, bitdepth, channels, color_type);
+            fflush(stdout);
+
+            const unsigned int stride = imgWidth * bitdepth * channels / 8;
+
+            auto image = new Image();
+            image->width = imgWidth;
+            image->height = imgHeight;
+            image->data = new unsigned char[stride * imgHeight];
+
+            auto rowPtrs = new png_bytep[imgHeight];
+            for (size_t i = 0; i < imgHeight; i++)
+            {
+                //png_uint_32 q = (imgHeight - i - 1) * stride;
+                //rowPtrs[i] = (png_bytep)image->data + q;
+                rowPtrs[i] = (png_bytep)image->data + i * stride;
+            }
+
+            png_read_image(pngPtr, rowPtrs);
+
+            delete[] (png_bytep)rowPtrs;
+            png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+
+            return image;
+        }
     }
+
+    return nullptr;
 }

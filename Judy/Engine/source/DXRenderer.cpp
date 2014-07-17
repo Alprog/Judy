@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include <iostream>
 
-#include <d3dx11.h>
-
 #include "DXSwapChain.h"
 #include "Win/WinRenderTarget.h"
 
@@ -54,16 +52,35 @@ void DXRenderer::Clear(Color color)
 
 void DXRenderer::SetTexture(std::wstring name)
 {
-    auto texture = (ID3D11ShaderResourceView*)textures[name];
-    if (texture == nullptr)
+    auto view = (ID3D11ShaderResourceView*)textures[name];
+    if (view == nullptr)
     {
+        Image* image = Images::LoadPng(name);
 
-        Images::LoadPng(name);
+        ID3D11Texture2D* texture;
+        D3D11_TEXTURE2D_DESC desc;
+        desc.Width = image->width;
+        desc.Height = image->height;
+        desc.MipLevels = 1;
+        desc.ArraySize = 1;
+        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.SampleDesc = DXGI_SAMPLE_DESC {1, 0};
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        desc.CPUAccessFlags = 0;
+        desc.MiscFlags = 0;
 
-        D3DX11CreateShaderResourceViewFromFile(device, name.c_str(), NULL, NULL, &texture, NULL);
-        textures[name] = texture;
+        D3D11_SUBRESOURCE_DATA data;
+        data.pSysMem = image->data;
+        data.SysMemPitch = image->width * 4;
+        data.SysMemSlicePitch = 0;
+
+        device->CreateTexture2D(&desc, &data, &texture);
+        device->CreateShaderResourceView(texture, NULL, &view);
+
+        textures[name] = view;
     }
-    deviceContext->PSSetShaderResources(0, 1, &texture);
+    deviceContext->PSSetShaderResources(0, 1, &view);
 }
 
 /*void DXRenderer::SetVertexShader(std::wstring name)
@@ -264,7 +281,25 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
 
     SetTexture(L"D:/test.png");
 
-    ID3D11SamplerState* state = NULL;
+    ID3D11SamplerState* state;
+
+    D3D11_SAMPLER_DESC samplerDesc;
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.MipLODBias = 0;
+    samplerDesc.MaxAnisotropy = 16;
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    samplerDesc.BorderColor[0] = 0;
+    samplerDesc.BorderColor[1] = 0;
+    samplerDesc.BorderColor[2] = 0;
+    samplerDesc.BorderColor[3] = 0;
+    samplerDesc.MinLOD = 0;
+    samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+
+    device->CreateSamplerState(&samplerDesc, &state);
     deviceContext->PSSetSamplers(0, 1, &state);
 
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

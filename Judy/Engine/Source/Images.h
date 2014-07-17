@@ -4,7 +4,14 @@
 #include <stdio.h>
 #include <iostream>
 
+struct Image
+{
+    int width;
+    int height;
+    unsigned char* data;
+};
+
 namespace Images
 {
-    void LoadPng(std::wstring path);
+    Image* LoadPng(std::wstring path);
 }
