@@ -4,11 +4,11 @@ win {
     INCLUDEPATH += "..\Engine\Source\Win"
 
     LIBS += -L"..\Engine" -lEngine
-    LIBS += -L"..\3rd-Party\zlib" -lzlib
-    LIBS += -L"..\3rd-Party\libpng" -llibpng
+    LIBS += -L"..\3rd-Party" -lzlib
+    LIBS += -L"..\3rd-Party" -llibpng
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
-    PRE_TARGETDEPS += "..\3rd-Party\zlib\zlib.lib"
-    PRE_TARGETDEPS += "..\3rd-Party\libpng\libpng.lib"
+    PRE_TARGETDEPS += "..\3rd-Party\zlib.lib"
+    PRE_TARGETDEPS += "..\3rd-Party\libpng.lib"
 
 
     LIBS += -lUser32 -lGdi32 -ld3d11 -ldxgi -lOpengl32

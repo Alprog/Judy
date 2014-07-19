@@ -2,6 +2,7 @@
 include(../../default.pri)
 
 TEMPLATE = lib
+TARGET = ../lua
 CONFIG += staticlib
 
 HEADERS += \

@@ -2,6 +2,7 @@
 include(../../default.pri)
 
 TEMPLATE = lib
+TARGET = ../libpng
 CONFIG += staticlib
 
 INCLUDEPATH += \

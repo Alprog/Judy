@@ -2,6 +2,7 @@
 include(../../default.pri)
 
 TEMPLATE = lib
+TARGET = ../zlib
 CONFIG += staticlib
 
 DEFINES += Z_SOLO
