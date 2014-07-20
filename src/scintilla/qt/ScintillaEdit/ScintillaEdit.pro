@@ -1,10 +1,5 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2011-05-05T12:41:23
-#
-#-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ScintillaEdit
@@ -64,7 +59,11 @@ HEADERS  += \
 
 OTHER_FILES +=
 
-INCLUDEPATH += ../ScintillaEditBase ../../include ../../src ../../lexlib
+INCLUDEPATH +=
+    ../ScintillaEditBase \
+    ../../include \
+    ../../src \
+    ../../lexlib
 
 DEFINES += SCINTILLA_QT=1 MAKING_LIBRARY=1 SCI_LEXER=1 _CRT_SECURE_NO_DEPRECATE=1
 

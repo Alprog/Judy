@@ -1,0 +1,14 @@
+
+class App
+{
+public:
+    static App* Instance();
+
+    void StartMainLoop();
+};
+
+class Window
+{
+public:
+    static Window* Create();
+};

@@ -16,12 +16,9 @@ extern "C"
 int main(int argc, char *argv[])
 {
     App* app = App::Instance();
-
-    //auto renderer = new DX11Renderer();
-
     Window* window = Window::Create();
 
-    lua_State* L = luaL_newstate();
+    /*lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
     if (luaL_loadfile(L, "luascript.lua"))
@@ -39,9 +36,14 @@ int main(int argc, char *argv[])
       lua_pop(L, 1);
     }
 
+    lua_getglobal(L, "myluafunction");
+    lua_pushnumber(L, 5);
+    lua_pcall(L, 1, 1, 0);
+    std::cout << "The return value of the function was " << lua_tostring(L, -1) << std::endl;
+    lua_pop(L,1);
 
 
-    lua_close(L);
+    lua_close(L);*/
 
 
     app->StartMainLoop();
