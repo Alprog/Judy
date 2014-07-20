@@ -2,13 +2,14 @@
 win {
     INCLUDEPATH += "..\Engine\Source"
     INCLUDEPATH += "..\Engine\Source\Win"
+    INCLUDEPATH += "..\3rd-Party\lua\Source"
 
     LIBS += -L"..\Engine" -lEngine
-    LIBS += -L"..\3rd-Party" -lzlib
-    LIBS += -L"..\3rd-Party" -llibpng
+    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
     PRE_TARGETDEPS += "..\3rd-Party\zlib.lib"
     PRE_TARGETDEPS += "..\3rd-Party\libpng.lib"
+    PRE_TARGETDEPS += "..\3rd-Party\lua.lib"
 
 
     LIBS += -lUser32 -lGdi32 -ld3d11 -ldxgi -lOpengl32
