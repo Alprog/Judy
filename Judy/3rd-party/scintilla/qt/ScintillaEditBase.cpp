@@ -27,18 +27,9 @@
 using namespace Scintilla;
 #endif
 
-void Foo::Bar()
-{
-     printf("Foo::Bar success");
-     fflush(stdout);
-}
-
 ScintillaEditBase::ScintillaEditBase(QWidget *parent)
 : QAbstractScrollArea(parent), sqt(0), preeditPos(-1), wheelDelta(0)
 {
-    printf("Scintilla constructor success");
-    fflush(stdout);
-
 	sqt = new ScintillaQt(this);
 
 	time.start();
