@@ -8,6 +8,8 @@ CONFIG += lib_bundle
 CONFIG += qt
 QT += core gui widgets
 
+DEFINES += SCI_LEXER
+
 VERSION = 3.3.6
 
 SOURCES += \
