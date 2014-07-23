@@ -13,28 +13,12 @@
 #include <QMainWindow>
 
 const char g_cppKeyWords[] =
+    "and break do else elseif end "
+    "false for function goto if in "
+    " nil not or repeat return "
+    "then true until while ";
 
-    // Standard
-    "asm auto bool break case catch char class const "
-    "const_cast continue default delete do double "
-    "dynamic_cast else enum explicit extern false finally "
-    "float for friend goto if inline int long mutable "
-    "namespace new operator private protected public "
-    "register reinterpret_cast register return short signed "
-    "sizeof static static_cast struct switch template "
-    "this throw true try typedef typeid typename "
-    "union unsigned using virtual void volatile "
-    "wchar_t while "
-
-    // Extended
-    "__asm __asume __based __box __cdecl __declspec "
-    "__delegate delegate depreciated dllexport dllimport "
-    "event __event __except __fastcall __finally __forceinline "
-    "__int8 __int16 __int32 __int64 __int128 __interface "
-    "interface __leave naked noinline __noop noreturn "
-    "nothrow novtable nullptr safecast __stdcall "
-    "__try __except __finally __unaligned uuid __uuidof "
-    "__virtual_inheritance";
+const char g_cppKeyWords2[] = "local";
 
 int RGB(int r, int g, int b)
 {
@@ -43,26 +27,36 @@ int RGB(int r, int g, int b)
 
 const int black = RGB( 0, 0, 0 );
 const int white = RGB( 255, 255, 255 );
-const int green = RGB( 0, 255, 0 );
+const int green = RGB( 0, 100, 0 );
 const int red = RGB( 255, 0, 0 );
-const int blue = RGB( 0, 0, 255 );
 const int yellow = RGB( 255, 255, 0 );
 const int magenta = RGB( 255, 0, 255 );
-const int cyan = RGB( 0, 255, 255 );
+const int blue = RGB( 0, 0, 255 );
+const int darkblue = RGB( 0, 0, 150 );
 
 /// Default color scheme
-int colors[10][2] =
+int colors[20][2] =
 {
-    {   SCE_C_COMMENT,          green },
-    {   SCE_C_COMMENTLINE,      green },
-    {   SCE_C_COMMENTDOC,       green },
-    {   SCE_C_NUMBER,           magenta },
-    {   SCE_C_STRING,           yellow },
-    {   SCE_C_CHARACTER,        yellow },
-    {   SCE_C_UUID,             cyan },
-    {   SCE_C_OPERATOR,         red },
-    {   SCE_C_PREPROCESSOR,     cyan },
-    {   SCE_C_WORD,             cyan },
+    { SCE_LUA_DEFAULT, black },
+    { SCE_LUA_COMMENT, green },
+    { SCE_LUA_COMMENTLINE, green },
+    { SCE_LUA_COMMENTDOC, green },
+    { SCE_LUA_NUMBER, red },
+    { SCE_LUA_WORD, blue },
+    { SCE_LUA_STRING, red },
+    { SCE_LUA_CHARACTER, red },
+    { SCE_LUA_LITERALSTRING, red },
+    { SCE_LUA_PREPROCESSOR, black },
+    { SCE_LUA_OPERATOR, darkblue },
+    { SCE_LUA_IDENTIFIER, black },
+    { SCE_LUA_STRINGEOL, green },
+    { SCE_LUA_WORD2, blue },
+    { SCE_LUA_WORD3, green },
+    { SCE_LUA_WORD4, green },
+    { SCE_LUA_WORD5, green },
+    { SCE_LUA_WORD6, green },
+    { SCE_LUA_WORD7, green },
+    { SCE_LUA_WORD8, green }
 };
 
 
@@ -79,24 +73,63 @@ int main(int argc, char *argv[])
     ScintillaEdit edit(&window);
     edit.resize(600, 600);
 
-    edit.setStyleBits(5);
+    //edit.setStyleBits(5);
     edit.setTabWidth(4);
 
-    edit.setLexer(SCLEX_CPP);
+    edit.setLexer(SCLEX_LUA);
     edit.setKeyWords(0, g_cppKeyWords);
-    for(int i = 0; i < 10; i++)
+    edit.setKeyWords(1, g_cppKeyWords2);
+
+
+    edit.styleSetFont(STYLE_DEFAULT, "Courier New");
+    edit.styleSetSize(STYLE_DEFAULT, 12);
+    edit.styleClearAll();
+    for(int i = 0; i < 20; i++)
     {
         edit.styleSetFore(colors[i][0], colors[i][1]);
     }
 
-    edit.styleSetFont(STYLE_DEFAULT, "Courier New");
-    edit.styleSetSize(STYLE_DEFAULT, 15);
+    edit.styleSetSize(STYLE_LINENUMBER, 10);
 
-    edit.setText("int a = 4; // bla");
+
+    //edit.styleSetFore(STYLE_DEFAULT, green);
+
+    edit.setText("local a = 4; -- bla\nfunction a()\n   local b\nend\n--[[\nefjejg\n]]");
+    edit.setProperty("fold", "1");
+    edit.setProperty("fold.compact", "0");
+
+    edit.setProperty("fold.comment", "1");
+    edit.setProperty("fold.preprocessor", "1");
+
+    int INDEX = 2;
+    edit.setMarginWidthN(INDEX, 0);
+
+    edit.setMarginTypeN(INDEX, SC_MARGIN_SYMBOL);
+    edit.setMarginMaskN(INDEX, SC_MASK_FOLDERS);
+    edit.setMarginWidthN(INDEX, 15);
+    edit.setMarginSensitiveN(INDEX, true);
+
+    edit.setAutomaticFold(SC_AUTOMATICFOLD_SHOW | SC_AUTOMATICFOLD_CLICK);
+
+
+    edit.setMarginWidthN(0, 40);
+
+    edit.markerDefine(SC_MARKNUM_FOLDER, SC_MARK_BOXPLUS);
+    edit.markerDefine(SC_MARKNUM_FOLDEREND, SC_MARK_BOXPLUSCONNECTED);
+
+    edit.markerDefine(SC_MARKNUM_FOLDEROPEN, SC_MARK_BOXMINUS);
+    edit.markerDefine(SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
+    edit.markerDefine(SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNER);
+    edit.markerDefine(SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
+    edit.markerDefine(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
+
+
+
 
     //int lid = edit.lexer();
+    //
 
-    edit.colourise(0, -1);
+    //edit.colourise(0, -1);
 
 
     /*edit.setText("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -108,11 +141,9 @@ int main(int argc, char *argv[])
         edit.markerAdd(i, i);
     }*/
 
-
-
     //int color = 0 | (200 << 8) | (0 << 16);
     //edit.setSelBack(true, color);
-    edit.styleClearAll();
+
 
     //window.showMaximized();
     window.show();
