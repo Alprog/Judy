@@ -11,6 +11,10 @@
 #include <QWidget>
 
 #include <QMainWindow>
+#include "QDockWidget"
+#include "QTextEdit"
+
+#include "MainWindow.h"
 
 const char g_cppKeyWords[] =
     "and break do else elseif end "
@@ -59,18 +63,40 @@ int colors[20][2] =
     { SCE_LUA_WORD8, green }
 };
 
-
-
 int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+
+    MainWindow mainWindow;
+    mainWindow.showMaximized();
+
+
+
+    return app.exec();
+}
+
+
+int maina(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
     QMainWindow window;
     window.resize(600, 600);
     window.setWindowTitle("Judy");
+    window.showMaximized();
+
+    QDockWidget dockWidget("name", 0, 0);
+    dockWidget.setWidget(new QTextEdit);
+    window.addDockWidget(Qt::LeftDockWidgetArea, &dockWidget);
+
+    QDockWidget dockWidget2("name2", 0, 0);;
+    dockWidget2.setWidget(new QTextEdit);
+    window.addDockWidget(Qt::RightDockWidgetArea, &dockWidget2);
 
 
-    ScintillaEdit edit(&window);
+    ScintillaEdit edit;
+    window.setCentralWidget(&edit);
+
     edit.resize(600, 600);
 
     //edit.setStyleBits(5);
@@ -123,31 +149,9 @@ int main(int argc, char *argv[])
     edit.markerDefine(SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
     edit.markerDefine(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
 
-
-
-
-    //int lid = edit.lexer();
-    //
-
-    //edit.colourise(0, -1);
-
-
-    /*edit.setText("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    for (int i = 0; i < 30; i++)
-    {
-        edit.markerDefine(i, i );
-        edit.markerSetFore(i, 200 << 8);
-        edit.markerSetBack(i, 200);
-        edit.markerAdd(i, i);
-    }*/
-
-    //int color = 0 | (200 << 8) | (0 << 16);
-    //edit.setSelBack(true, color);
-
-
-    //window.showMaximized();
-    window.show();
-
+    //QDockWidget dockWidget2;
+    //dockWidget2.setWidget(&edit);
+    //window.addDockWidget(Qt::RightDockWidgetArea, &dockWidget2);
 
     int a = window.winId();
 
