@@ -3,10 +3,11 @@
 #include "QAction.h"
 #include "QMenuBar.h"
 #include "QToolBar.h"
+#include "TextEditor.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
-    setWindowTitle("Judy");
+    setWindowTitle("Judy IDE");
 
     createActions();
 }
@@ -37,6 +38,8 @@ void MainWindow::createActions()
         fileMenu->addAction(action);
         fileToolBar->addAction(action);
     }
+
+    setCentralWidget(new TextEditor);
 }
 
 void MainWindow::newFile()
