@@ -1,0 +1,46 @@
+
+QWidget 
+{
+	color: #C0C0C0;
+	background-color: #2D2D2D;
+}
+
+QMenuBar::item 
+{
+	background: #2D2D2D;
+}
+
+QMenuBar::item:selected  
+{
+	background: #333333;
+}
+
+QMenu::item  
+{
+	background: #1B1B1B;
+}
+
+QMenu::item:selected  
+{
+	background: #333333;
+}
+
+QToolBar 
+{
+	border: none;
+}
+
+QTabBar::tab 
+{
+	background: #333333;
+}
+
+QTabBar::tab:selected
+{
+	background: #007ACC;
+}
+
+QTabBar::tab:hover
+{
+	background: #1C97EA;
+}

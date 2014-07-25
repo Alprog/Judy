@@ -13,8 +13,9 @@
 #include <QMainWindow>
 #include "QDockWidget"
 #include "QTextEdit"
-
+#include "QFile"
 #include "MainWindow.h"
+#include "QTextStream"
 
 int main(int argc, char *argv[])
 {
@@ -23,29 +24,20 @@ int main(int argc, char *argv[])
     MainWindow mainWindow;
     mainWindow.showMaximized();
 
-    QString sheet =
-        "QWidget {"
-        "color: #C0C0C0;"
-        "background-color: #2D2D2D;"
-        "}"
-        "QMenuBar::item  {"
-        "background: #2D2D2D;"
-        "}"
-        "QMenuBar::item:selected  {"
-        "background: #333333;"
-        "}"
-        "QMenu::item  {"
-        "background: #1B1B1B;"
-        "}"
-        "QMenu::item:selected  {"
-        "background: #333333;"
-        "}"
-        "QToolBar  {"
-        "border: none;"
-        "}"
-        ;
+    QFile file("style.css");
 
-    app.setStyleSheet(sheet);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        QString sheet = stream.readAll();
+
+        app.setStyleSheet(sheet);
+    }
+
+
+
+
+
 
     return app.exec();
 }

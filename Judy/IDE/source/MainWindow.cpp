@@ -9,6 +9,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
     setWindowTitle("Judy IDE");
 
+    setWindowIcon(QIcon(":/images/icon.png"));
+
+    setWindowOpacity(1);
+
     createActions();
 }
 
@@ -39,7 +43,15 @@ void MainWindow::createActions()
         fileToolBar->addAction(action);
     }
 
-    setCentralWidget(new TextEditor);
+    auto tabs = new QTabWidget;
+
+    tabs->setTabsClosable(true);
+    tabs->setMovable(true);
+
+    tabs->addTab(new TextEditor, "Ololo");
+    tabs->addTab(new TextEditor, "Ololo");
+
+    setCentralWidget(tabs);
 }
 
 void MainWindow::newFile()
