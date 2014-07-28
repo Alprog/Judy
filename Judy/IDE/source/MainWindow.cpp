@@ -3,7 +3,9 @@
 #include "QAction.h"
 #include "QMenuBar.h"
 #include "QToolBar.h"
+#include "QDockWidget"
 #include "TextEditor.h"
+#include "QFileDialog.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -20,7 +22,7 @@ QAction* MainWindow::createAction(const char* name, const char* icon, const char
 {
     auto action = new QAction(QIcon(icon), tr(name), this);
     action->setShortcuts(shortcut);
-    connect(action, SIGNAL(triggered), this, slot);
+    connect(action, SIGNAL(triggered()), this, slot);
     return action;
 }
 
@@ -43,6 +45,12 @@ void MainWindow::createActions()
         fileToolBar->addAction(action);
     }
 
+    QDockWidget* dockWidget;
+
+    dockWidget = new QDockWidget("Dock", 0, 0);
+
+    addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
+
     auto tabs = new QTabWidget;
 
     tabs->setTabsClosable(true);
@@ -61,6 +69,8 @@ void MainWindow::newFile()
 
 void MainWindow::openFile()
 {
+    auto filter = tr("Any supported (*.lua *.hlsl *.scene);;Lua (*.lua);;HLSL (*.hlsl);;Scene (*.scene)");
+    auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter);
 
 }
 
