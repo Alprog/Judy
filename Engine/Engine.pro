@@ -21,7 +21,8 @@ HEADERS += \
     Source/DXSwapChain.h \
     Source/GLContext.h \
     Source/Win/WinGLContext.h \
-    Source/Images.h
+    Source/Images.h \
+    Source/Node.h
 
 SOURCES += \
     Source/App.cpp \
@@ -35,7 +36,8 @@ SOURCES += \
     Source/DXSwapChain.cpp \
     Source/GLContext.cpp \
     Source/Win/WinGLContext.cpp \
-    Source/Images.cpp
+    Source/Images.cpp \
+    Source/Node.cpp
 
 win {
     INCLUDEPATH += Source/Windows
