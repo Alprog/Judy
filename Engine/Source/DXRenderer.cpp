@@ -118,12 +118,12 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     {
         a = true;
 
-        auto vsfile = L"D:\\Metroidvania\\Judy\\Engine\\source\\color.vs";
-        auto psfile = L"D:\\Metroidvania\\Judy\\Engine\\source\\color.ps";
+        auto vsfile = L"Shaders\\color.vs";
+        auto psfile = L"Shaders\\color.ps";
 
         ID3DBlob* vscode;
         ID3DBlob* pscode;
-        ID3DBlob* message;
+        ID3DBlob* message = nullptr;
 
         HRESULT a;
 
