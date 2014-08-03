@@ -1,4 +1,4 @@
-Metroidvania is a platform game inspired by Metroid and Castlevania. 
+Judy is a crossplatform multirender game engine.
 
 The source code is public, but this is NOT an open-source project right now. 
 You are free to view and download the code, but you CANNOT modify or redistribute it. 
