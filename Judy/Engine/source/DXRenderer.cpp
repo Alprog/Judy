@@ -127,9 +127,11 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
 
         HRESULT a;
 
-        a = D3DCompileFromFile(vsfile, NULL, NULL, "ColorVertexShader", "vs_5_0", 0, 0, &vscode, &message);
+        auto flags = D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
+
+        a = D3DCompileFromFile(vsfile, NULL, NULL, "ColorVertexShader", "vs_5_0", flags, 0, &vscode, &message);
         printf("VS:%X;", a); fflush(stdout);
-        a = D3DCompileFromFile(psfile, NULL, NULL, "ColorPixelShader", "ps_5_0", 0, 0, &pscode, &message);
+        a = D3DCompileFromFile(psfile, NULL, NULL, "ColorPixelShader", "ps_5_0", flags, 0, &pscode, &message);
         printf("PS:%X;", a); fflush(stdout);
 
         a = device->CreateVertexShader(vscode->GetBufferPointer(), vscode->GetBufferSize(), NULL, &vs);
