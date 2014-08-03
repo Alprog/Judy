@@ -14,6 +14,10 @@ public:
     void AddWindow(Window* window);
     void RemoveWindow(Window* window);
 
-protected:
+private:
+    void UpdateCollection();
+
     std::set<Window*> Windows;
+    std::set<Window*> AddedWindows;
+    std::set<Window*> RemovedWindows;
 };
