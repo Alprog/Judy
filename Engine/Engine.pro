@@ -23,7 +23,10 @@ HEADERS += \
     Source/Win/WinGLContext.h \
     Source/Images.h \
     Source/Node.h \
-    Source/Quad.h
+    Source/Quad.h \
+    Source/Vector2.h \
+    Source/Vector3.h \
+    Source/Vector4.h
 
 SOURCES += \
     Source/App.cpp \
@@ -40,7 +43,10 @@ SOURCES += \
     Source/Images.cpp \
     Source/Node.cpp \
     Source/Quad.cpp \
-    Source/Matrix.cpp
+    Source/Matrix.cpp \
+    Source/Vector2.cpp \
+    Source/Vector3.cpp \
+    Source/Vector4.cpp
 
 win {
     INCLUDEPATH += Source/Windows

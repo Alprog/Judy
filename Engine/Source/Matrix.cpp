@@ -3,7 +3,7 @@
 
 Matrix operator*(const Matrix& lhs, const Matrix& rhs)
 {
-    return
+    return // mij = mi1*m1j + mi2*m2j + mi3*m3j + mi4*m4j
     {
         lhs.m11 * rhs.m11 + lhs.m12 * rhs.m21 + lhs.m13 * rhs.m31 + lhs.m14 * rhs.m41,
         lhs.m11 * rhs.m12 + lhs.m12 * rhs.m22 + lhs.m13 * rhs.m32 + lhs.m14 * rhs.m42,

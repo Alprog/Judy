@@ -1,7 +1,10 @@
 
 #include "DXRenderer.h"
 
-#include "Vector.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
+
 #include "Matrix.h"
 
 #include <DXGI1_2.h>
