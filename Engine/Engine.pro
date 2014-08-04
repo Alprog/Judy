@@ -22,7 +22,8 @@ HEADERS += \
     Source/GLContext.h \
     Source/Win/WinGLContext.h \
     Source/Images.h \
-    Source/Node.h
+    Source/Node.h \
+    Source/Quad.h
 
 SOURCES += \
     Source/App.cpp \
@@ -37,7 +38,9 @@ SOURCES += \
     Source/GLContext.cpp \
     Source/Win/WinGLContext.cpp \
     Source/Images.cpp \
-    Source/Node.cpp
+    Source/Node.cpp \
+    Source/Quad.cpp \
+    Source/Matrix.cpp
 
 win {
     INCLUDEPATH += Source/Windows

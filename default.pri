@@ -13,4 +13,7 @@ mac:DEFINES += MAC
 
 CONFIG -= qt
 CONFIG -= debug_and_release debug_and_release_target
-QMAKE_CXXFLAGS += -std=c++0x
+
+linux {
+    QMAKE_CXXFLAGS += -std=c++0x
+}

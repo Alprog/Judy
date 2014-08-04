@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include "Renderer.h"
 
 class Node
 {
@@ -17,8 +18,8 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
-    void Update(double delta);
-    void Render();
+    virtual void Update(double delta);
+    virtual void Render(Renderer* renderer);
 
 private:
     Node* parent;

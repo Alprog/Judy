@@ -64,10 +64,10 @@ void Node::Update(double delta)
     }
 }
 
-void Node::Render()
+void Node::Render(Renderer* renderer)
 {
     for (auto child : childs)
     {
-        child->Render();
+        child->Render(renderer);
     }
 }
