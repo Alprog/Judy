@@ -8,7 +8,6 @@
 #include "Matrix.h"
 
 #include <DXGI1_2.h>
-#include <d3dcompiler.h>
 
 #include <stdio.h>
 #include <iostream>
@@ -18,9 +17,6 @@
 
 #include "Images.h"
 
-ID3D11VertexShader* vs;
-ID3D11PixelShader* ps;
-ID3D11InputLayout* layout;
 ID3D11Buffer* vertexBuffer;
 ID3D11Buffer* constantBuffer;
 
@@ -86,17 +82,19 @@ void DXRenderer::SetTexture(std::wstring name)
     deviceContext->PSSetShaderResources(0, 1, &view);
 }
 
-/*void DXRenderer::SetVertexShader(std::wstring name)
+void DXRenderer::SetShader(std::wstring name)
 {
-    auto vs = (ID3D11VertexShader*)vertexShaders[name];
-    if (vs == nullptr)
+    auto shader = shaders[name];
+    if (shader == nullptr)
     {
-        ID3DBlob* vscode;
-        ID3DBlob* message;
-        D3DCompileFromFile(name, NULL, NULL, "ColorVertexShader", "vs_5_0", 0, 0, &vscode, &message);
-        device->CreateVertexShader(vscode->GetBufferPointer(), vscode->GetBufferSize(), NULL, &vs);
+        shader = new DXShaderResource(device, name);
+        shaders[name] = shader;
     }
-}*/
+    deviceContext->IASetInputLayout(shader->inputLayout);
+    deviceContext->VSSetShader(shader->vertexShader, NULL, 0);
+    deviceContext->PSSetShader(shader->pixelShader, NULL, 0);
+
+}
 
 DXSwapChain* DXRenderer::GetSwapChain(RenderTarget* renderTarget)
 {
@@ -113,6 +111,7 @@ bool a = false;
 
 void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
 {
+
     auto swapChain = GetSwapChain(renderTarget);
     deviceContext->OMSetRenderTargets(1, &swapChain->view, NULL);
 
@@ -121,53 +120,7 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     {
         a = true;
 
-        auto vsfile = L"Shaders\\color.vs";
-        auto psfile = L"Shaders\\color.ps";
 
-        ID3DBlob* vscode;
-        ID3DBlob* pscode;
-        ID3DBlob* message = nullptr;
-
-        HRESULT a;
-
-        auto flags = D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
-
-        a = D3DCompileFromFile(vsfile, NULL, NULL, "ColorVertexShader", "vs_5_0", flags, 0, &vscode, &message);
-        printf("VS:%X;", a); fflush(stdout);
-        a = D3DCompileFromFile(psfile, NULL, NULL, "ColorPixelShader", "ps_5_0", flags, 0, &pscode, &message);
-        printf("PS:%X;", a); fflush(stdout);
-
-        a = device->CreateVertexShader(vscode->GetBufferPointer(), vscode->GetBufferSize(), NULL, &vs);
-        printf("VS:%X; ", a); fflush(stdout);
-        a = device->CreatePixelShader(pscode->GetBufferPointer(), pscode->GetBufferSize(), NULL, &ps);
-        printf("PS:%X;", a); fflush(stdout);
-
-        D3D11_INPUT_ELEMENT_DESC element_desc[3];
-        element_desc[0].SemanticName = "POSITION";
-        element_desc[0].SemanticIndex = 0;
-        element_desc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-        element_desc[0].InputSlot = 0;
-        element_desc[0].AlignedByteOffset = 0;
-        element_desc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-        element_desc[0].InstanceDataStepRate = 0;
-
-        element_desc[1].SemanticName = "COLOR";
-        element_desc[1].SemanticIndex = 0;
-        element_desc[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-        element_desc[1].InputSlot = 0;
-        element_desc[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        element_desc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-        element_desc[1].InstanceDataStepRate = 0;
-
-        element_desc[2].SemanticName = "TEXCOORD";
-        element_desc[2].SemanticIndex = 0;
-        element_desc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
-        element_desc[2].InputSlot = 0;
-        element_desc[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-        element_desc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-        element_desc[2].InstanceDataStepRate = 0;
-
-        a = device->CreateInputLayout(element_desc, 3, vscode->GetBufferPointer(), vscode->GetBufferSize(), &layout);
         printf("%X", a); fflush(stdout);
 
         VertexType vertices[6];
@@ -254,6 +207,8 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
         deviceContext->RSSetState(rsstate);
 
         //SetFocus(hWnd);
+
+        a = true;
     }
 
     /*static int a = 0; a++;
@@ -289,10 +244,7 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     //deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
     //deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-    deviceContext->IASetInputLayout(layout);
-    deviceContext->VSSetShader(vs, NULL, 0);
-    deviceContext->PSSetShader(ps, NULL, 0);
-
+    SetShader(L"Shaders\\Color");
     SetTexture(L"D:/test.png");
 
     ID3D11SamplerState* state;

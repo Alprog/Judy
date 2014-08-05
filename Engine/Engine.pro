@@ -26,7 +26,8 @@ HEADERS += \
     Source/Quad.h \
     Source/Vector2.h \
     Source/Vector3.h \
-    Source/Vector4.h
+    Source/Vector4.h \
+    Source/DXShaderResource.h
 
 SOURCES += \
     Source/App.cpp \
@@ -46,7 +47,8 @@ SOURCES += \
     Source/Matrix.cpp \
     Source/Vector2.cpp \
     Source/Vector3.cpp \
-    Source/Vector4.cpp
+    Source/Vector4.cpp \
+    Source/DXShaderResource.cpp
 
 win {
     INCLUDEPATH += Source/Windows
