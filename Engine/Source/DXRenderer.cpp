@@ -211,28 +211,6 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
         a = true;
     }
 
-    /*static int a = 0; a++;
-    if (a == 100)
-    {
-        swapChain->SetFullscreenState(true, NULL);
-
-        view->Release();
-        backBuffer->Release();
-        swapChain->ResizeBuffers(2, 1366, 768, DXGI_FORMAT_UNKNOWN, 0);
-        swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-        device->CreateRenderTargetView(backBuffer, NULL, &view);
-    }
-    if (a == 1000)
-    {
-        swapChain->SetFullscreenState(false, NULL);
-
-        view->Release();
-        backBuffer->Release();
-        swapChain->ResizeBuffers(2, 400, 800, DXGI_FORMAT_UNKNOWN, 0);
-        swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-        device->CreateRenderTargetView(backBuffer, NULL, &view);
-    }*/
-
     Color color { 0.0f, 0.0f, 1.0f, 1.0f };
     //Clear(color);
     deviceContext->ClearRenderTargetView(swapChain->view, color.data);
@@ -241,8 +219,6 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     unsigned int offset = 0;
 
     deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-    //deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
-    //deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     SetShader(L"Shaders\\Color");
     SetTexture(L"D:/test.png");
@@ -274,3 +250,25 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     swapChain->swapChain->Present(1, 0);
 
 }
+
+/*static int a = 0; a++;
+if (a == 100)
+{
+    swapChain->SetFullscreenState(true, NULL);
+
+    view->Release();
+    backBuffer->Release();
+    swapChain->ResizeBuffers(2, 1366, 768, DXGI_FORMAT_UNKNOWN, 0);
+    swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+    device->CreateRenderTargetView(backBuffer, NULL, &view);
+}
+if (a == 1000)
+{
+    swapChain->SetFullscreenState(false, NULL);
+
+    view->Release();
+    backBuffer->Release();
+    swapChain->ResizeBuffers(2, 400, 800, DXGI_FORMAT_UNKNOWN, 0);
+    swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+    device->CreateRenderTargetView(backBuffer, NULL, &view);
+}*/

@@ -4,7 +4,9 @@ include(../default.pri)
 TEMPLATE = lib
 CONFIG += staticlib
 
-INCLUDEPATH += Source
+INCLUDEPATH += \
+    Source \
+    Source/Math \
 
 HEADERS += \
     Source/App.h \
@@ -16,7 +18,6 @@ HEADERS += \
     Source/GLRenderer.h \
     Source/RenderTarget.h \
     Source/Color.h \
-    Source/Matrix.h \
     Source/Vector.h \
     Source/DXSwapChain.h \
     Source/GLContext.h \
@@ -24,9 +25,10 @@ HEADERS += \
     Source/Images.h \
     Source/Node.h \
     Source/Quad.h \
-    Source/Vector2.h \
-    Source/Vector3.h \
-    Source/Vector4.h \
+    Source/Math/Matrix.h \
+    Source/Math/Vector2.h \
+    Source/Math/Vector3.h \
+    Source/Math/Vector4.h \
     Source/DXShaderResource.h
 
 SOURCES += \
@@ -44,10 +46,10 @@ SOURCES += \
     Source/Images.cpp \
     Source/Node.cpp \
     Source/Quad.cpp \
-    Source/Matrix.cpp \
-    Source/Vector2.cpp \
-    Source/Vector3.cpp \
-    Source/Vector4.cpp \
+    Source/Math/Matrix.cpp \
+    Source/Math/Vector2.cpp \
+    Source/Math/Vector3.cpp \
+    Source/Math/Vector4.cpp \
     Source/DXShaderResource.cpp
 
 win {

@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
 
 
-    lua_State* L = luaL_newstate();
+    /*lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
     lua_sethook(L, func, LUA_MASKLINE, 0);
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
         std::cerr << lua_tostring(L, -1) << std::endl;
         lua_pop(L, 1);
-    }
+    }*/
     /*if (lua_pcall(L, 0, LUA_MULTRET, 0))
     {
       std::cerr << "Something went wrong during execution" << std::endl;
@@ -86,9 +86,9 @@ int main(int argc, char *argv[])
     lua_pop(L,1);*/
 
 
-    lua_close(L);
+    //lua_close(L);
 
-    fflush(stdout);
+    //fflush(stdout);
 
     return app.exec();
 }

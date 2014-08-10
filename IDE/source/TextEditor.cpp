@@ -21,11 +21,6 @@ TextEditor::TextEditor() : ScintillaEdit()
     init();
 }
 
-TextEditor::TextEditor(QWidget* parent) : ScintillaEdit(parent)
-{
-    init();
-}
-
 void TextEditor::init()
 {
     setTabWidth(4);

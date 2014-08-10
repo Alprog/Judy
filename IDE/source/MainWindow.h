@@ -2,6 +2,8 @@
 #pragma once
 #include <QMainWindow>
 
+#include "DocumentsControl.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -28,4 +30,7 @@ private:
     QToolBar* fileToolBar;
 
     QMenu* editMenu;
+
+
+    DocumentsControl* documents;
 };

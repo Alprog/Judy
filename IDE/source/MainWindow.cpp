@@ -6,6 +6,7 @@
 #include "QDockWidget"
 #include "TextEditor.h"
 #include "QFileDialog.h"
+#include "DocumentsControl.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -51,15 +52,8 @@ void MainWindow::createActions()
 
     addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
 
-    auto tabs = new QTabWidget;
-
-    tabs->setTabsClosable(true);
-    tabs->setMovable(true);
-
-    tabs->addTab(new TextEditor, "Ololo");
-    tabs->addTab(new TextEditor, "Ololo");
-
-    setCentralWidget(tabs);
+    documents = new DocumentsControl;
+    setCentralWidget(documents);
 }
 
 void MainWindow::newFile()
@@ -71,7 +65,10 @@ void MainWindow::openFile()
 {
     auto filter = tr("Any supported (*.lua *.hlsl *.scene);;Lua (*.lua);;HLSL (*.hlsl);;Scene (*.scene)");
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter);
-
+    if (fileName != "")
+    {
+        documents->Add(fileName.toUtf8().constData());
+    }
 }
 
 void MainWindow::saveFile()
