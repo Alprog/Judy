@@ -2,7 +2,7 @@
 #pragma once
 #include <QMainWindow>
 
-#include "DocumentsControl.h"
+#include "DocumentsPane.h"
 
 class MainWindow : public QMainWindow
 {
@@ -32,5 +32,5 @@ private:
     QMenu* editMenu;
 
 
-    DocumentsControl* documents;
+    DocumentsPane* documents;
 };

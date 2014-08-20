@@ -43,9 +43,6 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    MainWindow mainWindow;
-    mainWindow.showMaximized();
-
     QFile file("style.css");
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -56,7 +53,8 @@ int main(int argc, char *argv[])
         app.setStyleSheet(sheet);
     }
 
-
+    MainWindow mainWindow;
+    mainWindow.showMaximized();
 
     /*lua_State* L = luaL_newstate();
     luaL_openlibs(L);

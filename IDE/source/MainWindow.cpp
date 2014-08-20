@@ -6,7 +6,7 @@
 #include "QDockWidget"
 #include "TextEditor.h"
 #include "QFileDialog.h"
-#include "DocumentsControl.h"
+#include "DocumentsPane.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
@@ -52,7 +52,7 @@ void MainWindow::createActions()
 
     addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
 
-    documents = new DocumentsControl;
+    documents = new DocumentsPane;
     setCentralWidget(documents);
 }
 
@@ -65,7 +65,7 @@ void MainWindow::openFile()
 {
     auto filter = tr("Any supported (*.lua *.hlsl *.scene);;Lua (*.lua);;HLSL (*.hlsl);;Scene (*.scene)");
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter);
-    if (fileName != "")
+    if (!fileName.isEmpty())
     {
         documents->Add(fileName.toUtf8().constData());
     }

@@ -80,7 +80,6 @@ void TextEditor::init()
     styleSetFore(STYLE_LINENUMBER, blue);
     styleSetBack(STYLE_LINENUMBER, darkBack);
 
-    setText("\nlocal a = 4; -- bla\n\nfunction a()\n   local b\nend\n\n--[[\nefjejg\n]]");
     setProperty("fold", "1");
     setProperty("fold.compact", "0");
 
