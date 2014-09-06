@@ -4,19 +4,33 @@
 #include "string"
 #include "QWidget.h"
 
-class Document
+
+class TextEditor;
+
+class Document : public QWidget
 {
+    Q_OBJECT
+
 public:
-    Document();
     Document(std::string filePath);
 
     std::string Name() { return name; }
-    QWidget* Editor() { return editor; }
+    std::string GetTabName();
+
+    void Save();
+    bool HaveChanges();
 
 private:
     std::string name;
     std::string fullPath;
-    bool changed;
 
-    QWidget* editor;
+
+    TextEditor* editor;
+
+private slots:
+    void Modified();
+    void CloseTab(int index);
+
+signals:
+    void OnModified();
 };

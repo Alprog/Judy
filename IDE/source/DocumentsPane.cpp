@@ -1,6 +1,5 @@
 
 #include "DocumentsPane.h"
-#include "Document.h"
 
 #include "QTabBar.h"
 #include "QTextEdit"
@@ -9,56 +8,81 @@
 #include "QScrollArea"
 #include "QRadioButton"
 #include "QResizeEvent"
+#include "QTableWidget"
+#include "string"
+
+#include "QMessageBox.h"
+#include "Document.h"
 
 DocumentsPane::DocumentsPane()
 {
-    auto vbox = new QVBoxLayout(this);
-    vbox->setMargin(0);
-    vbox->setSpacing(0);
-
-    auto bar = new QTabBar(this);
-
-    bar->addTab("fef");
-    bar->addTab("fef");
-
-    bar->setExpanding(false);
-    bar->setMovable(true);
-
-    auto editor = new QWidget();
-
-    vbox->addWidget(bar);
-    vbox->addWidget(editor);
-
-    this->setLayout(vbox);
-
-
-    /*setTabsClosable(true);
+    setTabsClosable(true);
     setMovable(true);
     setUsesScrollButtons(true);
-
-
-    auto document = new Document;
-    addTab(document->Editor(), document->Name().c_str());
-
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));*/
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
 }
 
 void DocumentsPane::Add(std::string fileName)
 {
-    /*auto document = new Document(fileName);
-    addTab(document->Editor(), document->Name().c_str());
-    this->setCurrentWidget(document->Editor());*/
+    auto document = new Document(fileName);
+
+    connect(document, SIGNAL(OnModified()), this, SLOT(UpdateTabNames()));
+
+    addTab(document, document->Name().c_str());
+    this->setCurrentWidget(document);
+}
+
+Document* DocumentsPane::GetDocument(int index)
+{
+    return (Document*)widget(index);
+}
+
+Document* DocumentsPane::GetCurrentDocument()
+{
+    return (Document*)widget(currentIndex());
+}
+
+void DocumentsPane::SaveCurrentDocument()
+{
+    if (count() > 0)
+    {
+        GetCurrentDocument()->Save();
+    }
+}
+
+void DocumentsPane::UpdateTabNames()
+{
+    for (int i = 0; i < count(); i++)
+    {
+        auto document = (Document*)widget(i);
+        auto name = document->GetTabName();
+        this->setTabText(i, name.c_str());
+    }
 }
 
 void DocumentsPane::CloseTab(int index)
 {
-    //removeTab(index);
-}
+    auto document = GetDocument(index);
 
-void DocumentsPane::resizeEvent(QResizeEvent* event)
-{
-   int w = event->oldSize().width();
-   int ww = event->size().width();
+    if (document->HaveChanges())
+    {
+        QMessageBox msgBox;
+        msgBox.setText("The document has been modified.");
+        msgBox.setInformativeText("Save changes?");
+        msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Save);
+        int result = msgBox.exec();
 
-   QWidget::resizeEvent(event);
+        switch (result)
+        {
+            case QMessageBox::Save:
+                document->Save();
+                break;
+
+            case QMessageBox::Cancel:
+                return;
+        }
+    }
+
+    removeTab(index);
 }

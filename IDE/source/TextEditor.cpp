@@ -16,7 +16,7 @@ const int blue = RGB( 66, 156, 214 );
 const int blueSelect = RGB(38, 79, 129);
 const int darkBack = RGB(30, 30, 30);
 
-TextEditor::TextEditor() : ScintillaEdit()
+TextEditor::TextEditor(QWidget* parent) : ScintillaEdit(parent)
 {
     init();
 }
@@ -101,8 +101,6 @@ void TextEditor::init()
 
     setFoldMarginColour(true, darkBack);
     setFoldMarginHiColour(true, darkBack);
-
-
 
     setMarginWidthN(0, 40);
     markerDefine(SC_MARKNUM_FOLDER, SC_MARK_BOXPLUS);

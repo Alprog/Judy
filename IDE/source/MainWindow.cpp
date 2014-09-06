@@ -73,7 +73,7 @@ void MainWindow::openFile()
 
 void MainWindow::saveFile()
 {
-
+    documents->SaveCurrentDocument();
 }
 
 void MainWindow::saveAsFile()

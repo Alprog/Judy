@@ -3,18 +3,10 @@
 #include "TextEditor.h"
 #include "QFile.h"
 #include "QTextStream.h"
-
-Document::Document()
-    : name { "New" }
-    , fullPath { }
-    , changed { false }
-{
-    editor = new TextEditor;
-}
+#include "QLayout.h"
 
 Document::Document(std::string filePath)
     : fullPath { filePath }
-    , changed { false }
 {
     auto index = filePath.find_last_of("\\/");
     if (index == std::string::npos)
@@ -28,17 +20,63 @@ Document::Document(std::string filePath)
         name = fullPath.substr(index, size);
     }
 
-    editor = new TextEditor;
+    editor = new TextEditor(this);
+
+    auto layout = new QGridLayout();
+    layout->setSpacing(0);
+    layout->setMargin(0);
+    layout->addWidget(editor);
+    this->setLayout(layout);
 
     QFile file(fullPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
         QString text = stream.readAll();
-        ((TextEditor*)editor)->setText(text.toUtf8().constData());
-
-        ((TextEditor*)editor)->emptyUndoBuffer();
-        ((TextEditor*)editor)->setSavePoint();
+        editor->setText(text.toUtf8().constData());
+        editor->emptyUndoBuffer();
+        editor->setSavePoint();
+        file.close();
     }
 
+    connect(editor, SIGNAL(notifyChange()), this, SLOT(Modified()));
+
+
+}
+
+std::string Document::GetTabName()
+{
+    return HaveChanges() ? name + "*" : name;
+}
+
+void Document::CloseTab(int index)
+{
+
+}
+
+void Document::Save()
+{
+    QFile file(fullPath.c_str());
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
+    {
+        auto length = editor->length();
+        auto text = editor->getText(length + 1);
+
+        QTextStream stream(&file);
+        stream << text;
+        file.close();
+    }
+
+    editor->setSavePoint();
+    this->OnModified();
+}
+
+bool Document::HaveChanges()
+{
+    return editor->modify();
+}
+
+void Document::Modified()
+{
+    this->OnModified();
 }
