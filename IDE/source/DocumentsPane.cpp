@@ -11,7 +11,6 @@
 #include "QTableWidget"
 #include "string"
 
-#include "QMessageBox.h"
 #include "Document.h"
 
 DocumentsPane::DocumentsPane()
@@ -19,16 +18,25 @@ DocumentsPane::DocumentsPane()
     setTabsClosable(true);
     setMovable(true);
     setUsesScrollButtons(true);
+
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
 }
 
-void DocumentsPane::Add(std::string fileName)
+void DocumentsPane::Open(std::string path)
 {
-    auto document = new Document(fileName);
+    for (int i = 0; i < count(); i++)
+    {
+        auto document = GetDocument(i);
+        if (document->GetFullPath() == path)
+        {
+            setCurrentWidget(document);
+            return;
+        }
+    }
 
+    auto document = new Document(path);
     connect(document, SIGNAL(OnModified()), this, SLOT(UpdateTabNames()));
-
-    addTab(document, document->Name().c_str());
+    addTab(document, document->GetName().c_str());
     this->setCurrentWidget(document);
 }
 
@@ -58,6 +66,51 @@ void DocumentsPane::UpdateTabNames()
         auto name = document->GetTabName();
         this->setTabText(i, name.c_str());
     }
+}
+
+void DocumentsPane::CheckOutsideModification()
+{
+    bool toAll = false;
+    bool reload = false;
+
+    for (int i = 0; i < count(); i++)
+    {
+        auto document = (Document*)widget(i);
+        if (document->IsModifiedOutside())
+        {
+            if (!toAll)
+            {
+                setCurrentWidget(document);
+                int result = ReloadDocumentMessageBox(document);
+                reload = (result == QMessageBox::Yes) || (result == QMessageBox::YesToAll);
+                toAll = (result == QMessageBox::YesToAll) || (result == QMessageBox::NoToAll);
+            }
+
+            if (reload)
+            {
+                document->Reload();
+            }
+            else
+            {
+                document->IgnoreOutsideModification();
+            }
+        }
+    }
+}
+
+int DocumentsPane::ReloadDocumentMessageBox(Document* document)
+{
+    QMessageBox msgBox;
+    msgBox.setText(document->GetName().c_str());
+
+    auto text = "This file has been modified by another program.\n"
+                "Do you want to reload it?";
+    msgBox.setInformativeText(text);
+
+    auto buttons = QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll;
+    msgBox.setStandardButtons(buttons);
+
+    return msgBox.exec();
 }
 
 void DocumentsPane::CloseTab(int index)

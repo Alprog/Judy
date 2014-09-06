@@ -3,7 +3,7 @@
 
 #include "string"
 #include "QWidget.h"
-
+#include "QDateTime.h"
 
 class TextEditor;
 
@@ -14,16 +14,25 @@ class Document : public QWidget
 public:
     Document(std::string filePath);
 
-    std::string Name() { return name; }
+    std::string GetName() { return name; }
+    std::string GetFullPath() { return fullPath; }
+
     std::string GetTabName();
+
+    bool IsModifiedOutside();
+    void IgnoreOutsideModification();
 
     void Save();
     bool HaveChanges();
 
+    void Reload();
+
 private:
+    QDateTime GetLastModifiedTime();
+
     std::string name;
     std::string fullPath;
-
+    QDateTime modifiedTime;
 
     TextEditor* editor;
 

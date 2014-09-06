@@ -5,6 +5,7 @@
 #include "QTabWidget.h"
 #include "string"
 #include "Document.h"
+#include "QMessageBox.h"
 
 class DocumentsPane : public QTabWidget
 {
@@ -13,11 +14,15 @@ class DocumentsPane : public QTabWidget
 public:
     DocumentsPane();
 
-    void Add(std::string fileName);
+    void Open(std::string path);
     Document* GetCurrentDocument();
     Document* GetDocument(int index);
 
     void SaveCurrentDocument();
+    void CheckOutsideModification();
+
+private:
+    int ReloadDocumentMessageBox(Document* document);
 
 private slots:
     void CloseTab(int index);

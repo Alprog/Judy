@@ -23,6 +23,8 @@ private slots:
 private:
     void createActions();
 
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
     QAction* createAction(const char* name, const char* icon, const char* slot,
                           QKeySequence::StandardKey shortcut = QKeySequence::UnknownKey);
 
@@ -33,4 +35,5 @@ private:
 
 
     DocumentsPane* documents;
+    bool modificationChecking;
 };

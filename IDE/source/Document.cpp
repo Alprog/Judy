@@ -4,6 +4,7 @@
 #include "QFile.h"
 #include "QTextStream.h"
 #include "QLayout.h"
+#include "QFileInfo.h"
 
 Document::Document(std::string filePath)
     : fullPath { filePath }
@@ -28,20 +29,42 @@ Document::Document(std::string filePath)
     layout->addWidget(editor);
     this->setLayout(layout);
 
+    Reload();
+
+    editor->emptyUndoBuffer();
+
+    connect(editor, SIGNAL(notifyChange()), this, SLOT(Modified()));
+}
+
+void Document::Reload()
+{
     QFile file(fullPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
         QString text = stream.readAll();
         editor->setText(text.toUtf8().constData());
-        editor->emptyUndoBuffer();
         editor->setSavePoint();
         file.close();
+
+        modifiedTime = GetLastModifiedTime();
     }
+}
 
-    connect(editor, SIGNAL(notifyChange()), this, SLOT(Modified()));
+void Document::IgnoreOutsideModification()
+{
+    modifiedTime = GetLastModifiedTime();
+}
 
+bool Document::IsModifiedOutside()
+{
+    return modifiedTime < GetLastModifiedTime();
+}
 
+QDateTime Document::GetLastModifiedTime()
+{
+    QFileInfo info(fullPath.c_str());
+    return info.lastModified();
 }
 
 std::string Document::GetTabName()

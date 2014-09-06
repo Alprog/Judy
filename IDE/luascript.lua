@@ -1,10 +1,10 @@
 
 dofile "req.lua"
 
-function myluafunction(x)
+function myluafunction(x)  
 	x = x + 1
 	x = x + 2
 	return x + cppvar + fun();
 end
 
-myluafunction(3) 
+myluafunction(3)

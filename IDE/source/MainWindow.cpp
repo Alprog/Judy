@@ -7,8 +7,11 @@
 #include "TextEditor.h"
 #include "QFileDialog.h"
 #include "DocumentsPane.h"
+#include "QEvent.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent)
+    , modificationChecking(false)
 {
     setWindowTitle("Judy IDE");
 
@@ -17,6 +20,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     setWindowOpacity(1);
 
     createActions();
+
+    this->installEventFilter(this);
 }
 
 QAction* MainWindow::createAction(const char* name, const char* icon, const char* slot, QKeySequence::StandardKey shortcut)
@@ -67,7 +72,7 @@ void MainWindow::openFile()
     auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter);
     if (!fileName.isEmpty())
     {
-        documents->Add(fileName.toUtf8().constData());
+        documents->Open(fileName.toUtf8().constData());
     }
 }
 
@@ -81,3 +86,17 @@ void MainWindow::saveAsFile()
 
 }
 
+bool MainWindow::eventFilter(QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::WindowActivate)
+    {
+        if (!modificationChecking)
+        {
+            modificationChecking = true;
+            documents->CheckOutsideModification();
+            modificationChecking = false;
+        }
+    }
+
+    return QMainWindow::eventFilter(obj, event);
+}
