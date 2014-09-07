@@ -25,7 +25,7 @@ struct Matrix
     static Matrix RotationZ(float rotation);
     static Matrix Scaling(Vector3 scaling);
 
-    friend Matrix operator*(Matrix lhs, const Matrix& rhs);
+    friend Matrix operator*(const Matrix& lhs, const Matrix& rhs);
 
     Matrix& operator*=(const Matrix& rhs);
 };

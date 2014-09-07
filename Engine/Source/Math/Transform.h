@@ -11,5 +11,7 @@ struct Transform
     float Rotation;
     Vector3 Scaling;
 
+    Transform();
+
     Matrix GetMatrix();
 };

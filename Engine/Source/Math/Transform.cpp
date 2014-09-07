@@ -1,6 +1,14 @@
 
 #include "Transform.h"
 
+Transform::Transform()
+    : Pivot {Vector3::Zero}
+    , Translation {Vector3::Zero}
+    , Rotation {0}
+    , Scaling {Vector3::One}
+{
+}
+
 Matrix Transform::GetMatrix()
 {
     Matrix matrix = Matrix::Translation(-Pivot);

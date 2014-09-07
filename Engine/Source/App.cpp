@@ -20,13 +20,13 @@ void App::RemoveWindow(Window* window)
 
 void App::UpdateCollection()
 {
-    for(auto window : AddedWindows)
+    for (auto window : AddedWindows)
     {
         Windows.insert(window);
     }
     AddedWindows.clear();
 
-    for(auto window : RemovedWindows)
+    for (auto window : RemovedWindows)
     {
         Windows.erase(window);
     }
@@ -37,16 +37,15 @@ void App::StartMainLoop()
 {
     do
     {
-        for(auto window : Windows)
+        for (auto window : Windows)
         {
-           window->ProcessEvents();
+            window->ProcessEvents();
         }
-
         UpdateCollection();
 
-        for(auto window : Windows)
+        for (auto window : Windows)
         {
-           window->Render();
+            window->Render();
         }
     }
     while (Windows.size() > 0);

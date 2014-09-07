@@ -2,6 +2,9 @@
 #include "Vector4.h"
 #include "math.h"
 
+const Vector4 Vector4::Zero {0, 0, 0, 0};
+const Vector4 Vector4::One {1, 1, 1, 1};
+
 float Vector4::Length()
 {
     return sqrt(x * x + y * y + z * z + w * w);

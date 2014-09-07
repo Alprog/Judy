@@ -193,8 +193,10 @@ void DXRenderer::DrawQuad(Quad* quad)
     deviceContext->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
     auto buffer = (ConstantBufferType*)resource.pData;
     buffer->WVP = Matrix::Identity;
-    buffer->M1 = Matrix::Translation({-1, 1, 0});
-    buffer->M2 = Matrix::Scaling({0.5f, 0.5f, 0.5f});
+
+    buffer->M1 = quad->Transform.GetMatrix();
+    buffer->M2 = Matrix::Identity;
+
     deviceContext->Unmap(constantBuffer, 0);
 
 

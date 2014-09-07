@@ -2,6 +2,9 @@
 #include "Vector3.h"
 #include "math.h"
 
+const Vector3 Vector3::Zero {0, 0, 0};
+const Vector3 Vector3::One {1, 1, 1};
+
 float Vector3::Length()
 {
     return sqrt(x * x + y * y + z * z);

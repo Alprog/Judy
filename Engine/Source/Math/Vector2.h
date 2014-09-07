@@ -3,6 +3,9 @@
 
 struct Vector2
 {
+    static const Vector2 Zero;
+    static const Vector2 One;
+
     float x;
     float y;
 

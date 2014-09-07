@@ -3,7 +3,7 @@
 
 #include "Node.h"
 #include "string"
-#include "Vector2.h"
+#include "Transform.h"
 
 class Quad : public Node
 {
@@ -16,6 +16,7 @@ public:
 
     Vector2 Size;
 
+    Transform Transform;
 
     std::wstring Shader;
     std::wstring Texture;

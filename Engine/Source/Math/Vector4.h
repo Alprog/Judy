@@ -3,6 +3,9 @@
 
 struct Vector4
 {
+    static const Vector4 Zero;
+    static const Vector4 One;
+
     float x;
     float y;
     float z;
