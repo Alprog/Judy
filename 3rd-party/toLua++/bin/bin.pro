@@ -3,11 +3,11 @@ include(../../../default.pri)
 
 TEMPLATE = app
 CONFIG += console
-TARGET = ../../toLua
+TARGET = ../../toLua++
 
-LIBS += -L"../../" -llua -ltolua
+LIBS += -L"../../" -llua -ltolua++
 PRE_TARGETDEPS += "../../lua.lib"
-PRE_TARGETDEPS += "../../tolua.lib"
+PRE_TARGETDEPS += "../../tolua++.lib"
 
 INCLUDEPATH += \
     ../ \
@@ -16,4 +16,3 @@ INCLUDEPATH += \
 SOURCES += \
     tolua.c \
     toluabind.c \
-

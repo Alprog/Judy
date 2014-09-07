@@ -7,6 +7,8 @@ CONFIG += staticlib
 INCLUDEPATH += \
     Source \
     Source/Math \
+    ../../../3rd-party/toLua++ \
+    ../../../3rd-party/lua/source \
 
 HEADERS += \
     Source/App.h \
@@ -54,7 +56,8 @@ SOURCES += \
     Source/Math/Vector4.cpp \
     Source/DXShaderResource.cpp \
     Source/Keyframe.cpp \
-    Source/Math/Transform.cpp
+    Source/Math/Transform.cpp \
+    Source/Binding.cpp
 
 win {
     INCLUDEPATH += Source/Windows

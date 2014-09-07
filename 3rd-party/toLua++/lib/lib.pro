@@ -2,7 +2,7 @@
 include(../../../default.pri)
 
 TEMPLATE = lib
-TARGET = ../../toLua
+TARGET = ../../toLua++
 CONFIG += staticlib
 
 INCLUDEPATH += \
