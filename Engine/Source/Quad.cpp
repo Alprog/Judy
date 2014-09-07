@@ -1,5 +1,6 @@
 
 #include "Quad.h"
+#include "Renderer.h"
 
 using base = Node;
 
@@ -16,5 +17,7 @@ void Quad::Update(double delta)
 
 void Quad::Render(Renderer* renderer)
 {
+    renderer->DrawQuad(this);
+
     base::Render(renderer);
 }

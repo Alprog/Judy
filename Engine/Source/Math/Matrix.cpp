@@ -1,6 +1,14 @@
 
 #include "Matrix.h"
 
+const Matrix Matrix::Identity =
+{
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    1, 1, 1, 1
+};
+
 Matrix operator*(const Matrix& lhs, const Matrix& rhs)
 {
     return // mij = mi1*m1j + mi2*m2j + mi3*m3j + mi4*m4j
@@ -24,5 +32,16 @@ Matrix operator*(const Matrix& lhs, const Matrix& rhs)
         lhs.m41 * rhs.m12 + lhs.m42 * rhs.m22 + lhs.m43 * rhs.m32 + lhs.m44 * rhs.m42,
         lhs.m41 * rhs.m13 + lhs.m42 * rhs.m23 + lhs.m43 * rhs.m33 + lhs.m44 * rhs.m43,
         lhs.m41 * rhs.m14 + lhs.m42 * rhs.m24 + lhs.m43 * rhs.m34 + lhs.m44 * rhs.m44
+    };
+}
+
+Matrix Matrix::Translation(Vector3 t)
+{
+    return
+    {
+        1,   0,   0,   0,
+        0,   1,   0,   0,
+        0,   0,   1,   0,
+        t.x, t.y, t.z, 1
     };
 }

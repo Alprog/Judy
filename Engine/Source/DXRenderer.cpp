@@ -17,8 +17,12 @@
 
 #include "Images.h"
 
-ID3D11Buffer* vertexBuffer;
+#include "Node.h"
+
+ID3D11Buffer* quadVertexBuffer;
+ID3D11Buffer* quadIndexBuffer;
 ID3D11Buffer* constantBuffer;
+bool quadInited = false;
 
 struct ConstantBufferType
 {
@@ -46,7 +50,10 @@ DXRenderer::DXRenderer()
 
 void DXRenderer::Clear(Color color)
 {
-
+    ID3D11RenderTargetView* rtView;
+    ID3D11DepthStencilView* dsView;
+    deviceContext->OMGetRenderTargets(1, &rtView, &dsView);
+    deviceContext->ClearRenderTargetView(rtView, color.data);
 }
 
 void DXRenderer::SetTexture(std::wstring name)
@@ -107,71 +114,97 @@ DXSwapChain* DXRenderer::GetSwapChain(RenderTarget* renderTarget)
     return swapChain;
 }
 
+void DXRenderer::InitQuad()
+{
+    D3D11_BUFFER_DESC vertexBufferDesc;
+    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * 6;
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDesc.MiscFlags = 0;
+    vertexBufferDesc.StructureByteStride = 0;
+
+    device->CreateBuffer(&vertexBufferDesc, NULL, &quadVertexBuffer);
+
+    //-----------
+
+    D3D11_BUFFER_DESC indexBufferDesc;
+    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.ByteWidth = sizeof(unsigned int) * 6;
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.CPUAccessFlags = 0;
+    indexBufferDesc.MiscFlags = 0;
+    indexBufferDesc.StructureByteStride = 0;
+
+    unsigned int indices[6] = {0, 1, 2, 2, 1, 3};
+
+    D3D11_SUBRESOURCE_DATA indexData;
+    indexData.pSysMem = indices;
+    indexData.SysMemPitch = 0;
+    indexData.SysMemSlicePitch = 0;
+
+    device->CreateBuffer(&indexBufferDesc, &indexData, &quadIndexBuffer);
+
+    //-----------
+
+    D3D11_BUFFER_DESC constantBufferDesc;
+    constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDesc.ByteWidth = sizeof(ConstantBufferType);
+    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDesc.MiscFlags = 0;
+    constantBufferDesc.StructureByteStride = 0;
+
+    device->CreateBuffer(&constantBufferDesc, NULL, &constantBuffer);
+
+    //-----------
+
+    quadInited = true;
+}
+
+void DXRenderer::DrawQuad(Quad* quad)
+{
+    if (!quadInited) InitQuad();
+
+    VertexType vertices[4];
+    vertices[0].position = {-0.8f, 0.8f, 0.0f};
+    vertices[1].position = {0.8f, 0.8f, 0.0f};
+    vertices[2].position = {-0.8f, -0.8f, 0.0f};
+    vertices[3].position = {0.8f, -0.8f, 0.0f};
+
+    vertices[0].uv = {0.0f, 0.0f};
+    vertices[1].uv = {1.0f, 0.0f};
+    vertices[2].uv = {0.0f, 1.0f};
+    vertices[3].uv = {1.0f, 1.0f};
+
+    vertices[0].color = {1.0f, 0.0f, 0.0f, 1.0f};
+    vertices[1].color = {0.0f, 1.0f, 0.0f, 1.0f};
+    vertices[2].color = {0.0f, 0.0f, 1.0f, 1.0f};
+    vertices[3].color = {0.0f, 0.0f, 1.0f, 1.0f};
+
+    D3D11_MAPPED_SUBRESOURCE resource;
+    deviceContext->Map(quadVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+    memcpy(resource.pData, &vertices[0], sizeof(VertexType) * 4);
+    deviceContext->Unmap(quadVertexBuffer, 0);
+
+    unsigned int stride = sizeof(VertexType);
+    unsigned int offset = 0;
+    deviceContext->IASetVertexBuffers(0, 1, &quadVertexBuffer, &stride, &offset);
+    deviceContext->IASetIndexBuffer(quadIndexBuffer, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    deviceContext->DrawIndexed(6, 0, 0);
+}
+
 bool a = false;
 
-void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
+void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
 {
-
     auto swapChain = GetSwapChain(renderTarget);
     deviceContext->OMSetRenderTargets(1, &swapChain->view, NULL);
 
-
     if (a == false)
     {
-        a = true;
-
-
-        printf("%X", a); fflush(stdout);
-
-        VertexType vertices[6];
-        vertices[0].position = {-0.8f, 0.8f, 0.0f};
-        vertices[1].position = {0.8f, 0.8f, 0.0f};
-        vertices[2].position = {-0.8f, -0.8f, 0.0f};
-        vertices[3].position = {-0.8f, -0.8f, 0.0f};
-        vertices[4].position = {0.8f, 0.8f, 0.0f};
-        vertices[5].position = {0.8f, -0.8f, 0.0f};
-
-        vertices[0].uv = {0.0f, 0.0f};
-        vertices[1].uv = {1.0f, 0.0f};
-        vertices[2].uv = {0.0f, 1.0f};
-        vertices[3].uv = {0.0f, 1.0f};
-        vertices[4].uv = {1.0f, 0.0f};
-        vertices[5].uv = {1.0f, 1.0f};
-
-        vertices[0].color = {1.0f, 0.0f, 0.0f, 1.0f};
-        vertices[1].color = {0.0f, 1.0f, 0.0f, 1.0f};
-        vertices[2].color = {0.0f, 0.0f, 1.0f, 1.0f};
-        vertices[3].color = {1.0f, 0.0f, 0.0f, 1.0f};
-        vertices[4].color = {0.0f, 1.0f, 0.0f, 1.0f};
-        vertices[5].color = {0.0f, 0.0f, 1.0f, 1.0f};
-
-        D3D11_SUBRESOURCE_DATA vertexData;
-        vertexData.pSysMem = vertices;
-        vertexData.SysMemPitch = 0;
-        vertexData.SysMemSlicePitch = 0;
-
-        D3D11_BUFFER_DESC vertexBufferDesc;
-        vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-        vertexBufferDesc.ByteWidth = sizeof(VertexType) * 6;
-        vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        vertexBufferDesc.CPUAccessFlags = 0;
-        vertexBufferDesc.MiscFlags = 0;
-        vertexBufferDesc.StructureByteStride = 0;
-
-        a = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
-        printf("%X", a); fflush(stdout);
-
-        D3D11_BUFFER_DESC constantBufferDesc;
-        constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        constantBufferDesc.ByteWidth = sizeof(ConstantBufferType);
-        constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        constantBufferDesc.MiscFlags = 0;
-        constantBufferDesc.StructureByteStride = 0;
-
-        a = device->CreateBuffer(&constantBufferDesc, NULL, &constantBuffer);
-        printf("%X", a); fflush(stdout);
-
         D3D11_VIEWPORT viewport;
         viewport.TopLeftX = 0;
         viewport.TopLeftY = 0;
@@ -206,19 +239,10 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
 
         deviceContext->RSSetState(rsstate);
 
-        //SetFocus(hWnd);
-
         a = true;
     }
 
-    Color color { 0.0f, 0.0f, 1.0f, 1.0f };
-    //Clear(color);
-    deviceContext->ClearRenderTargetView(swapChain->view, color.data);
-
-    unsigned int stride = sizeof(VertexType);
-    unsigned int offset = 0;
-
-    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    Clear({ 0.0f, 0.0f, 1.0f, 1.0f });
 
     SetShader(L"Shaders\\Color");
     SetTexture(L"D:/test.png");
@@ -244,8 +268,7 @@ void DXRenderer::Render(Scene* scene, RenderTarget* renderTarget)
     device->CreateSamplerState(&samplerDesc, &state);
     deviceContext->PSSetSamplers(0, 1, &state);
 
-    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    deviceContext->Draw(6, 0);
+    scene->Render(this);
 
     swapChain->swapChain->Present(1, 0);
 

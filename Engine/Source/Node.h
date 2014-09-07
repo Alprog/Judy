@@ -2,7 +2,8 @@
 #pragma once
 
 #include <vector>
-#include "Renderer.h"
+
+class Renderer;
 
 class Node
 {

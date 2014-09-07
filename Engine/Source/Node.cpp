@@ -24,6 +24,7 @@ void Node::AddChild(Node* node)
 {
     node->Unparent();
     childs.push_back(node);
+    node->parent = this;
 }
 
 void Node::RemoveChild(Node* node)

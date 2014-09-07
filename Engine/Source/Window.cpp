@@ -5,9 +5,16 @@
 #include "GLRenderer.h"
 #include "DXRenderer.h"
 
+#include "Quad.h"
+
 Window* Window::Create()
 {
     return (Window*)new PlatformWindow();
+}
+
+Window::Window()
+{
+    scene = new Quad();
 }
 
 auto glRenderer = new GLRenderer();

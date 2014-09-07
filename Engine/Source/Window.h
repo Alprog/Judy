@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Scene.h"
+#include "Node.h"
 #include "RenderTarget.h"
 
 class Window
@@ -16,8 +16,11 @@ public:
     void Render();
 
 protected:
+    Window();
 
-    Scene* scene;
+protected:
+
+    Node* scene;
     RenderTarget* RenderTarget1;
     RenderTarget* RenderTarget2;
 };

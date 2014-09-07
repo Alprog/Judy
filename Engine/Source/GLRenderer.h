@@ -11,7 +11,8 @@ public:
 
     GLContext* GetContext(RenderTarget* renderTarget);
 
-    void Render(Scene* scene, RenderTarget* renderTarget) override;
+    void DrawQuad(Quad* quad) override;
+    void Render(Node* scene, RenderTarget* renderTarget) override;
 
     void Clear(Color color) override;
 };

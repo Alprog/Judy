@@ -1,7 +1,7 @@
 
 #include "GLRenderer.h"
 
-#include "Scene.h"
+#include "Node.h"
 
 #if WIN
     #include <windows.h>
@@ -34,7 +34,12 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
     return context;
 }
 
-void GLRenderer::Render(Scene *scene, RenderTarget* renderTarget)
+void GLRenderer::DrawQuad(Quad* quad)
+{
+
+}
+
+void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
 {
     auto context = GetContext(renderTarget);
 

@@ -1,8 +1,12 @@
 
 #pragma once
 
+#include "Vector3.h"
+
 struct Matrix
 {
+    static const Matrix Identity;
+
     union
     {
         struct // row-major
@@ -14,6 +18,8 @@ struct Matrix
         };
         float m[4][4]; // [row][column]
     };
+
+    static Matrix Translation(Vector3 translation);
 };
 
 Matrix operator*(const Matrix& lhs, const Matrix& rhs);

@@ -21,7 +21,8 @@ public:
 
     std::unordered_map<std::wstring, DXShaderResource*> shaders;
 
-    void Render(Scene* scene, RenderTarget* renderTarget) override;
+    void DrawQuad(Quad* quad) override;
+    void Render(Node* scene, RenderTarget* renderTarget) override;
 
     void Clear(Color color) override;
     void SetTexture(std::wstring name);
@@ -29,6 +30,9 @@ public:
 
     ID3D11Device* device;
     ID3D11DeviceContext* deviceContext;
+
+private:
+    void InitQuad();
 
 };
 
