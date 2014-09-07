@@ -20,6 +20,12 @@ struct Matrix
     };
 
     static Matrix Translation(Vector3 translation);
-};
+    static Matrix RotationX(float rotation);
+    static Matrix RotationY(float rotation);
+    static Matrix RotationZ(float rotation);
+    static Matrix Scaling(Vector3 scaling);
 
-Matrix operator*(const Matrix& lhs, const Matrix& rhs);
+    friend Matrix operator*(Matrix lhs, const Matrix& rhs);
+
+    Matrix& operator*=(const Matrix& rhs);
+};

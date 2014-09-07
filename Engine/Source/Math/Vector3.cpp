@@ -12,6 +12,16 @@ float Vector3::SquaredLength()
     return x * x + y * y + z * z;
 }
 
+Vector3 operator-(const Vector3& vector)
+{
+    return
+    {
+        -vector.x,
+        -vector.y,
+        -vector.z
+    };
+}
+
 Vector3 operator+(const Vector3& lhs, const Vector3& rhs)
 {
     return

@@ -36,6 +36,19 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
 
 void GLRenderer::DrawQuad(Quad* quad)
 {
+    glBegin(GL_TRIANGLES);
+
+    auto x = quad->Size.x;
+    auto y = quad->Size.y;
+
+    glVertex3f(-x, y, 0.0f);
+    glVertex3f(x, y, 0.0f);
+    glVertex3f(-x, -y, 0.0f);
+    glVertex3f(-x, -y, 0.0f);
+    glVertex3f(x, y, 0.0f);
+    glVertex3f(x, -y, 0.0f);
+
+    glEnd();
 
 }
 
@@ -52,16 +65,7 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
     Color color { 0.0f, 1.0f, 0.0f, 1.0f };
     Clear(color);
 
-    glBegin(GL_TRIANGLES);
-
-    glVertex3f(-0.8f, 0.8f, 0.0f);
-    glVertex3f(0.8f, 0.8f, 0.0f);
-    glVertex3f(-0.8f, -0.8f, 0.0f);
-    glVertex3f(-0.8f, -0.8f, 0.0f);
-    glVertex3f(0.8f, 0.8f, 0.0f);
-    glVertex3f(0.8f, -0.8f, 0.0f);
-
-    glEnd();
+    scene->Render(this);
 
     context->Swap();
 }

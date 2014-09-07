@@ -6,8 +6,8 @@ using base = Node;
 
 Quad::Quad()
     : base()
+    , Size({1, 1})
 {
-
 }
 
 void Quad::Update(double delta)

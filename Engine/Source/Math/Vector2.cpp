@@ -12,6 +12,15 @@ float Vector2::SquaredLength()
     return x * x + y * y;
 }
 
+Vector2 operator-(const Vector2& vector)
+{
+    return
+    {
+        -vector.x,
+        -vector.y
+    };
+}
+
 Vector2 operator+(const Vector2& lhs, const Vector2& rhs)
 {
     return

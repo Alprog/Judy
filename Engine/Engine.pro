@@ -30,7 +30,8 @@ HEADERS += \
     Source/Math/Vector3.h \
     Source/Math/Vector4.h \
     Source/DXShaderResource.h \
-    Source/Keyframe.h
+    Source/Keyframe.h \
+    Source/Math/Transform.h
 
 SOURCES += \
     Source/App.cpp \
@@ -52,7 +53,8 @@ SOURCES += \
     Source/Math/Vector3.cpp \
     Source/Math/Vector4.cpp \
     Source/DXShaderResource.cpp \
-    Source/Keyframe.cpp
+    Source/Keyframe.cpp \
+    Source/Math/Transform.cpp
 
 win {
     INCLUDEPATH += Source/Windows

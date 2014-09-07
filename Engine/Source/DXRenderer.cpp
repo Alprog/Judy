@@ -26,9 +26,9 @@ bool quadInited = false;
 
 struct ConstantBufferType
 {
-    Matrix world;
-    Matrix view;
-    Matrix projection;
+    Matrix WVP;
+    Matrix M1;
+    Matrix M2;
 };
 
 
@@ -166,11 +166,14 @@ void DXRenderer::DrawQuad(Quad* quad)
 {
     if (!quadInited) InitQuad();
 
+    auto x = quad->Size.x;
+    auto y = quad->Size.y;
+
     VertexType vertices[4];
-    vertices[0].position = {-0.8f, 0.8f, 0.0f};
-    vertices[1].position = {0.8f, 0.8f, 0.0f};
-    vertices[2].position = {-0.8f, -0.8f, 0.0f};
-    vertices[3].position = {0.8f, -0.8f, 0.0f};
+    vertices[0].position = {-x, y, 0.0f};
+    vertices[1].position = {x, y, 0.0f};
+    vertices[2].position = {-x, -y, 0.0f};
+    vertices[3].position = {x, -y, 0.0f};
 
     vertices[0].uv = {0.0f, 0.0f};
     vertices[1].uv = {1.0f, 0.0f};
@@ -187,10 +190,22 @@ void DXRenderer::DrawQuad(Quad* quad)
     memcpy(resource.pData, &vertices[0], sizeof(VertexType) * 4);
     deviceContext->Unmap(quadVertexBuffer, 0);
 
+    deviceContext->Map(constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+    auto buffer = (ConstantBufferType*)resource.pData;
+    buffer->WVP = Matrix::Identity;
+    buffer->M1 = Matrix::Translation({-1, 1, 0});
+    buffer->M2 = Matrix::Scaling({0.5f, 0.5f, 0.5f});
+    deviceContext->Unmap(constantBuffer, 0);
+
+
     unsigned int stride = sizeof(VertexType);
     unsigned int offset = 0;
     deviceContext->IASetVertexBuffers(0, 1, &quadVertexBuffer, &stride, &offset);
     deviceContext->IASetIndexBuffer(quadIndexBuffer, DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
+    deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
+
+    SetShader(quad->Shader);
+    SetTexture(quad->Texture);
 
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->DrawIndexed(6, 0, 0);
@@ -243,9 +258,6 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
     }
 
     Clear({ 0.0f, 0.0f, 1.0f, 1.0f });
-
-    SetShader(L"Shaders\\Color");
-    SetTexture(L"D:/test.png");
 
     ID3D11SamplerState* state;
 
