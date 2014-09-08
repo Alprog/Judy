@@ -13,5 +13,5 @@ struct Image
 
 namespace Images
 {
-    Image* LoadPng(std::wstring path);
+    Image* LoadPng(std::string path);
 }

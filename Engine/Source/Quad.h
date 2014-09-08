@@ -15,9 +15,8 @@ public:
     virtual void Render(Renderer* renderer) override;
 
     Vector2 Size;
-
     Transform Transform;
 
-    std::wstring Shader;
-    std::wstring Texture;
+    std::string Shader;
+    std::string Texture;
 };

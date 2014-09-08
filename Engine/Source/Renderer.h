@@ -12,7 +12,7 @@ class Node;
 class Renderer
 {
 public:
-    std::unordered_map<std::wstring, void*> textures;
+    std::unordered_map<std::string, void*> textures;
 
     virtual void DrawQuad(Quad* quad) = 0;
 

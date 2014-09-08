@@ -14,13 +14,10 @@ public:
     virtual void ProcessEvents() = 0;
 
     void Render();
-
-protected:
-    Window();
-
-protected:
-
     Node* scene;
+
+protected:
+    Window();    
     RenderTarget* RenderTarget1;
     RenderTarget* RenderTarget2;
 };

@@ -10,4 +10,6 @@ public:
     virtual void ProcessEvents() = 0;
 
     void Render();
+
+    Node* scene;
 }

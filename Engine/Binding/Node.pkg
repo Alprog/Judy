@@ -1,10 +1,4 @@
-
-#pragma once
-
-#include <vector>
-#include "Math/Vector2.h"
-
-class Renderer;
+$#include "Node.h"
 
 class Node
 {
@@ -22,8 +16,4 @@ public:
 
     virtual void Update(double delta);
     virtual void Render(Renderer* renderer);
-
-private:
-    Node* parent;
-    std::vector<Node*> childs;
 };

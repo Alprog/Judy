@@ -19,14 +19,14 @@ public:
 
     DXRenderer();
 
-    std::unordered_map<std::wstring, DXShaderResource*> shaders;
+    std::unordered_map<std::string, DXShaderResource*> shaders;
 
     void DrawQuad(Quad* quad) override;
     void Render(Node* scene, RenderTarget* renderTarget) override;
 
     void Clear(Color color) override;
-    void SetTexture(std::wstring name);
-    void SetShader(std::wstring name);
+    void SetTexture(std::string name);
+    void SetShader(std::string name);
 
     ID3D11Device* device;
     ID3D11DeviceContext* deviceContext;

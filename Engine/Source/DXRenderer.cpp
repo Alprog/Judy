@@ -56,7 +56,7 @@ void DXRenderer::Clear(Color color)
     deviceContext->ClearRenderTargetView(rtView, color.data);
 }
 
-void DXRenderer::SetTexture(std::wstring name)
+void DXRenderer::SetTexture(std::string name)
 {
     auto view = (ID3D11ShaderResourceView*)textures[name];
     if (view == nullptr)
@@ -89,12 +89,13 @@ void DXRenderer::SetTexture(std::wstring name)
     deviceContext->PSSetShaderResources(0, 1, &view);
 }
 
-void DXRenderer::SetShader(std::wstring name)
+void DXRenderer::SetShader(std::string name)
 {
     auto shader = shaders[name];
     if (shader == nullptr)
     {
-        shader = new DXShaderResource(device, name);
+        std::wstring wname(name.begin(), name.end());
+        shader = new DXShaderResource(device, wname);
         shaders[name] = shader;
     }
     deviceContext->IASetInputLayout(shader->inputLayout);

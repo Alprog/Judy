@@ -8,3 +8,4 @@ Makefile.*
 Build
 IDE/cache
 *.pdb
+Player/cache
