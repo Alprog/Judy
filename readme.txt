@@ -1,5 +1,7 @@
 Judy is a crossplatform multirender game engine.
 
+Homepage: http://alprog.net/judy/
+
 The source code is public, but this is NOT an open-source project right now. 
 You are free to view and download the code, but you CANNOT modify or redistribute it. 
 You can use the code for study purpose only.
