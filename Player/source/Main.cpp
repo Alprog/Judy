@@ -5,6 +5,10 @@
 #include <windows.h>
 #include "iostream"
 
+#include "tolua++.h"
+
+TOLUA_API int tolua_Binding_open(lua_State* tolua_S);
+
 extern "C"
 {
     #include "lua.h"
@@ -14,13 +18,12 @@ extern "C"
 
 int main(int argc, char *argv[])
 {
-    App* app = App::Instance();
-    Window* window = Window::Create();
-
-    /*lua_State* L = luaL_newstate();
+    lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
-    if (luaL_loadfile(L, "luascript.lua"))
+    tolua_Binding_open(L);
+
+    if (luaL_loadfile(L, "Main.lua"))
     {
         std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
         std::cerr << lua_tostring(L, -1) << std::endl;
@@ -42,8 +45,5 @@ int main(int argc, char *argv[])
     lua_pop(L,1);
 
 
-    lua_close(L);*/
-
-
-    app->StartMainLoop();
+    lua_close(L);
 }

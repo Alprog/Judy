@@ -5,12 +5,12 @@ win {
     INCLUDEPATH += "..\3rd-Party\lua\Source"
 
     LIBS += -L"..\Engine" -lEngine
-    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua
+    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua -ltoLua++
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
     PRE_TARGETDEPS += "..\3rd-Party\zlib.lib"
     PRE_TARGETDEPS += "..\3rd-Party\libpng.lib"
     PRE_TARGETDEPS += "..\3rd-Party\lua.lib"
-
+    PRE_TARGETDEPS += "..\3rd-Party\toLua++.lib"
 
     LIBS += -lUser32 -lGdi32 -ld3d11 -ldxgi -lOpengl32
     LIBS += -ld3dCompiler
@@ -21,7 +21,7 @@ linux {
     INCLUDEPATH += "../Engine/Source/Linux"
     LIBS += -L"../Engine" -lEngine
     PRE_TARGETDEPS += "../Engine/libEngine.a"
-    LIBS += -lX11 -lGL
+    LIBS += -lX11 -lGL -ltoLua++
 }
 
 mac {
