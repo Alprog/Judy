@@ -60,7 +60,7 @@ struct make_index_sequence : public make_index_sequence<N - 1, N - 1, I...> {};
 template <size_t... I>
 struct make_index_sequence<0, I...> : public index_sequence<I...>{};
 
-class MetaField
+class FieldMeta
 {
 public:
 	virtual void set(void* object, void* value) = 0;
@@ -69,10 +69,10 @@ public:
 };
 
 template <typename ClassType, typename FieldType>
-class MetaFieldConcrete : public MetaField
+class ConcreteFieldMeta : public FieldMeta
 {
 public:
-	MetaFieldConcrete(char* name, FieldType ClassType::*pointer)
+	ConcreteFieldMeta(char* name, FieldType ClassType::*pointer)
 	{
 		this->name = name;
 		this->pointer = pointer;
@@ -91,7 +91,7 @@ public:
 	FieldType ClassType::*pointer;
 };
 
-class MetaMethod
+class MethodMeta
 {
 public:
 	virtual Variant Invoke(void* object, std::vector<Variant> args) = 0;
@@ -100,7 +100,7 @@ public:
 };
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class MetaMethodConcreteBase : public MetaMethod
+class ConcreteMethodMetaBase : public MethodMeta
 {
 public:
 	static const int ArgCount = sizeof...(ArgTypes);
@@ -120,7 +120,7 @@ public:
 };
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class MetaMethodConcrete : public MetaMethodConcreteBase<ClassType, ReturnType, ArgTypes...>
+class ConcreteMethodMeta : public ConcreteMethodMetaBase<ClassType, ReturnType, ArgTypes...>
 {
 public:
 	Variant Invoke(void* object, std::vector<Variant> args) override
@@ -137,7 +137,7 @@ public:
 };
 
 template <typename ClassType, typename... ArgTypes>
-class MetaMethodConcrete<ClassType, void, ArgTypes...> : public MetaMethodConcreteBase<ClassType, void, ArgTypes...>
+class ConcreteMethodMeta<ClassType, void, ArgTypes...> : public ConcreteMethodMetaBase<ClassType, void, ArgTypes...>
 {
 public:
 	Variant Invoke(void* object, std::vector<Variant> args) override
@@ -155,27 +155,27 @@ public:
 };
 
 template <typename ClassType>
-class MetaClass
+class ClassMeta
 {
 public:
-	static MetaClass* Instance()
+	static ClassMeta* Instance()
 	{
-		static MetaClass<ClassType> instance;
+		static ClassMeta<ClassType> instance;
 		return &instance;
 	}
 
 	template <typename FieldType>
-	MetaClass* field(char* name, FieldType ClassType::*pointer)
+	ClassMeta* field(char* name, FieldType ClassType::*pointer)
 	{
-		auto field = new MetaFieldConcrete<ClassType, FieldType>(name, pointer);
+		auto field = new ConcreteFieldMeta<ClassType, FieldType>(name, pointer);
 		fields.push_back(field);
 		return this;
 	}
 
 	template <typename ReturnType, typename... ArgTypes>
-	MetaClass* method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
+	ClassMeta* method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
 	{
-		auto method = new MetaMethodConcrete<ClassType, ReturnType, ArgTypes...>();
+		auto method = new ConcreteMethodMeta<ClassType, ReturnType, ArgTypes...>();
 		method->name = name;
 		method->pointer = pointer;
 		methods.push_back(method);
@@ -221,29 +221,29 @@ public:
 		}
 	}
 
-	std::vector<MetaField*> fields;
-	std::vector<MetaMethod*> methods;
+	std::vector<FieldMeta*> fields;
+	std::vector<MethodMeta*> methods;
 };
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	MetaClass<Vector2>::Instance()
+	ClassMeta<Vector2>::Instance()
 		->field("X", &Vector2::X)
 		->field("Y", &Vector2::Y)
 		->method("Foo", &Vector2::Foo)
 		->method("Bar", &Vector2::Bar);
 
-	auto metaClass = MetaClass<Vector2>::Instance();
-	auto vector = metaClass->create();
+	auto vectorMeta = ClassMeta<Vector2>::Instance();
+	auto vector = vectorMeta->create();
 	
-	auto name = metaClass->methods[0]->GetArgTypes()[0]->name();
+	auto name = vectorMeta->methods[0]->GetArgTypes()[0]->name();
 
 	int x = 3; int y = 4;
-	metaClass->set(vector, "X", &x);
-	metaClass->set(vector, "Y", &y);
+	vectorMeta->set(vector, "X", &x);
+	vectorMeta->set(vector, "Y", &y);
 	
-	int result = metaClass->invoke(vector, "Foo", {0, 1});
+	int result = vectorMeta->invoke(vector, "Foo", { 0, 1 });
 
 	return 0;
 }
