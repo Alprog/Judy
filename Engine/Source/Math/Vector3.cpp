@@ -5,6 +5,13 @@
 const Vector3 Vector3::Zero {0, 0, 0};
 const Vector3 Vector3::One {1, 1, 1};
 
+Vector3::Vector3(float x, float y, float z)
+    : x {x}
+    , y {y}
+    , z {z}
+{
+}
+
 float Vector3::Length()
 {
     return sqrt(x * x + y * y + z * z);

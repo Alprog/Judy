@@ -5,6 +5,17 @@
 const Vector2 Vector2::Zero {0, 0};
 const Vector2 Vector2::One {1, 1};
 
+Vector2::Vector2()
+{
+
+}
+
+Vector2::Vector2(float x, float y)
+    : x {x}
+    , y {y}
+{
+}
+
 float Vector2::Length()
 {
     return sqrt(x * x + y * y);

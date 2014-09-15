@@ -1,6 +1,6 @@
 /*
 ** Lua binding: Binding
-** Generated automatically by tolua++-1.0.92 on 09/08/14 17:29:50.
+** Generated automatically by tolua++-1.0.92 on 09/09/14 01:13:12.
 */
 
 #ifndef __cplusplus
@@ -31,6 +31,13 @@ static int tolua_collect_Quad (lua_State* tolua_S)
 	return 0;
 }
 
+static int tolua_collect_size_t (lua_State* tolua_S)
+{
+ size_t* self = (size_t*) tolua_tousertype(tolua_S,1,0);
+	Mtolua_delete(self);
+	return 0;
+}
+
 static int tolua_collect_Node (lua_State* tolua_S)
 {
  Node* self = (Node*) tolua_tousertype(tolua_S,1,0);
@@ -38,9 +45,9 @@ static int tolua_collect_Node (lua_State* tolua_S)
 	return 0;
 }
 
-static int tolua_collect_size_t (lua_State* tolua_S)
+static int tolua_collect_Vector2 (lua_State* tolua_S)
 {
- size_t* self = (size_t*) tolua_tousertype(tolua_S,1,0);
+ Vector2* self = (Vector2*) tolua_tousertype(tolua_S,1,0);
 	Mtolua_delete(self);
 	return 0;
 }
@@ -58,6 +65,118 @@ static void tolua_reg_types (lua_State* tolua_S)
  tolua_usertype(tolua_S,"Node");
  tolua_usertype(tolua_S,"size_t");
 }
+
+/* method: new of class  Vector2 */
+#ifndef TOLUA_DISABLE_tolua_Binding_Vector2_new00
+static int tolua_Binding_Vector2_new00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isusertable(tolua_S,1,"Vector2",0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,4,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  float x = ((float)  tolua_tonumber(tolua_S,2,0));
+  float y = ((float)  tolua_tonumber(tolua_S,3,0));
+  {
+   Vector2* tolua_ret = (Vector2*)  Mtolua_new((Vector2)(x,y));
+    tolua_pushusertype(tolua_S,(void*)tolua_ret,"Vector2");
+  }
+ }
+ return 1;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'new'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: new_local of class  Vector2 */
+#ifndef TOLUA_DISABLE_tolua_Binding_Vector2_new00_local
+static int tolua_Binding_Vector2_new00_local(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isusertable(tolua_S,1,"Vector2",0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,4,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  float x = ((float)  tolua_tonumber(tolua_S,2,0));
+  float y = ((float)  tolua_tonumber(tolua_S,3,0));
+  {
+   Vector2* tolua_ret = (Vector2*)  Mtolua_new((Vector2)(x,y));
+    tolua_pushusertype(tolua_S,(void*)tolua_ret,"Vector2");
+    tolua_register_gc(tolua_S,lua_gettop(tolua_S));
+  }
+ }
+ return 1;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'new'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: new of class  Vector2 */
+#ifndef TOLUA_DISABLE_tolua_Binding_Vector2_new01
+static int tolua_Binding_Vector2_new01(lua_State* tolua_S)
+{
+ tolua_Error tolua_err;
+ if (
+     !tolua_isusertable(tolua_S,1,"Vector2",0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+ {
+  {
+   Vector2* tolua_ret = (Vector2*)  Mtolua_new((Vector2)());
+    tolua_pushusertype(tolua_S,(void*)tolua_ret,"Vector2");
+  }
+ }
+ return 1;
+tolua_lerror:
+ return tolua_Binding_Vector2_new00(tolua_S);
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* method: new_local of class  Vector2 */
+#ifndef TOLUA_DISABLE_tolua_Binding_Vector2_new01_local
+static int tolua_Binding_Vector2_new01_local(lua_State* tolua_S)
+{
+ tolua_Error tolua_err;
+ if (
+     !tolua_isusertable(tolua_S,1,"Vector2",0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+ {
+  {
+   Vector2* tolua_ret = (Vector2*)  Mtolua_new((Vector2)());
+    tolua_pushusertype(tolua_S,(void*)tolua_ret,"Vector2");
+    tolua_register_gc(tolua_S,lua_gettop(tolua_S));
+  }
+ }
+ return 1;
+tolua_lerror:
+ return tolua_Binding_Vector2_new00_local(tolua_S);
+}
+#endif //#ifndef TOLUA_DISABLE
 
 /* get function: Zero of class  Vector2 */
 #ifndef TOLUA_DISABLE_tolua_get_Vector2_Zero
@@ -1058,8 +1177,18 @@ TOLUA_API int tolua_Binding_open (lua_State* tolua_S)
  tolua_reg_types(tolua_S);
  tolua_module(tolua_S,NULL,0);
  tolua_beginmodule(tolua_S,NULL);
+  #ifdef __cplusplus
+  tolua_cclass(tolua_S,"Vector2","Vector2","",tolua_collect_Vector2);
+  #else
   tolua_cclass(tolua_S,"Vector2","Vector2","",NULL);
+  #endif
   tolua_beginmodule(tolua_S,"Vector2");
+   tolua_function(tolua_S,"new",tolua_Binding_Vector2_new00);
+   tolua_function(tolua_S,"new_local",tolua_Binding_Vector2_new00_local);
+   tolua_function(tolua_S,".call",tolua_Binding_Vector2_new00_local);
+   tolua_function(tolua_S,"new",tolua_Binding_Vector2_new01);
+   tolua_function(tolua_S,"new_local",tolua_Binding_Vector2_new01_local);
+   tolua_function(tolua_S,".call",tolua_Binding_Vector2_new01_local);
    tolua_variable(tolua_S,"Zero",tolua_get_Vector2_Zero,NULL);
    tolua_variable(tolua_S,"One",tolua_get_Vector2_One,NULL);
    tolua_variable(tolua_S,"x",tolua_get_Vector2_x,tolua_set_Vector2_x);

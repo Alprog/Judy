@@ -4,6 +4,9 @@ $#include "Vector4.h"
 
 struct Vector2
 {
+    Vector2(float x, float y);
+    Vector2();
+
     static const Vector2 Zero;
     static const Vector2 One;
 
@@ -12,7 +15,4 @@ struct Vector2
 
     float Length();
     float SquaredLength();
-	
-	//friend Vector2 operator-(const Vector2& vector);
-    //friend Vector2 operator+(const Vector2& lhs, const Vector2& rhs);
 }

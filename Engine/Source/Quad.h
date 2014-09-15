@@ -5,6 +5,9 @@
 #include "string"
 #include "Transform.h"
 
+#define META(_)
+#define SERIALIZED
+
 class Quad : public Node
 {
 
@@ -14,9 +17,9 @@ public:
     virtual void Update(double delta) override;
     virtual void Render(Renderer* renderer) override;
 
-    Vector2 Size;
-    Transform Transform;
+    SERIALIZED Vector2 Size;
+    SERIALIZED Transform Transform;
 
-    std::string Shader;
-    std::string Texture;
+    SERIALIZED std::string Shader;
+    SERIALIZED std::string Texture;
 };

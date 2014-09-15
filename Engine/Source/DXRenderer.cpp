@@ -94,7 +94,7 @@ void DXRenderer::SetShader(std::string name)
     auto shader = shaders[name];
     if (shader == nullptr)
     {
-        std::wstring wname(name.begin(), name.end());
+        std::wstring wname(begin(name), end(name));
         shader = new DXShaderResource(device, wname);
         shaders[name] = shader;
     }
