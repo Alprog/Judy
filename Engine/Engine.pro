@@ -38,7 +38,8 @@ HEADERS += \
     Source/Meta/Variant.h \
     Source/Meta/FieldMeta.h \
     Source/Meta/MethodMeta.h \
-    Source/Meta/MetaDefiner.h
+    Source/Meta/MetaDefiner.h \
+    Source/Meta/Any.h
 
 SOURCES += \
     Source/App.cpp \
@@ -66,7 +67,8 @@ SOURCES += \
     Source/Meta/TypeMeta.cpp \
     Source/Meta/Variant.cpp \
     Source/Meta/FieldMeta.cpp \
-    Source/Meta/MethodMeta.cpp
+    Source/Meta/MethodMeta.cpp \
+    Source/Meta/Any.cpp
 
 win {
     INCLUDEPATH += Source/Windows

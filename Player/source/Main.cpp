@@ -31,15 +31,33 @@ public:
     }
 
     template <typename Type>
-    void Serialize(Type* object)
+    void Serialize(Type object)
     {
+        lua_createtable(L, 0, 0);
         TypeMeta* typeMeta = ClassMeta<Type>::Instance();
         for (auto fieldMeta : typeMeta->fields)
         {
-            void* value = fieldMeta->get(object);
+            void* value = fieldMeta->get(&object);
             fieldMeta->Serialize(this, value);
             lua_setfield(L, -2, fieldMeta->name);
         }
+    }
+
+    template <typename Type>
+    Type Deserialize()
+    {
+        Type type;
+
+        TypeMeta* typeMeta = ClassMeta<Type>::Instance();
+        for (auto fieldMeta : typeMeta->fields)
+        {
+            lua_getfield(L, -1, fieldMeta->name);
+            Variant value = fieldMeta->Deserialize(this);
+            fieldMeta->set(&type, value);
+            lua_pop(L, 1);
+        }
+
+        return type;
     }
 
     //-------------------- SerializeField:
@@ -47,8 +65,7 @@ public:
     template <typename Type>
     void SerializeField(void* value)
     {
-        lua_createtable(L, 0, 0);
-        Serialize((Type*)value);
+        Serialize(*(Type*)value);
     }
 
     template <>
@@ -62,6 +79,26 @@ public:
     {
         lua_pushstring(L, *(char**)value);
     }
+
+    //-------------------- DeserializeField:
+
+    template <typename Type>
+    Variant DeserializeField()
+    {
+        return Deserialize<Type>();
+    }
+
+    template <>
+    Variant DeserializeField<int>()
+    {
+        return lua_tointeger(L, -1);
+    }
+
+    template <>
+    Variant DeserializeField<char*>()
+    {
+        return lua_tolstring(L, -1, nullptr);
+    }
 };
 
 struct SubStruct
@@ -71,24 +108,40 @@ struct SubStruct
 
 struct TestStruct
 {
+    friend Serializer;
+
     int a;
     int b;
     char* c;
     SubStruct d;
+
+public:
+    TestStruct(int a, int b, char* c, SubStruct d)
+    {
+        this->a = a;
+        this->b = b;
+        this->c = c;
+        this->d = d;
+    }
+
+private:
+    TestStruct()
+    {
+    }
 };
 
 
 template <typename Type>
-void SerialzeToTable(lua_State* L, Type* object)
+void SerialzeToTable(lua_State* L, Type object)
 {
-    lua_createtable(L, 0, 0);
-
     auto serializer = new Serializer(L);
 
     serializer->Serialize(object);
 
-    //Type* newObj = Deserialize(object);
+    Type newObj = serializer->Deserialize<Type>();
+    lua_pop(L, 1);
 
+    serializer->Serialize(object);
 
     lua_getglobal(L, "Test");
     lua_insert(L, 1);
@@ -118,7 +171,7 @@ int main(int argc, char *argv[])
         lua_pop(L, 1);
     }
 
-    TestStruct* testStruct = new TestStruct { 1, 2, "fff", { 4 } };
+    TestStruct testStruct { 1, 2, "fff", { 4 } };
     SerialzeToTable(L, testStruct);
 
     /*lua_createtable(L, 0, 0);
