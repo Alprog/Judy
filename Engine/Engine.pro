@@ -39,7 +39,9 @@ HEADERS += \
     Source/Meta/FieldMeta.h \
     Source/Meta/MethodMeta.h \
     Source/Meta/MetaDefiner.h \
-    Source/Meta/Any.h
+    Source/Meta/Any.h \
+    Source/Meta/Meta.h \
+    Source/Meta/Serializer.h
 
 SOURCES += \
     Source/App.cpp \
@@ -68,7 +70,10 @@ SOURCES += \
     Source/Meta/Variant.cpp \
     Source/Meta/FieldMeta.cpp \
     Source/Meta/MethodMeta.cpp \
-    Source/Meta/Any.cpp
+    Source/Meta/Any.cpp \
+    Source/Meta/Meta.cpp \
+    Source/Meta/MetaGen.cpp \
+    Source/Meta/Serializer.cpp
 
 win {
     INCLUDEPATH += Source/Windows

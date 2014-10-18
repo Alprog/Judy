@@ -5,6 +5,7 @@
 
 #include "FieldMeta.h"
 #include "MethodMeta.h"
+#include "MetaDefiner.h"
 
 #include <vector>
 

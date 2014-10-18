@@ -1,4 +1,7 @@
 
+#pragma once
+
+#include "Meta.h"
 #include "TypeMeta.h"
 #include "FieldMeta.h"
 #include "MethodMeta.h"
@@ -7,6 +10,12 @@ template <typename ClassType>
 class MetaDefiner
 {
 public:
+    MetaDefiner()
+    {
+        TypeMeta* typeMeta = ClassMeta<ClassType>::Instance();
+        Meta::Instance()->Types.push_back(typeMeta);
+    }
+
     template <typename FieldType>
     MetaDefiner& field(char* name, FieldType ClassType::*pointer)
     {
@@ -25,3 +34,5 @@ public:
         return *this;
     }
 };
+
+#include "MetaDefiner.tpp"

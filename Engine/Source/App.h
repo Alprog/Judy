@@ -4,6 +4,35 @@
 #include <set>
 #include "Window.h"
 
+struct SubStruct
+{
+    int e;
+};
+
+struct TestStruct
+{
+    friend Serializer;
+
+    int a;
+    int b;
+    char* c;
+    SubStruct d;
+
+public:
+    TestStruct(int a, int b, char* c, SubStruct d)
+    {
+        this->a = a;
+        this->b = b;
+        this->c = c;
+        this->d = d;
+    }
+
+private:
+    TestStruct()
+    {
+    }
+};
+
 class App
 {
 public:

@@ -2,9 +2,10 @@
 #pragma once
 
 #include <string>
+#include "Meta/TypeMeta.h"
 
 struct Vector2
-{   
+{
     static const Vector2 Zero;
     static const Vector2 One;
 
@@ -21,5 +22,3 @@ struct Vector2
     friend Vector2 operator+(const Vector2& lhs, const Vector2& rhs);
     friend Vector2 operator-(const Vector2& lhs, const Vector2& rhs);
 };
-
-
