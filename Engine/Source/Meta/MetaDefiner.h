@@ -10,9 +10,10 @@ template <typename ClassType>
 class MetaDefiner
 {
 public:
-    MetaDefiner()
+    MetaDefiner(char* name)
     {
         TypeMeta* typeMeta = ClassMeta<ClassType>::Instance();
+        typeMeta->name = name;
         Meta::Instance()->Types.push_back(typeMeta);
     }
 

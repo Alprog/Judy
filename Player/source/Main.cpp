@@ -6,14 +6,11 @@
 #include "iostream"
 
 #include "Meta/Meta.h"
-
-#include "tolua++.h"
+#include "Meta/Binder.h"
 
 #include "Meta/MetaDefiner.h"
 #include "Meta/TypeMeta.h"
 #include "Meta/FieldMeta.h"
-
-TOLUA_API int tolua_Binding_open(lua_State* tolua_S);
 
 extern "C"
 {
@@ -45,9 +42,8 @@ int main(int argc, char *argv[])
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
-    tolua_Binding_open(L);
-
-    Meta::Instance();
+    Meta* meta = Meta::Instance();
+    LuaBinder(L).Bind(meta);
 
     if (luaL_dofile(L, "Main.lua"))
     {

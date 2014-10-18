@@ -12,6 +12,8 @@
 class TypeMeta
 {
 public:
+    char* name;
+
     void set(void* object, char* name, void* value);
     void* get(void* object, char* name);
 

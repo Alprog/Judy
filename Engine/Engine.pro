@@ -41,7 +41,8 @@ HEADERS += \
     Source/Meta/MetaDefiner.h \
     Source/Meta/Any.h \
     Source/Meta/Meta.h \
-    Source/Meta/Serializer.h
+    Source/Meta/Serializer.h \
+    Source/Meta/Binder.h
 
 SOURCES += \
     Source/App.cpp \
@@ -65,7 +66,6 @@ SOURCES += \
     Source/DXShaderResource.cpp \
     Source/Keyframe.cpp \
     Source/Math/Transform.cpp \
-    Source/Binding.cpp \
     Source/Meta/TypeMeta.cpp \
     Source/Meta/Variant.cpp \
     Source/Meta/FieldMeta.cpp \
@@ -73,7 +73,8 @@ SOURCES += \
     Source/Meta/Any.cpp \
     Source/Meta/Meta.cpp \
     Source/Meta/MetaGen.cpp \
-    Source/Meta/Serializer.cpp
+    Source/Meta/Serializer.cpp \
+    Source/Meta/Binder.cpp
 
 win {
     INCLUDEPATH += Source/Windows

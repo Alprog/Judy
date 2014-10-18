@@ -8,11 +8,6 @@
 #endif
 #include "string.h"
 
-#include "tolua++.h"
-
-/* Exported function */
-TOLUA_API int  tolua_Binding_open (lua_State* tolua_S);
-
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"

@@ -7,13 +7,13 @@
 
 Meta::Meta()
 {
-    MetaDefiner<TestStruct>()
+    MetaDefiner<TestStruct>("TestStruct")
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
         .field("c", &TestStruct::c)
         .field("d", &TestStruct::d);
 
-    MetaDefiner<SubStruct>()
+    MetaDefiner<SubStruct>("SubStruct")
         .field("e", &SubStruct::e);
 }
 

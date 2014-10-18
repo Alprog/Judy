@@ -9,6 +9,7 @@ HEADERS += \
     source/lapi.h \
     source/lauxlib.h \
     source/lcode.h \
+    source/lctype.h \
     source/ldebug.h \
     source/ldo.h \
     source/lfunc.h \
@@ -24,6 +25,7 @@ HEADERS += \
     source/ltable.h \
     source/ltm.h \
     source/lua.h \
+    source/lua.hpp \
     source/luaconf.h \
     source/lualib.h \
     source/lundump.h \
@@ -34,7 +36,10 @@ SOURCES += \
     source/lapi.c \
     source/lauxlib.c \
     source/lbaselib.c \
+    source/lbitlib.c \
     source/lcode.c \
+    source/lcorolib.c \
+    source/lctype.c \
     source/ldblib.c \
     source/ldebug.c \
     source/ldo.c \
@@ -61,7 +66,6 @@ SOURCES += \
     source/luac.c \
     source/lundump.c \
     source/lvm.c \
-    source/lzio.c \
-    source/print.c
+    source/lzio.c
 
 
