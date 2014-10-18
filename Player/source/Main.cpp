@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     luaL_openlibs(L);
 
     Meta* meta = Meta::Instance();
+
     LuaBinder(L).Bind(meta);
 
     if (luaL_dofile(L, "Main.lua"))
@@ -52,8 +53,8 @@ int main(int argc, char *argv[])
         lua_pop(L, 1);
     }
 
-    TestStruct testStruct { 1, 2, "fff", { 4 } };
-    SerialzeToTable(L, testStruct);
+    //TestStruct testStruct { 1, 2, "fff", { 4 } };
+    //SerialzeToTable(L, testStruct);
 
     lua_close(L);
 }

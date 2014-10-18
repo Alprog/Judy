@@ -53,6 +53,33 @@ function Test(table)
 	print(TableToString(table))
 end
 
+local udata = SubStruct.new()
+
+local metatable = getmetatable(udata)
+
+metatable.__index = function(udata, key)
+	local metatable = getmetatable(udata)
+	return metatable['get_'..key](udata)
+end
+
+metatable.__newindex = function(udata, key, value)
+	local metatable = getmetatable(udata)
+	metatable['set_'..key](udata, value)
+end
+
+udata.e = 77
+print(udata.e)
+
+--print(udata)
+--print(udata.set_e)
+
+--udata:set_e(5)
+
+--local b = udata:get_e()
+--print(b)
+
+
+
 --[[
 local t = 
 {
