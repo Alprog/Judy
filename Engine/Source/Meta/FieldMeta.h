@@ -26,7 +26,6 @@ class FieldMeta : public IFieldMeta
 public:
     virtual ITypeMeta* GetType() override
     {
-        //return &(typeid(FieldType));
         return (ITypeMeta*)TypeMeta<FieldType>::Instance();
     }
 

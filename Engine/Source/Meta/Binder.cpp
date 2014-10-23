@@ -13,6 +13,26 @@ LuaBinder::LuaBinder(lua_State* L)
 {
 }
 
+template <typename T>
+T* CheckType(lua_State* L, int n)
+{
+    char* name = TypeMeta<T>::Instance()->name;
+    return *(T**)luaL_checkudata(L, n, name);
+}
+
+template <typename T>
+int Constructor(lua_State* L)
+{
+    auto meta = TypeMeta<T>::Instance();
+
+
+    auto size = sizeof(T*);
+    auto udata = (T**)lua_newuserdata(L, size);
+    *udata = new T();
+
+    return 0;
+}
+
 int SubStruct_Constructor(lua_State* L)
 {
     auto size = sizeof(SubStruct*);
@@ -24,13 +44,6 @@ int SubStruct_Constructor(lua_State* L)
     lua_setmetatable(L, -2);
 
     return 1;
-}
-
-template <typename T>
-T* CheckType(lua_State* L, int n)
-{
-    char* name = TypeMeta<T>::Instance()->name;
-    return *(T**)luaL_checkudata(L, n, name);
 }
 
 int TestStruct_Constructor(lua_State* L)
@@ -94,7 +107,7 @@ int Setter(lua_State* L)
     auto object = CheckType<ClassType>(L, 1);
     auto value = CheckType<FieldType>(L, 2);
 
-    IIFieldMeta* meta;
+    IFieldMeta* meta;
     meta->set(object, value);
 
     return 0;
@@ -130,7 +143,6 @@ void LuaBinder::Bind(Meta* meta)
     luaL_setfuncs(L, reg2, 0);
     lua_setglobal(L, "TestStruct");
 
-
     //lua_pop(L, 1);
 
     /*for (auto type : meta->Types)
@@ -138,6 +150,11 @@ void LuaBinder::Bind(Meta* meta)
         printf("%i\n", lua_gettop(L));
 
         luaL_newmetatable(L, type->name);
+
+        luaL_Reg reg[] =
+        {
+            { "new", SubStruct_Constructor }
+        }
 
         lua_setfield(L, -1, "__index");
 

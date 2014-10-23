@@ -22,7 +22,7 @@ public:
     std::vector<IFieldMeta*> fields;
     std::vector<IMethodMeta*> methods;
 
-    virtual Variant Create() = 0;
+    virtual Variant DefaultConstructor() = 0;
 };
 
 template <typename ClassType>
@@ -35,9 +35,15 @@ public:
         return &instance;
     }
 
-    Variant Create() override
+    Variant DefaultConstructor() override
     {
-        return ClassType();
+        return Constructor();
+    }
+
+    template <typename... Types>
+    Variant Constructor()
+    {
+        return ClassType(Types...);
     }
 };
 
