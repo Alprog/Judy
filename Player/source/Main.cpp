@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
         lua_pop(L, 1);
     }
 
-    //TestStruct testStruct { 1, 2, "fff", { 4 } };
-    //SerialzeToTable(L, testStruct);
+    TestStruct testStruct { 1, 2, "fff", SubStruct() };
+    SerialzeToTable(L, testStruct);
 
     lua_close(L);
 }

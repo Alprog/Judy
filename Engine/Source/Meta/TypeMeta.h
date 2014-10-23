@@ -21,6 +21,8 @@ public:
 
     std::vector<FieldMeta*> fields;
     std::vector<MethodMeta*> methods;
+
+    virtual Variant Create() = 0;
 };
 
 template <typename ClassType>
@@ -33,8 +35,8 @@ public:
         return &instance;
     }
 
-    void* create()
+    Variant Create() override
     {
-        return new ClassType();
+        return ClassType();
     }
 };

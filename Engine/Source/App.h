@@ -6,12 +6,19 @@
 
 struct SubStruct
 {
+    friend ClassMeta<SubStruct>;
+
     int e;
+
+    SubStruct()
+        : e { 0 }
+    {
+    }
 };
 
 struct TestStruct
 {
-    friend Serializer;
+    friend ClassMeta<TestStruct>;
 
     int a;
     int b;
