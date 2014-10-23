@@ -9,7 +9,7 @@
 
 #include <vector>
 
-class TypeMeta
+class ITypeMeta
 {
 public:
     char* name;
@@ -19,19 +19,19 @@ public:
 
     Variant invoke(void* object, char* name, std::vector<Variant> args);
 
-    std::vector<FieldMeta*> fields;
-    std::vector<MethodMeta*> methods;
+    std::vector<IFieldMeta*> fields;
+    std::vector<IMethodMeta*> methods;
 
     virtual Variant Create() = 0;
 };
 
 template <typename ClassType>
-class ClassMeta : public TypeMeta
+class TypeMeta : public ITypeMeta
 {
 public:
-    static ClassMeta* Instance()
+    static TypeMeta* Instance()
     {
-        static ClassMeta<ClassType> instance;
+        static TypeMeta<ClassType> instance;
         return &instance;
     }
 
@@ -40,3 +40,4 @@ public:
         return ClassType();
     }
 };
+

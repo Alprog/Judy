@@ -6,9 +6,9 @@
 #include "Serializer.h"
 
 class Serializer;
+class ITypeMeta;
 
-class TypeMeta;
-class FieldMeta
+class IFieldMeta
 {
 public:
     virtual void set(Variant object, Variant value) = 0;
@@ -16,21 +16,21 @@ public:
 
     virtual void set(void* object, void* value) = 0;
     virtual void* get(void* object) = 0;
-    virtual TypeMeta* GetType() = 0;
+    virtual ITypeMeta* GetType() = 0;
     char* name;
 };
 
 template <typename ClassType, typename FieldType>
-class ConcreteFieldMeta : public FieldMeta
+class FieldMeta : public IFieldMeta
 {
 public:
-    virtual TypeMeta* GetType() override
+    virtual ITypeMeta* GetType() override
     {
         //return &(typeid(FieldType));
-        return (TypeMeta*)ClassMeta<FieldType>::Instance();
+        return (ITypeMeta*)TypeMeta<FieldType>::Instance();
     }
 
-    ConcreteFieldMeta(char* name, FieldType ClassType::*pointer)
+    FieldMeta(char* name, FieldType ClassType::*pointer)
     {
         this->name = name;
         this->pointer = pointer;

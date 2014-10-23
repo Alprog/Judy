@@ -2,57 +2,57 @@
 #include "Serializer.h"
 #include "TypeMeta.h"
 
-void Serializer::Serialize(void* object, TypeMeta* typeMeta)
+void Serializer::Serialize(void* object, ITypeMeta* typeMeta)
 {
     lua_createtable(L, 0, 0);
-    for (auto fieldMeta : typeMeta->fields)
+    for (auto IIFieldMeta : typeMeta->fields)
     {
-        void* value = fieldMeta->get(object);
+        void* value = IIFieldMeta->get(object);
 
-        TypeMeta* id = fieldMeta->GetType();
+        ITypeMeta* id = IIFieldMeta->GetType();
 
-        if (id == ClassMeta<int>::Instance())
+        if (id == TypeMeta<int>::Instance())
         {
             lua_pushnumber(L, *(int*)value);
         }
-        else if (id == ClassMeta<char*>::Instance())
+        else if (id == TypeMeta<char*>::Instance())
         {
             lua_pushstring(L, *(char**)value);
         }
         else
         {
-            TypeMeta* meta = fieldMeta->GetType();
+            ITypeMeta* meta = IIFieldMeta->GetType();
             Serialize(value, meta);
         }
 
-        lua_setfield(L, -2, fieldMeta->name);
+        lua_setfield(L, -2, IIFieldMeta->name);
     }
 }
 
-Variant Serializer::Deserialize(TypeMeta* typeMeta)
+Variant Serializer::Deserialize(ITypeMeta* typeMeta)
 {
     Variant object = typeMeta->Create();
 
-    for (auto fieldMeta : typeMeta->fields)
+    for (auto IIFieldMeta : typeMeta->fields)
     {
-        lua_getfield(L, -1, fieldMeta->name);
+        lua_getfield(L, -1, IIFieldMeta->name);
 
-        TypeMeta* meta = fieldMeta->GetType();
+        ITypeMeta* meta = IIFieldMeta->GetType();
 
-        if (meta == ClassMeta<int>::Instance())
+        if (meta == TypeMeta<int>::Instance())
         {
             Variant value = lua_tointeger(L, -1);
-            fieldMeta->set(object, value);
+            IIFieldMeta->set(object, value);
         }
-        else if (meta == ClassMeta<char*>::Instance())
+        else if (meta == TypeMeta<char*>::Instance())
         {
             Variant value = lua_tolstring(L, -1, nullptr);
-            fieldMeta->set(object, value);
+            IIFieldMeta->set(object, value);
         }
         else
         {
             Variant value = Deserialize(meta);
-            fieldMeta->set(object, value);
+            IIFieldMeta->set(object, value);
         }
 
         lua_pop(L, 1);

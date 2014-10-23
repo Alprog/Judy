@@ -1,7 +1,7 @@
 
 #include "TypeMeta.h"
 
-void TypeMeta::set(void* object, char* name, void* value)
+void ITypeMeta::set(void* object, char* name, void* value)
 {
     for (auto field : fields)
     {
@@ -12,7 +12,7 @@ void TypeMeta::set(void* object, char* name, void* value)
     }
 }
 
-void* TypeMeta::get(void* object, char* name)
+void* ITypeMeta::get(void* object, char* name)
 {
     for (auto field : fields)
     {
@@ -24,7 +24,7 @@ void* TypeMeta::get(void* object, char* name)
     return 0;
 }
 
-Variant TypeMeta::invoke(void* object, char* name, std::vector<Variant> args)
+Variant ITypeMeta::invoke(void* object, char* name, std::vector<Variant> args)
 {
     for (auto method : methods)
     {

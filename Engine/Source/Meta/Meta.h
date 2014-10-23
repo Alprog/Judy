@@ -3,14 +3,14 @@
 
 #include <vector>
 
-class TypeMeta;
+class ITypeMeta;
 
 class Meta
 {
 public:
     static Meta* Instance();
 
-    std::vector<TypeMeta*> Types;
+    std::vector<ITypeMeta*> Types;
 
 private:
     Meta();

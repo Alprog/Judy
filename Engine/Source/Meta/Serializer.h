@@ -11,7 +11,7 @@ extern "C"
 #include "Variant.h"
 #include "FieldMeta.h"
 
-class TypeMeta;
+class ITypeMeta;
 
 class Serializer
 {
@@ -23,21 +23,21 @@ public:
         this->L = L;
     }
 
-    void Serialize(void* object, TypeMeta* typeMeta);
-
     template <typename Type>
     void Serialize(Type object)
     {
-        TypeMeta* typeMeta = ClassMeta<Type>::Instance();
+        ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
         Serialize(&object, typeMeta);
     }
-
-    Variant Deserialize(TypeMeta* typeMeta);
 
     template <typename Type>
     Type Deserialize()
     {
-        TypeMeta* typeMeta = ClassMeta<Type>::Instance();
+        ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
         return Deserialize(typeMeta);
     }
+
+private:
+    Variant Deserialize(ITypeMeta* typeMeta);
+    void Serialize(void* object, ITypeMeta* typeMeta);
 };

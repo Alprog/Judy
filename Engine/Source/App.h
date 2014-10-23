@@ -6,7 +6,7 @@
 
 struct SubStruct
 {
-    friend ClassMeta<SubStruct>;
+    friend TypeMeta<SubStruct>;
 
     int e;
 
@@ -18,7 +18,7 @@ struct SubStruct
 
 struct TestStruct
 {
-    friend ClassMeta<TestStruct>;
+    friend TypeMeta<TestStruct>;
 
     int a;
     int b;

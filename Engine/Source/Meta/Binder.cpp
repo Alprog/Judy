@@ -29,7 +29,7 @@ int SubStruct_Constructor(lua_State* L)
 template <typename T>
 T* CheckType(lua_State* L, int n)
 {
-    char* name = ClassMeta<T>::Instance()->name;
+    char* name = TypeMeta<T>::Instance()->name;
     return *(T**)luaL_checkudata(L, n, name);
 }
 
@@ -94,7 +94,7 @@ int Setter(lua_State* L)
     auto object = CheckType<ClassType>(L, 1);
     auto value = CheckType<FieldType>(L, 2);
 
-    FieldMeta* meta;
+    IIFieldMeta* meta;
     meta->set(object, value);
 
     return 0;

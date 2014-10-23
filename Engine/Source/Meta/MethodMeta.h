@@ -5,11 +5,11 @@
 #include "TypeMeta.h"
 #include <vector>
 
-class MethodMeta
+class IMethodMeta
 {
 public:
     virtual Variant Invoke(void* object, std::vector<Variant> args) = 0;
-    virtual std::vector<TypeMeta*> GetArgTypes() = 0;
+    virtual std::vector<ITypeMeta*> GetArgTypes() = 0;
     char* name;
 };
 
@@ -23,14 +23,14 @@ template <size_t... I>
 struct make_index_sequence<0, I...> : public index_sequence<I...>{};
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class ConcreteMethodMetaBase : public MethodMeta
+class MethodMetaBase : public IMethodMeta
 {
 public:
     static const int ArgCount = sizeof...(ArgTypes);
 
-    virtual std::vector<TypeMeta*> GetArgTypes() override
+    virtual std::vector<ITypeMeta*> GetArgTypes() override
     {
-        return{ ((TypeMeta*)ClassMeta<ArgTypes>::Instance())... };
+        return{ ((ITypeMeta*)TypeMeta<ArgTypes>::Instance())... };
     }
 
     template <int... I>
@@ -43,7 +43,7 @@ public:
 };
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class ConcreteMethodMeta : public ConcreteMethodMetaBase<ClassType, ReturnType, ArgTypes...>
+class MethodMeta : public MethodMetaBase<ClassType, ReturnType, ArgTypes...>
 {
 public:
     Variant Invoke(void* object, std::vector<Variant> args) override
@@ -60,7 +60,7 @@ public:
 };
 
 template <typename ClassType, typename... ArgTypes>
-class ConcreteMethodMeta<ClassType, void, ArgTypes...> : public ConcreteMethodMetaBase<ClassType, void, ArgTypes...>
+class MethodMeta<ClassType, void, ArgTypes...> : public MethodMetaBase<ClassType, void, ArgTypes...>
 {
 public:
     Variant Invoke(void* object, std::vector<Variant> args) override
