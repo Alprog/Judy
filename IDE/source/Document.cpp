@@ -7,7 +7,7 @@
 #include "QFileInfo.h"
 
 Document::Document(std::string filePath)
-    : fullPath { filePath }
+    : fullPath ( filePath )
 {
     auto index = filePath.find_last_of("\\/");
     if (index == std::string::npos)

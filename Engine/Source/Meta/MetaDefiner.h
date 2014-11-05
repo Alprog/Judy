@@ -17,6 +17,11 @@ public:
         Meta::Instance()->Types.push_back(typeMeta);
     }
 
+    MetaDefiner& constructor()
+    {
+        return *this;
+    }
+
     template <typename FieldType>
     MetaDefiner& field(char* name, FieldType ClassType::*pointer)
     {

@@ -3,11 +3,14 @@
 
 #include <vector>
 #include "Math/Vector2.h"
+#include "Meta/TypeMeta.h"
 
 class Renderer;
 
 class Node
 {
+    friend TypeMeta<Node>;
+
 public:
     Node();
 
