@@ -80,8 +80,9 @@ print(ts.d.e)
 print('----')
 
 local node = Node.new()
-local count = node:ChildCount()
-print(count)
+local child = Node.new();
+node:AddChild(child)
+node:RemoveChild(child)
 
 print('----')
 

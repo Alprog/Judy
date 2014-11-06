@@ -115,16 +115,27 @@ int Constructor(lua_State* L)
 int MethodInvoker(lua_State* L)
 {
     auto method = *(IMethodMeta**)lua_touserdata(L, lua_upvalueindex(1));
-    void* object = *(void**)lua_touserdata(L, 1);
-
-    printf("%p \n", object);
+    int index = 1;
+    void* object = *(void**)lua_touserdata(L, index++);
 
     std::vector<Variant> args = {};
+    for (auto argType : method->GetArgTypes())
+    {
+        if (argType == TypeMeta<int>::Instance())
+        {
+            args.push_back(lua_tointeger(L, index++));
+        }
+        else if (argType == TypeMeta<char*>::Instance())
+        {
+            args.push_back(lua_tostring(L, index++));
+        }
+        else
+        {
+            args.push_back(*(void**)lua_touserdata(L, index++));
+        }
+    }
 
     auto returnType = method->GetReturnType();
-
-    printf("%s \n", returnType->name);
-
     if (returnType == nullptr)
     {
         method->Invoke(object, args);
@@ -182,8 +193,6 @@ void LuaBinder::Bind(Meta* meta)
         *(IMethodMeta**)lua_newuserdata(L, size) = method;
         lua_pushcclosure(L, MethodInvoker, 1);
         lua_setfield(L, -2, method->name);
-
-        break;
     }
 
     lua_pushvalue(L, -1);

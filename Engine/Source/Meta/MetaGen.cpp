@@ -28,6 +28,7 @@ Meta::Meta()
         .constructor()
         .method("ChildCount", &Node::ChildCount)
         .method("RemoveChild", &Node::RemoveChild)
+        .method("AddChild", &Node::AddChild)
     ;
 
 
