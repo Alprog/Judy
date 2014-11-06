@@ -10,8 +10,10 @@ Node* Node::Parent()
     return parent;
 }
 
-size_t Node::ChildCount()
+int Node::ChildCount()
 {
+    int count = childs.size();
+    printf("childsize %i \n", count);
     return childs.size();
 }
 

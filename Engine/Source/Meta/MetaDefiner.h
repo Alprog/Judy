@@ -14,6 +14,7 @@ public:
     {
         ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
         typeMeta->name = name;
+        printf("TYPE %p \n", typeMeta);
         Meta::Instance()->Types.push_back(typeMeta);
     }
 
@@ -27,6 +28,12 @@ public:
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
         TypeMeta<ClassType>::Instance()->fields.push_back(field);
+        return *this;
+    }
+
+    template <void* pointer>
+    MetaDefiner& method(char* name)
+    {
         return *this;
     }
 

@@ -20,19 +20,6 @@ T* CheckType(lua_State* L, int n)
     return *(T**)luaL_checkudata(L, n, name);
 }
 
-template <typename T>
-int Constructor(lua_State* L)
-{
-    auto meta = TypeMeta<T>::Instance();
-
-
-    auto size = sizeof(T*);
-    auto udata = (T**)lua_newuserdata(L, size);
-    *udata = new T();
-
-    return 0;
-}
-
 int SubStruct_Constructor(lua_State* L)
 {
     auto size = sizeof(SubStruct*);
@@ -113,6 +100,45 @@ int Setter(lua_State* L)
     return 0;
 }
 
+template <typename Type>
+int Constructor(lua_State* L)
+{
+    auto size = sizeof(Type*);
+    *(Type**)lua_newuserdata(L, size) = new Type();
+
+    luaL_getmetatable(L, TypeMeta<Type>::Instance()->name);
+    lua_setmetatable(L, -2);
+
+    return 1;
+}
+
+int MethodInvoker(lua_State* L)
+{
+    auto method = *(IMethodMeta**)lua_touserdata(L, lua_upvalueindex(1));
+    void* object = *(void**)lua_touserdata(L, 1);
+
+    printf("%p \n", object);
+
+    std::vector<Variant> args = {};
+
+    auto returnType = method->GetReturnType();
+
+    printf("%s \n", returnType->name);
+
+    if (returnType == nullptr)
+    {
+        method->Invoke(object, args);
+        return 0;
+    }
+    else
+    {
+        Variant result = method->Invoke(object, args);
+        int a = result;
+        lua_pushnumber(L, a);
+        return 1;
+    }
+}
+
 void LuaBinder::Bind(Meta* meta)
 {
     luaL_newmetatable(L, "SubStruct");
@@ -143,27 +169,26 @@ void LuaBinder::Bind(Meta* meta)
     luaL_setfuncs(L, reg2, 0);
     lua_setglobal(L, "TestStruct");
 
-    //lua_pop(L, 1);
 
-    /*for (auto type : meta->Types)
+    ITypeMeta* type = TypeMeta<Node>::Instance();
+    luaL_newmetatable(L, type->name);
+
+    lua_pushcfunction(L, Constructor<Node>);
+    lua_setfield(L, -2, "new");
+
+    auto size = sizeof(IMethodMeta*);
+    for (auto method : type->methods)
     {
-        printf("%i\n", lua_gettop(L));
+        *(IMethodMeta**)lua_newuserdata(L, size) = method;
+        lua_pushcclosure(L, MethodInvoker, 1);
+        lua_setfield(L, -2, method->name);
 
-        luaL_newmetatable(L, type->name);
+        break;
+    }
 
-        luaL_Reg reg[] =
-        {
-            { "new", SubStruct_Constructor }
-        }
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -2, "__index");
 
-        lua_setfield(L, -1, "__index");
+    lua_setglobal(L, type->name);
 
-        printf("%s\n", type->name);
-        printf("%i\n", lua_gettop(L));
-
-        for (auto field : type->fields)
-        {
-            //field->name
-        }
-    }*/
 }

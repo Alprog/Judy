@@ -77,6 +77,14 @@ print(ts)
 print(ts.d)
 print(ts.d.e)
 
+print('----')
+
+local node = Node.new()
+local count = node:ChildCount()
+print(count)
+
+print('----')
+
 --print(udata)
 --print(udata.set_e)
 --udata:set_e(5)

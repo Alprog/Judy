@@ -15,7 +15,7 @@ public:
     Node();
 
     Node* Parent();
-    size_t ChildCount();
+    int ChildCount();
     Node* Child(int i);
 
     void AddChild(Node* node);
