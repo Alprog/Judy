@@ -53,7 +53,7 @@ function Test(table)
 	print(TableToString(table))
 end
 
-local index = function(udata, key)
+--[[local index = function(udata, key)
 	local metatable = getmetatable(udata)
 	return metatable['get_'..key](udata)
 end
@@ -75,49 +75,16 @@ local ts = TestStruct.new(3, 3, 'f', ss)
 
 print(ts)
 print(ts.d)
-print(ts.d.e)
+print(ts.d.e)]]
 
-print('----')
 
 local node = Node.constructor0()
-local child = Node.constructor0()
-
+local child = Node.constructor1(42)
 print(node:ChildCount())
 node:AddChild(child)
-
 print(node:ChildCount())
-
 node:RemoveChild(child)
-
 print(node:ChildCount())
 
-print('----')
 
---print(udata)
---print(udata.set_e)
---udata:set_e(5)
---local b = udata:get_e()
---print(b)
-
-
-
---[[
-local t = 
-{
-	["@"] = "Quad",
-	Size = { 0.3, 0.3 },
-	Shader = "Shaders\\Color",
-	Texture = "D:/test.png",
-	Childs = 
-	{
-		{
-			Class = "Quad",
-			Size = { 0.3, 0.3 },
-			Shader = "Shaders\\Color",
-			Texture = "D:/test.png",
-			Childs = {}
-		}
-	}
-}
-
-app:StartMainLoop();]]
+--app:StartMainLoop();
