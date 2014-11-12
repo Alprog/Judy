@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Variant.h"
-#include "MetaDefiner.h"
 
 class IFieldMeta;
 class IMethodMeta;

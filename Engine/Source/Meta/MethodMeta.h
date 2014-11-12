@@ -3,20 +3,15 @@
 
 #include "Variant.h"
 #include "TypeMeta.h"
+#include "FunctionMeta.h"
 #include <vector>
 
 class Node;
 
-class IMethodMeta
+class IMethodMeta : public virtual IFunctionMeta
 {
 public:
-    virtual ITypeMeta* GetReturnType() = 0;
-    virtual size_t GetArgCount() = 0;
-    virtual std::vector<ITypeMeta*> GetArgTypes() = 0;
-
     virtual Variant Invoke(void* object, std::vector<Variant> args) = 0;
-
-    char* name;
 };
 
 template <size_t... I>
@@ -29,52 +24,9 @@ template <size_t... I>
 struct make_index_sequence<0, I...> : public index_sequence<I...>{};
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class MethodMeta : public IMethodMeta
+class MethodMeta : public IMethodMeta, public FunctionMeta<ReturnType, ArgTypes...>
 {
 public:
-
-    virtual size_t GetArgCount() override
-    {
-        return sizeof...(ArgTypes);
-    }
-
-    // GetReturnType
-
-    template <typename Type>
-    inline ITypeMeta* GetReturnTypeHelper()
-    {
-        return TypeMeta<ReturnType>::Instance();
-    }
-
-    template <>
-    inline ITypeMeta* GetReturnTypeHelper<void>()
-    {
-        return nullptr;
-    }
-
-    ITypeMeta* GetReturnType() override
-    {
-        return GetReturnTypeHelper<ReturnType>();
-    }
-
-    // GetArgTypes
-
-    template <int count>
-    inline std::vector<ITypeMeta*> GetArgTypesHelper()
-    {
-        return{ ((ITypeMeta*)TypeMeta<ArgTypes>::Instance())... };
-    }
-
-    template <>
-    inline std::vector<ITypeMeta*> GetArgTypesHelper<0>()
-    {
-        return {};
-    }
-
-    virtual std::vector<ITypeMeta*> GetArgTypes() override
-    {
-        return GetArgTypesHelper<sizeof...(ArgTypes)>();
-    }
 
     // Invoke
 

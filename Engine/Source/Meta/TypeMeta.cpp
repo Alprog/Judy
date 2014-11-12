@@ -1,5 +1,7 @@
 
 #include "TypeMeta.h"
+#include "FieldMeta.h"
+#include "MethodMeta.h"
 
 void ITypeMeta::set(void* object, char* name, void* value)
 {

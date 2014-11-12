@@ -5,6 +5,7 @@
 #include "TypeMeta.h"
 #include "FieldMeta.h"
 #include "MethodMeta.h"
+#include "ConstructorMeta.h"
 
 #include "App.h"
 
