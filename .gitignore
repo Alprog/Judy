@@ -9,3 +9,11 @@ Build
 IDE/cache
 *.pdb
 Player/cache
+
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.suo
+*.sln
+*.sdf
+*.opensdf

@@ -5,8 +5,7 @@ include(../Engine/Include.pri)
 TEMPLATE = app
 
 INCLUDEPATH += \
-    ../../../3rd-party/toLua++ \
-    ../../../3rd-party/lua/source \
+    ../3rd-party/lua/source \
 
 
 SOURCES += \
