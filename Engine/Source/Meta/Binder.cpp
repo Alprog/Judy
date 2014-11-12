@@ -113,7 +113,7 @@ int Constructor(lua_State* L)
     return 1;
 }
 
-int ConstructorInvoker(lua_State* L)
+/*int ConstructorInvoker(lua_State* L)
 {
     auto constructor = *(IConstructorMeta**)lua_touserdata(L, lua_upvalueindex(1));
     auto typeName = lua_tostring(L, lua_upvalueindex(2));
@@ -125,21 +125,20 @@ int ConstructorInvoker(lua_State* L)
         args.push_back(777);
     }
 
-    void* object = constructor->Invoke(args);
+    void* object = constructor->Invoke(args).as<void*>();
 
     *(void**)lua_newuserdata(L, sizeof(object)) = object;
     luaL_getmetatable(L, typeName);
     lua_setmetatable(L, -2);
 
     return 1;
-}
+}*/
 
 int MethodInvoker(lua_State* L)
 {
-    auto method = *(IMethodMeta**)lua_touserdata(L, lua_upvalueindex(1));
-    int index = 1;
-    void* object = *(void**)lua_touserdata(L, index++);
+    auto method = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
 
+    int index = 1;
     std::vector<Variant> args = {};
     for (auto argType : method->GetArgTypes())
     {
@@ -153,21 +152,39 @@ int MethodInvoker(lua_State* L)
         }
         else
         {
-            args.push_back(*(void**)lua_touserdata(L, index++));
+            void* p = *(void**)lua_touserdata(L, index++);
+            args.push_back(p);
         }
     }
 
     auto returnType = method->GetReturnType();
     if (returnType == nullptr)
     {
-        method->Invoke(object, args);
+        method->Invoke(args);
         return 0;
     }
     else
     {
-        Variant result = method->Invoke(object, args);
-        int a = result;
-        lua_pushnumber(L, a);
+        Variant result = method->Invoke(args);
+        if (returnType == TypeMeta<int>::Instance())
+        {
+            lua_pushinteger(L, result.as<int>());
+        }
+        else if (returnType == TypeMeta<char*>::Instance())
+        {
+            lua_pushstring(L, result.as<char*>());
+        }
+        else
+        {
+            *(void**)lua_newuserdata(L, sizeof(void*)) = result;
+
+            printf("%s \n", returnType->name);
+            fflush(stdout);
+
+            luaL_getmetatable(L, returnType->name);
+            lua_setmetatable(L, -2);
+        }
+
         return 1;
     }
 }
@@ -217,9 +234,9 @@ void LuaBinder::Bind(Meta* meta)
         int argCount = constructor->GetArgCount();
         //printf("constructor with %i parameters\n", argCount);
 
-        *(IConstructorMeta**)lua_newuserdata(L, size) = constructor;
-        lua_pushstring(L, type->name);
-        lua_pushcclosure(L, ConstructorInvoker, 2);
+        *(IFunctionMeta**)lua_newuserdata(L, size) = constructor;
+        //lua_pushstring(L, type->name);
+        lua_pushcclosure(L, MethodInvoker, 1);
 
         std::string text = "constructor" + std::to_string(argCount);
         printf(text.c_str());
@@ -229,7 +246,7 @@ void LuaBinder::Bind(Meta* meta)
 
     for (auto method : type->methods)
     {
-        *(IMethodMeta**)lua_newuserdata(L, size) = method;
+        *(IFunctionMeta**)lua_newuserdata(L, size) = method;
         lua_pushcclosure(L, MethodInvoker, 1);
         lua_setfield(L, -2, method->name);
     }

@@ -41,7 +41,7 @@ public:
     }
 
     template <typename... Types>
-    inline static void* New(Types... args)
+    inline static ClassType* New(Types... args)
     {
         return new ClassType(args...);
     }

@@ -32,7 +32,7 @@ Variant ITypeMeta::invoke(void* object, char* name, std::vector<Variant> args)
     {
         if (method->name == name)
         {
-            return method->Invoke(object, args);
+            return Variant::empty; //method->Invoke(object, args);
         }
     }
 }

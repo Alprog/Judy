@@ -11,7 +11,7 @@ class Node;
 class IMethodMeta : public virtual IFunctionMeta
 {
 public:
-    virtual Variant Invoke(void* object, std::vector<Variant> args) = 0;
+    //virtual Variant Invoke(void* object, std::vector<Variant> args) = 0;
 };
 
 template <size_t... I>
@@ -24,7 +24,7 @@ template <size_t... I>
 struct make_index_sequence<0, I...> : public index_sequence<I...>{};
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class MethodMeta : public IMethodMeta, public FunctionMeta<ReturnType, ArgTypes...>
+class MethodMeta : public IMethodMeta, public FunctionMeta<ReturnType, ClassType*, ArgTypes...>
 {
 public:
 
@@ -49,10 +49,12 @@ public:
         return Variant::empty;
     }
 
-    Variant Invoke(void* object, std::vector<Variant> args) override
+    Variant Invoke(std::vector<Variant> args) override
     {
-        if (args.size() == sizeof...(ArgTypes))
+        if (args.size() == sizeof...(ArgTypes) + 1)
         {
+            void* object = args[0];
+            args.erase(begin(args), begin(args));
             return InvokeHelper<ReturnType>(object, args);
         }
         else
