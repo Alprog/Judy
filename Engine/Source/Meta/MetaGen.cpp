@@ -24,13 +24,19 @@ Meta::Meta()
         .field("e", &SubStruct::e)
      ;
 
+    MetaDefiner<App>("App")
+        .method("StartMainLoop", &App::StartMainLoop)
+    ;
+
     MetaDefiner<Node>("Node")
         .constructor()
+        .constructor<int>()
         .method("ChildCount", &Node::ChildCount)
         .method("RemoveChild", &Node::RemoveChild)
         .method("AddChild", &Node::AddChild)
     ;
 
+    //Node* node = (Node*)TypeMeta<Node>::Instance()->constructors[1]->Invoke({1});
 
     int i = TypeMeta<Node>::Instance()->methods[1]->GetArgCount();
 

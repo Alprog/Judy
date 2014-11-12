@@ -13,6 +13,7 @@ class Node
 
 public:
     Node();
+    Node(int a);
 
     Node* Parent();
     int ChildCount();

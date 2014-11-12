@@ -1,13 +1,13 @@
 
 #pragma once
 
+#include <vector>
 #include "Variant.h"
-
-#include "FieldMeta.h"
-#include "MethodMeta.h"
 #include "MetaDefiner.h"
 
-#include <vector>
+class IFieldMeta;
+class IMethodMeta;
+class IConstructorMeta;
 
 class ITypeMeta
 {
@@ -19,6 +19,7 @@ public:
 
     Variant invoke(void* object, char* name, std::vector<Variant> args);
 
+    std::vector<IConstructorMeta*> constructors;
     std::vector<IFieldMeta*> fields;
     std::vector<IMethodMeta*> methods;
 
@@ -37,12 +38,12 @@ public:
 
     Variant DefaultConstructor() override
     {
-        return Constructor();
+        return ClassType();
     }
 
     template <typename... Types>
-    Variant Constructor()
+    inline static void* New(Types... args)
     {
-        return ClassType(Types...);
+        return new ClassType(args...);
     }
 };

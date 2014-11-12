@@ -112,6 +112,27 @@ int Constructor(lua_State* L)
     return 1;
 }
 
+int ConstructorInvoker(lua_State* L)
+{
+    auto constructor = *(IConstructorMeta**)lua_touserdata(L, lua_upvalueindex(1));
+    auto typeName = lua_tostring(L, lua_upvalueindex(2));
+
+    std::vector<Variant> args = {};
+
+    for (int i = 0; i < constructor->GetArgCount(); i++)
+    {
+        args.push_back(777);
+    }
+
+    void* object = constructor->Invoke(args);
+
+    *(void**)lua_newuserdata(L, sizeof(object)) = object;
+    luaL_getmetatable(L, typeName);
+    lua_setmetatable(L, -2);
+
+    return 1;
+}
+
 int MethodInvoker(lua_State* L)
 {
     auto method = *(IMethodMeta**)lua_touserdata(L, lua_upvalueindex(1));
@@ -180,14 +201,31 @@ void LuaBinder::Bind(Meta* meta)
     luaL_setfuncs(L, reg2, 0);
     lua_setglobal(L, "TestStruct");
 
-
     ITypeMeta* type = TypeMeta<Node>::Instance();
     luaL_newmetatable(L, type->name);
 
     lua_pushcfunction(L, Constructor<Node>);
     lua_setfield(L, -2, "new");
 
-    auto size = sizeof(IMethodMeta*);
+    auto size = sizeof(void*);
+
+
+
+    for (auto constructor : type->constructors)
+    {
+        int argCount = constructor->GetArgCount();
+        //printf("constructor with %i parameters\n", argCount);
+
+        *(IConstructorMeta**)lua_newuserdata(L, size) = constructor;
+        lua_pushstring(L, type->name);
+        lua_pushcclosure(L, ConstructorInvoker, 2);
+
+        std::string text = "constructor" + std::to_string(argCount);
+        printf(text.c_str());
+
+        lua_setfield(L, -2, text.c_str());
+    }
+
     for (auto method : type->methods)
     {
         *(IMethodMeta**)lua_newuserdata(L, size) = method;

@@ -79,10 +79,18 @@ print(ts.d.e)
 
 print('----')
 
-local node = Node.new()
+local node = Node.constructor1(777)
 local child = Node.new();
+
+print(node:ChildCount())
+
 node:AddChild(child)
+
+print(node:ChildCount())
+
 node:RemoveChild(child)
+
+print(node:ChildCount())
 
 print('----')
 

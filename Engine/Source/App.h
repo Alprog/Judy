@@ -4,6 +4,8 @@
 #include <set>
 #include "Window.h"
 
+#include "Meta/TypeMeta.h"
+
 struct SubStruct
 {
     friend TypeMeta<SubStruct>;
@@ -42,6 +44,8 @@ private:
 
 class App
 {
+    friend TypeMeta<App>;
+
 public:
     static App* Instance();
 

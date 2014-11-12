@@ -52,6 +52,12 @@ public:
     }
 
     template <typename Type>
+    inline Type as()
+    {
+        return *(Type*)data;
+    }
+
+    template <typename Type>
     operator Type()
     {
         return *(Type*)data;

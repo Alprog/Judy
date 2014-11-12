@@ -5,6 +5,7 @@
 #include "TypeMeta.h"
 #include "FieldMeta.h"
 #include "MethodMeta.h"
+#include "ConstructorMeta.h"
 
 template <typename ClassType>
 class MetaDefiner
@@ -18,8 +19,11 @@ public:
         Meta::Instance()->Types.push_back(typeMeta);
     }
 
+    template <typename... ArgTypes>
     MetaDefiner& constructor()
     {
+        auto constructor = new ConstructorMeta<ClassType, ArgTypes...>();
+        TypeMeta<ClassType>::Instance()->constructors.push_back(constructor);
         return *this;
     }
 
