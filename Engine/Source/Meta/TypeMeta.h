@@ -37,7 +37,7 @@ public:
 
     Variant DefaultConstructor() override
     {
-        return ClassType();
+        return new ClassType();
     }
 
     template <typename... Types>

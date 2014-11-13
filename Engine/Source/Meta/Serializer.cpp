@@ -4,7 +4,7 @@
 
 void Serializer::Serialize(void* object, ITypeMeta* typeMeta)
 {
-    lua_createtable(L, 0, 0);
+    lua_newtable(L);
     for (auto fieldMeta : typeMeta->fields)
     {
         void* value = fieldMeta->get(object);
