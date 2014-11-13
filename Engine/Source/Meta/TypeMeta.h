@@ -22,27 +22,54 @@ public:
     std::vector<IFieldMeta*> fields;
     std::vector<IMethodMeta*> methods;
 
+    virtual bool isPointer() = 0;
     virtual Variant DefaultConstructor() = 0;
 };
 
-template <typename ClassType>
+template <typename Type>
 class TypeMeta : public ITypeMeta
 {
 public:
     static TypeMeta* Instance()
     {
-        static TypeMeta<ClassType> instance;
+        static TypeMeta<Type> instance;
         return &instance;
+    }
+
+    virtual bool isPointer() override
+    {
+        return false;
     }
 
     Variant DefaultConstructor() override
     {
-        return new ClassType();
+        return new Type();
     }
 
     template <typename... Types>
-    inline static ClassType* New(Types... args)
+    inline static Type* New(Types... args)
     {
-        return new ClassType(args...);
+        return new Type(args...);
+    }
+};
+
+template <typename Type>
+class TypeMeta<Type*> : public ITypeMeta
+{
+public:
+    static TypeMeta* Instance()
+    {
+        static TypeMeta<Type*> instance;
+        return &instance;
+    }
+
+    virtual bool isPointer() override
+    {
+        return true;
+    }
+
+    Variant DefaultConstructor() override
+    {
+        return new Type();
     }
 };

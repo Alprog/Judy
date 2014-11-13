@@ -9,7 +9,10 @@
 
 Meta::Meta()
 {
-    TypeMeta<int>::Instance()->name = "int";
+    bool a = TypeMeta<int>::Instance()->isPointer();
+    bool b = TypeMeta<int*>::Instance()->isPointer();
+
+    //TypeMeta<int>::Instance()->name = "int";
 
     MetaDefiner<TestStruct>("TestStruct")
         .constructor()
