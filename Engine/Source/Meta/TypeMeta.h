@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <type_traits>
 #include "Variant.h"
 
 class IFieldMeta;
@@ -25,17 +26,29 @@ public:
     virtual bool isPointer() = 0;
     virtual Variant DefaultConstructor() = 0;
 
-    template <typename Type>
-    static ITypeMeta* Get()
+    template <typename Type, bool B>
+    static ITypeMeta* GetHelper()
     {
-        return TypeMeta<Type>::Instance();
+        return nullptr;
     }
+
+    template <typename Type>
+    inline static ITypeMeta* Get()
+    {
+        return TypeMeta<Type>::Get();
+    }
+
 };
 
 template <typename Type>
 class TypeMeta : public ITypeMeta
 {
 public:
+    static TypeMeta* Get()
+    {
+        return Instance();
+    }
+
     static TypeMeta* Instance()
     {
         static TypeMeta<Type> instance;
