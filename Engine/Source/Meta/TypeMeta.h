@@ -24,6 +24,12 @@ public:
 
     virtual bool isPointer() = 0;
     virtual Variant DefaultConstructor() = 0;
+
+    template <typename Type>
+    static ITypeMeta* Get()
+    {
+        return TypeMeta<Type>::Instance();
+    }
 };
 
 template <typename Type>
@@ -34,6 +40,11 @@ public:
     {
         static TypeMeta<Type> instance;
         return &instance;
+    }
+
+    ITypeMeta* PointerType()
+    {
+        return TypeMeta<Type*>::Instance();
     }
 
     virtual bool isPointer() override
@@ -54,6 +65,22 @@ public:
 };
 
 template <typename Type>
+class BuildInTypeMeta : TypeMeta<Type>
+{
+};
+
+template <typename Type>
+class ClassMeta : TypeMeta<Type>
+{
+};
+
+template <typename Type>
+class PointerTypeMeta : TypeMeta<Type>
+{
+};
+
+
+/*template <typename Type>
 class TypeMeta<Type*> : public ITypeMeta
 {
 public:
@@ -72,4 +99,4 @@ public:
     {
         return new Type();
     }
-};
+};*/

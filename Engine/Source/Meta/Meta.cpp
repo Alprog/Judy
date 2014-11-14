@@ -7,9 +7,3 @@ Meta* Meta::Instance()
     return &instance;
 }
 
-/*template <typename T>
-MetaDefiner<T>* Meta::Define()
-{
-    return MetaDefiner<T>();
-}
-*/

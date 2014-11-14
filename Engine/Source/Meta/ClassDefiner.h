@@ -8,10 +8,10 @@
 #include "ConstructorMeta.h"
 
 template <typename ClassType>
-class MetaDefiner
+class ClassDefiner
 {
 public:
-    MetaDefiner(char* name)
+    ClassDefiner(char* name)
     {
         ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
         typeMeta->name = name;
@@ -20,7 +20,7 @@ public:
     }
 
     template <typename... ArgTypes>
-    MetaDefiner& constructor()
+    ClassDefiner& constructor()
     {
         auto constructor = new ConstructorMeta<ClassType, ArgTypes...>();
         TypeMeta<ClassType>::Instance()->constructors.push_back(constructor);
@@ -28,7 +28,7 @@ public:
     }
 
     template <typename FieldType>
-    MetaDefiner& field(char* name, FieldType ClassType::*pointer)
+    ClassDefiner& field(char* name, FieldType ClassType::*pointer)
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
         TypeMeta<ClassType>::Instance()->fields.push_back(field);
@@ -36,13 +36,13 @@ public:
     }
 
     template <void* pointer>
-    MetaDefiner& method(char* name)
+    ClassDefiner& method(char* name)
     {
         return *this;
     }
 
     template <typename ReturnType, typename... ArgTypes>
-    MetaDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
+    ClassDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
     {
         auto method = new MethodMeta<ClassType, ReturnType, ArgTypes...>();
         method->name = name;
@@ -52,4 +52,4 @@ public:
     }
 };
 
-#include "MetaDefiner.tpp"
+#include "ClassDefiner.tpp"

@@ -8,7 +8,7 @@
 #include "Meta/Meta.h"
 #include "Meta/Binder.h"
 
-#include "Meta/MetaDefiner.h"
+#include "Meta/ClassDefiner.h"
 #include "Meta/TypeMeta.h"
 #include "Meta/FieldMeta.h"
 

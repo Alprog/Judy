@@ -1,7 +1,7 @@
 
 #include "Meta.h"
 
-#include "MetaDefiner.h"
+#include "ClassDefiner.h"
 #include "TypeMeta.h"
 
 #include "App.h"
@@ -9,12 +9,13 @@
 
 Meta::Meta()
 {
-    bool a = TypeMeta<int>::Instance()->isPointer();
-    bool b = TypeMeta<int*>::Instance()->isPointer();
+    bool a = ITypeMeta::Get<int>()->isPointer();
+    bool b = ITypeMeta::Get<int*>()->isPointer();
 
+    //bool c = ITypeMeta::Get<int>()->PointerType()->isPointer();
     //TypeMeta<int>::Instance()->name = "int";
 
-    MetaDefiner<TestStruct>("TestStruct")
+    ClassDefiner<TestStruct>("TestStruct")
         .constructor()
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
@@ -22,16 +23,16 @@ Meta::Meta()
         .field("d", &TestStruct::d)
     ;
 
-    MetaDefiner<SubStruct>("SubStruct")
+    ClassDefiner<SubStruct>("SubStruct")
         .constructor()
         .field("e", &SubStruct::e)
      ;
 
-    MetaDefiner<App>("App")
+    ClassDefiner<App>("App")
         .method("StartMainLoop", &App::StartMainLoop)
     ;
 
-    MetaDefiner<Node>("Node")
+    ClassDefiner<Node>("Node")
         .constructor()
         .constructor<int>()
         .method("ChildCount", &Node::ChildCount)

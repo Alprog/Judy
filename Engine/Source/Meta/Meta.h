@@ -14,7 +14,4 @@ public:
 
 private:
     Meta();
-
-    //template <typename T>
-    //MetaDefiner<T>* Define();
 };

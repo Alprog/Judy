@@ -37,13 +37,13 @@ HEADERS += \
     Source/Meta/Variant.h \
     Source/Meta/FieldMeta.h \
     Source/Meta/MethodMeta.h \
-    Source/Meta/MetaDefiner.h \
     Source/Meta/Any.h \
     Source/Meta/Meta.h \
     Source/Meta/Serializer.h \
     Source/Meta/Binder.h \
     Source/Meta/ConstructorMeta.h \
-    Source/Meta/FunctionMeta.h
+    Source/Meta/FunctionMeta.h \
+    Source/Meta/ClassDefiner.h
 
 SOURCES += \
     Source/App.cpp \
