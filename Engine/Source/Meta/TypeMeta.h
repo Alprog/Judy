@@ -26,14 +26,8 @@ public:
     virtual bool isPointer() = 0;
     virtual Variant DefaultConstructor() = 0;
 
-    template <typename Type, bool B>
-    static ITypeMeta* GetHelper()
-    {
-        return nullptr;
-    }
-
     template <typename Type>
-    inline static ITypeMeta* Get()
+    inline static ITypeMeta* const Get()
     {
         return TypeMeta<Type>::Get();
     }
@@ -44,14 +38,15 @@ template <typename Type>
 class TypeMeta : public ITypeMeta
 {
 public:
-    static TypeMeta* Get()
+    static TypeMeta<Type> instance;
+
+    static TypeMeta* const Get()
     {
         return Instance();
     }
 
-    static TypeMeta* Instance()
+    static TypeMeta* const Instance()
     {
-        static TypeMeta<Type> instance;
         return &instance;
     }
 
@@ -92,6 +87,8 @@ class PointerTypeMeta : TypeMeta<Type>
 {
 };
 
+template <typename Type>
+TypeMeta<Type> TypeMeta<Type>::instance;
 
 /*template <typename Type>
 class TypeMeta<Type*> : public ITypeMeta

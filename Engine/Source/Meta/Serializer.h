@@ -11,6 +11,8 @@ extern "C"
 #include "Variant.h"
 #include "FieldMeta.h"
 
+#include "App.h"
+
 class ITypeMeta;
 
 class Serializer
@@ -38,6 +40,6 @@ public:
     }
 
 private:
-    Variant Deserialize(ITypeMeta* typeMeta);
-    void Serialize(void* object, ITypeMeta* typeMeta);
+    Variant Deserialize(ITypeMeta* const typeMeta);
+    void Serialize(void* object, ITypeMeta* const typeMeta);
 };

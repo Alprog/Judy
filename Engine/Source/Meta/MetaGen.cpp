@@ -20,8 +20,9 @@ Meta::Meta()
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
         .field("c", &TestStruct::c)
-        .field("d", &TestStruct::d)
-    ;
+        .field("d", &TestStruct::d);
+        //.field("g", &TestStruct::g)
+    //;
 
     ClassDefiner<SubStruct>("SubStruct")
         .constructor()
