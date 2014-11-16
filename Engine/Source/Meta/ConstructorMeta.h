@@ -17,12 +17,12 @@ class ConstructorMeta : public IConstructorMeta, public FunctionMeta<ClassType, 
 {
 public:
     template <int... I>
-    inline Variant RealInvoke(std::vector<Variant> args, index_sequence<I...>)
+    inline Variant RealInvoke(std::vector<Variant>& args, index_sequence<I...>)
     {
         return TypeMeta<ClassType>::New<ArgTypes...>(args[I]...);
     }
 
-    virtual Variant Invoke(std::vector<Variant> args) override
+    virtual Variant Invoke(std::vector<Variant>& args) override
     {
         if (args.size() == sizeof...(ArgTypes))
         {

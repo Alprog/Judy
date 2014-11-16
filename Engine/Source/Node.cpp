@@ -8,7 +8,6 @@ Node::Node()
 Node::Node(int i)
     : parent {nullptr}
 {
-    printf("CONSTRUCTOR WITH INT %i\n", i);
 }
 
 Node* Node::Parent()
@@ -18,8 +17,6 @@ Node* Node::Parent()
 
 int Node::ChildCount()
 {
-    int count = childs.size();
-    printf("childsize %i \n", count);
     return childs.size();
 }
 

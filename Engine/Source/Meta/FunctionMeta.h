@@ -11,7 +11,7 @@ public:
     virtual size_t GetArgCount() = 0;
     virtual std::vector<ITypeMeta*> GetArgTypes() = 0;
 
-    virtual Variant Invoke(std::vector<Variant> args) = 0;
+    virtual Variant Invoke(std::vector<Variant>& args) = 0;
 };
 
 template <typename ReturnType, typename... ArgTypes>

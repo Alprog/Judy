@@ -3,7 +3,7 @@
 #include "FieldMeta.h"
 #include "MethodMeta.h"
 
-void ITypeMeta::set(void* object, char* name, void* value)
+/*void ITypeMeta::set(void* object, char* name, void* value)
 {
     for (auto field : fields)
     {
@@ -35,4 +35,4 @@ Variant ITypeMeta::invoke(void* object, char* name, std::vector<Variant> args)
             return Variant::empty; //method->Invoke(object, args);
         }
     }
-}
+}*/

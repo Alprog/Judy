@@ -77,14 +77,16 @@ print(ts)
 print(ts.d)
 print(ts.d.e)]]
 
-
 local node = Node.constructor0()
+
 local child = Node.constructor1(42)
+
 print(node:ChildCount())
 node:AddChild(child)
+
 print(node:ChildCount())
 node:RemoveChild(child)
-print(node:ChildCount())
 
+print(node:ChildCount())
 
 --app:StartMainLoop();

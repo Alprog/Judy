@@ -15,7 +15,6 @@ public:
     {
         ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
         typeMeta->name = name;
-        printf("TYPE %p \n", typeMeta);
         Meta::Instance()->Types.push_back(typeMeta);
     }
 

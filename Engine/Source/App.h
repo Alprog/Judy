@@ -26,8 +26,7 @@ struct TestStruct
     int b;
     char* c;
     SubStruct d;
-
-    //std::string g;
+    std::string g;
 
 public:
     TestStruct(int a, int b, char* c, SubStruct d)
@@ -36,7 +35,7 @@ public:
         this->b = b;
         this->c = c;
         this->d = d;
-        //this->g = g;
+        this->g = c;
     }
 
 private:

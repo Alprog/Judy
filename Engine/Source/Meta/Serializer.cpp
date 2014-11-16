@@ -31,9 +31,6 @@ void Serializer::Serialize(void* object, ITypeMeta* const typeMeta)
 
 Variant Serializer::Deserialize(ITypeMeta* const typeMeta)
 {
-    printf("%s\n", typeMeta->name);
-    fflush(stdout);
-
     if (typeMeta == &TypeMeta<int>::instance)
     {
         return lua_tointeger(L, -1);

@@ -26,19 +26,6 @@ extern "C"
     #include "lauxlib.h"
 }
 
-void func(lua_State *L, lua_Debug *ar)
-{
-    printf("CALLED\n");
-
-    lua_getstack(L, 0, ar);
-    lua_getinfo(L, "nSl", ar);
-
-    printf("%s\n", ar->what);
-    printf("%s\n", ar->source);
-    printf("%i\n", ar->currentline);
-
-}
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

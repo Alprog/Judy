@@ -24,13 +24,12 @@ template <typename Type>
 void SerialzeToTable(lua_State* L, Type object)
 {
     auto serializer = new Serializer(L);
-
     serializer->Serialize(object);
 
     Type newObj = serializer->Deserialize<Type>();
     lua_pop(L, 1);
 
-    serializer->Serialize(object);
+    serializer->Serialize(newObj);
 
     lua_getglobal(L, "Test");
     lua_insert(L, 1);

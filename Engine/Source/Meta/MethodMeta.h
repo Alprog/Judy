@@ -31,25 +31,25 @@ public:
     // Invoke
 
     template <int... I>
-    inline ReturnType RealInvoke(void* object, std::vector<Variant> args, index_sequence<I...>)
+    inline ReturnType RealInvoke(void* object, std::vector<Variant>& args, index_sequence<I...>)
     {
         return ((ClassType*)object->*pointer)(args.at(I)...);
     }
 
     template <typename type>
-    inline Variant InvokeHelper(void* object, std::vector<Variant> args)
+    inline Variant InvokeHelper(void* object, std::vector<Variant>& args)
     {
         return RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
     }
 
     template <>
-    inline Variant InvokeHelper<void>(void* object, std::vector<Variant> args)
+    inline Variant InvokeHelper<void>(void* object, std::vector<Variant>& args)
     {
         RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
-        return Variant::empty;
+        return Variant();
     }
 
-    Variant Invoke(std::vector<Variant> args) override
+    Variant Invoke(std::vector<Variant>& args) override
     {
         if (args.size() == sizeof...(ArgTypes) + 1)
         {

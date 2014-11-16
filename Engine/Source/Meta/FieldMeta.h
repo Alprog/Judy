@@ -11,7 +11,7 @@ class ITypeMeta;
 class IFieldMeta
 {
 public:
-    virtual void set(Variant object, Variant value) = 0;
+    virtual void set(Variant& object, Variant& value) = 0;
     virtual void* get(void* object) = 0;
     virtual ITypeMeta* const GetType() = 0;
     char* name;
@@ -32,7 +32,7 @@ public:
         this->pointer = pointer;
     }
 
-    virtual void set(Variant object, Variant value) override
+    virtual void set(Variant& object, Variant& value) override
     {
         (ClassType*)object->*pointer = value.as<FieldType>();
     }

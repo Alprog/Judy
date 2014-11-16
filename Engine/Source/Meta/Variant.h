@@ -47,6 +47,7 @@ public:
         p = new VariantData<T>(value);
     }
 
+    // copy constructor
     Variant(const Variant& v)
     {
         if (v.p == nullptr)
@@ -57,6 +58,13 @@ public:
         {
             p = v.p->clone();
         }
+    }
+
+    // move constructor
+    Variant (Variant&& v)
+    {
+        p = v.p;
+        v.p = nullptr;
     }
 
     ~Variant()

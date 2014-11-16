@@ -36,7 +36,28 @@ public:
     Type Deserialize()
     {
         ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
-        return Deserialize(typeMeta);
+
+        Variant v = Deserialize(typeMeta);
+
+        fflush(stdout);
+
+        Type t = static_cast<Type>(v);
+
+        fflush(stdout);
+
+        return t;
+    }
+
+    template <>
+    TestStruct Deserialize<TestStruct>()
+    {
+        ITypeMeta* typeMeta = TypeMeta<TestStruct>::Instance();
+
+        Variant v = Deserialize(typeMeta);
+
+        TestStruct* tt = static_cast<TestStruct*>(v);
+
+        return *tt;
     }
 
 private:

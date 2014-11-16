@@ -21,55 +21,6 @@ T* CheckType(lua_State* L, int n)
     return *(T**)luaL_checkudata(L, n, name);
 }
 
-/*int SubStruct_GetE(lua_State* L)
-{
-    SubStruct* obj = CheckType<SubStruct>(L, 1);
-    lua_pushnumber(L, obj->e);
-    return 1;
-}
-
-int SubStruct_SetE(lua_State* L)
-{
-    SubStruct* obj = CheckType<SubStruct>(L, 1);
-    int value = (int)luaL_checknumber(L, 2);
-    obj->e = value;
-    return 0;
-}
-
-int TestStruct_GetD(lua_State* L)
-{
-    TestStruct* obj = CheckType<TestStruct>(L, 1);
-
-    auto size = sizeof(SubStruct*);
-    auto udata = (SubStruct**)lua_newuserdata(L, size);
-    *udata = &obj->d;
-
-    luaL_getmetatable(L, "SubStruct");
-    lua_setmetatable(L, -2);
-
-    return 1;
-}
-
-int TestStruct_SetD(lua_State* L)
-{
-    TestStruct* obj = CheckType<TestStruct>(L, 1);
-    auto value = *CheckType<SubStruct>(L, 2);
-    obj->d = value;
-    return 0;
-}
-
-template <typename ClassType, typename FieldType>
-int Setter(lua_State* L)
-{
-    auto object = CheckType<ClassType>(L, 1);
-    auto value = CheckType<FieldType>(L, 2);
-
-    IFieldMeta* meta;
-    meta->set(object, value);
-
-    return 0;
-}*/
-
 int GetterInvoker(lua_State* L)
 {
     auto field = *(IFieldMeta**)lua_touserdata(L, lua_upvalueindex(1));
@@ -124,10 +75,6 @@ int FunctionInvoker(lua_State* L)
         else
         {
             *(void**)lua_newuserdata(L, sizeof(void*)) = result;
-
-            printf("%s \n", returnType->name);
-            fflush(stdout);
-
             luaL_getmetatable(L, returnType->name);
             lua_setmetatable(L, -2);
         }
@@ -150,7 +97,6 @@ void LuaBinder::Bind(Meta* meta)
         *(IFunctionMeta**)lua_newuserdata(L, size) = constructor;
         lua_pushcclosure(L, FunctionInvoker, 1);
         std::string text = "constructor" + std::to_string(argCount);
-        printf(text.c_str());
         lua_setfield(L, 1, text.c_str());
     }
 

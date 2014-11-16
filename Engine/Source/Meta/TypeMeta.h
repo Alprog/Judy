@@ -14,10 +14,9 @@ class ITypeMeta
 public:
     char* name;
 
-    void set(void* object, char* name, void* value);
-    void* get(void* object, char* name);
-
-    Variant invoke(void* object, char* name, std::vector<Variant> args);
+    //void set(void* object, char* name, void* value);
+    //void* get(void* object, char* name);
+    //Variant invoke(void* object, char* name, std::vector<Variant> args);
 
     std::vector<IConstructorMeta*> constructors;
     std::vector<IFieldMeta*> fields;
