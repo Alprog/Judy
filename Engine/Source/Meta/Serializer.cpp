@@ -23,23 +23,16 @@ void Serializer::Serialize(Variant object, ITypeMeta* const typeMeta)
         for (auto fieldMeta : typeMeta->fields)
         {
             Variant value = fieldMeta->get_local(object);
-
             auto type = fieldMeta->GetType();
 
-            if (type->isPointer())
+            while (type->isPointer())
             {
-                Variant v = type->Dereferencing(value);
-
-                value = v;
-
-                Serialize(v, fieldMeta->GetType());
-                lua_setfield(L, -2, fieldMeta->name);
+                type = type->DerefType();
+                value = type->Dereferencing(value);
             }
-            else
-            {
-                Serialize(value, fieldMeta->GetType());
-                lua_setfield(L, -2, fieldMeta->name);
-            }
+
+            Serialize(value, type);
+            lua_setfield(L, -2, fieldMeta->name);
         }
     }
 }

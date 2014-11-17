@@ -146,7 +146,7 @@ public:
 
     virtual ITypeMeta* DerefType() override
     {
-        return TypeMeta<Type*>::Instance();
+        return TypeMeta<Type>::Instance();
     }
 };
 
