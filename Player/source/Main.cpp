@@ -26,8 +26,12 @@ void SerialzeToTable(lua_State* L, Type object)
     auto serializer = new Serializer(L);
     serializer->Serialize(object);
 
+    printf("z\n"); fflush(stdout);
+
     Type newObj = serializer->Deserialize<Type>();
     lua_pop(L, 1);
+
+    printf("HEY YO!\n"); fflush(stdout);
 
     serializer->Serialize(newObj);
 

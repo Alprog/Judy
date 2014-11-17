@@ -29,38 +29,17 @@ public:
     void Serialize(Type object)
     {
         ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
-        Serialize(&object, typeMeta);
+        Serialize(object, typeMeta);
     }
 
     template <typename Type>
     Type Deserialize()
     {
         ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
-
-        Variant v = Deserialize(typeMeta);
-
-        fflush(stdout);
-
-        Type t = static_cast<Type>(v);
-
-        fflush(stdout);
-
-        return t;
-    }
-
-    template <>
-    TestStruct Deserialize<TestStruct>()
-    {
-        ITypeMeta* typeMeta = TypeMeta<TestStruct>::Instance();
-
-        Variant v = Deserialize(typeMeta);
-
-        TestStruct* tt = static_cast<TestStruct*>(v);
-
-        return *tt;
+        return Deserialize(typeMeta);
     }
 
 private:
     Variant Deserialize(ITypeMeta* const typeMeta);
-    void Serialize(void* object, ITypeMeta* const typeMeta);
+    void Serialize(Variant object, ITypeMeta* const typeMeta);
 };

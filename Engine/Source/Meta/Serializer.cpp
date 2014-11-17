@@ -2,19 +2,19 @@
 #include "Serializer.h"
 #include "TypeMeta.h"
 
-void Serializer::Serialize(void* object, ITypeMeta* const typeMeta)
+void Serializer::Serialize(Variant object, ITypeMeta* const typeMeta)
 {
     if (typeMeta == &TypeMeta<int>::instance)
     {
-        lua_pushnumber(L, *(int*)object);
+        lua_pushnumber(L, object.as<int>());
     }
     else if (typeMeta == &TypeMeta<std::string>::instance)
     {
-        lua_pushstring(L, (*(std::string*)object).c_str());
+        lua_pushstring(L, object.as<std::string>().c_str());
     }
     else if (typeMeta == &TypeMeta<char*>::instance)
     {
-        lua_pushstring(L, *(char**)object);
+        lua_pushstring(L, object.as<char*>());
     }
     else
     {
@@ -22,9 +22,24 @@ void Serializer::Serialize(void* object, ITypeMeta* const typeMeta)
 
         for (auto fieldMeta : typeMeta->fields)
         {
-            void* value = fieldMeta->get(object);
-            Serialize(value, fieldMeta->GetType());
-            lua_setfield(L, -2, fieldMeta->name);
+            Variant value = fieldMeta->get_local(object);
+
+            auto type = fieldMeta->GetType();
+
+            if (type->isPointer())
+            {
+                Variant v = type->Dereferencing(value);
+
+                value = v;
+
+                Serialize(v, fieldMeta->GetType());
+                lua_setfield(L, -2, fieldMeta->name);
+            }
+            else
+            {
+                Serialize(value, fieldMeta->GetType());
+                lua_setfield(L, -2, fieldMeta->name);
+            }
         }
     }
 }
@@ -45,16 +60,21 @@ Variant Serializer::Deserialize(ITypeMeta* const typeMeta)
     }
     else
     {
-        Variant object = typeMeta->DefaultConstructor();
+        Variant object = typeMeta->CreateOnStack();
 
         for (auto fieldMeta : typeMeta->fields)
         {
-            lua_getfield(L, -1, fieldMeta->name);
+            if (fieldMeta->GetType()->isPointer())
+            {
 
-            Variant value = Deserialize(fieldMeta->GetType());
-
-            fieldMeta->set(object, value);
-            lua_pop(L, 1);
+            }
+            else
+            {
+                lua_getfield(L, -1, fieldMeta->name);
+                Variant value = Deserialize(fieldMeta->GetType());
+                fieldMeta->set_local(object, value);
+                lua_pop(L, 1);
+            }
         }
 
         return object;

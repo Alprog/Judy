@@ -10,7 +10,7 @@ struct IVariantData
     {
     }
 
-    virtual IVariantData* clone() = 0;
+    virtual IVariantData* copy() = 0;
 };
 
 template <typename T>
@@ -23,7 +23,7 @@ struct VariantData : public IVariantData
     {
     }
 
-    virtual IVariantData* clone() override
+    virtual IVariantData* copy() override
     {
         return new VariantData<T>(data);
     }
@@ -34,69 +34,100 @@ class Variant
 public:
     static const Variant empty;
 
-    IVariantData* p;
+    IVariantData* data;
 
     Variant(void)
-        : p {nullptr}
+        : data {nullptr}
     {
     }
 
     template <typename T>
     Variant(T const& value)
     {
-        p = new VariantData<T>(value);
+        data = new VariantData<T>(value);
     }
 
     // copy constructor
-    Variant(const Variant& v)
+    Variant(const Variant& other)
     {
-        if (v.p == nullptr)
-        {
-            p = nullptr;
-        }
-        else
-        {
-            p = v.p->clone();
-        }
+        CopyData(other);
     }
 
     // move constructor
-    Variant (Variant&& v)
+    Variant(Variant&& other)
     {
-        p = v.p;
-        v.p = nullptr;
+        MoveData(other);
     }
 
+    // copy assigment operator
+    Variant& operator=(const Variant& other)
+    {
+        DestroyData();
+        CopyData(other);
+        return *this;
+    }
+
+    // move assigment operator
+    Variant& operator=(Variant&& other)
+    {
+        DestroyData();
+        MoveData(other);
+        return *this;
+    }
+
+    // destructor
     ~Variant()
     {
-        if (p != nullptr)
+        DestroyData();
+    }
+
+    inline void DestroyData()
+    {
+        if (data != nullptr)
         {
-            delete p;
+            delete data;
         }
+    }
+
+    inline void CopyData(const Variant& other)
+    {
+        if (other.data == nullptr)
+        {
+            data = nullptr;
+        }
+        else
+        {
+            data = other.data->copy();
+        }
+    }
+
+    inline void MoveData(Variant& other)
+    {
+        data = other.data;
+        other.data = nullptr;
     }
 
     template <typename T>
-    Variant& operator=(T const& value)
+    Variant& operator=(T& value)
     {
-        if (p != nullptr)
-        {
-            delete p;
-        }
-        p = new VariantData<T>(value);
-        return *(this);
+        DestroyData();
+
+        data = new VariantData<T>(value);
+        return *this;
     }
 
     template <typename Type>
-    inline Type as()
+    inline Type& as()
     {
-        return ((VariantData<Type>*)p)->data;
+        return static_cast<VariantData<Type>*>(data)->data;
     }
 
     template <typename Type>
-    operator Type()
+    operator Type&()
     {
-        return ((VariantData<Type>*)p)->data;
+        return static_cast<VariantData<Type>*>(data)->data;
     }
+
 };
 
 //class Variant

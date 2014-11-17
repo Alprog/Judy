@@ -16,6 +16,11 @@ struct SubStruct
         : e { 0 }
     {
     }
+
+    SubStruct(int v)
+        : e { v }
+    {
+    }
 };
 
 struct TestStruct
@@ -26,6 +31,7 @@ struct TestStruct
     int b;
     char* c;
     SubStruct d;
+    SubStruct* dd;
     std::string g;
 
 public:
@@ -36,11 +42,13 @@ public:
         this->c = c;
         this->d = d;
         this->g = c;
+        this->dd = new SubStruct(17);
     }
 
 private:
     TestStruct()
     {
+        this->dd = new SubStruct(22);
     }
 };
 

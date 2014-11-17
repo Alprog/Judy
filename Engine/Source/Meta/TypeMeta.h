@@ -25,11 +25,17 @@ public:
     virtual bool isPointer() = 0;
     virtual Variant DefaultConstructor() = 0;
 
+    virtual Variant CreateOnStack() = 0;
+
     template <typename Type>
     inline static ITypeMeta* const Get()
     {
         return TypeMeta<Type>::Get();
     }
+
+    virtual ITypeMeta* DerefType() = 0;
+
+    virtual Variant Dereferencing(Variant& object) = 0;
 
 };
 
@@ -64,38 +70,57 @@ public:
         return new Type();
     }
 
+    Variant CreateOnStack() override
+    {
+        return Type();
+    }
+
     template <typename... Types>
     inline static Type* New(Types... args)
     {
         return new Type(args...);
     }
+
+    virtual Variant Dereferencing(Variant& object) override
+    {
+        return *object.as<Type*>();
+    }
+
+    virtual ITypeMeta* DerefType() override
+    {
+        throw new std::exception();
+    }
 };
 
-template <typename Type>
-class BuildInTypeMeta : TypeMeta<Type>
-{
-};
+//template <typename Type>
+//class BuildInTypeMeta : TypeMeta<Type>
+//{
+//};
+
+//template <typename Type>
+//class ClassMeta : TypeMeta<Type>
+//{
+//};
+
+//template <typename Type>
+//class PointerTypeMeta : TypeMeta<Type>
+//{
+//};
+
 
 template <typename Type>
-class ClassMeta : TypeMeta<Type>
-{
-};
-
-template <typename Type>
-class PointerTypeMeta : TypeMeta<Type>
-{
-};
-
-template <typename Type>
-TypeMeta<Type> TypeMeta<Type>::instance;
-
-/*template <typename Type>
 class TypeMeta<Type*> : public ITypeMeta
 {
 public:
-    static TypeMeta* Instance()
+    static TypeMeta<Type*> instance;
+
+    static TypeMeta* const Get()
     {
-        static TypeMeta<Type*> instance;
+        return Instance();
+    }
+
+    static TypeMeta* const Instance()
+    {
         return &instance;
     }
 
@@ -108,4 +133,27 @@ public:
     {
         return new Type();
     }
-};*/
+
+    Variant CreateOnStack() override
+    {
+        return Type();
+    }
+
+    virtual Variant Dereferencing(Variant& object) override
+    {
+        return *object.as<Type*>();
+    }
+
+    virtual ITypeMeta* DerefType() override
+    {
+        return TypeMeta<Type*>::Instance();
+    }
+};
+
+
+template <typename Type>
+TypeMeta<Type> TypeMeta<Type>::instance;
+
+template <typename Type>
+TypeMeta<Type*> TypeMeta<Type*>::instance;
+
