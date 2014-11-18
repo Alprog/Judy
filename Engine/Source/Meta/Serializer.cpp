@@ -2,37 +2,38 @@
 #include "Serializer.h"
 #include "TypeMeta.h"
 
-void Serializer::Serialize(Variant object, ITypeMeta* const typeMeta)
+void Serializer::Serialize(Variant object, ITypeMeta* type)
 {
-    if (typeMeta == &TypeMeta<int>::instance)
+    if (type == &TypeMeta<int>::instance)
     {
         lua_pushnumber(L, object.as<int>());
     }
-    else if (typeMeta == &TypeMeta<std::string>::instance)
+    else if (type == &TypeMeta<std::string>::instance)
     {
         lua_pushstring(L, object.as<std::string>().c_str());
-    }
-    else if (typeMeta == &TypeMeta<char*>::instance)
-    {
-        lua_pushstring(L, object.as<char*>());
     }
     else
     {
         lua_newtable(L);
 
-        for (auto fieldMeta : typeMeta->fields)
+        std::string modifiers = "";
+
+        while (type->isPointer())
         {
-            Variant value = fieldMeta->get_local(object);
-            auto type = fieldMeta->GetType();
+            type = type->DerefType();
+            object = type->Dereferencing(object);
+            modifiers += '*';
+        }
 
-            while (type->isPointer())
-            {
-                type = type->DerefType();
-                value = type->Dereferencing(value);
-            }
-
-            Serialize(value, type);
-            lua_setfield(L, -2, fieldMeta->name);
+        auto name = type->name + modifiers;
+        lua_pushstring(L, name.c_str());
+        lua_setfield(L, -2, "@");
+        for (auto field : type->fields)
+        {
+            Variant value = field->get_local(object);
+            auto fieldType = field->GetType();
+            Serialize(value, fieldType);
+            lua_setfield(L, -2, field->name);
         }
     }
 }
@@ -46,10 +47,6 @@ Variant Serializer::Deserialize(ITypeMeta* const typeMeta)
     else if (typeMeta == &TypeMeta<std::string>::instance)
     {
         return std::string( lua_tostring(L, -1) );
-    }
-    else if (typeMeta == &TypeMeta<char*>::instance)
-    {
-        return lua_tostring(L, -1);
     }
     else
     {
