@@ -1,5 +1,4 @@
 
-
 function TableToString( object, tab )
 	local i = 1
 	local str = ''
@@ -45,3 +44,33 @@ function TableToString( object, tab )
 
 	return str
 end
+
+function RefCounting(objectTable, refsTable)
+	refsTable[objectTable] = (refsTable[objectTable] or 0) + 1
+	for _, value in pairs(objectTable) do
+		if type(value) == 'table' then
+			RefCounting(value, refsTable)
+		end
+	end
+end
+
+function SmartTableToString(objectTable)
+
+	local refsTable = {}
+	RefCounting(objectTable, refsTable)
+	
+	for k, v in pairs(refsTable) do
+		print(k)
+		print(v)
+	end
+	
+end
+
+local e = { "eee", "fff" }
+
+local t = {}
+t.a = "fef"
+t.b = e
+t.c = e
+
+print(SmartTableToString(t))

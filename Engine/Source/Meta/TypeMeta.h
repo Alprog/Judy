@@ -26,6 +26,7 @@ public:
     virtual Variant DefaultConstructor() = 0;
 
     virtual Variant CreateOnStack() = 0;
+    virtual Variant CreateOnHeap() = 0;
 
     template <typename Type>
     inline static ITypeMeta* const Get()
@@ -36,7 +37,7 @@ public:
     virtual ITypeMeta* DerefType() = 0;
 
     virtual Variant Dereferencing(Variant& object) = 0;
-
+    virtual Variant MakePointerTo(Variant& object) = 0;
 };
 
 template <typename Type>
@@ -75,6 +76,11 @@ public:
         return Type();
     }
 
+    Variant CreateOnHeap() override
+    {
+        return new Type();
+    }
+
     template <typename... Types>
     inline static Type* New(Types... args)
     {
@@ -84,6 +90,11 @@ public:
     virtual Variant Dereferencing(Variant& object) override
     {
         return *object.as<Type*>();
+    }
+
+    virtual Variant MakePointerTo(Variant& object) override
+    {
+        return Variant::empty;
     }
 
     virtual ITypeMeta* DerefType() override
@@ -109,7 +120,7 @@ public:
 
 
 template <typename Type>
-class TypeMeta<Type*> : public ITypeMeta
+class TypeMeta<Type*> : public TypeMeta<Type>
 {
 public:
     static TypeMeta<Type*> instance;
@@ -129,24 +140,14 @@ public:
         return true;
     }
 
-    Variant DefaultConstructor() override
-    {
-        return new Type();
-    }
-
-    Variant CreateOnStack() override
-    {
-        return Type();
-    }
-
-    virtual Variant Dereferencing(Variant& object) override
-    {
-        return *object.as<Type*>();
-    }
-
     virtual ITypeMeta* DerefType() override
     {
         return TypeMeta<Type>::Instance();
+    }
+
+    Variant CreateOnHeap() override
+    {
+        return new Type();
     }
 };
 

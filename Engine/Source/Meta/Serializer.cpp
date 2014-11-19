@@ -38,33 +38,40 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
     }
 }
 
-Variant Serializer::Deserialize(ITypeMeta* const typeMeta)
+Variant Serializer::Deserialize(ITypeMeta* type)
 {
-    if (typeMeta == &TypeMeta<int>::instance)
+    bool isPointer = type->isPointer();
+
+    if (type == &TypeMeta<int>::instance)
     {
         return lua_tointeger(L, -1);
     }
-    else if (typeMeta == &TypeMeta<std::string>::instance)
+    else if (type == &TypeMeta<std::string>::instance)
     {
         return std::string( lua_tostring(L, -1) );
     }
     else
     {
-        Variant object = typeMeta->CreateOnStack();
+        Variant object = isPointer ? type->CreateOnHeap() : type->CreateOnStack();
 
-        for (auto fieldMeta : typeMeta->fields)
+        while (type->isPointer())
         {
-            if (fieldMeta->GetType()->isPointer())
-            {
+            type = type->DerefType();
+        }
 
+        for (auto fieldMeta : type->fields)
+        {
+            lua_getfield(L, -1, fieldMeta->name);
+            Variant value = Deserialize(fieldMeta->GetType());
+            if (isPointer)
+            {
+                fieldMeta->set(object, value);
             }
             else
             {
-                lua_getfield(L, -1, fieldMeta->name);
-                Variant value = Deserialize(fieldMeta->GetType());
                 fieldMeta->set_local(object, value);
-                lua_pop(L, 1);
             }
+            lua_pop(L, 1);
         }
 
         return object;
