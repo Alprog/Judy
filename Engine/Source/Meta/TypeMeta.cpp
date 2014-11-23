@@ -3,6 +3,11 @@
 #include "FieldMeta.h"
 #include "MethodMeta.h"
 
+ITypeMeta::ITypeMeta()
+    : isClass {false}
+{
+}
+
 /*void ITypeMeta::set(void* object, char* name, void* value)
 {
     for (auto field : fields)

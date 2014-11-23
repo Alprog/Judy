@@ -13,6 +13,9 @@ class ITypeMeta
 {
 public:
     char* name;
+    bool isClass;
+
+    ITypeMeta();
 
     //void set(void* object, char* name, void* value);
     //void* get(void* object, char* name);
@@ -148,6 +151,13 @@ public:
     Variant CreateOnHeap() override
     {
         return new Type();
+    }
+
+    virtual Variant MakePointerTo(Variant& object) override
+    {
+        Type* pointer;
+        *pointer = object.as<Type>();
+        return pointer;
     }
 };
 

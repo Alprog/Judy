@@ -15,6 +15,7 @@ public:
     {
         ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
         typeMeta->name = name;
+        typeMeta->isClass = true;
         Meta::Instance()->Types.push_back(typeMeta);
     }
 

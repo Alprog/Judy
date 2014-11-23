@@ -22,14 +22,16 @@ function TableToString( object, tab )
 		else
 			str = str .. ','
 		end
-		str = str .. '\r\n' .. tab .. '  '
+	    if #keys > 1 then
+			str = str .. '\r\n' .. tab .. '    '
+		end
 		if key == i then
 			i = i + 1
 		else
 			str = str .. key .. ' = '
 		end
 		if type( value ) == 'table' then
-			str = str .. TableToString( value, tab .. '  ' )
+			str = str .. TableToString( value, #keys > 1 and tab .. '    ' or tab )
 		elseif type( value ) == 'string' then
 			str = str .. '\'' .. value .. '\''
 		else
@@ -37,7 +39,7 @@ function TableToString( object, tab )
 		end
 	end
 
-	if not first then
+	if not first and #keys > 1 then
 		str = str .. '\r\n' .. tab
 	end
 	str = str .. '}'

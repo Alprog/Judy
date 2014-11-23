@@ -29,19 +29,19 @@ struct TestStruct
 
     int a;
     int b;
-    char* c;
+    int* c;
     SubStruct d;
     SubStruct* dd;
     std::string g;
 
 public:
-    TestStruct(int a, int b, char* c, SubStruct d)
+    TestStruct(int a, int b, char* text, SubStruct d)
     {
         this->a = a;
         this->b = b;
-        this->c = c;
+        this->c = new int(8);
         this->d = d;
-        this->g = c;
+        this->g = text;
         this->dd = new SubStruct(17);
     }
 

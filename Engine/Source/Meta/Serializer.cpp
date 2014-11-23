@@ -4,6 +4,16 @@
 
 void Serializer::Serialize(Variant object, ITypeMeta* type)
 {
+    if (type->isPointer())
+    {
+        lua_newtable(L);
+        lua_pushinteger(L, 1);
+        object = type->Dereferencing(object);
+        Serialize(object, type->DerefType());
+        lua_settable(L, -3);
+        return;
+    }
+
     if (type == &TypeMeta<int>::instance)
     {
         lua_pushnumber(L, object.as<int>());
@@ -41,6 +51,16 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
 Variant Serializer::Deserialize(ITypeMeta* type)
 {
     bool isPointer = type->isPointer();
+    if (isPointer)
+    {
+        lua_pushinteger(L, 1);
+        lua_gettable(L, -2);
+        auto value = Deserialize(type->DerefType());
+        value = type->MakePointerTo(value);
+        lua_pop(L, 1);
+        return value;
+    }
+
 
     if (type == &TypeMeta<int>::instance)
     {
