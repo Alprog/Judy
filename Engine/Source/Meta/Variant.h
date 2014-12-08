@@ -3,6 +3,7 @@
 
 #include "memory.h"
 #include "stdio.h"
+#include "ITypeMeta.h"
 
 struct IVariantData
 {

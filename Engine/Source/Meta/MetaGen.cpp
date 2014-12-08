@@ -23,6 +23,7 @@ Meta::Meta()
         .field("d", &TestStruct::d)
         .field("dd", &TestStruct::dd)
         .field("g", &TestStruct::g)
+        .field("arr", &TestStruct::arr)
     ;
 
     ClassDefiner<SubStruct>("SubStruct")

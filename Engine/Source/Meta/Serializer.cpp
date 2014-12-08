@@ -18,6 +18,10 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
     {
         lua_pushnumber(L, object.as<int>());
     }
+    else if (type->isVector())
+    {
+        return lua_pushnumber(L, 0);
+    }
     else if (type == &TypeMeta<std::string>::instance)
     {
         lua_pushstring(L, object.as<std::string>().c_str());
@@ -48,23 +52,73 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
     }
 }
 
+Variant Serializer::Deserialize()
+{
+    auto type = lua_type(L, -1);
+
+    switch (type)
+    {
+    case LUA_TBOOLEAN:
+        return lua_toboolean(L, -1);
+
+    case LUA_TNUMBER:
+        return lua_tonumber(L, -1);
+
+    case LUA_TSTRING:
+        return std::string { lua_tostring(L, -1) };
+
+    case LUA_TTABLE:
+        return DeserializeTable();
+
+    default:
+        return Variant::empty;
+    }
+}
+
+Variant Serializer::DeserializeTable()
+{
+    lua_getfield(L, -1, "@");
+
+    auto type = lua_type(L, -1);
+
+    return Variant::empty;
+}
+
 Variant Serializer::Deserialize(ITypeMeta* type)
 {
+    printf("DES %s\n", type->name);
+    fflush(stdout);
+
     bool isPointer = type->isPointer();
     if (isPointer)
     {
+        printf("POINTER\n");
+        fflush(stdout);
+
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
         auto value = Deserialize(type->DerefType());
+
+        printf("value %i\n", value.as<int>());
+        fflush(stdout);
+
         value = type->MakePointerTo(value);
+
+        printf("SUCCESS\n");
+        fflush(stdout);
+
         lua_pop(L, 1);
         return value;
     }
 
-
     if (type == &TypeMeta<int>::instance)
     {
         return lua_tointeger(L, -1);
+    }
+    else if (type->isVector())
+    {
+        lua_tointeger(L, -1);
+        return std::vector<int>();
     }
     else if (type == &TypeMeta<std::string>::instance)
     {
@@ -81,6 +135,9 @@ Variant Serializer::Deserialize(ITypeMeta* type)
 
         for (auto fieldMeta : type->fields)
         {
+            printf("F %s\n", fieldMeta->name);
+            fflush(stdout);
+
             lua_getfield(L, -1, fieldMeta->name);
             Variant value = Deserialize(fieldMeta->GetType());
             if (isPointer)

@@ -3,45 +3,9 @@
 
 #include <vector>
 #include <type_traits>
+
+#include "ITypeMeta.h"
 #include "Variant.h"
-
-class IFieldMeta;
-class IMethodMeta;
-class IConstructorMeta;
-
-class ITypeMeta
-{
-public:
-    char* name;
-    bool isClass;
-
-    ITypeMeta();
-
-    //void set(void* object, char* name, void* value);
-    //void* get(void* object, char* name);
-    //Variant invoke(void* object, char* name, std::vector<Variant> args);
-
-    std::vector<IConstructorMeta*> constructors;
-    std::vector<IFieldMeta*> fields;
-    std::vector<IMethodMeta*> methods;
-
-    virtual bool isPointer() = 0;
-    virtual Variant DefaultConstructor() = 0;
-
-    virtual Variant CreateOnStack() = 0;
-    virtual Variant CreateOnHeap() = 0;
-
-    template <typename Type>
-    inline static ITypeMeta* const Get()
-    {
-        return TypeMeta<Type>::Get();
-    }
-
-    virtual ITypeMeta* DerefType() = 0;
-
-    virtual Variant Dereferencing(Variant& object) = 0;
-    virtual Variant MakePointerTo(Variant& object) = 0;
-};
 
 template <typename Type>
 class TypeMeta : public ITypeMeta
@@ -69,9 +33,9 @@ public:
         return false;
     }
 
-    Variant DefaultConstructor() override
+    virtual bool isVector() override
     {
-        return new Type();
+        return false;
     }
 
     Variant CreateOnStack() override
@@ -123,6 +87,28 @@ public:
 
 
 template <typename Type>
+class TypeMeta<std::vector<Type>> : public TypeMeta<Type>
+{
+public:
+    static TypeMeta<std::vector<Type>> instance;
+
+    static TypeMeta* const Get()
+    {
+        return Instance();
+    }
+
+    static TypeMeta* const Instance()
+    {
+        return &instance;
+    }
+
+    virtual bool isVector() override
+    {
+        return true;
+    }
+};
+
+template <typename Type>
 class TypeMeta<Type*> : public TypeMeta<Type>
 {
 public:
@@ -155,7 +141,7 @@ public:
 
     virtual Variant MakePointerTo(Variant& object) override
     {
-        Type* pointer;
+        Type* pointer = new Type();
         *pointer = object.as<Type>();
         return pointer;
     }
@@ -168,3 +154,5 @@ TypeMeta<Type> TypeMeta<Type>::instance;
 template <typename Type>
 TypeMeta<Type*> TypeMeta<Type*>::instance;
 
+template <typename Type>
+TypeMeta<std::vector<Type>> TypeMeta<std::vector<Type>>::instance;

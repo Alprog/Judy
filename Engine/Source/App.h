@@ -33,6 +33,7 @@ struct TestStruct
     SubStruct d;
     SubStruct* dd;
     std::string g;
+    std::vector<int> arr;
 
 public:
     TestStruct(int a, int b, char* text, SubStruct d)
@@ -43,6 +44,10 @@ public:
         this->d = d;
         this->g = text;
         this->dd = new SubStruct(17);
+
+        arr.push_back(1);
+        arr.push_back(2);
+        arr.push_back(3);
     }
 
 private:

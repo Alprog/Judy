@@ -32,6 +32,9 @@ public:
         Serialize(object, typeMeta);
     }
 
+    Variant Deserialize();
+    Variant DeserializeTable();
+
     template <typename Type>
     Type Deserialize()
     {
