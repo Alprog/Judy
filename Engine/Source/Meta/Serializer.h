@@ -32,6 +32,11 @@ public:
         Serialize(object, typeMeta);
     }
 
+    void Serialize(Variant object)
+    {
+        Serialize(object, object.GetType());
+    }
+
     Variant DeserializeUnknown();
     Variant DeserializeUnknownTable();
 

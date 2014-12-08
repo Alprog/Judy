@@ -69,7 +69,7 @@ Variant Serializer::DeserializeUnknown()
         return std::string { lua_tostring(L, -1) };
 
     case LUA_TTABLE:
-        return DeserializeTable();
+        return DeserializeUnknownTable();
 
     default:
         return Variant::empty;
@@ -84,11 +84,12 @@ Variant Serializer::DeserializeUnknownTable()
     if (type == LUA_TSTRING)
     {
         const char* typeName = lua_tostring(L, -1);
+        lua_pop(L, 1);
         for (auto type : Meta::Instance()->Types)
         {
             if (!strcmp(type->name, typeName))
             {
-                return DeserializeClass(type);
+                return DeserializeAsClass(type);
             }
         }
 
@@ -97,9 +98,21 @@ Variant Serializer::DeserializeUnknownTable()
     return Variant::empty;
 }
 
-Variant Serializer::DeserializeClass(ITypeMeta* type)
+Variant Serializer::DeserializeAsClass(ITypeMeta* type)
 {
+    auto object = type->CreateOnStack();
 
+    for (auto fieldMeta : type->fields)
+    {
+        printf(fieldMeta->name);
+
+        lua_getfield(L, -1, fieldMeta->name);
+        Variant value = Deserialize(fieldMeta->GetType());
+        fieldMeta->set_local(object, value);
+        lua_pop(L, 1);
+    }
+
+    return object;
 }
 
 Variant Serializer::Deserialize(ITypeMeta* type)

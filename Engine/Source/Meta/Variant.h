@@ -54,7 +54,17 @@ public:
         return static_cast<VariantData<Type>*>(data)->data;
     }
 
-    inline ITypeMeta* GetType();
+    inline ITypeMeta* GetType()
+    {
+        if (data != nullptr)
+        {
+            return data->GetType();
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
 
 private:
     IVariantData* data;

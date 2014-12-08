@@ -63,7 +63,7 @@ inline void Variant::MoveData(Variant& other)
     other.data = nullptr;
 }
 
-inline ITypeMeta* Variant::GetType()
+/*inline ITypeMeta* Variant::GetType()
 {
     if (data != nullptr)
     {
@@ -73,4 +73,4 @@ inline ITypeMeta* Variant::GetType()
     {
         return nullptr;
     }
-}
+}*/
