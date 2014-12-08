@@ -1,6 +1,7 @@
 
 #include "Serializer.h"
-#include "TypeMeta.h"
+#include "ITypeMeta.h"
+#include "Meta.h"
 
 void Serializer::Serialize(Variant object, ITypeMeta* type)
 {
@@ -52,7 +53,7 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
     }
 }
 
-Variant Serializer::Deserialize()
+Variant Serializer::DeserializeUnknown()
 {
     auto type = lua_type(L, -1);
 
@@ -75,13 +76,30 @@ Variant Serializer::Deserialize()
     }
 }
 
-Variant Serializer::DeserializeTable()
+Variant Serializer::DeserializeUnknownTable()
 {
     lua_getfield(L, -1, "@");
-
     auto type = lua_type(L, -1);
 
+    if (type == LUA_TSTRING)
+    {
+        const char* typeName = lua_tostring(L, -1);
+        for (auto type : Meta::Instance()->Types)
+        {
+            if (!strcmp(type->name, typeName))
+            {
+                return DeserializeClass(type);
+            }
+        }
+
+    }
+
     return Variant::empty;
+}
+
+Variant Serializer::DeserializeClass(ITypeMeta* type)
+{
+
 }
 
 Variant Serializer::Deserialize(ITypeMeta* type)

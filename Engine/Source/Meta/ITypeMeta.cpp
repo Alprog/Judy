@@ -1,12 +1,23 @@
 
 #include "ITypeMeta.h"
-//#include "FieldMeta.h"
-//#include "MethodMeta.h"
+#include "TypeMeta.h"
 
 ITypeMeta::ITypeMeta()
     : isClass {false}
 {
 }
+
+/*template <typename Type>
+ITypeMeta* const ITypeMeta::Get()
+{
+    return TypeMeta<Type>::Get();
+}*/
+
+/*template <>
+inline ITypeMeta* const ITypeMeta::Get<int>()
+{
+    return TypeMeta<float>::Get();
+}*/
 
 /*void ITypeMeta::set(void* object, char* name, void* value)
 {

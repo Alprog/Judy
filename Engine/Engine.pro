@@ -44,7 +44,8 @@ HEADERS += \
     Source/Meta/ConstructorMeta.h \
     Source/Meta/FunctionMeta.h \
     Source/Meta/ClassDefiner.h \
-    Source/Meta/ITypeMeta.h
+    Source/Meta/ITypeMeta.h \
+    Source/Meta/VariantData.h
 
 SOURCES += \
     Source/App.cpp \
@@ -79,7 +80,8 @@ SOURCES += \
     Source/Meta/Binder.cpp \
     Source/Meta/ConstructorMeta.cpp \
     Source/Meta/FunctionMeta.cpp \
-    Source/Meta/ITypeMeta.cpp
+    Source/Meta/ITypeMeta.cpp \
+    Source/Meta/VariantData.cpp
 
 win {
     INCLUDEPATH += Source/Windows

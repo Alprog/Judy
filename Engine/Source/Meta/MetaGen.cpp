@@ -16,7 +16,7 @@ Meta::Meta()
     //TypeMeta<int>::Instance()->name = "int";
 
     ClassDefiner<TestStruct>("TestStruct")
-        .constructor()
+        //.constructor()
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
         .field("c", &TestStruct::c)
@@ -27,7 +27,7 @@ Meta::Meta()
     ;
 
     ClassDefiner<SubStruct>("SubStruct")
-        .constructor()
+        //.constructor()
         .field("e", &SubStruct::e)
      ;
 
@@ -36,7 +36,7 @@ Meta::Meta()
     ;
 
     ClassDefiner<Node>("Node")
-        .constructor()
+        //.constructor()
         .constructor<int>()
         .method("ChildCount", &Node::ChildCount)
         .method("RemoveChild", &Node::RemoveChild)

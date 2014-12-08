@@ -134,19 +134,44 @@ public:
         return TypeMeta<Type>::Instance();
     }
 
-    Variant CreateOnHeap() override
+    /*Variant CreateOnHeap() override
     {
         return new Type();
-    }
+    }*/
 
     virtual Variant MakePointerTo(Variant& object) override
     {
-        Type* pointer = new Type();
-        *pointer = object.as<Type>();
-        return pointer;
+        //Type* pointer = new Type();
+        //*pointer = object.as<Type>();
+        //return pointer;
+        return Variant::empty;
     }
 };
 
+template <>
+class TypeMeta<void> : public ITypeMeta
+{
+public:
+    static TypeMeta<void> instance;
+
+    static TypeMeta* const Get()
+    {
+        return Instance();
+    }
+
+    static TypeMeta* const Instance()
+    {
+        return &instance;
+    }
+
+    virtual bool isPointer() override { return false; }
+    virtual bool isVector() override { return false; }
+    virtual Variant CreateOnStack() override { return 0; }
+    virtual Variant CreateOnHeap() override { return 0; }
+    virtual ITypeMeta* DerefType() override { return 0; }
+    virtual Variant Dereferencing(Variant& object) override { return 0; }
+    virtual Variant MakePointerTo(Variant& object) override { return 0; }
+};
 
 template <typename Type>
 TypeMeta<Type> TypeMeta<Type>::instance;

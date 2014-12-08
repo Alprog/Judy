@@ -36,6 +36,12 @@ public:
         return TypeMeta<Type>::Get();
     }
 
+    template <>
+    inline static ITypeMeta* const Get<void>()
+    {
+        return nullptr;
+    }
+
     virtual ITypeMeta* DerefType() = 0;
 
     virtual Variant Dereferencing(Variant& object) = 0;

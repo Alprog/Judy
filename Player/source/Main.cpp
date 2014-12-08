@@ -26,6 +26,9 @@ void SerialzeToTable(lua_State* L, Type object)
     auto serializer = new Serializer(L);
     serializer->Serialize(object);
 
+    auto a = serializer->Deserialize();
+
+
 //    Type newObj = serializer->Deserialize<Type>();
 //    lua_pop(L, 1);
 
