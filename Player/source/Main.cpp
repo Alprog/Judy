@@ -12,6 +12,8 @@
 #include "Meta/TypeMeta.h"
 #include "Meta/FieldMeta.h"
 
+#include "Meta/BaseType.h"
+
 extern "C"
 {
     #include "lua.h"
@@ -35,12 +37,56 @@ void SerialzeToTable(lua_State* L, Type object)
     lua_pcall(L, 1, LUA_MULTRET, 0);
 }
 
+class Foo
+{
+    //virtual void v() {};
+};
+
+class Bar : public Foo {};
+
+class ITpMt
+{
+    virtual bool isClass() { return false; }
+};
+
+class IClsMt : public ITpMt
+{
+    virtual bool isClass() override { return true; }
+};
+
+//----------------
+
+template <typename Type>
+class TpMt : public ITpMt
+{
+
+};
+
+template <typename Type>
+class TpMt<Type*> : public IClsMt
+{
+};
+
+
+
+
+template <typename Type>
+ITpMt* Get()
+{
+    base_type<Type>::value a;
+
+    return nullptr;
+}
+
+
 int main(int argc, char *argv[])
 {
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
     Meta* meta = Meta::Instance();
+
+    ITpMt* boo = Get<int>();
 
     LuaBinder(L).Bind(meta);
 

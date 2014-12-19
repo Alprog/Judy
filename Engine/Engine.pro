@@ -45,7 +45,8 @@ HEADERS += \
     Source/Meta/FunctionMeta.h \
     Source/Meta/ClassDefiner.h \
     Source/Meta/ITypeMeta.h \
-    Source/Meta/VariantData.h
+    Source/Meta/VariantData.h \
+    Source/Meta/BaseType.h
 
 SOURCES += \
     Source/App.cpp \
