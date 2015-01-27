@@ -14,6 +14,10 @@
 
 #include "Meta/BaseType.h"
 
+#include <typeindex>
+#include <unordered_map>
+#include <iostream>
+
 extern "C"
 {
     #include "lua.h"
@@ -39,10 +43,16 @@ void SerialzeToTable(lua_State* L, Type object)
 
 class Foo
 {
-    //virtual void v() {};
+public:
+    virtual void v() {}
 };
 
-class Bar : public Foo {};
+template <typename T>
+class Bar : public Foo
+{
+public:
+    T a;
+};
 
 class ITpMt
 {
@@ -67,13 +77,42 @@ class TpMt<Type*> : public IClsMt
 {
 };
 
+std::unordered_map<std::type_index, ITpMt*> metas;
+
+template <typename T>
+ITpMt* OL(T* p)
+{
+    auto index = std::type_index(typeid(*p));
+
+    if (metas.find(index) == mymap.end())
+    {
+
+    }
 
 
+    printf(typeid(*p).name());
+    printf("\n");
+
+    return nullptr;
+}
 
 template <typename Type>
 ITpMt* Get()
 {
+
+
+    Type aa;
+    std::string ss = typeid(aa).name();
+    printf(ss.c_str());
+    printf("\n");
+
     base_type<Type>::value a;
+
+    std::string s = typeid(a).name();
+
+    printf(s.c_str());
+    printf("\n");
+    fflush(stdout);
 
     return nullptr;
 }
@@ -81,12 +120,23 @@ ITpMt* Get()
 
 int main(int argc, char *argv[])
 {
-    lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
-
     Meta* meta = Meta::Instance();
 
-    ITpMt* boo = Get<int>();
+
+    Foo* foo = new Foo();
+    Foo* bar_int = new Bar<int>();
+    Foo* bar_float = new Bar<float>();
+
+    OL(foo);
+    OL(bar_int);
+    OL(bar_float);
+
+    //ITpMt* boo = Get<int*>();
+
+    return 0;
+
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
 
     LuaBinder(L).Bind(meta);
 
