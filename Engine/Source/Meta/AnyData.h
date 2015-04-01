@@ -3,21 +3,21 @@
 
 #include "ITypeMeta.h"
 
-struct IVariantData
+struct IAnyData
 {
-    virtual ~IVariantData() {}
+    virtual ~IAnyData() {}
 
     virtual ITypeMeta* GetType() = 0;
 
-    virtual IVariantData* copy() = 0;
+    virtual IAnyData* copy() = 0;
 };
 
 template <typename T>
-struct VariantData : public IVariantData
+struct AnyData : public IAnyData
 {
     T data;
 
-    VariantData(T const& data)
+    AnyData(T const& data)
         : data(data)
     {
     }
@@ -27,8 +27,8 @@ struct VariantData : public IVariantData
         return ITypeMeta::Get<T>();
     }
 
-    virtual IVariantData* copy() override
+    virtual IAnyData* copy() override
     {
-        return new VariantData<T>(data);
+        return new AnyData<T>(data);
     }
 };

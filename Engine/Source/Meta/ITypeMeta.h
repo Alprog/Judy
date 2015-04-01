@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class Variant;
+class Any;
 class IFieldMeta;
 class IMethodMeta;
 class IConstructorMeta;
@@ -11,7 +11,7 @@ class IConstructorMeta;
 class ITypeMeta
 {
 public:
-    char* name;
+    const char* name;
     bool isClass;
 
     ITypeMeta();
@@ -27,8 +27,8 @@ public:
     virtual bool isPointer() = 0;
     virtual bool isVector() = 0;
 
-    virtual Variant CreateOnStack() = 0;
-    virtual Variant CreateOnHeap() = 0;
+    virtual Any CreateOnStack() = 0;
+    virtual Any CreateOnHeap() = 0;
 
     template <typename Type>
     inline static ITypeMeta* const Get()
@@ -44,6 +44,6 @@ public:
 
     virtual ITypeMeta* DerefType() = 0;
 
-    virtual Variant Dereferencing(Variant& object) = 0;
-    virtual Variant MakePointerTo(Variant& object) = 0;
+    virtual Any Dereferencing(Any& object) = 0;
+    virtual Any MakePointerTo(Any& object) = 0;
 };

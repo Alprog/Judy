@@ -6,4 +6,3 @@ Meta* Meta::Instance()
     static Meta instance;
     return &instance;
 }
-

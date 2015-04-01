@@ -11,10 +11,10 @@ template <typename ClassType>
 class ClassDefiner
 {
 public:
-    ClassDefiner(char* name)
+    ClassDefiner()
     {
         ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
-        typeMeta->name = name;
+        typeMeta->name = typeid(ClassType).name();
         typeMeta->isClass = true;
         Meta::Instance()->Types.push_back(typeMeta);
     }
@@ -35,11 +35,11 @@ public:
         return *this;
     }
 
-    template <void* pointer>
-    ClassDefiner& method(char* name)
-    {
-        return *this;
-    }
+//    template <void* pointer>
+//    ClassDefiner& method(char* name)
+//    {
+//        return *this;
+//    }
 
     template <typename ReturnType, typename... ArgTypes>
     ClassDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
@@ -49,6 +49,13 @@ public:
         method->pointer = pointer;
         TypeMeta<ClassType>::Instance()->methods.push_back(method);
         return *this;
+    }
+
+    template <typename ReturnType, typename... ArgTypes>
+    ClassDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...) const)
+    {
+        auto nonconstpointer = reinterpret_cast<ReturnType(ClassType::*)(ArgTypes...)>(pointer);
+        return method(name, nonconstpointer);
     }
 };
 

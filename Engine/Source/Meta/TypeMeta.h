@@ -5,7 +5,7 @@
 #include <type_traits>
 
 #include "ITypeMeta.h"
-#include "Variant.h"
+#include "Any.h"
 
 template <typename Type>
 class TypeMeta : public ITypeMeta
@@ -38,12 +38,12 @@ public:
         return false;
     }
 
-    Variant CreateOnStack() override
+    Any CreateOnStack() override
     {
         return Type();
     }
 
-    Variant CreateOnHeap() override
+    Any CreateOnHeap() override
     {
         return new Type();
     }
@@ -54,14 +54,14 @@ public:
         return new Type(args...);
     }
 
-    virtual Variant Dereferencing(Variant& object) override
+    virtual Any Dereferencing(Any& object) override
     {
         return *object.as<Type*>();
     }
 
-    virtual Variant MakePointerTo(Variant& object) override
+    virtual Any MakePointerTo(Any& object) override
     {
-        return Variant::empty;
+        return Any::empty;
     }
 
     virtual ITypeMeta* DerefType() override
@@ -139,12 +139,12 @@ public:
         return new Type();
     }*/
 
-    virtual Variant MakePointerTo(Variant& object) override
+    virtual Any MakePointerTo(Any& object) override
     {
         //Type* pointer = new Type();
         //*pointer = object.as<Type>();
         //return pointer;
-        return Variant::empty;
+        return Any::empty;
     }
 };
 
@@ -166,11 +166,11 @@ public:
 
     virtual bool isPointer() override { return false; }
     virtual bool isVector() override { return false; }
-    virtual Variant CreateOnStack() override { return 0; }
-    virtual Variant CreateOnHeap() override { return 0; }
+    virtual Any CreateOnStack() override { return 0; }
+    virtual Any CreateOnHeap() override { return 0; }
     virtual ITypeMeta* DerefType() override { return 0; }
-    virtual Variant Dereferencing(Variant& object) override { return 0; }
-    virtual Variant MakePointerTo(Variant& object) override { return 0; }
+    virtual Any Dereferencing(Any& object) override { return 0; }
+    virtual Any MakePointerTo(Any& object) override { return 0; }
 };
 
 template <typename Type>

@@ -3,7 +3,7 @@
 #include "ITypeMeta.h"
 #include "Meta.h"
 
-void Serializer::Serialize(Variant object, ITypeMeta* type)
+void Serializer::Serialize(Any object, ITypeMeta* type)
 {
     if (type->isPointer())
     {
@@ -45,7 +45,7 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
         lua_setfield(L, -2, "@");
         for (auto field : type->fields)
         {
-            Variant value = field->get_local(object);
+            Any value = field->get_local(object);
             auto fieldType = field->GetType();
             Serialize(value, fieldType);
             lua_setfield(L, -2, field->name);
@@ -53,7 +53,7 @@ void Serializer::Serialize(Variant object, ITypeMeta* type)
     }
 }
 
-Variant Serializer::DeserializeUnknown()
+Any Serializer::DeserializeUnknown()
 {
     auto type = lua_type(L, -1);
 
@@ -72,11 +72,11 @@ Variant Serializer::DeserializeUnknown()
         return DeserializeUnknownTable();
 
     default:
-        return Variant::empty;
+        return Any::empty;
     }
 }
 
-Variant Serializer::DeserializeUnknownTable()
+Any Serializer::DeserializeUnknownTable()
 {
     lua_getfield(L, -1, "@");
     auto type = lua_type(L, -1);
@@ -95,10 +95,10 @@ Variant Serializer::DeserializeUnknownTable()
 
     }
 
-    return Variant::empty;
+    return Any::empty;
 }
 
-Variant Serializer::DeserializeAsClass(ITypeMeta* type)
+Any Serializer::DeserializeAsClass(ITypeMeta* type)
 {
     auto object = type->CreateOnStack();
 
@@ -107,7 +107,7 @@ Variant Serializer::DeserializeAsClass(ITypeMeta* type)
         printf(fieldMeta->name);
 
         lua_getfield(L, -1, fieldMeta->name);
-        Variant value = Deserialize(fieldMeta->GetType());
+        Any value = Deserialize(fieldMeta->GetType());
         fieldMeta->set_local(object, value);
         lua_pop(L, 1);
     }
@@ -115,7 +115,7 @@ Variant Serializer::DeserializeAsClass(ITypeMeta* type)
     return object;
 }
 
-Variant Serializer::Deserialize(ITypeMeta* type)
+Any Serializer::Deserialize(ITypeMeta* type)
 {
     printf("DES %s\n", type->name);
     fflush(stdout);
@@ -157,7 +157,7 @@ Variant Serializer::Deserialize(ITypeMeta* type)
     }
     else
     {
-        Variant object = isPointer ? type->CreateOnHeap() : type->CreateOnStack();
+        Any object = isPointer ? type->CreateOnHeap() : type->CreateOnStack();
 
         while (type->isPointer())
         {
@@ -170,7 +170,7 @@ Variant Serializer::Deserialize(ITypeMeta* type)
             fflush(stdout);
 
             lua_getfield(L, -1, fieldMeta->name);
-            Variant value = Deserialize(fieldMeta->GetType());
+            Any value = Deserialize(fieldMeta->GetType());
             if (isPointer)
             {
                 fieldMeta->set(object, value);

@@ -34,10 +34,8 @@ HEADERS += \
     Source/Keyframe.h \
     Source/Math/Transform.h \
     Source/Meta/TypeMeta.h \
-    Source/Meta/Variant.h \
     Source/Meta/FieldMeta.h \
     Source/Meta/MethodMeta.h \
-    Source/Meta/Any.h \
     Source/Meta/Meta.h \
     Source/Meta/Serializer.h \
     Source/Meta/Binder.h \
@@ -45,8 +43,9 @@ HEADERS += \
     Source/Meta/FunctionMeta.h \
     Source/Meta/ClassDefiner.h \
     Source/Meta/ITypeMeta.h \
-    Source/Meta/VariantData.h \
-    Source/Meta/BaseType.h
+    Source/Meta/BaseType.h \
+    Source/Meta/Any.h \
+    Source/Meta/AnyData.h
 
 SOURCES += \
     Source/App.cpp \
@@ -71,7 +70,6 @@ SOURCES += \
     Source/Keyframe.cpp \
     Source/Math/Transform.cpp \
     Source/Meta/TypeMeta.cpp \
-    Source/Meta/Variant.cpp \
     Source/Meta/FieldMeta.cpp \
     Source/Meta/MethodMeta.cpp \
     Source/Meta/Any.cpp \
@@ -82,7 +80,7 @@ SOURCES += \
     Source/Meta/ConstructorMeta.cpp \
     Source/Meta/FunctionMeta.cpp \
     Source/Meta/ITypeMeta.cpp \
-    Source/Meta/VariantData.cpp
+    Source/Meta/AnyData.cpp
 
 win {
     INCLUDEPATH += Source/Windows

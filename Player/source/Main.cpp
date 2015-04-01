@@ -44,6 +44,7 @@ void SerialzeToTable(lua_State* L, Type object)
 class Foo
 {
 public:
+    int foo_field;
     virtual void v() {}
 };
 
@@ -79,16 +80,27 @@ class TpMt<Type*> : public IClsMt
 
 std::unordered_map<std::type_index, ITpMt*> metas;
 
+template <template<typename A> class T>
+void FF(T<int> arg)
+{
+    printf("work\n");
+}
+
 template <typename T>
 ITpMt* OL(T* p)
 {
     auto index = std::type_index(typeid(*p));
 
-    if (metas.find(index) == mymap.end())
+    auto it = metas.find(index);
+
+    if (it == metas.end())
     {
 
     }
-
+    else
+    {
+        return it->second;
+    }
 
     printf(typeid(*p).name());
     printf("\n");
@@ -96,10 +108,20 @@ ITpMt* OL(T* p)
     return nullptr;
 }
 
+template <typename T>
+void BarDefiner()
+{
+    ClassDefiner<Bar<T>>()
+        .field("a", &Bar<T>::a)
+    ;
+};
+
 template <typename Type>
 ITpMt* Get()
 {
-
+    ClassDefiner<Foo>("Foo")
+        .field("foo_field", &Foo::foo_field)
+    ;
 
     Type aa;
     std::string ss = typeid(aa).name();
@@ -117,11 +139,20 @@ ITpMt* Get()
     return nullptr;
 }
 
+template <template <typename> class T1, typename T2>
+ITpMt* YO(T1<T2> *t)
+{
+
+    printf("YO, MAN!");
+
+    return nullptr;
+}
 
 int main(int argc, char *argv[])
 {
-    Meta* meta = Meta::Instance();
+    YO(new Bar<int>());
 
+    Meta* meta = Meta::Instance();
 
     Foo* foo = new Foo();
     Foo* bar_int = new Bar<int>();
@@ -131,7 +162,7 @@ int main(int argc, char *argv[])
     OL(bar_int);
     OL(bar_float);
 
-    //ITpMt* boo = Get<int*>();
+    BarDefiner<int>();
 
     return 0;
 

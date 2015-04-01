@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Variant.h"
+#include "Any.h"
 #include "TypeMeta.h"
 #include "FunctionMeta.h"
 #include <vector>
@@ -31,30 +31,39 @@ public:
     // Invoke
 
     template <int... I>
-    inline ReturnType RealInvoke(void* object, std::vector<Variant>& args, index_sequence<I...>)
+    inline ReturnType RealInvoke(void* object, std::vector<Any>& args, index_sequence<I...>)
     {
+        printf("%p\n", object);
+        printf("%p\n", pointer);
+
+        std::vector<Any> vv = { args.at(I)... };
+        for (auto& v : vv)
+        {
+            printf(">> %i\n", (char)v);
+        }
+
         return ((ClassType*)object->*pointer)(args.at(I)...);
     }
 
     template <typename type>
-    inline Variant InvokeHelper(void* object, std::vector<Variant>& args)
+    inline Any InvokeHelper(void* object, std::vector<Any>& args)
     {
         return RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
     }
 
     template <>
-    inline Variant InvokeHelper<void>(void* object, std::vector<Variant>& args)
+    inline Any InvokeHelper<void>(void* object, std::vector<Any>& args)
     {
         RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
-        return Variant();
+        return Any();
     }
 
-    Variant Invoke(std::vector<Variant>& args) override
+    Any Invoke(std::vector<Any>& args) override
     {
         if (args.size() == sizeof...(ArgTypes) + 1)
         {
             void* object = args[0];
-            args.erase(begin(args), begin(args));
+            args.erase(begin(args), begin(args) + 1);
             return InvokeHelper<ReturnType>(object, args);
         }
         else

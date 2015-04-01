@@ -37,7 +37,7 @@ int FunctionInvoker(lua_State* L)
     auto method = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
 
     int index = 1;
-    std::vector<Variant> args = {};
+    std::vector<Any> args = {};
     for (auto argType : method->GetArgTypes())
     {
         if (argType == TypeMeta<int>::Instance())
@@ -63,7 +63,7 @@ int FunctionInvoker(lua_State* L)
     }
     else
     {
-        Variant result = method->Invoke(args);
+        Any result = method->Invoke(args);
         if (returnType == TypeMeta<int>::Instance())
         {
             lua_pushinteger(L, result.as<int>());

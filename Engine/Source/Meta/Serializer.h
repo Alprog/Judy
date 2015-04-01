@@ -8,7 +8,7 @@ extern "C"
     #include "lauxlib.h"
 }
 
-#include "Variant.h"
+#include "Any.h"
 #include "FieldMeta.h"
 
 #include "App.h"
@@ -32,15 +32,15 @@ public:
         Serialize(object, typeMeta);
     }
 
-    void Serialize(Variant object)
+    void Serialize(Any object)
     {
         Serialize(object, object.GetType());
     }
 
-    Variant DeserializeUnknown();
-    Variant DeserializeUnknownTable();
+    Any DeserializeUnknown();
+    Any DeserializeUnknownTable();
 
-    Variant DeserializeAsClass(ITypeMeta* type);
+    Any DeserializeAsClass(ITypeMeta* type);
 
     template <typename Type>
     Type Deserialize()
@@ -50,6 +50,6 @@ public:
     }
 
 private:
-    Variant Deserialize(ITypeMeta* const typeMeta);
-    void Serialize(Variant object, ITypeMeta* const typeMeta);
+    Any Deserialize(ITypeMeta* const typeMeta);
+    void Serialize(Any object, ITypeMeta* const typeMeta);
 };

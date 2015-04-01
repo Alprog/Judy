@@ -2,7 +2,7 @@
 #pragma once
 
 #include "vector"
-#include "Variant.h"
+#include "Any.h"
 #include "TypeMeta.h"
 #include "MethodMeta.h"
 #include "FunctionMeta.h"
@@ -17,12 +17,12 @@ class ConstructorMeta : public IConstructorMeta, public FunctionMeta<ClassType, 
 {
 public:
     template <int... I>
-    inline Variant RealInvoke(std::vector<Variant>& args, index_sequence<I...>)
+    inline Any RealInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
         return TypeMeta<ClassType>::New<ArgTypes...>(args[I]...);
     }
 
-    virtual Variant Invoke(std::vector<Variant>& args) override
+    virtual Any Invoke(std::vector<Any>& args) override
     {
         if (args.size() == sizeof...(ArgTypes))
         {
