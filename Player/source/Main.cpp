@@ -78,110 +78,32 @@ class TpMt<Type*> : public IClsMt
 {
 };
 
-std::unordered_map<std::type_index, ITpMt*> metas;
-
 template <template<typename A> class T>
 void FF(T<int> arg)
 {
     printf("work\n");
 }
 
-template <typename T>
-ITpMt* OL(T* p)
-{
-    auto index = std::type_index(typeid(*p));
+//template <typename T>
+//void BarDefiner()
+//{
+//    ClassDefiner<Bar<T>>()
+//        .field("a", &Bar<T>::a)
+//    ;
+//};
 
-    auto it = metas.find(index);
+//template <template <typename> class T1, typename T2>
+//ITpMt* YO(T1<T2> *t)
+//{
 
-    if (it == metas.end())
-    {
+//    printf("YO, MAN!");
 
-    }
-    else
-    {
-        return it->second;
-    }
-
-    printf(typeid(*p).name());
-    printf("\n");
-
-    return nullptr;
-}
-
-template <typename T>
-void BarDefiner()
-{
-    ClassDefiner<Bar<T>>()
-        .field("a", &Bar<T>::a)
-    ;
-};
-
-template <typename Type>
-ITpMt* Get()
-{
-    ClassDefiner<Foo>("Foo")
-        .field("foo_field", &Foo::foo_field)
-    ;
-
-    Type aa;
-    std::string ss = typeid(aa).name();
-    printf(ss.c_str());
-    printf("\n");
-
-    base_type<Type>::value a;
-
-    std::string s = typeid(a).name();
-
-    printf(s.c_str());
-    printf("\n");
-    fflush(stdout);
-
-    return nullptr;
-}
-
-template <template <typename> class T1, typename T2>
-ITpMt* YO(T1<T2> *t)
-{
-
-    printf("YO, MAN!");
-
-    return nullptr;
-}
-
-class BBB
-{
-public:
-    int a;
-    int b;
-};
-
-template <>
-class TypeMeta<BBB>
-{
-    TypeMeta()
-    {
-        printf("!!!!!");
-    }
-};
+//    return nullptr;
+//}
 
 int main(int argc, char *argv[])
 {
-
-    //auto m = TypeMeta<BBB>::Instance();
-
-    YO(new Bar<int>());
-
     Meta* meta = Meta::Instance();
-
-    Foo* foo = new Foo();
-    Foo* bar_int = new Bar<int>();
-    Foo* bar_float = new Bar<float>();
-
-    OL(foo);
-    OL(bar_int);
-    OL(bar_float);
-
-    BarDefiner<int>();
 
     return 0;
 

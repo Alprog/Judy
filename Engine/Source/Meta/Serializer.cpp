@@ -85,7 +85,7 @@ Any Serializer::DeserializeUnknownTable()
     {
         const char* typeName = lua_tostring(L, -1);
         lua_pop(L, 1);
-        for (auto type : Meta::Instance()->Types)
+        for (auto type : Meta::Instance()->types)
         {
             if (!strcmp(type->name, typeName))
             {

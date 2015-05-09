@@ -4,47 +4,33 @@
 #include <vector>
 #include <unordered_map>
 #include <typeindex>
+#include "Singleton.h"
 
 class ITypeMeta;
 
-namespace meta
+class Meta : public Singleton<Meta>
 {
-    extern std::unordered_map<std::type_index, ITypeMeta*> types;
-
-    /*template <typename T>
-    ITpMt* OL(T* p)
-    {
-        auto index = std::type_index(typeid(*p));
-
-        auto it = metas.find(index);
-
-        if (it == metas.end())
-        {
-
-        }
-        else
-        {
-            return it->second;
-        }
-
-        printf(typeid(*p).name());
-        printf("\n");
-
-        return nullptr;
-    }*/
-
-}
-
-
-class Meta
-{
-public:
-    static Meta* Instance();
-
-    std::unordered_map<std::string, ITypeMeta*> TypeMap;
-
-    std::vector<ITypeMeta*> Types;
+    friend class Singleton<Meta>;
 
 private:
     Meta();
+
+public:
+    template <typename T>
+    ITypeMeta* GetTypeMeta(T* p)
+    {
+        auto index = std::type_index(typeid(*p));
+        auto it = typeMap.find(index);
+        if (it != typeMap.end())
+        {
+            return it->second;
+        }
+        return nullptr;
+    }
+
+public:
+    std::unordered_map<std::type_index, ITypeMeta*> typeMap;
+    std::vector<ITypeMeta*> types;
+
+
 };

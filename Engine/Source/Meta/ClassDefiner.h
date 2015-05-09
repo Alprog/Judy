@@ -16,7 +16,10 @@ public:
         ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
         typeMeta->name = typeid(ClassType).name();
         typeMeta->isClass = true;
-        Meta::Instance()->Types.push_back(typeMeta);
+
+        auto type_index = std::type_index(typeid(typeMeta));
+        Meta::Instance()->typeMap.emplace(type_index, typeMeta);
+        Meta::Instance()->types.push_back(typeMeta);
     }
 
     template <typename... ArgTypes>
