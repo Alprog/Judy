@@ -33,7 +33,7 @@ public:
     template <typename Type>
     inline static ITypeMeta* const Get()
     {
-        return TypeMeta<Type>::Get();
+        return TypeMeta<Type>::Instance();
     }
 
     template <>
@@ -47,3 +47,5 @@ public:
     virtual Any Dereferencing(Any& object) = 0;
     virtual Any MakePointerTo(Any& object) = 0;
 };
+
+

@@ -11,7 +11,7 @@ class Node;
 class IMethodMeta : public virtual IFunctionMeta
 {
 public:
-    //virtual Variant Invoke(void* object, std::vector<Variant> args) = 0;
+    //virtual Any Invoke(void* object, std::vector<Variant> args) = 0;
 };
 
 template <size_t... I>

@@ -148,8 +148,27 @@ ITpMt* YO(T1<T2> *t)
     return nullptr;
 }
 
+class BBB
+{
+public:
+    int a;
+    int b;
+};
+
+template <>
+class TypeMeta<BBB>
+{
+    TypeMeta()
+    {
+        printf("!!!!!");
+    }
+};
+
 int main(int argc, char *argv[])
 {
+
+    //auto m = TypeMeta<BBB>::Instance();
+
     YO(new Bar<int>());
 
     Meta* meta = Meta::Instance();

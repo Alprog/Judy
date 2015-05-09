@@ -15,7 +15,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         return;
     }
 
-    if (type == &TypeMeta<int>::instance)
+    if (type == TypeMeta<int>::Instance())
     {
         lua_pushnumber(L, object.as<int>());
     }
@@ -23,7 +23,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         return lua_pushnumber(L, 0);
     }
-    else if (type == &TypeMeta<std::string>::instance)
+    else if (type == TypeMeta<std::string>::Instance())
     {
         lua_pushstring(L, object.as<std::string>().c_str());
     }
@@ -142,7 +142,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
         return value;
     }
 
-    if (type == &TypeMeta<int>::instance)
+    if (type == TypeMeta<int>::Instance())
     {
         return lua_tointeger(L, -1);
     }
@@ -151,7 +151,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
         lua_tointeger(L, -1);
         return std::vector<int>();
     }
-    else if (type == &TypeMeta<std::string>::instance)
+    else if (type == TypeMeta<std::string>::Instance())
     {
         return std::string( lua_tostring(L, -1) );
     }

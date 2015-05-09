@@ -25,7 +25,7 @@ public:
     Any(Any&& other);                  // move constructor
     Any& operator=(const Any& other);  // copy assigment operator
     Any& operator=(Any&& other);       // move assigment operator
-    ~Any();                                // destructor
+    ~Any();                            // destructor
 
 private:
     inline void DestroyData();

@@ -6,23 +6,12 @@
 
 #include "ITypeMeta.h"
 #include "Any.h"
+#include "Singleton.h"
 
 template <typename Type>
-class TypeMeta : public ITypeMeta
+class TypeMeta : public ITypeMeta, public Singleton<TypeMeta<Type>>
 {
 public:
-    static TypeMeta<Type> instance;
-
-    static TypeMeta* const Get()
-    {
-        return Instance();
-    }
-
-    static TypeMeta* const Instance()
-    {
-        return &instance;
-    }
-
     ITypeMeta* PointerType()
     {
         return TypeMeta<Type*>::Instance();
@@ -172,9 +161,6 @@ public:
     virtual Any Dereferencing(Any& object) override { return 0; }
     virtual Any MakePointerTo(Any& object) override { return 0; }
 };
-
-template <typename Type>
-TypeMeta<Type> TypeMeta<Type>::instance;
 
 template <typename Type>
 TypeMeta<Type*> TypeMeta<Type*>::instance;
