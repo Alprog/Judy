@@ -33,15 +33,7 @@ public:
     template <int... I>
     inline ReturnType RealInvoke(void* object, std::vector<Any>& args, index_sequence<I...>)
     {
-        printf("%p\n", object);
-        printf("%p\n", pointer);
-
         std::vector<Any> vv = { args.at(I)... };
-        for (auto& v : vv)
-        {
-            printf(">> %i\n", (char)v);
-        }
-
         return ((ClassType*)object->*pointer)(args.at(I)...);
     }
 

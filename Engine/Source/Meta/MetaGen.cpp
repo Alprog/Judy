@@ -46,16 +46,12 @@ Meta::Meta()
     ;
 
     B b;
-
     std::vector<Any> args { &b, 8 };
     auto result = TypeMeta<B>::Instance()->methods[0]->Invoke(args);
-
     printf("%i \n", result.as<int>());
 
 
     std::string* str = new std::string("123456");
-
-
     std::vector<Any> args2 { str, '3', 0ull };
     auto r2 = TypeMeta<std::string>::Instance()->methods[2]->Invoke(args2);
     printf("%i\n", r2.as<std::string::size_type>());

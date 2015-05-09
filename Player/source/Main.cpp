@@ -105,8 +105,6 @@ int main(int argc, char *argv[])
 {
     Meta* meta = Meta::Instance();
 
-    return 0;
-
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 

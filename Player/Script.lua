@@ -1,9 +1,10 @@
 
-function TableToString( object, tab )
+function TableToString( object, tab, replaceTable )
 	local i = 1
 	local str = ''
 	str = str .. '{'
 	tab = tab or ''
+	replaceTable = replaceTable or {}
 	
 	local keys, values = {}, {}
 	for k, v in pairs(object) do
@@ -31,7 +32,11 @@ function TableToString( object, tab )
 			str = str .. key .. ' = '
 		end
 		if type( value ) == 'table' then
-			str = str .. TableToString( value, #keys > 1 and tab .. '    ' or tab )
+			if replaceTable[value] then
+				str = str .. replaceTable[value]
+			else
+				str = str .. TableToString( value, #keys > 1 and tab .. '    ' or tab )
+			end
 		elseif type( value ) == 'string' then
 			str = str .. '\'' .. value .. '\''
 		else
@@ -47,11 +52,14 @@ function TableToString( object, tab )
 	return str
 end
 
-function RefCounting(objectTable, refsTable)
+function RefCounting(objectTable, refsTable, orderTable)
 	refsTable[objectTable] = (refsTable[objectTable] or 0) + 1
+	if refsTable[objectTable] == 1 then
+		table.insert(orderTable, objectTable)
+	end
 	for _, value in pairs(objectTable) do
 		if type(value) == 'table' then
-			RefCounting(value, refsTable)
+			RefCounting(value, refsTable, orderTable)
 		end
 	end
 end
@@ -59,20 +67,34 @@ end
 function SmartTableToString(objectTable)
 
 	local refsTable = {}
-	RefCounting(objectTable, refsTable)
+	local orderTable = {}
+	RefCounting(objectTable, refsTable, orderTable)
 	
-	for k, v in pairs(refsTable) do
-		print(k)
-		print(v)
+	local str = ''
+	local index = 0
+	local replaceTable = {}
+	for i = #orderTable, 1, -1 do
+		local object = orderTable[i]
+		if i == 1 or refsTable[object] > 1 then
+			index = index + 1
+			local name = 'object' .. index
+			str = str .. 'local ' .. name .. ' = \n'
+			str = str .. TableToString(object, nil, replaceTable) .. '\n\n'
+			replaceTable[object] = name 
+		end
 	end
+	
+	print(str)
 	
 end
 
-local e = { "eee", "fff" }
+local d = { "111", "222" }
+local e = { "eee", d }
 
 local t = {}
 t.a = "fef"
 t.b = e
 t.c = e
+t.d = d
 
-print(SmartTableToString(t))
+--print(SmartTableToString(t))

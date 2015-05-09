@@ -14,6 +14,8 @@ print(v.x)]]
 
 require "Script"
 
+print("!!!")
+
 function Test(table)
 	print(TableToString(table))
 end
