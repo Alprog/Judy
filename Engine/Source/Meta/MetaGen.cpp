@@ -83,7 +83,7 @@ Meta::Meta()
     ;
 
     ClassDefiner<Node>()
-        //.constructor()
+        .constructor()
         .constructor<int>()
         .method("ChildCount", &Node::ChildCount)
         .method("RemoveChild", &Node::RemoveChild)

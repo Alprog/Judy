@@ -108,21 +108,21 @@ void LuaBinder::Bind(Meta* meta)
     }
 
     // fields
-    {
-        lua_newtable(L); // set table (2)
+//    {
+//        lua_newtable(L); // set table (2)
 
-        for (auto field : type->fields)
-        {
-            *(IFieldMeta**)lua_newuserdata(L, size) = field;
+//        for (auto field : type->fields)
+//        {
+//            *(IFieldMeta**)lua_newuserdata(L, size) = field;
 
-        }
+//        }
 
-        lua_setfield(L, 1, "__newindex");
-    }
+//        lua_setfield(L, 1, "__newindex");
+//    }
 
     lua_pushvalue(L, 1);
     lua_setfield(L, 1, "__index");
 
-    lua_setglobal(L, type->name);
-
+    lua_setglobal(L, "Node");
+    printf("NAME: %s \n", type->name);
 }
