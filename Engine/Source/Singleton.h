@@ -5,14 +5,9 @@ template <typename T>
 class Singleton
 {
 public:
-    inline static T* const Instance()
+    static T* Instance()
     {
+        static T instance;
         return &instance;
     }
-
-private:
-    static T instance;
 };
-
-template <typename T>
-T Singleton<T>::instance;

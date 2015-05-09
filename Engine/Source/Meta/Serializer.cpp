@@ -43,6 +43,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         auto name = type->name + modifiers;
         lua_pushstring(L, name.c_str());
         lua_setfield(L, -2, "@");
+
         for (auto field : type->fields)
         {
             Any value = field->get_local(object);
@@ -104,7 +105,7 @@ Any Serializer::DeserializeAsClass(ITypeMeta* type)
 
     for (auto fieldMeta : type->fields)
     {
-        printf(fieldMeta->name);
+        printf("field: %s \n", fieldMeta->name);
 
         lua_getfield(L, -1, fieldMeta->name);
         Any value = Deserialize(fieldMeta->GetType());
