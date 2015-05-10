@@ -28,7 +28,7 @@ public:
     virtual ITypeMeta* const GetType() override
     {
         //return (ITypeMeta*)TypeMeta<FieldType>::Instance();
-        return Meta::Instance()->GetMetaType<FieldType>();
+        return Meta::Instance()->GetTypeMeta<FieldType>();
     }
 
     FieldMeta(char* name, FieldType ClassType::*pointer)

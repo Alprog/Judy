@@ -29,7 +29,7 @@ class FunctionMeta : virtual IFunctionMeta
     inline ITypeMeta* GetReturnTypeHelper()
     {
         //return ITypeMeta::Get<ReturnType>();
-        return Meta::Instance()->GetMetaType<ReturnType>();
+        return Meta::Instance()->GetTypeMeta<ReturnType>();
     }
 
     template <>
@@ -49,7 +49,7 @@ class FunctionMeta : virtual IFunctionMeta
     inline std::vector<ITypeMeta*> GetArgTypesHelper()
     {
         //return { ITypeMeta::Get<ArgTypes>()... };
-        return { Meta::Instance()->GetMetaType<ArgTypes>()... };
+        return { Meta::Instance()->GetTypeMeta<ArgTypes>()... };
     }
 
     template <>

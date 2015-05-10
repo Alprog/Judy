@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <typeindex>
 #include "Singleton.h"
-#include "TypeMeta.h"
 
 class ITypeMeta;
 
@@ -27,27 +26,23 @@ private:
     }
 
 public:
+    ITypeMeta* GetTypeMeta(std::type_index index);
+
     template <typename T>
-    ITypeMeta* GetMetaType()
+    ITypeMeta* GetTypeMeta()
     {
         auto index = std::type_index(typeid(T));
-        auto it = typeMap.find(index);
-        if (it != typeMap.end())
-        {
-            return it->second;
-        }
-        return nullptr;
+        return GetTypeMeta(index);
     }
 
     template <typename T>
-    inline ITypeMeta* GetMetaType(T* p)
+    inline ITypeMeta* GetTypeMeta(T* p)
     {
-        return GetMetaType<T>();
+        return GetTypeMeta<T>();
     }
 
 public:
     std::unordered_map<std::type_index, ITypeMeta*> typeMap;
     std::vector<ITypeMeta*> types;
-
-
 };
+

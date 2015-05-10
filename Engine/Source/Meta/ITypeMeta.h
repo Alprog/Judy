@@ -26,18 +26,6 @@ public:
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;
 
-    template <typename Type>
-    inline static ITypeMeta* const Get()
-    {
-        return TypeMeta<Type>::Instance();
-    }
-
-    template <>
-    inline static ITypeMeta* const Get<void>()
-    {
-        return nullptr;
-    }
-
     virtual ITypeMeta* DerefType() = 0;
 
     virtual Any Dereferencing(Any& object) = 0;

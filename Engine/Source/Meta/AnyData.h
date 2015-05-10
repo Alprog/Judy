@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ITypeMeta.h"
+#include "Meta.h"
 
 struct IAnyData
 {
@@ -24,7 +25,8 @@ struct AnyData : public IAnyData
 
     virtual ITypeMeta* GetType() override
     {
-        return ITypeMeta::Get<T>();
+        return Meta::Instance()->GetTypeMeta<T>();
+        //return ITypeMeta::Get<T>();
     }
 
     virtual IAnyData* copy() override
