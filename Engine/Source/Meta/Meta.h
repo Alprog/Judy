@@ -18,7 +18,8 @@ private:
     template <typename T>
     void DefineBuildInType(std::string name)
     {
-        ITypeMeta* meta = TypeMeta<T>::Instance();
+        //ITypeMeta* meta = TypeMeta<T>::Instance();
+        ITypeMeta* meta = new TypeMeta<T>();
         meta->name = name;
 
         types.push_back(meta);

@@ -28,7 +28,7 @@ public:
     template <typename Type>
     void Serialize(Type object)
     {
-        ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
+        ITypeMeta* typeMeta = Meta::Instance()->GetTypeMeta<Type>();
         Serialize(object, typeMeta);
     }
 
@@ -45,7 +45,7 @@ public:
     template <typename Type>
     Type Deserialize()
     {
-        ITypeMeta* typeMeta = TypeMeta<Type>::Instance();
+        ITypeMeta* typeMeta = Meta::Instance()->GetTypeMeta<Type>();
         return Deserialize(typeMeta);
     }
 

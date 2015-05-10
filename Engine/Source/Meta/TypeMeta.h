@@ -9,12 +9,12 @@
 #include "Singleton.h"
 
 template <typename Type>
-class TypeMeta : public ITypeMeta, public Singleton<TypeMeta<Type>>
+class TypeMeta : public ITypeMeta
 {
 public:
     ITypeMeta* PointerType()
     {
-        return TypeMeta<Type*>::Instance();
+        return Meta::Instance()->GetTypeMeta<Type*>();
     }
 
     virtual bool isPointer() override
@@ -79,18 +79,6 @@ template <typename Type>
 class TypeMeta<std::vector<Type>> : public TypeMeta<Type>
 {
 public:
-    static TypeMeta<std::vector<Type>> instance;
-
-    static TypeMeta* const Get()
-    {
-        return Instance();
-    }
-
-    static TypeMeta* const Instance()
-    {
-        return &instance;
-    }
-
     virtual bool isVector() override
     {
         return true;
@@ -101,18 +89,6 @@ template <typename Type>
 class TypeMeta<Type*> : public TypeMeta<Type>
 {
 public:
-    static TypeMeta<Type*> instance;
-
-    static TypeMeta* const Get()
-    {
-        return Instance();
-    }
-
-    static TypeMeta* const Instance()
-    {
-        return &instance;
-    }
-
     virtual bool isPointer() override
     {
         return true;
@@ -120,7 +96,7 @@ public:
 
     virtual ITypeMeta* DerefType() override
     {
-        return TypeMeta<Type>::Instance();
+        return Meta::Instance()->GetTypeMeta<Type>();
     }
 
     /*Variant CreateOnHeap() override
@@ -161,9 +137,3 @@ public:
     virtual Any Dereferencing(Any& object) override { return 0; }
     virtual Any MakePointerTo(Any& object) override { return 0; }
 };
-
-template <typename Type>
-TypeMeta<Type*> TypeMeta<Type*>::instance;
-
-template <typename Type>
-TypeMeta<std::vector<Type>> TypeMeta<std::vector<Type>>::instance;

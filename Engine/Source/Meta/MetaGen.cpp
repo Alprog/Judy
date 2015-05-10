@@ -29,6 +29,7 @@ Meta::Meta()
     DefineBuildInType<int>("int");
     DefineBuildInType<float>("float");
     DefineBuildInType<std::string>("string");
+    DefineBuildInType<char*>("char*");
 
     /*
     //void (B::*p)(int) = &B::test;
@@ -95,7 +96,7 @@ Meta::Meta()
 
     //Node* node = (Node*)TypeMeta<Node>::Instance()->constructors[1]->Invoke({1});
 
-    int i = TypeMeta<Node>::Instance()->methods[1]->GetArgCount();
+    int i = Meta::Instance()->GetTypeMeta<Node>()->methods[1]->GetArgCount();
 
     i = i + 1;
 }

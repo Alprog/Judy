@@ -17,7 +17,7 @@ LuaBinder::LuaBinder(lua_State* L)
 template <typename T>
 T* CheckType(lua_State* L, int n)
 {
-    char* name = TypeMeta<T>::Instance()->name;
+    char* name = Meta::Instance()->GetTypeMeta<T>()->name;
     return *(T**)luaL_checkudata(L, n, name);
 }
 
@@ -40,11 +40,11 @@ int FunctionInvoker(lua_State* L)
     std::vector<Any> args = {};
     for (auto argType : method->GetArgTypes())
     {
-        if (argType == TypeMeta<int>::Instance())
+        if (argType == Meta::Instance()->GetTypeMeta<int>())
         {
             args.push_back(lua_tointeger(L, index++));
         }
-        else if (argType == TypeMeta<char*>::Instance())
+        else if (argType == Meta::Instance()->GetTypeMeta<char*>())
         {
             args.push_back(lua_tostring(L, index++));
         }
@@ -64,11 +64,11 @@ int FunctionInvoker(lua_State* L)
     else
     {
         Any result = method->Invoke(args);
-        if (returnType == TypeMeta<int>::Instance())
+        if (returnType == Meta::Instance()->GetTypeMeta<int>())
         {
             lua_pushinteger(L, result.as<int>());
         }
-        else if (returnType == TypeMeta<char*>::Instance())
+        else if (returnType == Meta::Instance()->GetTypeMeta<char*>())
         {
             lua_pushstring(L, result.as<char*>());
         }
@@ -85,7 +85,7 @@ int FunctionInvoker(lua_State* L)
 
 void LuaBinder::Bind(Meta* meta)
 {
-    ITypeMeta* type = TypeMeta<Node>::Instance();
+    ITypeMeta* type = Meta::Instance()->GetTypeMeta<Node>();
 
     luaL_newmetatable(L, type->name.c_str()); // (1)
 

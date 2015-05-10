@@ -13,7 +13,8 @@ class ClassDefiner
 public:
     ClassDefiner()
     {
-        ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
+        //ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
+        ITypeMeta* typeMeta = new TypeMeta<ClassType>();
         typeMeta->name = typeid(ClassType).name();
         typeMeta->isClass = true;
 
@@ -26,7 +27,7 @@ public:
     ClassDefiner& constructor()
     {
         auto constructor = new ConstructorMeta<ClassType, ArgTypes...>();
-        TypeMeta<ClassType>::Instance()->constructors.push_back(constructor);
+        Meta::Instance()->GetTypeMeta<ClassType>()->constructors.push_back(constructor);
         return *this;
     }
 
@@ -34,7 +35,7 @@ public:
     ClassDefiner& field(char* name, FieldType ClassType::*pointer)
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
-        TypeMeta<ClassType>::Instance()->fields.push_back(field);
+        Meta::Instance()->GetTypeMeta<ClassType>()->fields.push_back(field);
         return *this;
     }
 
@@ -50,7 +51,7 @@ public:
         auto method = new MethodMeta<ClassType, ReturnType, ArgTypes...>();
         method->name = name;
         method->pointer = pointer;
-        TypeMeta<ClassType>::Instance()->methods.push_back(method);
+        Meta::Instance()->GetTypeMeta<ClassType>()->methods.push_back(method);
         return *this;
     }
 
