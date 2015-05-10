@@ -18,6 +18,7 @@
 #include <unordered_map>
 #include <iostream>
 #include "Meta/Sfinae.h"
+#include "Meta/NewMeta.h"
 
 extern "C"
 {
@@ -125,9 +126,10 @@ void FF(T<int> arg)
 //    void foo() { printf("2!\n"); }
 //};
 
-
 int main(int argc, char *argv[])
 {
+    printf("%i \n", TypeMetaOf<int>()->isPointer());
+    printf("%i \n", TypeMetaOf<int*>()->isPointer());
 
     Meta* meta = Meta::Instance();
 
