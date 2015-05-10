@@ -24,17 +24,14 @@ struct ClassMETA : ITypeMETA
 struct IPointerMETA : ITypeMETA
 {
     virtual bool isPointer() override { printf("!\n"); return true; }
-};
 
-template <typename T>
-struct PointerMETA : IPointerMETA
-{
-    ITypeMETA* DerefType()
+    IPointerMETA(ITypeMETA* pointeeType)
     {
-        return TypeMetaOf<T>();
+        this->pointeeType = pointeeType;
     }
-};
 
+    ITypeMETA* pointeeType;
+};
 
 //---------------------------------
 
@@ -53,7 +50,7 @@ struct TypeMetaHolder<T, typename enable_pointer<T>::type>
 {
     static ITypeMETA* Instance()
     {
-        static PointerMETA<base_type<T>::value> instance;
+        static IPointerMETA instance { TypeMetaOf<base_type<T>::value>() };
         return &instance;
     }
 };

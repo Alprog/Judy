@@ -128,8 +128,10 @@ void FF(T<int> arg)
 
 int main(int argc, char *argv[])
 {
-    printf("%i \n", TypeMetaOf<int>()->isPointer());
-    printf("%i \n", TypeMetaOf<int*>()->isPointer());
+    auto typeMeta = (IPointerMETA*)TypeMetaOf<int*>();
+
+    printf("%i \n", typeMeta->isPointer());
+    printf("%i \n", typeMeta->pointeeType->isPointer());
 
     Meta* meta = Meta::Instance();
 
