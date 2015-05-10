@@ -46,7 +46,9 @@ class FunctionMeta : virtual IFunctionMeta
     template <int count>
     inline std::vector<ITypeMeta*> GetArgTypesHelper()
     {
-        return{ ((ITypeMeta*)TypeMeta<ArgTypes>::Instance())... };
+        return { ITypeMeta::Get<ArgTypes>()... };
+
+        //return{ ((ITypeMeta*)TypeMeta<ArgTypes>::Instance())... };
     }
 
     template <>

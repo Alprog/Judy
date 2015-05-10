@@ -66,11 +66,8 @@ Meta::Meta()
         //.constructor()
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
-        //.field("c", &TestStruct::c)
         .field("d", &TestStruct::d)
-        //.field("dd", &TestStruct::dd)
         .field("g", &TestStruct::g)
-        //.field("arr", &TestStruct::arr)
     ;
 
     ClassDefiner<SubStruct>()

@@ -17,6 +17,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <iostream>
+#include "Meta/Sfinae.h"
 
 extern "C"
 {
@@ -101,8 +102,35 @@ void FF(T<int> arg)
 //    return nullptr;
 //}
 
+//template <typename T, typename Enable = void>
+//class AA
+//{
+//    static_assert(std::is_same<Enable, void>::value, "Only one parameter");
+
+//public:
+//    void foo() { printf("0!\n"); }
+//};
+
+//template <class T>
+//class AA<T, typename enable_integral<T>::type>
+//{
+//public:
+//    void foo() { printf("1!\n"); }
+//};
+
+//template <class T>
+//class AA<T, typename enable_pointer<T>::type>
+//{
+//public:
+//    void foo() { printf("2!\n"); }
+//};
+
+
 int main(int argc, char *argv[])
 {
+    AA<int> a;
+    a.foo();
+
     Meta* meta = Meta::Instance();
 
     lua_State* L = luaL_newstate();

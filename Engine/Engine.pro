@@ -46,7 +46,8 @@ HEADERS += \
     Source/Meta/BaseType.h \
     Source/Meta/Any.h \
     Source/Meta/AnyData.h \
-    Source/Singleton.h
+    Source/Singleton.h \
+    Source/Meta/Sfinae.h
 
 SOURCES += \
     Source/App.cpp \
