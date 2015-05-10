@@ -24,6 +24,11 @@ public:
 
 Meta::Meta()
 {
+    DefineBuildInType<bool>("bool");
+    DefineBuildInType<int>("int");
+    DefineBuildInType<float>("float");
+    DefineBuildInType<std::string>("string");
+
     //void (B::*p)(int) = &B::test;
 
     std::string::iterator (std::string::*p)() = &std::string::begin;

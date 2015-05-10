@@ -75,7 +75,7 @@ int FunctionInvoker(lua_State* L)
         else
         {
             *(void**)lua_newuserdata(L, sizeof(void*)) = result;
-            luaL_getmetatable(L, returnType->name);
+            luaL_getmetatable(L, returnType->name.c_str());
             lua_setmetatable(L, -2);
         }
 
@@ -87,7 +87,7 @@ void LuaBinder::Bind(Meta* meta)
 {
     ITypeMeta* type = TypeMeta<Node>::Instance();
 
-    luaL_newmetatable(L, type->name); // (1)
+    luaL_newmetatable(L, type->name.c_str()); // (1)
 
     auto size = sizeof(void*);
 
@@ -124,5 +124,5 @@ void LuaBinder::Bind(Meta* meta)
     lua_setfield(L, 1, "__index");
 
     lua_setglobal(L, "Node");
-    printf("NAME: %s \n", type->name);
+    printf("NAME: %s \n", type->name.c_str());
 }

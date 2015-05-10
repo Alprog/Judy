@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include "Singleton.h"
+#include "TypeMeta.h"
 
 class ITypeMeta;
 
@@ -14,6 +15,13 @@ class Meta : public Singleton<Meta>
 
 private:
     Meta();
+
+    template <typename T>
+    void DefineBuildInType(std::string name)
+    {
+        ITypeMeta* meta = TypeMeta<T>::Instance();
+        meta->name = name;
+    }
 
 public:
     template <typename T>

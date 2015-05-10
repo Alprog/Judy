@@ -84,11 +84,11 @@ Any Serializer::DeserializeUnknownTable()
 
     if (type == LUA_TSTRING)
     {
-        const char* typeName = lua_tostring(L, -1);
+        std::string typeName = lua_tostring(L, -1);
         lua_pop(L, 1);
         for (auto type : Meta::Instance()->types)
         {
-            if (!strcmp(type->name, typeName))
+            if (type->name == typeName)
             {
                 return DeserializeAsClass(type);
             }
@@ -118,7 +118,7 @@ Any Serializer::DeserializeAsClass(ITypeMeta* type)
 
 Any Serializer::Deserialize(ITypeMeta* type)
 {
-    printf("DES %s\n", type->name);
+    printf("DES %s\n", type->name.c_str());
     fflush(stdout);
 
     bool isPointer = type->isPointer();

@@ -128,8 +128,6 @@ void FF(T<int> arg)
 
 int main(int argc, char *argv[])
 {
-    AA<int> a;
-    a.foo();
 
     Meta* meta = Meta::Instance();
 

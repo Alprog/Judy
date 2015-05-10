@@ -11,7 +11,7 @@ class IConstructorMeta;
 class ITypeMeta
 {
 public:
-    const char* name;
+    std::string name;
     bool isClass;
 
     ITypeMeta();
@@ -43,5 +43,3 @@ public:
     virtual Any Dereferencing(Any& object) = 0;
     virtual Any MakePointerTo(Any& object) = 0;
 };
-
-
