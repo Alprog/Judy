@@ -4,6 +4,7 @@
 #include <string>
 #include "Any.h"
 #include "Serializer.h"
+#include "Meta.h"
 
 class Serializer;
 class ITypeMeta;
@@ -26,7 +27,8 @@ class FieldMeta : public IFieldMeta
 public:
     virtual ITypeMeta* const GetType() override
     {
-        return (ITypeMeta*)TypeMeta<FieldType>::Instance();
+        //return (ITypeMeta*)TypeMeta<FieldType>::Instance();
+        return Meta::Instance()->GetMetaType<FieldType>();
     }
 
     FieldMeta(char* name, FieldType ClassType::*pointer)

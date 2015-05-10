@@ -17,7 +17,7 @@ public:
         typeMeta->name = typeid(ClassType).name();
         typeMeta->isClass = true;
 
-        auto type_index = std::type_index(typeid(typeMeta));
+        auto type_index = std::type_index(typeid(ClassType));
         Meta::Instance()->typeMap.emplace(type_index, typeMeta);
         Meta::Instance()->types.push_back(typeMeta);
     }

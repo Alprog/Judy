@@ -66,38 +66,3 @@ public:
 
     ReturnType(ClassType::*pointer)(ArgTypes...);
 };
-
-/*template <typename ClassType, typename ReturnType, typename... ArgTypes>
-class MethodMeta : public MethodMetaBase<ClassType, ReturnType, ArgTypes...>
-{
-public:
-    Variant Invoke(void* object, std::vector<Variant> args) override
-    {
-        if (args.size() == sizeof...(ArgTypes))
-        {
-            return RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
-        }
-        else
-        {
-            throw new std::exception();
-        }
-    }
-};
-
-template <typename ClassType, typename... ArgTypes>
-class MethodMeta<ClassType, void, ArgTypes...> : public MethodMetaBase<ClassType, void, ArgTypes...>
-{
-public:
-    Variant Invoke(void* object, std::vector<Variant> args) override
-    {
-        if (args.size() == sizeof...(ArgTypes))
-        {
-            RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
-            return Variant::empty;
-        }
-        else
-        {
-            throw new std::exception();
-        }
-    }
-};*/

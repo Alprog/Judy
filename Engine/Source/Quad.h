@@ -4,12 +4,11 @@
 #include "Node.h"
 #include "string"
 #include "Transform.h"
-
-#define META(_)
-#define SERIALIZED
+#include "Meta/TypeMeta.h"
 
 class Quad : public Node
 {
+    friend TypeMeta<Quad>;
 
 public:
     Quad();
@@ -17,9 +16,9 @@ public:
     virtual void Update(double delta) override;
     virtual void Render(Renderer* renderer) override;
 
-    SERIALIZED Vector2 Size;
-    SERIALIZED Transform Transform;
+    Vector2 Size;
+    Transform Transform;
 
-    SERIALIZED std::string Shader;
-    SERIALIZED std::string Texture;
+    std::string Shader;
+    std::string Texture;
 };

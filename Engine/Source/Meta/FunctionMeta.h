@@ -2,6 +2,7 @@
 #pragma once
 
 #include "TypeMeta.h"
+#include "Meta.h"
 
 class IFunctionMeta
 {
@@ -27,7 +28,8 @@ class FunctionMeta : virtual IFunctionMeta
     template <typename Type>
     inline ITypeMeta* GetReturnTypeHelper()
     {
-        return TypeMeta<ReturnType>::Instance();
+        //return ITypeMeta::Get<ReturnType>();
+        return Meta::Instance()->GetMetaType<ReturnType>();
     }
 
     template <>
@@ -46,9 +48,8 @@ class FunctionMeta : virtual IFunctionMeta
     template <int count>
     inline std::vector<ITypeMeta*> GetArgTypesHelper()
     {
-        return { ITypeMeta::Get<ArgTypes>()... };
-
-        //return{ ((ITypeMeta*)TypeMeta<ArgTypes>::Instance())... };
+        //return { ITypeMeta::Get<ArgTypes>()... };
+        return { Meta::Instance()->GetMetaType<ArgTypes>()... };
     }
 
     template <>

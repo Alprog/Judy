@@ -21,19 +21,28 @@ private:
     {
         ITypeMeta* meta = TypeMeta<T>::Instance();
         meta->name = name;
+
+        types.push_back(meta);
+        typeMap.emplace(std::type_index(typeid(T)), meta);
     }
 
 public:
     template <typename T>
-    ITypeMeta* GetTypeMeta(T* p)
+    ITypeMeta* GetMetaType()
     {
-        auto index = std::type_index(typeid(*p));
+        auto index = std::type_index(typeid(T));
         auto it = typeMap.find(index);
         if (it != typeMap.end())
         {
             return it->second;
         }
         return nullptr;
+    }
+
+    template <typename T>
+    inline ITypeMeta* GetMetaType(T* p)
+    {
+        return GetMetaType<T>();
     }
 
 public:
