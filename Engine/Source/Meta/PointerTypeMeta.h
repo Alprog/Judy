@@ -34,6 +34,6 @@ public:
 
     virtual ITypeMeta* PointeeTypeMeta() override
     {
-        return Meta::Instance()->GetTypeMeta<pointeeType>();
+        return TypeMetaOf<pointeeType>();
     }
 };

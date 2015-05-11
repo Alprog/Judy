@@ -28,8 +28,7 @@ class FunctionMeta : virtual IFunctionMeta
     template <typename Type>
     inline ITypeMeta* GetReturnTypeHelper()
     {
-        //return ITypeMeta::Get<ReturnType>();
-        return Meta::Instance()->GetTypeMeta<ReturnType>();
+        return TypeMetaOf<ReturnType>();
     }
 
     template <>
@@ -48,8 +47,7 @@ class FunctionMeta : virtual IFunctionMeta
     template <int count>
     inline std::vector<ITypeMeta*> GetArgTypesHelper()
     {
-        //return { ITypeMeta::Get<ArgTypes>()... };
-        return { Meta::Instance()->GetTypeMeta<ArgTypes>()... };
+        return { TypeMetaOf<ArgTypes>()... };
     }
 
     template <>
