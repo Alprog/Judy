@@ -23,22 +23,6 @@ public:
     int test(float a) { return 88; }
 };
 
-//template <>
-//struct TypeMeta<SubStruct> : public IClassMeta<SubStruct>
-//{
-//    template <typename FieldType>
-//    void regField(char* name, FieldType SubStruct::*pointer)
-//    {
-//        auto field = new FieldMeta<SubStruct, FieldType>(name, pointer);
-//        fields.push_back(field);
-//    }
-
-//    TypeMeta()
-//    {
-//        regField("e", &SubStruct::e);
-//    }
-//};
-
 Meta::Meta()
 {
     DefineBuildInType<bool>("bool");

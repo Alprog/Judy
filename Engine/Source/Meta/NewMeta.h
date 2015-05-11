@@ -11,14 +11,11 @@ class IMethodMeta;
 
 struct ITypeMETA
 {
-    virtual bool isPointer() { return false; }
-    virtual bool isClass() { return false; }
+    virtual bool isPointer() { printf("!\n"); return false; }
 };
 
 struct ClassMETA : ITypeMETA
 {
-    virtual bool isClass() override { return true; }
-
     std::vector<IConstructorMeta*> constructors;
     std::vector<IFieldMeta*> fields;
     std::vector<IMethodMeta*> methods;
@@ -26,7 +23,7 @@ struct ClassMETA : ITypeMETA
 
 struct IPointerMETA : ITypeMETA
 {
-    virtual bool isPointer() override { return true; }
+    virtual bool isPointer() override { printf("!\n"); return true; }
 
     IPointerMETA(ITypeMETA* pointeeType)
     {

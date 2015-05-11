@@ -19,7 +19,7 @@ public:
     template <int... I>
     inline Any RealInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
-        return TypeMeta<ClassType>::Constructor<ArgTypes...>(args[I]...);
+        return TypeMeta<ClassType>::New<ArgTypes...>(args[I]...);
     }
 
     virtual Any Invoke(std::vector<Any>& args) override

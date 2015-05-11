@@ -7,79 +7,133 @@
 #include "ITypeMeta.h"
 #include "Any.h"
 #include "Singleton.h"
-#include "Sfinae.h"
 
-template <typename T, typename Enable = void>
-struct TypeMeta : public ITypeMeta
+template <typename Type>
+class TypeMeta : public ITypeMeta
 {
-    virtual bool isPointer() override { return false; }
-    virtual bool isVector() override { return false; }
+public:
+    ITypeMeta* PointerType()
+    {
+        return Meta::Instance()->GetTypeMeta<Type*>();
+    }
+
+    virtual bool isPointer() override
+    {
+        return false;
+    }
+
+    virtual bool isVector() override
+    {
+        return false;
+    }
 
     Any CreateOnStack() override
     {
-        return T();
+        return Type();
     }
 
     Any CreateOnHeap() override
     {
-        return new T();
+        return new Type();
+    }
+
+    template <typename... Types>
+    inline static Type* New(Types... args)
+    {
+        return new Type(args...);
     }
 
     virtual Any Dereferencing(Any& object) override
     {
-        return *object.as<T*>();
+        return *object.as<Type*>();
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        return &object.as<T>();
+        return Any::empty;
     }
 
     virtual ITypeMeta* DerefType() override
     {
         throw new std::exception();
     }
+};
 
-    template <typename... ArgTypes>
-    inline static T* Constructor(ArgTypes... args)
+//template <typename Type>
+//class BuildInTypeMeta : TypeMeta<Type>
+//{
+//};
+
+//template <typename Type>
+//class ClassMeta : TypeMeta<Type>
+//{
+//};
+
+//template <typename Type>
+//class PointerTypeMeta : TypeMeta<Type>
+//{
+//};
+
+
+template <typename Type>
+class TypeMeta<std::vector<Type>> : public TypeMeta<Type>
+{
+public:
+    virtual bool isVector() override
     {
-        return new T(args...);
+        return true;
     }
 };
 
-template <typename T>
-struct TypeMeta<T, typename enable_pointer<T>::type> : public ITypeMeta
+template <typename Type>
+class TypeMeta<Type*> : public TypeMeta<Type>
 {
-    virtual bool isPointer() override { return true; }
-    virtual bool isVector() override { return false; }
+public:
+    virtual bool isPointer() override
+    {
+        return true;
+    }
 
     virtual ITypeMeta* DerefType() override
     {
-        return Meta::Instance()->GetTypeMeta<T>();
+        return Meta::Instance()->GetTypeMeta<Type>();
     }
 
-    Any CreateOnStack() override
+    /*Variant CreateOnHeap() override
     {
-        return T();
-    }
-
-    Any CreateOnHeap() override
-    {
-        return new T();
-    }
-
-    virtual Any Dereferencing(Any& object) override
-    {
-        return *object.as<T*>();
-    }
+        return new Type();
+    }*/
 
     virtual Any MakePointerTo(Any& object) override
     {
-        return &object.as<T>();
+        //Type* pointer = new Type();
+        //*pointer = object.as<Type>();
+        //return pointer;
+        return Any::empty;
     }
 };
 
-template <typename T>
-struct IClassMeta : public ITypeMeta
+template <>
+class TypeMeta<void> : public ITypeMeta
 {
+public:
+    static TypeMeta<void> instance;
+
+    static TypeMeta* const Get()
+    {
+        return Instance();
+    }
+
+    static TypeMeta* const Instance()
+    {
+        return &instance;
+    }
+
+    virtual bool isPointer() override { return false; }
+    virtual bool isVector() override { return false; }
+    virtual Any CreateOnStack() override { return 0; }
+    virtual Any CreateOnHeap() override { return 0; }
+    virtual ITypeMeta* DerefType() override { return 0; }
+    virtual Any Dereferencing(Any& object) override { return 0; }
+    virtual Any MakePointerTo(Any& object) override { return 0; }
 };
