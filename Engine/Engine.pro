@@ -48,7 +48,6 @@ HEADERS += \
     Source/Meta/AnyData.h \
     Source/Singleton.h \
     Source/Meta/Sfinae.h \
-    Source/Meta/NewMeta.h \
     Source/Meta/ClassMeta.h \
     Source/Meta/PointerTypeMeta.h
 
