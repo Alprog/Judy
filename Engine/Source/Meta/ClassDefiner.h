@@ -16,7 +16,6 @@ public:
         //ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
         ITypeMeta* typeMeta = new TypeMeta<ClassType>();
         typeMeta->name = typeid(ClassType).name();
-        typeMeta->isClass = true;
 
         auto type_index = std::type_index(typeid(ClassType));
         Meta::Instance()->typeMap.emplace(type_index, typeMeta);
