@@ -8,6 +8,7 @@
 
 struct SubStruct
 {
+    friend Meta;
     friend TypeMeta<SubStruct>;
 
     int e;
@@ -25,15 +26,18 @@ struct SubStruct
 
 struct TestStruct
 {
+    friend Meta;
     friend TypeMeta<TestStruct>;
 
     int a;
-    int b;
     int* c;
     SubStruct d;
     SubStruct* dd;
     std::string g;
     std::vector<int> arr;
+
+private:
+    int b;
 
 public:
     TestStruct(int a, int b, char* text, SubStruct d)

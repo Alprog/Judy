@@ -22,6 +22,8 @@ private:
         ITypeMeta* meta = new TypeMeta<T>();
         meta->name = name;
 
+        printf("HHH %i \n", meta->isPointer());
+
         types.push_back(meta);
         typeMap.emplace(std::type_index(typeid(T)), meta);
     }
