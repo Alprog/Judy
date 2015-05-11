@@ -11,22 +11,23 @@ template <typename ClassType>
 class ClassDefiner
 {
 public:
+    ClassMetaBase* classMeta;
+
     ClassDefiner()
+        : classMeta { TypeMeta<ClassType>::Instance() }
     {
-        //ITypeMeta* typeMeta = TypeMeta<ClassType>::Instance();
-        ITypeMeta* typeMeta = new TypeMeta<ClassType>();
-        typeMeta->name = typeid(ClassType).name();
+        classMeta->name = typeid(ClassType).name();
 
         auto type_index = std::type_index(typeid(ClassType));
-        Meta::Instance()->typeMap.emplace(type_index, typeMeta);
-        Meta::Instance()->types.push_back(typeMeta);
+        Meta::Instance()->typeMap.emplace(type_index, classMeta);
+        Meta::Instance()->types.push_back(classMeta);
     }
 
     template <typename... ArgTypes>
     ClassDefiner& constructor()
     {
         auto constructor = new ConstructorMeta<ClassType, ArgTypes...>();
-        Meta::Instance()->GetTypeMeta<ClassType>()->constructors.push_back(constructor);
+        classMeta->constructors.push_back(constructor);
         return *this;
     }
 
@@ -34,15 +35,9 @@ public:
     ClassDefiner& field(char* name, FieldType ClassType::*pointer)
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
-        Meta::Instance()->GetTypeMeta<ClassType>()->fields.push_back(field);
+        classMeta->fields.push_back(field);
         return *this;
     }
-
-//    template <void* pointer>
-//    ClassDefiner& method(char* name)
-//    {
-//        return *this;
-//    }
 
     template <typename ReturnType, typename... ArgTypes>
     ClassDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
@@ -50,7 +45,7 @@ public:
         auto method = new MethodMeta<ClassType, ReturnType, ArgTypes...>();
         method->name = name;
         method->pointer = pointer;
-        Meta::Instance()->GetTypeMeta<ClassType>()->methods.push_back(method);
+        classMeta->methods.push_back(method);
         return *this;
     }
 

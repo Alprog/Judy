@@ -3,6 +3,7 @@
 
 #include "ITypeMeta.h"
 #include "Sfinae.h"
+#include "Singleton.h"
 
 class PointerTypeMetaBase : public ITypeMeta
 {
@@ -12,7 +13,7 @@ class PointerTypeMetaBase : public ITypeMeta
 };
 
 template <typename T>
-class TypeMeta<T, typename enable_pointer<T>::type> : public PointerTypeMetaBase
+class TypeMeta<T, typename enable_pointer<T>::type> : public PointerTypeMetaBase, public Singleton<TypeMeta<T>>
 {
 public:
     using pointeeType = typename std::remove_pointer<T>::type;

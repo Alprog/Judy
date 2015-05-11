@@ -3,6 +3,7 @@
 
 #include "ITypeMeta.h"
 #include "Sfinae.h"
+#include "Singleton.h"
 
 class ClassMetaBase : public ITypeMeta
 {
@@ -12,7 +13,7 @@ class ClassMetaBase : public ITypeMeta
 };
 
 template <typename T>
-class TypeMeta<T, typename enable_class<T>::type> : public ClassMetaBase
+class TypeMeta<T, typename enable_class<T>::type> : public ClassMetaBase, public Singleton<TypeMeta<T>>
 {
 public:
     Any CreateOnStack() override { return T(); }

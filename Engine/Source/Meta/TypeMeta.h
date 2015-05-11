@@ -9,16 +9,11 @@
 #include "Singleton.h"
 
 template <typename Type, typename Enable = void>
-class TypeMeta : public ITypeMeta
+class TypeMeta : public ITypeMeta, public Singleton<TypeMeta<Type>>
 {
     static_assert(std::is_same<Enable, void>::value, "Enable type must be void");
 
 public:
-    ITypeMeta* PointerType()
-    {
-        return Meta::Instance()->GetTypeMeta<Type*>();
-    }
-
     virtual bool isPointer() override { return false; }
     virtual bool isVector() override { return false; }
     virtual bool isClass() override { return false; }
@@ -45,3 +40,10 @@ public:
 // Template Specializations:
 #include "PointerTypeMeta.h"
 #include "ClassMeta.h"
+
+template <typename T>
+inline ITypeMeta* TypeMetaOf()
+{
+    return TypeMeta<std::decay<T>::type>::Instance();
+}
+
