@@ -10,7 +10,6 @@ extern "C"
 
 #include "Any.h"
 #include "FieldMeta.h"
-
 #include "App.h"
 
 class ITypeMeta;
@@ -28,7 +27,7 @@ public:
     template <typename Type>
     void Serialize(Type object)
     {
-        ITypeMeta* typeMeta = Meta::Instance()->GetTypeMeta<Type>();
+        ITypeMeta* typeMeta = TypeMetaOf<Type>();
         Serialize(object, typeMeta);
     }
 
@@ -45,7 +44,7 @@ public:
     template <typename Type>
     Type Deserialize()
     {
-        ITypeMeta* typeMeta = Meta::Instance()->GetTypeMeta<Type>();
+        ITypeMeta* typeMeta = TypeMetaOf<Type>();
         return Deserialize(typeMeta);
     }
 
