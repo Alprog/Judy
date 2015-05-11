@@ -12,9 +12,6 @@ class ITypeMeta
 {
 public:
     std::string name;
-    bool isClass;
-
-    ITypeMeta();
 
     std::vector<IConstructorMeta*> constructors;
     std::vector<IFieldMeta*> fields;
@@ -22,6 +19,7 @@ public:
 
     virtual bool isPointer() = 0;
     virtual bool isVector() = 0;
+    virtual bool isClass() = 0;
 
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;
