@@ -10,7 +10,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         lua_newtable(L);
         lua_pushinteger(L, 1);
         object = type->Dereferencing(object);
-        Serialize(object, type->DerefType());
+        Serialize(object, type->PointeeTypeMeta());
         lua_settable(L, -3);
         return;
     }
@@ -35,7 +35,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
 
         while (type->isPointer())
         {
-            type = type->DerefType();
+            type = type->PointeeTypeMeta();
             object = type->Dereferencing(object);
             modifiers += '*';
         }
@@ -129,7 +129,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
 
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
-        auto value = Deserialize(type->DerefType());
+        auto value = Deserialize(type->PointeeTypeMeta());
 
         printf("value %i\n", value.as<int>());
         fflush(stdout);
@@ -162,7 +162,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
 
         while (type->isPointer())
         {
-            type = type->DerefType();
+            type = type->PointeeTypeMeta();
         }
 
         for (auto fieldMeta : type->fields)
