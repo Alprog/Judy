@@ -10,19 +10,6 @@
 
 #include <functional>
 
-class A
-{
-public:
-    virtual int test(char a) const { return 7 + a; }
-};
-
-class B : public A
-{
-public:
-    virtual int test(char a) const override { return 5 + a; }
-    int test(float a) { return 88; }
-};
-
 Meta::Meta()
 {
     DefineBuildInType<bool>("bool");
@@ -95,9 +82,5 @@ Meta::Meta()
     ;
 
     //Node* node = (Node*)TypeMeta<Node>::Instance()->constructors[1]->Invoke({1});
-
-    int i = Meta::Instance()->GetTypeMeta<Node>()->methods[1]->GetArgCount();
-
-    i = i + 1;
 }
 

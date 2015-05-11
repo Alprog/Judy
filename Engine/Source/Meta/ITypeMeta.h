@@ -13,10 +13,6 @@ class ITypeMeta
 public:
     std::string name;
 
-    std::vector<IConstructorMeta*> constructors;
-    std::vector<IFieldMeta*> fields;
-    std::vector<IMethodMeta*> methods;
-
     virtual bool isPointer() = 0;
     virtual bool isVector() = 0;
     virtual bool isClass() = 0;

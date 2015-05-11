@@ -7,9 +7,14 @@
 
 class ClassMetaBase : public ITypeMeta
 {
+public:
     bool isPointer() override { return false; }
     bool isVector() override { return false; }
     bool isClass() override { return true; }
+
+    std::vector<IConstructorMeta*> constructors;
+    std::vector<IFieldMeta*> fields;
+    std::vector<IMethodMeta*> methods;
 };
 
 template <typename T>

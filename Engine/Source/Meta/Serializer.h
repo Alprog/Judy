@@ -40,7 +40,7 @@ public:
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();
 
-    Any DeserializeAsClass(ITypeMeta* type);
+    Any DeserializeAsClass(ClassMetaBase* classMeta);
 
     template <typename Type>
     Type Deserialize()

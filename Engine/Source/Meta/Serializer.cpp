@@ -44,13 +44,18 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         lua_pushstring(L, name.c_str());
         lua_setfield(L, -2, "@");
 
-        for (auto field : type->fields)
+        if (type->isClass())
         {
-            Any value = field->get_local(object);
-            auto fieldType = field->GetType();
-            Serialize(value, fieldType);
-            lua_setfield(L, -2, field->name);
+            auto classMeta = static_cast<ClassMetaBase*>(type);
+            for (auto field : classMeta->fields)
+            {
+                Any value = field->get_local(object);
+                auto fieldType = field->GetType();
+                Serialize(value, fieldType);
+                lua_setfield(L, -2, field->name);
+            }
         }
+
     }
 }
 
@@ -90,7 +95,11 @@ Any Serializer::DeserializeUnknownTable()
         {
             if (type->name == typeName)
             {
-                return DeserializeAsClass(type);
+                if (type->isClass())
+                {
+                    auto classMeta = static_cast<ClassMetaBase*>(type);
+                    return DeserializeAsClass(classMeta);
+                }
             }
         }
 
@@ -99,11 +108,11 @@ Any Serializer::DeserializeUnknownTable()
     return Any::empty;
 }
 
-Any Serializer::DeserializeAsClass(ITypeMeta* type)
+Any Serializer::DeserializeAsClass(ClassMetaBase* classMeta)
 {
-    auto object = type->CreateOnStack();
+    auto object = classMeta->CreateOnStack();
 
-    for (auto fieldMeta : type->fields)
+    for (auto fieldMeta : classMeta->fields)
     {
         printf("field: %s \n", fieldMeta->name);
 
@@ -156,16 +165,18 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return std::string( lua_tostring(L, -1) );
     }
-    else
+    else if (type->isClass())
     {
-        Any object = isPointer ? type->CreateOnHeap() : type->CreateOnStack();
+        auto classMeta = static_cast<ClassMetaBase*>(type);
+
+        Any object = isPointer ? classMeta->CreateOnHeap() : classMeta->CreateOnStack();
 
         while (type->isPointer())
         {
             type = type->PointeeTypeMeta();
         }
 
-        for (auto fieldMeta : type->fields)
+        for (auto fieldMeta : classMeta->fields)
         {
             printf("F %s\n", fieldMeta->name);
             fflush(stdout);
@@ -185,4 +196,6 @@ Any Serializer::Deserialize(ITypeMeta* type)
 
         return object;
     }
+
+    return Any::empty;
 }

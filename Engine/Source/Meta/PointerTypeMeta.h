@@ -7,6 +7,7 @@
 
 class PointerTypeMetaBase : public ITypeMeta
 {
+public:
     bool isPointer() override { return true; }
     bool isVector() override { return false; }
     bool isClass() override { return false; }
