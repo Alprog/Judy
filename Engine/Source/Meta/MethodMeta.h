@@ -28,26 +28,11 @@ class MethodMeta : public IMethodMeta, public FunctionMeta<ReturnType, ClassType
 {
 public:
 
-    // Invoke
-
     template <int... I>
     inline ReturnType RealInvoke(void* object, std::vector<Any>& args, index_sequence<I...>)
     {
         std::vector<Any> vv = { args.at(I)... };
         return ((ClassType*)object->*pointer)(args.at(I)...);
-    }
-
-    template <typename type>
-    inline Any InvokeHelper(void* object, std::vector<Any>& args)
-    {
-        return RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
-    }
-
-    template <>
-    inline Any InvokeHelper<void>(void* object, std::vector<Any>& args)
-    {
-        RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
-        return Any();
     }
 
     Any Invoke(std::vector<Any>& args) override
@@ -56,7 +41,7 @@ public:
         {
             void* object = args[0];
             args.erase(begin(args), begin(args) + 1);
-            return InvokeHelper<ReturnType>(object, args);
+            return RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
         }
         else
         {
@@ -65,4 +50,33 @@ public:
     }
 
     ReturnType(ClassType::*pointer)(ArgTypes...);
+};
+
+template <typename ClassType, typename... ArgTypes>
+class MethodMeta<ClassType, void, ArgTypes...> : public IMethodMeta, public FunctionMeta<void, ClassType*, ArgTypes...>
+{
+public:
+    template <size_t... I>
+    inline void RealInvoke(void*& object, std::vector<Any>& args, index_sequence<I...>)
+    {
+        std::vector<Any> vv = { args.at(I)... };
+        ((ClassType*)object->*pointer)(args.at(I)...);
+    }
+
+    Any Invoke(std::vector<Any>& args) override
+    {
+        if (args.size() == sizeof...(ArgTypes) + 1)
+        {
+            void* object = args[0];
+            args.erase(begin(args), begin(args) + 1);
+            RealInvoke(object, args, make_index_sequence<sizeof...(ArgTypes)>());
+            return Any::empty;
+        }
+        else
+        {
+            throw new std::exception();
+        }
+    }
+
+    void(ClassType::*pointer)(ArgTypes...);
 };

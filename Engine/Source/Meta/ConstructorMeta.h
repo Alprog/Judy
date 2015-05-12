@@ -4,8 +4,8 @@
 #include "vector"
 #include "Any.h"
 #include "TypeMeta.h"
-#include "MethodMeta.h"
 #include "FunctionMeta.h"
+#include "MethodMeta.h"
 
 class IConstructorMeta : public virtual IFunctionMeta
 {
@@ -16,10 +16,10 @@ template <typename ClassType, typename... ArgTypes>
 class ConstructorMeta : public IConstructorMeta, public FunctionMeta<ClassType, ArgTypes...>
 {
 public:
-    template <int... I>
+    template <size_t... I>
     inline Any RealInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
-        return TypeMeta<ClassType>::New<ArgTypes...>(args[I]...);
+        return TypeMeta<ClassType>::New<ArgTypes...>( args.at(I)... );
     }
 
     virtual Any Invoke(std::vector<Any>& args) override

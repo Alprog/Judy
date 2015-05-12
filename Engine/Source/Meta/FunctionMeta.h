@@ -23,30 +23,32 @@ class FunctionMeta : virtual IFunctionMeta
         return sizeof...(ArgTypes);
     }
 
-    // GetReturnType
+    ITypeMeta* GetReturnType() override
+    {
+        return TypeMetaOf<ReturnType>();
+    }
+
+    virtual std::vector<ITypeMeta*> GetArgTypes() override
+    {
+        return { TypeMetaOf<ArgTypes>()... };
+    }
+};
+
+template <typename ReturnType>
+class FunctionMeta<ReturnType> : virtual IFunctionMeta
+{
+    virtual size_t GetArgCount() override
+    {
+        return 0;
+    }
 
     ITypeMeta* GetReturnType() override
     {
         return TypeMetaOf<ReturnType>();
     }
 
-    // GetArgTypes
-
-    template <int count>
-    inline std::vector<ITypeMeta*> GetArgTypesHelper()
-    {
-        return { TypeMetaOf<ArgTypes>()... };
-    }
-
-
-    template <> inline std::vector<ITypeMeta*> GetArgTypesHelper<0>()
+    virtual std::vector<ITypeMeta*> GetArgTypes() override
     {
         return {};
     }
-
-    virtual std::vector<ITypeMeta*> GetArgTypes() override
-    {
-        return GetArgTypesHelper<sizeof...(ArgTypes)>();
-    }
 };
-
