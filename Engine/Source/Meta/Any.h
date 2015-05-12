@@ -1,18 +1,16 @@
 
 #pragma once
 
-#include "ITypeMeta.h"
 #include "AnyData.h"
+
+class ITypeMeta;
 
 class Any
 {
 public:
     static const Any empty;
 
-    Any(void)
-        : data {nullptr}
-    {
-    }
+    Any(void);
 
     template <typename T>
     Any(T const& value)

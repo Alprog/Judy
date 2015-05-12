@@ -25,21 +25,9 @@ class FunctionMeta : virtual IFunctionMeta
 
     // GetReturnType
 
-    template <typename Type>
-    inline ITypeMeta* GetReturnTypeHelper()
-    {
-        return TypeMetaOf<ReturnType>();
-    }
-
-    template <>
-    inline ITypeMeta* GetReturnTypeHelper<void>()
-    {
-        return nullptr;
-    }
-
     ITypeMeta* GetReturnType() override
     {
-        return GetReturnTypeHelper<ReturnType>();
+        return TypeMetaOf<ReturnType>();
     }
 
     // GetArgTypes
@@ -50,8 +38,8 @@ class FunctionMeta : virtual IFunctionMeta
         return { TypeMetaOf<ArgTypes>()... };
     }
 
-    template <>
-    inline std::vector<ITypeMeta*> GetArgTypesHelper<0>()
+
+    template <> inline std::vector<ITypeMeta*> GetArgTypesHelper<0>()
     {
         return {};
     }

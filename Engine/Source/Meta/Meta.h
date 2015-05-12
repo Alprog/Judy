@@ -7,6 +7,8 @@
 #include "Singleton.h"
 
 class ITypeMeta;
+template <typename T>
+ITypeMeta* TypeMetaOf();
 
 class Meta : public Singleton<Meta>
 {
@@ -18,7 +20,7 @@ private:
     template <typename T>
     void DefineBuildInType(std::string name)
     {
-        auto meta = TypeMeta<T>::Instance();
+        auto meta = TypeMetaOf<T>();
         meta->name = name;
 
         printf("HHH %i \n", meta->isPointer());

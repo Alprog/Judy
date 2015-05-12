@@ -44,6 +44,11 @@ public:
 template <typename T>
 inline ITypeMeta* TypeMetaOf()
 {
-    return TypeMeta<std::decay<T>::type>::Instance();
+    return TypeMeta<typename std::decay<T>::type>::Instance();
 }
 
+template <>
+inline ITypeMeta* TypeMetaOf<void>()
+{
+    return nullptr;
+}

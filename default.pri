@@ -15,5 +15,5 @@ CONFIG -= qt
 CONFIG -= debug_and_release debug_and_release_target
 
 linux {
-    QMAKE_CXXFLAGS += -std=c++0x
+    QMAKE_CXXFLAGS += -std=c++0x -fpermissive
 }

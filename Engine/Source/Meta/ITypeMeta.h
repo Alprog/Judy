@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 class Any;
 class IFieldMeta;
@@ -25,4 +26,3 @@ public:
     virtual Any Dereferencing(Any& object) = 0;
     virtual Any MakePointerTo(Any& object) = 0;
 };
-

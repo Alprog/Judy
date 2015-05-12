@@ -3,6 +3,11 @@
 
 const Any Any::empty;
 
+Any::Any(void)
+    : data {nullptr}
+{
+}
+
 // copy constructor
 Any::Any(const Any& other)
 {
@@ -62,15 +67,3 @@ inline void Any::MoveData(Any& other)
     data = other.data;
     other.data = nullptr;
 }
-
-/*inline ITypeMeta* Variant::GetType()
-{
-    if (data != nullptr)
-    {
-        return data->GetType();
-    }
-    else
-    {
-        return nullptr;
-    }
-}*/

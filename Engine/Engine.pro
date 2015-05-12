@@ -15,14 +15,11 @@ HEADERS += \
     Source/Window.h \
     Source/Platforms.h \
     Source/Scene.h \
-    Source/DXRenderer.h \
     Source/GLRenderer.h \
     Source/RenderTarget.h \
     Source/Color.h \
     Source/Vector.h \
-    Source/DXSwapChain.h \
     Source/GLContext.h \
-    Source/Win/WinGLContext.h \
     Source/Images.h \
     Source/Node.h \
     Source/Quad.h \
@@ -30,7 +27,6 @@ HEADERS += \
     Source/Math/Vector2.h \
     Source/Math/Vector3.h \
     Source/Math/Vector4.h \
-    Source/DXShaderResource.h \
     Source/Keyframe.h \
     Source/Math/Transform.h \
     Source/Meta/TypeMeta.h \
@@ -56,13 +52,7 @@ SOURCES += \
     Source/Renderer.cpp \
     Source/Window.cpp \
     Source/Scene.cpp \
-    Source/DXRenderer.cpp \
-    Source/GLRenderer.cpp \
-    Source/RenderTarget.cpp \
     Source/Color.cpp \
-    Source/DXSwapChain.cpp \
-    Source/GLContext.cpp \
-    Source/Win/WinGLContext.cpp \
     Source/Images.cpp \
     Source/Node.cpp \
     Source/Quad.cpp \
@@ -70,7 +60,6 @@ SOURCES += \
     Source/Math/Vector2.cpp \
     Source/Math/Vector3.cpp \
     Source/Math/Vector4.cpp \
-    Source/DXShaderResource.cpp \
     Source/Keyframe.cpp \
     Source/Math/Transform.cpp \
     Source/Meta/TypeMeta.cpp \
@@ -96,6 +85,21 @@ win {
     SOURCES += Source/Win/WinApp.cpp
     HEADERS += Source/Win/WinRenderTarget.h
     SOURCES += Source/Win/WinRenderTarget.cpp
+
+    HEADERS += Source/DXSwapChain.h
+    SOURCES += Source/DXSwapChain.cpp
+    HEADERS += Source/DXShaderResource.h
+    HEADERS += Source/DXShaderResource.cpp
+    HEADERS += Source/Win/WinGLContext.h
+    SOURCES += Source/Win/WinGLContext.cpp
+    HEADERS += Source/DXRenderer.h
+    SOURCES += Source/DXRenderer.cpp
+
+    SOURCES += Source/GLContext.cpp
+    SOURCES += Source/GLRenderer.cpp
+    SOURCES += Source/RenderTarget.cpp
+
+
 }
 
 linux {

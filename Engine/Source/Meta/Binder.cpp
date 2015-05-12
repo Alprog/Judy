@@ -17,7 +17,7 @@ LuaBinder::LuaBinder(lua_State* L)
 template <typename T>
 T* CheckType(lua_State* L, int n)
 {
-    char* name = Meta::Instance()->GetTypeMeta<T>()->name;
+    char* name = TypeMetaOf<T>()->name;
     return *(T**)luaL_checkudata(L, n, name);
 }
 
@@ -40,11 +40,11 @@ int FunctionInvoker(lua_State* L)
     std::vector<Any> args = {};
     for (auto argType : method->GetArgTypes())
     {
-        if (argType == Meta::Instance()->GetTypeMeta<int>())
+        if (argType == TypeMetaOf<int>())
         {
             args.push_back(lua_tointeger(L, index++));
         }
-        else if (argType == Meta::Instance()->GetTypeMeta<char*>())
+        else if (argType == TypeMetaOf<char*>())
         {
             args.push_back(lua_tostring(L, index++));
         }
@@ -64,11 +64,11 @@ int FunctionInvoker(lua_State* L)
     else
     {
         Any result = method->Invoke(args);
-        if (returnType == Meta::Instance()->GetTypeMeta<int>())
+        if (returnType == TypeMetaOf<int>())
         {
             lua_pushinteger(L, result.as<int>());
         }
-        else if (returnType == Meta::Instance()->GetTypeMeta<char*>())
+        else if (returnType == TypeMetaOf<char*>())
         {
             lua_pushstring(L, result.as<char*>());
         }
