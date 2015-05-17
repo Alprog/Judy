@@ -15,7 +15,6 @@ HEADERS += \
     Source/Window.h \
     Source/Platforms.h \
     Source/Scene.h \
-    Source/GLRenderer.h \
     Source/RenderTarget.h \
     Source/Color.h \
     Source/Vector.h \
@@ -74,8 +73,8 @@ SOURCES += \
     Source/Meta/FunctionMeta.cpp \
     Source/Meta/ITypeMeta.cpp \
     Source/Meta/AnyData.cpp \
-    Source/Singleton.cpp \
-    Source/Meta/NewMeta.cpp
+    Source/Meta/NewMeta.cpp \
+    Source/Singleton.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -89,12 +88,13 @@ win {
     HEADERS += Source/DXSwapChain.h
     SOURCES += Source/DXSwapChain.cpp
     HEADERS += Source/DXShaderResource.h
-    HEADERS += Source/DXShaderResource.cpp
+    SOURCES += Source/DXShaderResource.cpp
     HEADERS += Source/Win/WinGLContext.h
     SOURCES += Source/Win/WinGLContext.cpp
     HEADERS += Source/DXRenderer.h
     SOURCES += Source/DXRenderer.cpp
 
+    HEADERS += Source/GLRenderer.h
     SOURCES += Source/GLContext.cpp
     SOURCES += Source/GLRenderer.cpp
     SOURCES += Source/RenderTarget.cpp

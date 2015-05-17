@@ -8,6 +8,7 @@
 // Additions Copyright (c) 2011 Archaeopteryx Software, Inc. d/b/a Wingware
 // ScintillaWidget.h - Qt widget that wraps ScintillaQt and provides events and scrolling
 
+
 #ifndef SCINTILLAEDITBASE_H
 #define SCINTILLAEDITBASE_H
 
@@ -142,6 +143,10 @@ private:
 	QString preeditString;
 
 	int wheelDelta;
+
+	static bool IsHangul(const QChar qchar);
+	void MoveImeCarets(int offset); 
+	void DrawImeIndicator(int indicator, int len);
 };
 
 #ifdef SCI_NAMESPACE

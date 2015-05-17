@@ -2,7 +2,10 @@
 #include "App.h"
 #include "Window.h"
 
+#ifdef WIN
 #include <windows.h>
+#endif
+
 #include "iostream"
 
 #include "Meta/Meta.h"

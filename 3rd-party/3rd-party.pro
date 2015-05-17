@@ -1,5 +1,5 @@
 
 TEMPLATE = subdirs
-SUBDIRS += zlib libpng lua scintilla hlsl2glslfork
+SUBDIRS += zlib libpng lua scintilla
 
 libpng.depends = zlib

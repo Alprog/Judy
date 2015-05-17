@@ -7,6 +7,12 @@ TEMPLATE = app
 CONFIG += qt
 QT += widgets
 
+HEADERS += \
+    Source/MainWindow.h \
+    Source/TextEditor.h \
+    Source/Document.h \
+    Source/DocumentsPane.h
+
 SOURCES += \
     Source/Main.cpp \
     Source/MainWindow.cpp \
@@ -16,14 +22,12 @@ SOURCES += \
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 
-LIBS += -L"../3rd-party" -lscintillaedit3
+win {
+    LIBS += -L"../3rd-party" -lscintillaedit3
+}
 
-HEADERS += \
-    Source/MainWindow.h \
-    Source/TextEditor.h \
-    Source/Document.h \
-    Source/DocumentsPane.h
+linux {
+    LIBS += -L"../3rd-party" -lScintillaEdit
+}
 
 RESOURCES = ide.qrc
-
-FORMS +=

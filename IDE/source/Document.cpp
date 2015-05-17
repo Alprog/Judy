@@ -1,10 +1,10 @@
 
 #include "Document.h"
 #include "TextEditor.h"
-#include "QFile.h"
-#include "QTextStream.h"
-#include "QLayout.h"
-#include "QFileInfo.h"
+#include <QFile>
+#include <QTextStream>
+#include <QLayout>
+#include <QFileInfo>
 
 Document::Document(std::string filePath)
     : fullPath ( filePath )
@@ -21,7 +21,7 @@ Document::Document(std::string filePath)
         name = fullPath.substr(index, size);
     }
 
-    editor = new TextEditor(this);
+    editor = new TextEditor(nullptr);
 
     auto layout = new QGridLayout();
     layout->setSpacing(0);

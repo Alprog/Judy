@@ -40,8 +40,9 @@ public:
     }
 
     template <typename... Types>
-    inline static T* New(Types... args)
+    inline T* New(Types... args)
     {
         return new T(args...);
     }
+
 };

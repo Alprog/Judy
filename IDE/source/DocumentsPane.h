@@ -1,11 +1,12 @@
 
 #pragma once
 
-#include "QWidget.h"
-#include "QTabWidget.h"
-#include "string"
+#include <QWidget>
+#include <QTabWidget>
+#include <QMessageBox>
+#include <string>
 #include "Document.h"
-#include "QMessageBox.h"
+
 
 class DocumentsPane : public QTabWidget
 {

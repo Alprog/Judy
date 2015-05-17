@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "string"
-#include "QWidget.h"
-#include "QDateTime.h"
+#include <string>
+#include <QWidget>
+#include <QDateTime>
 
 class TextEditor;
 

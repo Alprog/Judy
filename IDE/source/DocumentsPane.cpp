@@ -1,15 +1,14 @@
 
 #include "DocumentsPane.h"
 
-#include "QTabBar.h"
-#include "QTextEdit"
-
-#include "QVBoxLayout"
-#include "QScrollArea"
-#include "QRadioButton"
-#include "QResizeEvent"
-#include "QTableWidget"
-#include "string"
+#include <QTabBar>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QRadioButton>
+#include <QResizeEvent>
+#include <QTableWidget>
+#include <string>
 
 #include "Document.h"
 

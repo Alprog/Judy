@@ -45,6 +45,12 @@ public:
         return GetTypeMeta<T>();
     }
 
+    template <typename T, typename... Types>
+    inline static T* New(Types... args)
+    {
+        return new T(args...);
+    }
+
 public:
     std::unordered_map<std::type_index, ITypeMeta*> typeMap;
     std::vector<ITypeMeta*> types;

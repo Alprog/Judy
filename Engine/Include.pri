@@ -18,14 +18,23 @@ win {
 linux {
     INCLUDEPATH += "../Engine/Source"
     INCLUDEPATH += "../Engine/Source/Linux"
+    INCLUDEPATH += "../3rd-Party/lua/Source"
+
     LIBS += -L"../Engine" -lEngine
+    LIBS += -L"../3rd-Party" -lzlib -llibpng -llua
     PRE_TARGETDEPS += "../Engine/libEngine.a"
+    PRE_TARGETDEPS += "../3rd-Party/libzlib.a"
+    PRE_TARGETDEPS += "../3rd-Party/liblibpng.a"
+    PRE_TARGETDEPS += "../3rd-Party/liblua.a"
+
     LIBS += -lX11 -lGL
 }
 
 mac {
     INCLUDEPATH += "../Engine/Source"
     INCLUDEPATH += "../Engine/Source/Mac"
+    INCLUDEPATH += "../3rd-Party/lua/Source"
+
     LIBS += -L"../Engine" -lEngine
     PRE_TARGETDEPS += "../Engine/libEngine.a"
     LIBS += -framework Cocoa -framework OpenGL

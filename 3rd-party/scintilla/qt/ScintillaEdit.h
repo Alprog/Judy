@@ -66,6 +66,7 @@ public:
 	void addText(sptr_t length, const char * text);
 	void addStyledText(sptr_t length, const char * c);
 	void insertText(sptr_t pos, const char * text);
+	void changeInsertion(sptr_t length, const char * text);
 	void clearAll();
 	void deleteRange(sptr_t pos, sptr_t deleteLength);
 	void clearDocumentStyle();
@@ -100,7 +101,12 @@ public:
 	void setBufferedDraw(bool buffered);
 	void setTabWidth(sptr_t tabWidth);
 	sptr_t tabWidth() const;
+	void clearTabStops(sptr_t line);
+	void addTabStop(sptr_t line, sptr_t x);
+	sptr_t getNextTabStop(sptr_t line, sptr_t x);
 	void setCodePage(sptr_t codePage);
+	sptr_t iMEInteraction() const;
+	void setIMEInteraction(sptr_t imeInteraction);
 	void markerDefine(sptr_t markerNumber, sptr_t markerSymbol);
 	void markerSetFore(sptr_t markerNumber, sptr_t fore);
 	void markerSetBack(sptr_t markerNumber, sptr_t back);
@@ -179,6 +185,12 @@ public:
 	sptr_t indicFore(sptr_t indic) const;
 	void indicSetUnder(sptr_t indic, bool under);
 	bool indicUnder(sptr_t indic) const;
+	void indicSetHoverStyle(sptr_t indic, sptr_t style);
+	sptr_t indicHoverStyle(sptr_t indic) const;
+	void indicSetHoverFore(sptr_t indic, sptr_t fore);
+	sptr_t indicHoverFore(sptr_t indic) const;
+	void indicSetFlags(sptr_t indic, sptr_t flags);
+	sptr_t indicFlags(sptr_t indic) const;
 	void setWhitespaceFore(bool useSetting, sptr_t fore);
 	void setWhitespaceBack(bool useSetting, sptr_t back);
 	void setWhitespaceSize(sptr_t size);
@@ -293,6 +305,8 @@ public:
 	sptr_t targetStart() const;
 	void setTargetEnd(sptr_t pos);
 	sptr_t targetEnd() const;
+	void setTargetRange(sptr_t start, sptr_t end);
+	QByteArray targetText() const;
 	sptr_t replaceTarget(sptr_t length, const char * text);
 	sptr_t replaceTargetRE(sptr_t length, const char * text);
 	sptr_t searchInTarget(sptr_t length, const char * text);
@@ -302,6 +316,7 @@ public:
 	void callTipCancel();
 	bool callTipActive();
 	sptr_t callTipPosStart();
+	void callTipSetPosStart(sptr_t posStart);
 	void callTipSetHlt(sptr_t start, sptr_t end);
 	void callTipSetBack(sptr_t back);
 	void callTipSetFore(sptr_t fore);
@@ -364,6 +379,8 @@ public:
 	void appendText(sptr_t length, const char * text);
 	bool twoPhaseDraw() const;
 	void setTwoPhaseDraw(bool twoPhase);
+	sptr_t phasesDraw() const;
+	void setPhasesDraw(sptr_t phases);
 	void setFontQuality(sptr_t fontQuality);
 	sptr_t fontQuality() const;
 	void setFirstVisibleLine(sptr_t lineDisplay);
@@ -535,6 +552,8 @@ public:
 	QByteArray autoCCurrentText() const;
 	void autoCSetCaseInsensitiveBehaviour(sptr_t behaviour);
 	sptr_t autoCCaseInsensitiveBehaviour() const;
+	void autoCSetMulti(sptr_t multi);
+	sptr_t autoCMulti() const;
 	void autoCSetOrder(sptr_t order);
 	sptr_t autoCOrder() const;
 	void allocate(sptr_t bytes);
@@ -568,8 +587,6 @@ public:
 	sptr_t characterPointer() const;
 	sptr_t rangePointer(sptr_t position, sptr_t rangeLength) const;
 	sptr_t gapPosition() const;
-	void setKeysUnicode(bool keysUnicode);
-	bool keysUnicode() const;
 	void indicSetAlpha(sptr_t indicator, sptr_t alpha);
 	sptr_t indicAlpha(sptr_t indicator) const;
 	void indicSetOutlineAlpha(sptr_t indicator, sptr_t alpha);
@@ -622,6 +639,7 @@ public:
 	void clearSelections();
 	sptr_t setSelection(sptr_t caret, sptr_t anchor);
 	sptr_t addSelection(sptr_t caret, sptr_t anchor);
+	void dropSelectionN(sptr_t selection);
 	void setMainSelection(sptr_t selection);
 	sptr_t mainSelection() const;
 	void setSelectionNCaret(sptr_t selection, sptr_t pos);
@@ -680,6 +698,9 @@ public:
 	void vCHomeDisplayExtend();
 	bool caretLineVisibleAlways() const;
 	void setCaretLineVisibleAlways(bool alwaysVisible);
+	void setLineEndTypesAllowed(sptr_t lineEndBitSet);
+	sptr_t lineEndTypesAllowed() const;
+	sptr_t lineEndTypesActive() const;
 	void setRepresentation(const char * encodedCharacter, const char * representation);
 	QByteArray representation(const char * encodedCharacter) const;
 	void clearRepresentation(const char * encodedCharacter);
@@ -702,9 +723,6 @@ public:
 	sptr_t propertyType(const char * name);
 	QByteArray describeProperty(const char * name);
 	QByteArray describeKeyWordSets();
-	void setLineEndTypesAllowed(sptr_t lineEndBitSet);
-	sptr_t lineEndTypesAllowed() const;
-	sptr_t lineEndTypesActive() const;
 	sptr_t lineEndTypesSupported() const;
 	sptr_t allocateSubStyles(sptr_t styleBase, sptr_t numberStyles);
 	sptr_t subStylesStart(sptr_t styleBase) const;

@@ -4,6 +4,10 @@
 
 #include "ScintillaEdit.h"
 
+#ifdef SCI_NAMESPACE
+using namespace Scintilla;
+#endif
+
 ScintillaEdit::ScintillaEdit(QWidget *parent) : ScintillaEditBase(parent) {
 }
 
@@ -91,6 +95,10 @@ void ScintillaEdit::addStyledText(sptr_t length, const char * c) {
 
 void ScintillaEdit::insertText(sptr_t pos, const char * text) {
     send(SCI_INSERTTEXT, pos, (sptr_t)text);
+}
+
+void ScintillaEdit::changeInsertion(sptr_t length, const char * text) {
+    send(SCI_CHANGEINSERTION, length, (sptr_t)text);
 }
 
 void ScintillaEdit::clearAll() {
@@ -229,8 +237,28 @@ sptr_t ScintillaEdit::tabWidth() const {
     return send(SCI_GETTABWIDTH, 0, 0);
 }
 
+void ScintillaEdit::clearTabStops(sptr_t line) {
+    send(SCI_CLEARTABSTOPS, line, 0);
+}
+
+void ScintillaEdit::addTabStop(sptr_t line, sptr_t x) {
+    send(SCI_ADDTABSTOP, line, x);
+}
+
+sptr_t ScintillaEdit::getNextTabStop(sptr_t line, sptr_t x) {
+    return send(SCI_GETNEXTTABSTOP, line, x);
+}
+
 void ScintillaEdit::setCodePage(sptr_t codePage) {
     send(SCI_SETCODEPAGE, codePage, 0);
+}
+
+sptr_t ScintillaEdit::iMEInteraction() const {
+    return send(SCI_GETIMEINTERACTION, 0, 0);
+}
+
+void ScintillaEdit::setIMEInteraction(sptr_t imeInteraction) {
+    send(SCI_SETIMEINTERACTION, imeInteraction, 0);
 }
 
 void ScintillaEdit::markerDefine(sptr_t markerNumber, sptr_t markerSymbol) {
@@ -543,6 +571,30 @@ void ScintillaEdit::indicSetUnder(sptr_t indic, bool under) {
 
 bool ScintillaEdit::indicUnder(sptr_t indic) const {
     return send(SCI_INDICGETUNDER, indic, 0);
+}
+
+void ScintillaEdit::indicSetHoverStyle(sptr_t indic, sptr_t style) {
+    send(SCI_INDICSETHOVERSTYLE, indic, style);
+}
+
+sptr_t ScintillaEdit::indicHoverStyle(sptr_t indic) const {
+    return send(SCI_INDICGETHOVERSTYLE, indic, 0);
+}
+
+void ScintillaEdit::indicSetHoverFore(sptr_t indic, sptr_t fore) {
+    send(SCI_INDICSETHOVERFORE, indic, fore);
+}
+
+sptr_t ScintillaEdit::indicHoverFore(sptr_t indic) const {
+    return send(SCI_INDICGETHOVERFORE, indic, 0);
+}
+
+void ScintillaEdit::indicSetFlags(sptr_t indic, sptr_t flags) {
+    send(SCI_INDICSETFLAGS, indic, flags);
+}
+
+sptr_t ScintillaEdit::indicFlags(sptr_t indic) const {
+    return send(SCI_INDICGETFLAGS, indic, 0);
 }
 
 void ScintillaEdit::setWhitespaceFore(bool useSetting, sptr_t fore) {
@@ -1001,6 +1053,14 @@ sptr_t ScintillaEdit::targetEnd() const {
     return send(SCI_GETTARGETEND, 0, 0);
 }
 
+void ScintillaEdit::setTargetRange(sptr_t start, sptr_t end) {
+    send(SCI_SETTARGETRANGE, start, end);
+}
+
+QByteArray ScintillaEdit::targetText() const {
+    return TextReturner(SCI_GETTARGETTEXT, 0);
+}
+
 sptr_t ScintillaEdit::replaceTarget(sptr_t length, const char * text) {
     return send(SCI_REPLACETARGET, length, (sptr_t)text);
 }
@@ -1035,6 +1095,10 @@ bool ScintillaEdit::callTipActive() {
 
 sptr_t ScintillaEdit::callTipPosStart() {
     return send(SCI_CALLTIPPOSSTART, 0, 0);
+}
+
+void ScintillaEdit::callTipSetPosStart(sptr_t posStart) {
+    send(SCI_CALLTIPSETPOSSTART, posStart, 0);
 }
 
 void ScintillaEdit::callTipSetHlt(sptr_t start, sptr_t end) {
@@ -1283,6 +1347,14 @@ bool ScintillaEdit::twoPhaseDraw() const {
 
 void ScintillaEdit::setTwoPhaseDraw(bool twoPhase) {
     send(SCI_SETTWOPHASEDRAW, twoPhase, 0);
+}
+
+sptr_t ScintillaEdit::phasesDraw() const {
+    return send(SCI_GETPHASESDRAW, 0, 0);
+}
+
+void ScintillaEdit::setPhasesDraw(sptr_t phases) {
+    send(SCI_SETPHASESDRAW, phases, 0);
 }
 
 void ScintillaEdit::setFontQuality(sptr_t fontQuality) {
@@ -1969,6 +2041,14 @@ sptr_t ScintillaEdit::autoCCaseInsensitiveBehaviour() const {
     return send(SCI_AUTOCGETCASEINSENSITIVEBEHAVIOUR, 0, 0);
 }
 
+void ScintillaEdit::autoCSetMulti(sptr_t multi) {
+    send(SCI_AUTOCSETMULTI, multi, 0);
+}
+
+sptr_t ScintillaEdit::autoCMulti() const {
+    return send(SCI_AUTOCGETMULTI, 0, 0);
+}
+
 void ScintillaEdit::autoCSetOrder(sptr_t order) {
     send(SCI_AUTOCSETORDER, order, 0);
 }
@@ -2099,14 +2179,6 @@ sptr_t ScintillaEdit::rangePointer(sptr_t position, sptr_t rangeLength) const {
 
 sptr_t ScintillaEdit::gapPosition() const {
     return send(SCI_GETGAPPOSITION, 0, 0);
-}
-
-void ScintillaEdit::setKeysUnicode(bool keysUnicode) {
-    send(SCI_SETKEYSUNICODE, keysUnicode, 0);
-}
-
-bool ScintillaEdit::keysUnicode() const {
-    return send(SCI_GETKEYSUNICODE, 0, 0);
 }
 
 void ScintillaEdit::indicSetAlpha(sptr_t indicator, sptr_t alpha) {
@@ -2315,6 +2387,10 @@ sptr_t ScintillaEdit::setSelection(sptr_t caret, sptr_t anchor) {
 
 sptr_t ScintillaEdit::addSelection(sptr_t caret, sptr_t anchor) {
     return send(SCI_ADDSELECTION, caret, anchor);
+}
+
+void ScintillaEdit::dropSelectionN(sptr_t selection) {
+    send(SCI_DROPSELECTIONN, selection, 0);
 }
 
 void ScintillaEdit::setMainSelection(sptr_t selection) {
@@ -2549,6 +2625,18 @@ void ScintillaEdit::setCaretLineVisibleAlways(bool alwaysVisible) {
     send(SCI_SETCARETLINEVISIBLEALWAYS, alwaysVisible, 0);
 }
 
+void ScintillaEdit::setLineEndTypesAllowed(sptr_t lineEndBitSet) {
+    send(SCI_SETLINEENDTYPESALLOWED, lineEndBitSet, 0);
+}
+
+sptr_t ScintillaEdit::lineEndTypesAllowed() const {
+    return send(SCI_GETLINEENDTYPESALLOWED, 0, 0);
+}
+
+sptr_t ScintillaEdit::lineEndTypesActive() const {
+    return send(SCI_GETLINEENDTYPESACTIVE, 0, 0);
+}
+
 void ScintillaEdit::setRepresentation(const char * encodedCharacter, const char * representation) {
     send(SCI_SETREPRESENTATION, (sptr_t)encodedCharacter, (sptr_t)representation);
 }
@@ -2635,18 +2723,6 @@ QByteArray ScintillaEdit::describeProperty(const char * name) {
 
 QByteArray ScintillaEdit::describeKeyWordSets() {
     return TextReturner(SCI_DESCRIBEKEYWORDSETS, 0);
-}
-
-void ScintillaEdit::setLineEndTypesAllowed(sptr_t lineEndBitSet) {
-    send(SCI_SETLINEENDTYPESALLOWED, lineEndBitSet, 0);
-}
-
-sptr_t ScintillaEdit::lineEndTypesAllowed() const {
-    return send(SCI_GETLINEENDTYPESALLOWED, 0, 0);
-}
-
-sptr_t ScintillaEdit::lineEndTypesActive() const {
-    return send(SCI_GETLINEENDTYPESACTIVE, 0, 0);
 }
 
 sptr_t ScintillaEdit::lineEndTypesSupported() const {

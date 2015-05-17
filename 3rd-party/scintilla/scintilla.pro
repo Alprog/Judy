@@ -10,7 +10,7 @@ QT += core gui widgets
 
 DEFINES += SCI_LEXER
 
-VERSION = 3.3.6
+VERSION = 3.5.5
 
 SOURCES += \
     qt/ScintillaEdit.cpp \
@@ -33,6 +33,8 @@ SOURCES += \
     src/Indicator.cxx \
     src/ExternalLexer.cxx \
     src/Editor.cxx \
+    src/EditView.cxx \
+    src/EditModel.cxx \
     src/Document.cxx \
     src/Decoration.cxx \
     src/ContractionState.cxx \
@@ -43,6 +45,7 @@ SOURCES += \
     src/CaseConvert.cxx \
     src/CallTip.cxx \
     src/AutoComplete.cxx \
+    src/MarginView.cxx \
     lexlib/WordList.cxx \
     lexlib/StyleContext.cxx \
     lexlib/PropSetSimple.cxx \

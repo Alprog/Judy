@@ -2,9 +2,8 @@
 #include "Window.h"
 #include "Platforms.h"
 
-#include "GLRenderer.h"
-
 #ifdef WIN
+#include "GLRenderer.h"
 #include "DXRenderer.h"
 #endif
 
@@ -19,16 +18,26 @@ Window::Window()
 {
 }
 
+#ifdef WIN
+
 auto glRenderer = new GLRenderer();
-//auto dxRenderer = new DXRenderer();
+auto dxRenderer = new DXRenderer();
 
 void Window::Render()
 {
     auto quad = (Quad*)scene;
     quad->Transform.Rotation += 0.04f;
     glRenderer->Render(scene, RenderTarget2);
-    //dxRenderer->Render(scene, RenderTarget1);
+    dxRenderer->Render(scene, RenderTarget1);
 }
+#else
+
+void Window::Render()
+{
+}
+
+
+#endif
 
 void Window::show()
 {

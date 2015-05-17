@@ -1,13 +1,14 @@
 
 #include "MainWindow.h"
-#include "QAction.h"
-#include "QMenuBar.h"
-#include "QToolBar.h"
-#include "QDockWidget"
-#include "TextEditor.h"
-#include "QFileDialog.h"
+
+#include <QAction>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QDockWidget>
+#include <QFileDialog>
+#include <QEvent>
 #include "DocumentsPane.h"
-#include "QEvent.h"
+#include "TextEditor.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)

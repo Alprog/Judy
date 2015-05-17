@@ -1,6 +1,6 @@
 
 #include "TextEditor.h"
-#include "QWidget.h"
+#include <QWidget>
 
 int RGB(int r, int g, int b)
 {
