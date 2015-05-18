@@ -30,4 +30,8 @@ linux {
     LIBS += -L"../3rd-party" -lScintillaEdit
 }
 
+mac {
+    LIBS += -F"../3rd-party" -framework ScintillaEdit
+}
+
 RESOURCES = ide.qrc
