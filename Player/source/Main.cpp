@@ -46,6 +46,7 @@ void SerialzeToTable(lua_State* L, Type object)
 int main(int argc, char *argv[])
 {
     Meta* meta = Meta::Instance();
+    meta->Init();
 
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);

@@ -32,6 +32,8 @@ private:
 public:
     ITypeMeta* GetTypeMeta(std::type_index index);
 
+    void Init();
+
     template <typename T>
     ITypeMeta* GetTypeMeta()
     {

@@ -12,6 +12,10 @@
 
 Meta::Meta()
 {
+}
+
+void Meta::Init()
+{
     DefineBuildInType<bool>("bool");
     DefineBuildInType<int>("int");
     DefineBuildInType<float>("float");
