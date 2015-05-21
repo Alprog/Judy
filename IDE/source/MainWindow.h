@@ -1,7 +1,6 @@
 
 #pragma once
 #include <QMainWindow>
-
 #include "DocumentsPane.h"
 
 class MainWindow : public QMainWindow
@@ -10,7 +9,6 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget* parent = 0);
-
 
 signals:
 
@@ -37,3 +35,4 @@ private:
     DocumentsPane* documents;
     bool modificationChecking;
 };
+

@@ -6,7 +6,8 @@
 #include <QLayout>
 #include <QFileInfo>
 
-Document::Document(std::string filePath)
+
+DocumentM::DocumentM(std::string filePath)
     : fullPath ( filePath )
 {
     auto index = filePath.find_last_of("\\/");
@@ -36,7 +37,7 @@ Document::Document(std::string filePath)
     connect(editor, SIGNAL(notifyChange()), this, SLOT(Modified()));
 }
 
-void Document::Reload()
+void DocumentM::Reload()
 {
     QFile file(fullPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -51,33 +52,33 @@ void Document::Reload()
     }
 }
 
-void Document::IgnoreOutsideModification()
+void DocumentM::IgnoreOutsideModification()
 {
     modifiedTime = GetLastModifiedTime();
 }
 
-bool Document::IsModifiedOutside()
+bool DocumentM::IsModifiedOutside()
 {
     return modifiedTime < GetLastModifiedTime();
 }
 
-QDateTime Document::GetLastModifiedTime()
+QDateTime DocumentM::GetLastModifiedTime()
 {
     QFileInfo info(fullPath.c_str());
     return info.lastModified();
 }
 
-std::string Document::GetTabName()
+std::string DocumentM::GetTabName()
 {
     return HaveChanges() ? name + "*" : name;
 }
 
-void Document::CloseTab(int index)
+void DocumentM::CloseTab(int index)
 {
 
 }
 
-void Document::Save()
+void DocumentM::Save()
 {
     QFile file(fullPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
@@ -94,12 +95,12 @@ void Document::Save()
     this->OnModified();
 }
 
-bool Document::HaveChanges()
+bool DocumentM::HaveChanges()
 {
     return editor->modify();
 }
 
-void Document::Modified()
+void DocumentM::Modified()
 {
     this->OnModified();
 }

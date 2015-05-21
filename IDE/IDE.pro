@@ -9,16 +9,16 @@ QT += widgets
 
 HEADERS += \
     Source/MainWindow.h \
-    Source/TextEditor.h \
     Source/Document.h \
+    Source/TextEditor.h \
     Source/DocumentsPane.h
 
 SOURCES += \
-    Source/Main.cpp \
     Source/MainWindow.cpp \
-    Source/TextEditor.cpp \
+    Source/Main.cpp \
     Source/Document.cpp \
-    Source/DocumentsPane.cpp
+    Source/TextEditor.cpp \
+    Source/DocumentsPane.cpp \
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 

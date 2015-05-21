@@ -1,8 +1,4 @@
 
-#include "../../../3rd-Party/scintilla/qt/ScintillaEditBase.h"
-#include "../../../3rd-Party/scintilla/qt/ScintillaEdit.h"
-#include "SciLexer.h"
-
 #define Window W
 #include "App.h"
 #define Window Window
@@ -43,6 +39,7 @@ int main(int argc, char *argv[])
     MainWindow mainWindow;
     mainWindow.showMaximized();
 
+
     /*lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
@@ -70,10 +67,10 @@ int main(int argc, char *argv[])
     std::cout << "The return value of the function was " << lua_tostring(L, -1) << std::endl;
     lua_pop(L,1);*/
 
-
     //lua_close(L);
 
     //fflush(stdout);
 
     return app.exec();
 }
+

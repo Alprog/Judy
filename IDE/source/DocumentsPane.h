@@ -16,14 +16,14 @@ public:
     DocumentsPane();
 
     void Open(std::string path);
-    Document* GetCurrentDocument();
-    Document* GetDocument(int index);
+    DocumentM* GetCurrentDocument();
+    DocumentM* GetDocument(int index);
 
     void SaveCurrentDocument();
     void CheckOutsideModification();
 
 private:
-    int ReloadDocumentMessageBox(Document* document);
+    int ReloadDocumentMessageBox(DocumentM* document);
 
 private slots:
     void CloseTab(int index);

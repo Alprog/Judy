@@ -33,20 +33,20 @@ void DocumentsPane::Open(std::string path)
         }
     }
 
-    auto document = new Document(path);
+    auto document = new DocumentM(path);
     connect(document, SIGNAL(OnModified()), this, SLOT(UpdateTabNames()));
     addTab(document, document->GetName().c_str());
     this->setCurrentWidget(document);
 }
 
-Document* DocumentsPane::GetDocument(int index)
+DocumentM* DocumentsPane::GetDocument(int index)
 {
-    return (Document*)widget(index);
+    return (DocumentM*)widget(index);
 }
 
-Document* DocumentsPane::GetCurrentDocument()
+DocumentM* DocumentsPane::GetCurrentDocument()
 {
-    return (Document*)widget(currentIndex());
+    return (DocumentM*)widget(currentIndex());
 }
 
 void DocumentsPane::SaveCurrentDocument()
@@ -61,7 +61,7 @@ void DocumentsPane::UpdateTabNames()
 {
     for (int i = 0; i < count(); i++)
     {
-        auto document = (Document*)widget(i);
+        auto document = (DocumentM*)widget(i);
         auto name = document->GetTabName();
         this->setTabText(i, name.c_str());
     }
@@ -74,7 +74,7 @@ void DocumentsPane::CheckOutsideModification()
 
     for (int i = 0; i < count(); i++)
     {
-        auto document = (Document*)widget(i);
+        auto document = (DocumentM*)widget(i);
         if (document->IsModifiedOutside())
         {
             if (!toAll)
@@ -97,7 +97,7 @@ void DocumentsPane::CheckOutsideModification()
     }
 }
 
-int DocumentsPane::ReloadDocumentMessageBox(Document* document)
+int DocumentsPane::ReloadDocumentMessageBox(DocumentM* document)
 {
     QMessageBox msgBox;
     msgBox.setText(document->GetName().c_str());

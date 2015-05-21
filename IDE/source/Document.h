@@ -7,12 +7,12 @@
 
 class TextEditor;
 
-class Document : public QWidget
+class DocumentM : public QWidget
 {
     Q_OBJECT
 
 public:
-    Document(std::string filePath);
+    DocumentM(std::string filePath);
 
     std::string GetName() { return name; }
     std::string GetFullPath() { return fullPath; }

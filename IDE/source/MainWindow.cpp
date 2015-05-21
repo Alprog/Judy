@@ -8,22 +8,19 @@
 #include <QFileDialog>
 #include <QEvent>
 #include "DocumentsPane.h"
-#include "TextEditor.h"
+#include "../qt/ScintillaEditBase.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , modificationChecking(false)
 {
     setWindowTitle("Judy IDE");
-
     setWindowIcon(QIcon(":/images/icon.png"));
-
     setWindowOpacity(1);
-
     createActions();
-
     this->installEventFilter(this);
 }
+
 
 QAction* MainWindow::createAction(const char* name, const char* icon, const char* slot, QKeySequence::StandardKey shortcut)
 {
