@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <unordered_map>
 #include <typeindex>
 #include "Singleton.h"

@@ -18,7 +18,7 @@ MacWindow::MacWindow()
     int mask = NSTitledWindowMask | NSClosableWindowMask;
     mask = mask | NSMiniaturizableWindowMask | NSResizableWindowMask;
 
-    int backing = NSBackingStoreBuffered;
+    auto backing = NSBackingStoreBuffered;
 
     [window initWithContentRect:rect styleMask:mask backing:backing defer:NO];
 
