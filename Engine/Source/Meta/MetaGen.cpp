@@ -52,7 +52,7 @@ void Meta::Init()
     //TypeMeta<int>::Instance()->name = "int";
     */
 
-    ClassDefiner<TestStruct>()
+    ClassDefiner<TestStruct>("TestStruct")
         .constructor()
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
@@ -60,16 +60,16 @@ void Meta::Init()
         .field("g", &TestStruct::g)
     ;
 
-    ClassDefiner<SubStruct>()
+    ClassDefiner<SubStruct>("SubStruct")
         .constructor()
         .field("e", &SubStruct::e)
     ;
 
-    ClassDefiner<App>()
+    ClassDefiner<App>("App")
         .method("StartMainLoop", &App::StartMainLoop)
     ;
 
-    ClassDefiner<Node>()
+    ClassDefiner<Node>("Node")
         .constructor()
         .constructor<int>()
         .method("Update", &Node::Update)
@@ -79,7 +79,7 @@ void Meta::Init()
         .method("AddChild", &Node::AddChild)
     ;
 
-    ClassDefiner<Quad>()
+    ClassDefiner<Quad>("Quad")
         .constructor()
         .method("Update", &Quad::Update)
         //.method("Render", &Quad::Render)

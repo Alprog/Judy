@@ -13,10 +13,10 @@ class ClassDefiner
 public:
     ClassMetaBase* classMeta;
 
-    ClassDefiner()
+    ClassDefiner(const char* name)
         : classMeta { TypeMeta<ClassType>::Instance() }
     {
-        classMeta->name = typeid(ClassType).name();
+        classMeta->name = name;
 
         auto type_index = std::type_index(typeid(ClassType));
         Meta::Instance()->typeMap.emplace(type_index, classMeta);

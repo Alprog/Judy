@@ -20,16 +20,18 @@ public:
     using pointeeType = typename std::remove_pointer<T>::type;
 
     Any CreateOnStack() override { return T(); }
-    Any CreateOnHeap() override { return new T(); }
+    Any CreateOnHeap() override { throw new std::exception(); }
 
     virtual Any Dereferencing(Any& object) override
     {
-        return *(object.as<T*>());
+        throw new std::exception();
+        //return *(object.as<T*>());
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        return &(object.as<T>());
+        throw new std::exception();
+        //return &(object.as<T>());
     }
 
     virtual ITypeMeta* PointeeTypeMeta() override

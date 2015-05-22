@@ -38,11 +38,4 @@ public:
     {
         throw new std::exception();
     }
-
-    template <typename... Types>
-    inline T* New(Types... args)
-    {
-        return new T(args...);
-    }
-
 };

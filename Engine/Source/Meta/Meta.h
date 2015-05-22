@@ -8,6 +8,7 @@
 #include "Singleton.h"
 
 class ITypeMeta;
+
 template <typename T>
 ITypeMeta* TypeMetaOf();
 
@@ -31,22 +32,7 @@ private:
     }
 
 public:
-    ITypeMeta* GetTypeMeta(std::type_index index);
-
     void Init();
-
-    template <typename T>
-    ITypeMeta* GetTypeMeta()
-    {
-        auto index = std::type_index(typeid(T));
-        return GetTypeMeta(index);
-    }
-
-    template <typename T>
-    inline ITypeMeta* GetTypeMeta(T* p)
-    {
-        return GetTypeMeta<T>();
-    }
 
     template <typename T, typename... Types>
     inline static T* New(Types... args)

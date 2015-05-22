@@ -2,7 +2,8 @@
 #pragma once
 
 class ITypeMeta;
-#include "Meta.h"
+
+template <typename T>
 ITypeMeta* TypeMetaOf();
 
 struct IAnyData
@@ -26,10 +27,7 @@ struct AnyData : public IAnyData
 
     virtual ITypeMeta* GetType() override
     {
-        //return nullptr;
-        return Meta::Instance()->GetTypeMeta<T>();
-        //return TypeMetaOf<T>();
-        //return ITypeMeta::Get<T>();
+        return TypeMetaOf<T>();
     }
 
     virtual IAnyData* copy() override

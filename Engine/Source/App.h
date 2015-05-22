@@ -4,6 +4,7 @@
 #include <set>
 #include "Window.h"
 
+#include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
 
 struct SubStruct
