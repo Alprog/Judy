@@ -24,8 +24,7 @@ public:
     inline Any RealInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
         return Meta::New<ClassType, ArgTypes...>( args.at(I)... );
-
-        //return TypeMeta<Node>::New<ArgTypes...>( args.at(I)... );
+        //return TypeMeta<ClassType>::New<ArgTypes...>( args.at(I)... );
     }
 
     virtual Any Invoke(std::vector<Any>& args) override

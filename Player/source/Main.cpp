@@ -20,6 +20,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <iostream>
+#include <io.h>
 
 extern "C"
 {
@@ -51,7 +52,36 @@ int main(int argc, char *argv[])
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
+    //lua_getglobal(L, "_G");
+    //lua_pushcfunction(L, 1, luaPrint);
+    //lua_setfield(L, 1, "print");
+
     LuaBinder(L).Bind(meta);
+
+    fflush(stdout);
+
+    int descr = dup(fileno(stdout));
+
+    int pipepines[2];
+    _pipe(pipepines, 128 * 1024, 0);
+    dup2(pipepines[1], fileno(stdout));
+
+    for (int i = 0; i < 100; i++)
+    {
+        std::cout << "--------------";
+        printf("HEYs");
+    }
+    fflush(stdout);
+    dup2(descr, fileno(stdout));
+
+    char buffer[1024 + 1];
+    int result = 1024;
+    do
+    {
+        result = read(pipepines[0], buffer, 1024);
+        printf(buffer);
+    }
+    while (result == 1024);
 
     if (luaL_dofile(L, "Main.lua"))
     {
