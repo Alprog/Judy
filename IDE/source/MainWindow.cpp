@@ -7,6 +7,8 @@
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QEvent>
+#include "OutputPane.h"
+
 #include "DocumentsPane.h"
 #include "../qt/ScintillaEditBase.h"
 
@@ -19,6 +21,22 @@ MainWindow::MainWindow(QWidget* parent)
     setWindowOpacity(1);
     createActions();
     this->installEventFilter(this);
+
+    this->setAnimated(true);
+    this->setDockNestingEnabled(true);
+
+
+    auto area = Qt::BottomDockWidgetArea;
+    addDockWidget(area, new OutputPane());
+
+
+    QDockWidget* dockWidget;
+    dockWidget = new QDockWidget("Dock2", 0, 0);
+    dockWidget->setObjectName("Dock2");
+    addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
+
+    documents = new DocumentsPane;
+    setCentralWidget(documents);
 }
 
 
@@ -30,17 +48,20 @@ QAction* MainWindow::createAction(const char* name, const char* icon, const char
     return action;
 }
 
+#include <iostream>
+
 void MainWindow::createActions()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileToolBar = addToolBar(tr("File"));
+    fileToolBar->setObjectName("fileToolBar");
 
     QAction* actions[]
     {
-        createAction("&New", ":/images/new.png", SLOT(newFile()), QKeySequence::New),
-        createAction("&Open", ":/images/open.png", SLOT(openFile()), QKeySequence::Open),
-        createAction("&Save", ":/images/save.png", SLOT(saveFile()), QKeySequence::Save),
-        createAction("&SaveAs", NULL, SLOT(saveAsFile()), QKeySequence::SaveAs)
+        createAction("New", ":/images/new.png", SLOT(newFile()), QKeySequence::New),
+        createAction("Open", ":/images/open.png", SLOT(openFile()), QKeySequence::Open),
+        createAction("Save", ":/images/save.png", SLOT(saveFile()), QKeySequence::Save),
+        createAction("SaveAs", nullptr, SLOT(saveAsFile()), QKeySequence::SaveAs)
     };
 
     for (auto action : actions)
@@ -49,19 +70,22 @@ void MainWindow::createActions()
         fileToolBar->addAction(action);
     }
 
-    QDockWidget* dockWidget;
-
-    dockWidget = new QDockWidget("Dock", 0, 0);
-
-    addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
-
-    documents = new DocumentsPane;
-    setCentralWidget(documents);
+    auto windowMenu = menuBar()->addMenu(tr("&Window"));
+    auto layoutMenu = windowMenu->addMenu(tr("&Layout"));
+    for (int i = 0; i < 4; i++)
+    {
+        auto str = std::to_string(i);
+        auto name = str.c_str();
+        createAction(name, nullptr, SLOT(saveAsFile()));
+        layoutMenu->addAction(tr(name));
+    }
 }
+
+QByteArray ba;
 
 void MainWindow::newFile()
 {
-
+    this->restoreState(ba, 0);
 }
 
 void MainWindow::openFile()
@@ -81,7 +105,8 @@ void MainWindow::saveFile()
 
 void MainWindow::saveAsFile()
 {
-
+    printf("save\nsave!");
+    ba = this->saveState(0);
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)

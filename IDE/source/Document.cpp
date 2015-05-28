@@ -89,6 +89,8 @@ void DocumentM::Save()
         QTextStream stream(&file);
         stream << text;
         file.close();
+
+        modifiedTime = GetLastModifiedTime();
     }
 
     editor->setSavePoint();

@@ -6,5 +6,4 @@ function fun()
 	b = b + 1
 
 	return b
-
-end
+end 

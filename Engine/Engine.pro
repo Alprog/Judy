@@ -44,7 +44,8 @@ HEADERS += \
     Source/Singleton.h \
     Source/Meta/Sfinae.h \
     Source/Meta/ClassMeta.h \
-    Source/Meta/PointerTypeMeta.h
+    Source/Meta/PointerTypeMeta.h \
+    Source/Pipe.h
 
 SOURCES += \
     Source/App.cpp \
@@ -74,7 +75,8 @@ SOURCES += \
     Source/Meta/ITypeMeta.cpp \
     Source/Meta/AnyData.cpp \
     Source/Meta/NewMeta.cpp \
-    Source/Singleton.cpp
+    Source/Singleton.cpp \
+    Source/Pipe.cpp
 
 win {
     INCLUDEPATH += Source/Windows

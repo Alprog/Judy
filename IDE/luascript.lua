@@ -7,4 +7,4 @@ function myluafunction(x)
 	return x + cppvar + fun()
 end
 
-myluafunction(3)
+myluafunction(3)  
