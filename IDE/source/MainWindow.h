@@ -2,6 +2,7 @@
 #pragma once
 #include <QMainWindow>
 #include "DocumentsPane.h"
+#include "LuaMachine.h"
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +18,9 @@ private slots:
     void openFile();
     void saveFile();
     void saveAsFile();
+
+    void startDebug();
+    void stopDebug();
 
 private:
     void createActions();
@@ -37,5 +41,7 @@ private:
 
     DocumentsPane* documents;
     bool modificationChecking;
+
+    LuaMachine* luaMachine;
 };
 

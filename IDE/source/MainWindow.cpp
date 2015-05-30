@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QEvent>
 #include "OutputPane.h"
+#include "LuaMachine.h"
 
 #include "DocumentsPane.h"
 #include "../qt/ScintillaEditBase.h"
@@ -87,8 +88,8 @@ void MainWindow::createActions()
 
     QAction* debugActions[]
     {
-        createAction("Start", ":/images/play.png", SLOT(saveAsFile()), Qt::Key_F5),
-        createAction("Break", ":/images/pause.png", SLOT(saveAsFile()), Qt::Key_F6),
+        createAction("Start", ":/images/play.png", SLOT(startDebug()), Qt::Key_F5),
+        createAction("Break", ":/images/pause.png", SLOT(stopDebug()), Qt::Key_F6),
         createAction("Step Into", ":/images/stepinto.png", SLOT(saveAsFile()), Qt::Key_F11),
         createAction("Step Over", ":/images/stepover.png", SLOT(saveAsFile()), Qt::Key_F10),
         createAction("Step Out", ":/images/stepout.png", SLOT(saveAsFile()), QKeySequence(Qt::SHIFT + Qt::Key_F11))
@@ -154,4 +155,14 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
     }
 
     return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::startDebug()
+{
+    LuaMachine::Instance()->Start("Main.lua");
+}
+
+void MainWindow::stopDebug()
+{
+    LuaMachine::Instance()->Stop();
 }

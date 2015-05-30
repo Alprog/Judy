@@ -45,7 +45,8 @@ HEADERS += \
     Source/Meta/Sfinae.h \
     Source/Meta/ClassMeta.h \
     Source/Meta/PointerTypeMeta.h \
-    Source/Pipe.h
+    Source/Pipe.h \
+    Source/LuaMachine.h
 
 SOURCES += \
     Source/App.cpp \
@@ -76,7 +77,8 @@ SOURCES += \
     Source/Meta/AnyData.cpp \
     Source/Meta/NewMeta.cpp \
     Source/Singleton.cpp \
-    Source/Pipe.cpp
+    Source/Pipe.cpp \
+    Source/LuaMachine.cpp
 
 win {
     INCLUDEPATH += Source/Windows

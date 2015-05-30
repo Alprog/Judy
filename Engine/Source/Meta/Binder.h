@@ -1,14 +1,8 @@
 
 #pragma once
 
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
-
 class Meta;
+class lua_State;
 
 class LuaBinder
 {

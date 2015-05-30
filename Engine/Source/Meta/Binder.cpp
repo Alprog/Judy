@@ -9,6 +9,13 @@
 
 #include "App.h"
 
+extern "C"
+{
+    #include "lua.h"
+    #include "lualib.h"
+    #include "lauxlib.h"
+}
+
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }
 {
