@@ -12,10 +12,6 @@
 
 Meta::Meta()
 {
-}
-
-void Meta::Init()
-{
     DefineBuildInType<bool>("bool");
     DefineBuildInType<int>("int");
     DefineBuildInType<float>("float");
@@ -52,7 +48,7 @@ void Meta::Init()
     //TypeMeta<int>::Instance()->name = "int";
     */
 
-    ClassDefiner<TestStruct>("TestStruct")
+    ClassDefiner<TestStruct>(this, "TestStruct")
         .constructor()
         .field("a", &TestStruct::a)
         .field("b", &TestStruct::b)
@@ -60,16 +56,16 @@ void Meta::Init()
         .field("g", &TestStruct::g)
     ;
 
-    ClassDefiner<SubStruct>("SubStruct")
+    ClassDefiner<SubStruct>(this, "SubStruct")
         .constructor()
         .field("e", &SubStruct::e)
     ;
 
-    ClassDefiner<App>("App")
+    ClassDefiner<App>(this, "App")
         .method("StartMainLoop", &App::StartMainLoop)
     ;
 
-    ClassDefiner<Node>("Node")
+    ClassDefiner<Node>(this, "Node")
         .constructor()
         .constructor<int>()
         .method("Update", &Node::Update)
@@ -79,7 +75,7 @@ void Meta::Init()
         .method("AddChild", &Node::AddChild)
     ;
 
-    ClassDefiner<Quad>("Quad")
+    ClassDefiner<Quad>(this, "Quad")
         .constructor()
         .method("Update", &Quad::Update)
         //.method("Render", &Quad::Render)

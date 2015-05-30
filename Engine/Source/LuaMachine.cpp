@@ -23,12 +23,9 @@ void LuaMachine::Start(std::string scriptName)
 {
     Stop();
 
-    auto meta = Meta::Instance();
-    meta->Init();
-
     L = luaL_newstate();
     luaL_openlibs(L);
-    LuaBinder(L).Bind(meta);
+    LuaBinder(L).Bind(Meta::Instance());
 
     if (luaL_dofile(L, "Main.lua"))
     {

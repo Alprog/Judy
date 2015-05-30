@@ -32,8 +32,6 @@ private:
     }
 
 public:
-    void Init();
-
     template <typename T, typename... Types>
     inline static T* New(Types... args)
     {

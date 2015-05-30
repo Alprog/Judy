@@ -13,14 +13,14 @@ class ClassDefiner
 public:
     ClassMetaBase* classMeta;
 
-    ClassDefiner(const char* name)
+    ClassDefiner(Meta* meta, const char* name)
         : classMeta { TypeMeta<ClassType>::Instance() }
     {
         classMeta->name = name;
 
         auto type_index = std::type_index(typeid(ClassType));
-        Meta::Instance()->typeMap.emplace(type_index, classMeta);
-        Meta::Instance()->types.push_back(classMeta);
+        meta->typeMap.emplace(type_index, classMeta);
+        meta->types.push_back(classMeta);
     }
 
     template <typename... ArgTypes>
