@@ -1,8 +1,15 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-    <file>images/new.png</file>
-    <file>images/open.png</file>
-    <file>images/save.png</file>
-    <file>images/icon.png</file>
-</qresource>
+<RCC>
+    <qresource prefix="/">
+        <file>images/new.png</file>
+        <file>images/open.png</file>
+        <file>images/save.png</file>
+        <file>images/icon.png</file>
+        <file>images/pause.png</file>
+        <file>images/stepinto.png</file>
+        <file>images/stepout.png</file>
+        <file>images/stepover.png</file>
+        <file>images/stop.png</file>
+        <file>images/play.png</file>
+        <file>images/play_disabled.png</file>
+    </qresource>
 </RCC>

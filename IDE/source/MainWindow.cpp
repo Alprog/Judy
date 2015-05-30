@@ -39,11 +39,15 @@ MainWindow::MainWindow(QWidget* parent)
     setCentralWidget(documents);
 }
 
-
-QAction* MainWindow::createAction(const char* name, const char* icon, const char* slot, QKeySequence::StandardKey shortcut)
+QAction* MainWindow::createAction(const char* name, const char* icon, const char* slot, const QKeySequence& shortcut)
 {
-    auto action = new QAction(QIcon(icon), tr(name), this);
-    action->setShortcuts(shortcut);
+    auto action = new QAction(tr(name), this);
+    if (icon != nullptr)
+    {
+        action->setIcon(QIcon(icon));
+    }
+
+    action->setShortcut(shortcut);
     connect(action, SIGNAL(triggered()), this, slot);
     return action;
 }
@@ -55,20 +59,48 @@ void MainWindow::createActions()
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileToolBar = addToolBar(tr("File"));
     fileToolBar->setObjectName("fileToolBar");
+    fileToolBar->setIconSize(QSize(20, 20));
 
-    QAction* actions[]
+    QAction* fileActions[]
     {
         createAction("New", ":/images/new.png", SLOT(newFile()), QKeySequence::New),
         createAction("Open", ":/images/open.png", SLOT(openFile()), QKeySequence::Open),
         createAction("Save", ":/images/save.png", SLOT(saveFile()), QKeySequence::Save),
-        createAction("SaveAs", nullptr, SLOT(saveAsFile()), QKeySequence::SaveAs)
+        createAction("Save As", nullptr, SLOT(saveAsFile()), QKeySequence::SaveAs)
     };
 
-    for (auto action : actions)
+    for (QAction* action : fileActions)
     {
         fileMenu->addAction(action);
-        fileToolBar->addAction(action);
+        if (!action->icon().isNull())
+        {
+            fileToolBar->addAction(action);
+        }
     }
+
+    //---------------
+
+    debugMenu = menuBar()->addMenu(tr("&Debug"));
+    debugToolBar = addToolBar(tr("Debug"));
+    debugToolBar->setObjectName("debugToolBar");
+    debugToolBar->setIconSize(QSize(20, 20));
+
+    QAction* debugActions[]
+    {
+        createAction("Start", ":/images/play.png", SLOT(saveAsFile()), Qt::Key_F5),
+        createAction("Break", ":/images/pause.png", SLOT(saveAsFile()), Qt::Key_F6),
+        createAction("Step Into", ":/images/stepinto.png", SLOT(saveAsFile()), Qt::Key_F11),
+        createAction("Step Over", ":/images/stepover.png", SLOT(saveAsFile()), Qt::Key_F10),
+        createAction("Step Out", ":/images/stepout.png", SLOT(saveAsFile()), QKeySequence(Qt::SHIFT + Qt::Key_F11))
+    };
+
+    for (auto action : debugActions)
+    {
+        debugMenu->addAction(action);
+        debugToolBar->addAction(action);
+    }
+
+    //---------------
 
     auto windowMenu = menuBar()->addMenu(tr("&Window"));
     auto layoutMenu = windowMenu->addMenu(tr("&Layout"));
@@ -105,7 +137,7 @@ void MainWindow::saveFile()
 
 void MainWindow::saveAsFile()
 {
-    printf("save\nsave!");
+    printf("save!\n");
     ba = this->saveState(0);
 }
 

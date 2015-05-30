@@ -24,10 +24,13 @@ private:
     bool eventFilter(QObject* obj, QEvent* event) override;
 
     QAction* createAction(const char* name, const char* icon, const char* slot,
-                          QKeySequence::StandardKey shortcut = QKeySequence::UnknownKey);
+                          const QKeySequence& shortcut = QKeySequence::UnknownKey);
 
     QMenu* fileMenu;
     QToolBar* fileToolBar;
+
+    QMenu* debugMenu;
+    QToolBar* debugToolBar;
 
     QMenu* editMenu;
 
