@@ -42,22 +42,13 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
     lua_getinfo(L, "S", ar);
     printf("%s %i\n", ar->source, ar->currentline);
 
-    /*for (int i = 0; i < 30; i++)
+    if (Breakpoints.IsSet(ar->source, ar->currentline))
     {
-        int a = lua_getstack(L, i, ar);
-        if (a != 1) break;
-
-        lua_getinfo(L, "Sn", ar);
-        printf("%s %s %s %s\n", ar->source, ar->name, ar->namewhat, ar->what);
-
-        //printf("%i %i\n", ar->event, ar->currentline);
-
-    }*/
-
-    suspended = true;
-    while (suspended)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+        suspended = true;
+        while (suspended)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(30));
+        }
     }
 }
 
@@ -67,6 +58,12 @@ void LuaMachine::Start(std::string scriptName)
 
     L = luaL_newstate();
     luaL_openlibs(L);
+
+    // search path for required scipts
+    lua_getglobal(L, "package");
+    lua_pushstring(L, "?.lua");
+    lua_setfield(L, -2, "path");
+
     LuaBinder(L).Bind(Meta::Instance());
 
     int mask = LUA_MASKLINE;

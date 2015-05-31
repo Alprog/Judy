@@ -34,7 +34,7 @@ void DocumentsPane::Open(std::string path)
     }
 
     auto document = new DocumentM(path);
-    connect(document, SIGNAL(OnModified()), this, SLOT(UpdateTabNames()));
+    connect(document, SIGNAL(Modified()), this, SLOT(UpdateTabNames()));
     addTab(document, document->GetName().c_str());
     this->setCurrentWidget(document);
 }

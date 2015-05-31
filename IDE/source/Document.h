@@ -37,10 +37,9 @@ private:
     TextEditor* editor;
 
 private slots:
-    void Modified();
+    void OnModified();
     void CloseTab(int index);
-    void UpdateBreakpoints();
 
 signals:
-    void OnModified();
+    void Modified();
 };

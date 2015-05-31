@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     fflush(stdout);
 
 
-    if (luaL_dofile(L, "Main.lua"))
+    if (luaL_dofile(L, "main.lua"))
     {
         std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
         std::cerr << lua_tostring(L, -1) << std::endl;

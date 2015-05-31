@@ -1,6 +1,7 @@
 
 #include "TextEditor.h"
 #include <QWidget>
+#include "LuaMachine/LuaMachine.h"
 
 int RGB(int r, int g, int b)
 {
@@ -10,20 +11,31 @@ int RGB(int r, int g, int b)
 const int black = RGB( 0, 0, 0 );
 const int white = RGB( 220, 220, 220 );
 const int green = RGB( 87, 166, 74 );
-const int red = RGB( 214, 156, 66 );
+const int red = RGB( 229, 20, 0 );
+const int rust = RGB( 214, 156, 66 );
 const int gray = RGB( 128, 128, 139 );
 const int blue = RGB( 66, 156, 214 );
 const int blueSelect = RGB(38, 79, 129);
 const int darkBack = RGB(30, 30, 30);
+const int lightBack = RGB(51, 51, 51);
+const int sunglow = RGB(255, 216, 56);
+
+const int TextMarginStyle = 1;
 
 enum Markers
 {
-    Breakpoint
+    Breakpoint,
+    ActiveLine
 };
 
 TextEditor::TextEditor(QWidget* parent) : ScintillaEdit(parent)
 {
     init();
+}
+
+void TextEditor::setSource(std::string source)
+{
+    this->source = source;
 }
 
 void TextEditor::init()
@@ -55,11 +67,11 @@ void TextEditor::init()
         { SCE_LUA_COMMENT, green },
         { SCE_LUA_COMMENTLINE, green },
         { SCE_LUA_COMMENTDOC, green },
-        { SCE_LUA_NUMBER, red },
+        { SCE_LUA_NUMBER, rust },
         { SCE_LUA_WORD, blue },
-        { SCE_LUA_STRING, red },
-        { SCE_LUA_CHARACTER, red },
-        { SCE_LUA_LITERALSTRING, red },
+        { SCE_LUA_STRING, rust },
+        { SCE_LUA_CHARACTER, rust },
+        { SCE_LUA_LITERALSTRING, rust },
         { SCE_LUA_PREPROCESSOR, white },
         { SCE_LUA_OPERATOR, gray },
         { SCE_LUA_IDENTIFIER, white },
@@ -78,18 +90,25 @@ void TextEditor::init()
         styleSetFore(colors[i][0], colors[i][1]);
     }
 
-    int INDEX = 0;
-    setMarginTypeN(INDEX, SC_MARGIN_NUMBER);
-    setMarginWidthN(INDEX, 40);
     styleSetSize(STYLE_LINENUMBER, 10);
     styleSetFore(STYLE_LINENUMBER, blue);
     styleSetBack(STYLE_LINENUMBER, darkBack);
+    styleSetBack(TextMarginStyle, lightBack);
+    connect(this, SIGNAL(linesAdded(int)), this, SLOT(onLinesAdded(int)));
 
-    INDEX = 1;
-    setMarginTypeN(INDEX, SC_MARGIN_SYMBOL);
+    int INDEX;
+
+    INDEX = 0;
+    setMarginTypeN(INDEX, SC_MARGIN_TEXT);
+    setMarginMaskN(INDEX, (1 << Breakpoint) | (1 << ActiveLine));
     setMarginWidthN(INDEX, 14);
     setMarginSensitiveN(INDEX, true);
     connect(this, SIGNAL(marginClicked(int, int, int)), this, SLOT(onMarginClicked(int, int, int)));
+
+    INDEX = 1;
+    setMarginTypeN(INDEX, SC_MARGIN_NUMBER);
+    setMarginMaskN(INDEX, 0);
+    setMarginWidthN(INDEX, 40);
 
     INDEX = 2;
     setMarginTypeN(INDEX, SC_MARGIN_SYMBOL);
@@ -113,23 +132,39 @@ void TextEditor::init()
     markerDefine(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
 
     markerDefine(Breakpoint, SC_MARK_CIRCLE);
+    markerSetFore(Breakpoint, white);
+    markerSetBack(Breakpoint, red);
+
+    markerDefine(ActiveLine, SC_MARK_SHORTARROW);
+    markerSetFore(ActiveLine, black);
+    markerSetBack(ActiveLine, sunglow);
 
     setMarginLeft(7);
 }
 
-void TextEditor::GetBreakpointLines()
+void TextEditor::onLinesAdded(int arg)
 {
-    int mask = (1 << Breakpoint);
+    for (int i = 0; i < lineCount(); i++)
+    {
+       marginSetStyle(i, TextMarginStyle);
+    }
+}
 
+void TextEditor::getBreakpointLines()
+{
+    std::unordered_set<int> lines;
+
+    int mask = (1 << Breakpoint);
     int line = 0;
     line = markerNext(line, mask);
     while (line >= 0)
     {
-        printf("%i ", line);
+        printf("%i\n", line);
+        lines.insert(line + 1);
         line = markerNext(line + 1, mask);
     }
 
-    printf("\n", line);
+    LuaMachine::Instance()->Breakpoints.Set(source, lines);
 }
 
 void TextEditor::onMarginClicked(int position, int modifiers, int margin)
@@ -144,5 +179,5 @@ void TextEditor::onMarginClicked(int position, int modifiers, int margin)
         markerAdd(line, Breakpoint);
     }
 
-    GetBreakpointLines();
+    getBreakpointLines();
 }

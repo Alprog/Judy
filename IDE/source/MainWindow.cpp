@@ -166,7 +166,7 @@ void MainWindow::startDebug()
     }
     else
     {
-        machine->Start("Main.lua");
+        machine->Start("main.lua");
     }
 }
 
