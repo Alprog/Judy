@@ -131,5 +131,5 @@ void LuaBinder::Bind(Meta* meta)
     lua_setfield(L, 1, "__index");
 
     lua_setglobal(L, "Node");
-    printf("NAME: %s \n", type->name.c_str());
+    //printf("NAME: %s \n", type->name.c_str());
 }

@@ -159,7 +159,15 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 
 void MainWindow::startDebug()
 {
-    LuaMachine::Instance()->Start("Main.lua");
+    auto machine = LuaMachine::Instance();
+    if (machine->IsStarted())
+    {
+        machine->Continue();
+    }
+    else
+    {
+        machine->Start("Main.lua");
+    }
 }
 
 void MainWindow::stopDebug()

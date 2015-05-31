@@ -1,2 +1,9 @@
+
+function a()
+	print("foo")
+	print("bar")
+end
 
-print("main")
+print("global")
+
+a();
