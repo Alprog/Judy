@@ -1,6 +1,9 @@
 
 #include "OutputPane.h"
 #include <QTextEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include "sstream"
 #include "iostream"
@@ -12,12 +15,44 @@ OutputPane::OutputPane()
 {
     setObjectName("Output");
 
-    edit = new QTextEdit(nullptr);
-    edit->setReadOnly(true);
-    this->setWidget(edit);
+    auto layout = new QVBoxLayout();
+    {
+        layout->setMargin(0);
+
+        auto hLayout = new QHBoxLayout();
+        {
+            hLayout->setMargin(0);
+
+            auto button = new QPushButton("Clear");
+            button->setIcon(QIcon());
+            button->setMaximumSize(100, 30);
+            hLayout->addWidget(button);
+            connect(button, SIGNAL(clicked()), this, SLOT(clear()));
+
+            //button = new QPushButton("Clear");
+            //button->setMaximumSize(100, 30);
+            //hLayout->addWidget(button);
+
+            hLayout->addWidget(new QWidget);
+        }
+        layout->addLayout(hLayout);
+
+        edit = new QTextEdit(nullptr);
+        edit->setReadOnly(true);
+    }
+    layout->addWidget(edit);
+
+    auto widget = new QWidget();
+    widget->setLayout(layout);
+    setWidget(widget);
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(work()));
     timer.start(100);
+}
+
+void OutputPane::clear()
+{
+    edit->setPlainText(tr(""));
 }
 
 void OutputPane::work()

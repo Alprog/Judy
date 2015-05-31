@@ -16,6 +16,7 @@ public:
     ~OutputPane();
 
 private slots:
+    void clear();
     void work();
 
 private:

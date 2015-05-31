@@ -32,8 +32,9 @@ MainWindow::MainWindow(QWidget* parent)
 
 
     QDockWidget* dockWidget;
-    dockWidget = new QDockWidget("Dock2", 0, 0);
-    dockWidget->setObjectName("Dock2");
+    dockWidget = new QDockWidget("Stack", 0, 0);
+    dockWidget->setObjectName("Stack");
+    dockWidget->setMinimumWidth(250);
     addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
 
     documents = new DocumentsPane;

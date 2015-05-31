@@ -40,10 +40,10 @@ void hook(lua_State *L, lua_Debug *ar)
 void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
 {
     lua_getinfo(L, "S", ar);
-    printf("%s %i\n", ar->source, ar->currentline);
-
     if (Breakpoints.IsSet(ar->source, ar->currentline))
     {
+        printf("%s %i\n", ar->source, ar->currentline);
+
         suspended = true;
         while (suspended)
         {
@@ -80,6 +80,9 @@ void LuaMachine::Execution(std::string scriptName)
         std::cerr << lua_tostring(L, -1) << std::endl;
         lua_pop(L, 1);
     }
+
+    printf("completed\n");
+    Stop();
 }
 
 void LuaMachine::Continue()
