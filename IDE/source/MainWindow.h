@@ -2,7 +2,7 @@
 #pragma once
 #include <QMainWindow>
 #include "DocumentsPane.h"
-#include "LuaMachine.h"
+#include "LuaMachine/LuaMachine.h"
 
 class MainWindow : public QMainWindow
 {

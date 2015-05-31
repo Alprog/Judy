@@ -39,6 +39,7 @@ private:
 private slots:
     void Modified();
     void CloseTab(int index);
+    void UpdateBreakpoints();
 
 signals:
     void OnModified();

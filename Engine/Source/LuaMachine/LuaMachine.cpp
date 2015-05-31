@@ -27,6 +27,11 @@ bool LuaMachine::IsStarted() const
     return L != nullptr;
 }
 
+bool LuaMachine::IsBreaked() const
+{
+    return L != nullptr && suspended;
+}
+
 void hook(lua_State *L, lua_Debug *ar)
 {
     LuaMachine::Instance()->Hook(L, ar);
@@ -49,8 +54,8 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
 
     }*/
 
-    breakpoint = true;
-    while (breakpoint)
+    suspended = true;
+    while (suspended)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
@@ -82,7 +87,7 @@ void LuaMachine::Execution(std::string scriptName)
 
 void LuaMachine::Continue()
 {
-    breakpoint = false;
+    suspended = false;
 }
 
 void LuaMachine::Stop()

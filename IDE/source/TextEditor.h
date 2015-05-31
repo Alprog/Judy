@@ -13,6 +13,11 @@ class TextEditor : public ScintillaEdit
 public:
     TextEditor(QWidget* parent = 0);
 
+    void GetBreakpointLines();
+
+private slots:
+    void onMarginClicked(int position, int modifiers, int margin);
+
 private:
     void init();
 };

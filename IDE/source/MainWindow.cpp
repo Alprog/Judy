@@ -8,7 +8,7 @@
 #include <QFileDialog>
 #include <QEvent>
 #include "OutputPane.h"
-#include "LuaMachine.h"
+#include "LuaMachine/LuaMachine.h"
 
 #include "DocumentsPane.h"
 #include "../qt/ScintillaEditBase.h"

@@ -5,7 +5,7 @@
 #include <QTextStream>
 #include <QLayout>
 #include <QFileInfo>
-
+#include "LuaMachine/LuaMachine.h"
 
 DocumentM::DocumentM(std::string filePath)
     : fullPath ( filePath )
@@ -35,6 +35,9 @@ DocumentM::DocumentM(std::string filePath)
     editor->emptyUndoBuffer();
 
     connect(editor, SIGNAL(notifyChange()), this, SLOT(Modified()));
+    connect(editor, SIGNAL(onModified()), this, SLOT(UpdateBreakpoints()));
+
+    printf("%s\n", fullPath.c_str());
 }
 
 void DocumentM::Reload()
@@ -105,4 +108,9 @@ bool DocumentM::HaveChanges()
 void DocumentM::Modified()
 {
     this->OnModified();
+}
+
+void DocumentM::UpdateBreakpoints()
+{
+
 }

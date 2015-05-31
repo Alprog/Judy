@@ -1,9 +1,11 @@
-
-function a()
+
+require "folder/req"
+
+function a()
 	print("foo")
 	print("bar")
-end
+end
 
-print("global")
-
+print("global")
+
 a();

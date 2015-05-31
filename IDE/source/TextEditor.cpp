@@ -16,6 +16,11 @@ const int blue = RGB( 66, 156, 214 );
 const int blueSelect = RGB(38, 79, 129);
 const int darkBack = RGB(30, 30, 30);
 
+enum Markers
+{
+    Breakpoint
+};
+
 TextEditor::TextEditor(QWidget* parent) : ScintillaEdit(parent)
 {
     init();
@@ -37,13 +42,10 @@ void TextEditor::init()
     setKeyWords(1, keyWords2);
 
     setCaretFore(white);
-
     styleSetFont(STYLE_DEFAULT, "Consolas");
     styleSetSize(STYLE_DEFAULT, 12);
     styleSetBack(STYLE_DEFAULT, darkBack);
-
     styleClearAll();
-
 
     setSelBack(true, blueSelect);
 
@@ -76,39 +78,71 @@ void TextEditor::init()
         styleSetFore(colors[i][0], colors[i][1]);
     }
 
+    int INDEX = 0;
+    setMarginTypeN(INDEX, SC_MARGIN_NUMBER);
+    setMarginWidthN(INDEX, 40);
     styleSetSize(STYLE_LINENUMBER, 10);
     styleSetFore(STYLE_LINENUMBER, blue);
     styleSetBack(STYLE_LINENUMBER, darkBack);
 
+    INDEX = 1;
+    setMarginTypeN(INDEX, SC_MARGIN_SYMBOL);
+    setMarginWidthN(INDEX, 14);
+    setMarginSensitiveN(INDEX, true);
+    connect(this, SIGNAL(marginClicked(int, int, int)), this, SLOT(onMarginClicked(int, int, int)));
+
+    INDEX = 2;
+    setMarginTypeN(INDEX, SC_MARGIN_SYMBOL);
+    setMarginMaskN(INDEX, SC_MASK_FOLDERS);
+    setMarginWidthN(INDEX, 12);
+    setMarginSensitiveN(INDEX, true);
+    setAutomaticFold(SC_AUTOMATICFOLD_SHOW | SC_AUTOMATICFOLD_CLICK);
+    setFoldMarginColour(true, darkBack);
+    setFoldMarginHiColour(true, darkBack);
     setProperty("fold", "1");
     setProperty("fold.compact", "0");
-
     setProperty("fold.comment", "1");
     setProperty("fold.preprocessor", "1");
 
-    int INDEX = 2;
-    setMarginWidthN(INDEX, 0);
-
-    //marginSetStyle(1, STYLE_LINENUMBER);;
-
-    setMarginTypeN(INDEX, SC_MARGIN_SYMBOL);
-    setMarginMaskN(INDEX, SC_MASK_FOLDERS);
-    setMarginWidthN(INDEX, 15);
-    setMarginLeft(7);
-    setMarginSensitiveN(INDEX, true);
-
-    setAutomaticFold(SC_AUTOMATICFOLD_SHOW | SC_AUTOMATICFOLD_CLICK);
-
-    setFoldMarginColour(true, darkBack);
-    setFoldMarginHiColour(true, darkBack);
-
-    setMarginWidthN(0, 40);
     markerDefine(SC_MARKNUM_FOLDER, SC_MARK_BOXPLUS);
     markerDefine(SC_MARKNUM_FOLDEREND, SC_MARK_BOXPLUSCONNECTED);
-
     markerDefine(SC_MARKNUM_FOLDEROPEN, SC_MARK_BOXMINUS);
     markerDefine(SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
     markerDefine(SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNER);
     markerDefine(SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
     markerDefine(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
+
+    markerDefine(Breakpoint, SC_MARK_CIRCLE);
+
+    setMarginLeft(7);
+}
+
+void TextEditor::GetBreakpointLines()
+{
+    int mask = (1 << Breakpoint);
+
+    int line = 0;
+    line = markerNext(line, mask);
+    while (line >= 0)
+    {
+        printf("%i ", line);
+        line = markerNext(line + 1, mask);
+    }
+
+    printf("\n", line);
+}
+
+void TextEditor::onMarginClicked(int position, int modifiers, int margin)
+{
+    auto line = lineFromPosition(position);
+    if (markerGet(line) & (1 << Breakpoint))
+    {
+        markerDelete(line, Breakpoint);
+    }
+    else
+    {
+        markerAdd(line, Breakpoint);
+    }
+
+    GetBreakpointLines();
 }
