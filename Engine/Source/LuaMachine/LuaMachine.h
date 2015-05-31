@@ -24,7 +24,7 @@ public:
    bool IsStarted() const;
    bool IsBreaked() const;
 
-   void Start(std::string scriptName);
+   void Start(std::string scriptName, bool thread = true);
    void Continue();
    void Stop();
 

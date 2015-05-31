@@ -52,7 +52,7 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
     }
 }
 
-void LuaMachine::Start(std::string scriptName)
+void LuaMachine::Start(std::string scriptName, bool thread)
 {
     Stop();
 
@@ -69,7 +69,15 @@ void LuaMachine::Start(std::string scriptName)
     int mask = LUA_MASKLINE;
     lua_sethook(L, hook, mask, 0);
 
-    executionThread = new std::thread(&LuaMachine::Execution, this, scriptName);
+    if (thread)
+    {
+        executionThread = new std::thread(&LuaMachine::Execution, this, scriptName);
+    }
+    else
+    {
+        Execution(scriptName);
+    }
+
 }
 
 void LuaMachine::Execution(std::string scriptName)

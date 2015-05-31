@@ -1,35 +1,41 @@
 
-#include "App.h"
-#include "Window.h"
+#include "LuaMachine/LuaMachine.h"
+#include <thread>
+#include <chrono>
 
-#ifdef WIN
-#include <windows.h>
-#endif
+#include "Socket.h"
 
-#include "iostream"
-
-#include "Meta/Meta.h"
-#include "Meta/Binder.h"
-
-#include "Meta/ClassDefiner.h"
-#include "Meta/TypeMeta.h"
-#include "Meta/FieldMeta.h"
-
-#include "Meta/BaseType.h"
-
-#include <typeindex>
-#include <unordered_map>
-#include <iostream>
-#include <io.h>
-
-extern "C"
+void serverTask()
 {
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
+    auto server = new Socket();
+    server->Host(2730);
+    const char* str = server->Read();
+    printf("%s\n", str);
 }
 
-template <typename Type>
+void clientTask()
+{
+    auto client = new Socket();
+    while (!client->Connect("127.0.0.1", 2730)) {}
+    client->Send("Albukerke!");
+}
+
+int main(int argc, char *argv[])
+{
+    std::thread serverThread(serverTask);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::thread clientThread(clientTask);
+
+    clientThread.join();
+    serverThread.join();
+
+    printf("finish\n");
+    fflush(stdout);
+
+    //LuaMachine::Instance()->Start("main.lua");
+}
+
+/*template <typename Type>
 void SerialzeToTable(lua_State* L, Type object)
 {
     auto serializer = new Serializer(L);
@@ -42,9 +48,9 @@ void SerialzeToTable(lua_State* L, Type object)
     lua_getglobal(L, "Test");
     lua_insert(L, 1);
     lua_pcall(L, 1, LUA_MULTRET, 0);
-}
+}*/
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
@@ -64,4 +70,4 @@ int main(int argc, char *argv[])
     SerialzeToTable(L, testStruct);
 
     lua_close(L);
-}
+}*/
