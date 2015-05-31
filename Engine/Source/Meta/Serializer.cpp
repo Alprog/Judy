@@ -17,7 +17,11 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
 
     if (type == TypeMetaOf<int>())
     {
-        lua_pushnumber(L, object.as<int>());
+        lua_pushinteger(L, object.as<int>());
+    }
+    else if (type == TypeMetaOf<float>())
+    {
+        lua_pushnumber(L, object.as<float>());
     }
     else if (type->isVector())
     {
@@ -155,6 +159,10 @@ Any Serializer::Deserialize(ITypeMeta* type)
     if (type == TypeMetaOf<int>())
     {
         return lua_tointeger(L, -1);
+    }
+    else if (type == TypeMetaOf<float>())
+    {
+        return (float)lua_tonumber(L, -1);
     }
     else if (type->isVector())
     {

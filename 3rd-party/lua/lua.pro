@@ -30,7 +30,8 @@ HEADERS += \
     source/lualib.h \
     source/lundump.h \
     source/lvm.h \
-    source/lzio.h
+    source/lzio.h \
+    source/lprefix.h
 
 SOURCES += \
     source/lapi.c \
@@ -66,6 +67,7 @@ SOURCES += \
     source/luac.c \
     source/lundump.c \
     source/lvm.c \
-    source/lzio.c
+    source/lzio.c \
+    source/lutf8lib.c
 
 

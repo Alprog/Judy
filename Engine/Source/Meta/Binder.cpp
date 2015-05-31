@@ -51,6 +51,10 @@ int FunctionInvoker(lua_State* L)
         {
             args.push_back(lua_tointeger(L, index++));
         }
+        else if (argType == TypeMetaOf<float>())
+        {
+            args.push_back((float)lua_tonumber(L, index++));
+        }
         else if (argType == TypeMetaOf<char*>())
         {
             args.push_back(lua_tostring(L, index++));
@@ -74,6 +78,10 @@ int FunctionInvoker(lua_State* L)
         if (returnType == TypeMetaOf<int>())
         {
             lua_pushinteger(L, result.as<int>());
+        }
+        else if (returnType == TypeMetaOf<float>())
+        {
+            lua_pushnumber(L, result.as<float>());
         }
         else if (returnType == TypeMetaOf<char*>())
         {

@@ -30,7 +30,7 @@ struct TestStruct
     friend Meta;
     friend TypeMeta<TestStruct>;
 
-    int a;
+    float a;
     int* c;
     SubStruct d;
     SubStruct* dd;
@@ -41,7 +41,7 @@ private:
     int b;
 
 public:
-    TestStruct(int a, int b, char* text, SubStruct d)
+    TestStruct(float a, int b, char* text, SubStruct d)
     {
         this->a = a;
         this->b = b;
