@@ -3,19 +3,37 @@
 
 #include <winsock2.h>
 
+int count = 0;
+
 Socket::Socket()
 {
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (count == 0)
+    {
+        WSADATA wsaData;
+        WSAStartup(MAKEWORD(2, 2), &wsaData);
+    }
+    count++;
+
     handle = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 }
 
 Socket::~Socket()
 {
-    WSACleanup();
+    count--;
+    if (count == 0)
+    {
+        WSACleanup();
+    }
 }
 
-void Socket::Host(int port)
+bool Socket::SetBlockingMode(bool value)
+{
+    auto mode = value ? 0ul : 1ul;
+    auto result = ioctlsocket(handle, FIONBIO, &mode);
+    return result == NO_ERROR;
+}
+
+void Socket::Listen(int port)
 {
     struct sockaddr_in adress;
     adress.sin_family = AF_INET;
@@ -26,21 +44,33 @@ void Socket::Host(int port)
 
     if (bind(handle, (sockaddr*)&adress, size))
     {
+        printf("!");
         throw;
     }
 
     if (listen(handle, 2))
     {
+        printf("@");
         throw;
     }
+}
 
+bool Socket::Accept()
+{
     struct sockaddr_in clientAddress;
     int clientSize = sizeof(clientAddress);
-    handle = accept(handle, (struct sockaddr*)&clientAddress, (int*)&clientSize);
-    if (handle == 0)
+
+    SOCKET clientSocket = accept(handle, (struct sockaddr*)&clientAddress, (int*)&clientSize);
+    if (clientSocket == INVALID_SOCKET)
     {
-        throw;
+        if (WSAGetLastError() == WSAEWOULDBLOCK)
+        {
+
+        }
+        return false;
     }
+
+    return true;
 }
 
 bool Socket::Connect(std::string host, int port)
@@ -49,6 +79,9 @@ bool Socket::Connect(std::string host, int port)
     adress.sin_family = AF_INET;
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
+
+    //getaddrinfo();
+
     return connect(handle, (sockaddr*)&adress, sizeof(adress)) == 0;
 }
 

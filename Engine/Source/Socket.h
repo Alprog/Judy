@@ -9,12 +9,16 @@ public:
     Socket();
     ~Socket();
 
-    void Host(int port);
+    bool SetBlockingMode(bool value);
+
+    void Listen(int port);
+    bool Accept();
+
     bool Connect(std::string host, int port);
 
     void Send(char* buffer);
     char* Read();
 
 private:
-    int handle;
+    unsigned int handle;
 };

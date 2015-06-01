@@ -8,7 +8,8 @@
 void serverTask()
 {
     auto server = new Socket();
-    server->Host(2730);
+    server->Listen(2730);
+    server->Accept();
     const char* str = server->Read();
     printf("%s\n", str);
 }
@@ -22,12 +23,17 @@ void clientTask()
 
 int main(int argc, char *argv[])
 {
-    std::thread serverThread(serverTask);
+    auto server = new Socket();
+    server->SetBlockingMode(false);
+    server->Listen(2730);
+    server->Accept();
+
+    /*std::thread serverThread(serverTask);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::thread clientThread(clientTask);
 
     clientThread.join();
-    serverThread.join();
+    serverThread.join();*/
 
     printf("finish\n");
     fflush(stdout);
