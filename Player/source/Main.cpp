@@ -3,14 +3,14 @@
 #include <thread>
 #include <chrono>
 
-#include "Socket.h"
+#include "Net/Socket.h"
 
 void serverTask()
 {
     auto server = new Socket();
     server->Listen(2730);
     server->Accept();
-    const char* str = server->Read();
+    const char* str = server->Receive();
     printf("%s\n", str);
 }
 

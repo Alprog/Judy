@@ -84,17 +84,16 @@ function SmartTableToString(objectTable)
 		end
 	end
 	
-	print(str)
-	
+	return str
 end
 
-local d = { "111", "222" }
+--[[local d = { "111", "222" }
 local e = { "eee", d }
 
 local t = {}
 t.a = "fef"
 t.b = e
 t.c = e
-t.d = d
+t.d = d]]
 
 --print(SmartTableToString(t))

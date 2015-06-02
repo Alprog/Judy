@@ -16,8 +16,9 @@ public:
 
     bool Connect(std::string host, int port);
 
+    bool Send(std::string& message);
     void Send(char* buffer);
-    char* Read();
+    char* Receive();
 
 private:
     unsigned int handle;

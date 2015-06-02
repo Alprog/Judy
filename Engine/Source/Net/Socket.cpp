@@ -79,10 +79,28 @@ bool Socket::Connect(std::string host, int port)
     adress.sin_family = AF_INET;
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
+    auto result = connect(handle, (sockaddr*)&adress, sizeof(adress));
+    return result == NO_ERROR;
+}
 
-    //getaddrinfo();
+bool Socket::Send(std::string& message)
+{
+    const char* buffer = message.c_str();
 
-    return connect(handle, (sockaddr*)&adress, sizeof(adress)) == 0;
+    auto length = strlen(buffer) + 1;
+
+    int totalSend = 0;
+    while (totalSend < length)
+    {
+        int count = send(handle, buffer + totalSend, length - totalSend, 0);
+        if (count < 0)
+        {
+            return false;
+        }
+        totalSend += count;
+    }
+
+    return true;
 }
 
 void Socket::Send(char* buffer)
@@ -90,7 +108,9 @@ void Socket::Send(char* buffer)
     send(handle, buffer, strlen(buffer) + 1, 0);
 }
 
-char* Socket::Read()
+char* Socket::Receive()
 {
     return nullptr;
+    //char[1024] buffer;
+    //recv(handle, buffer, max, 0);
 }

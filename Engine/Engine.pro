@@ -48,7 +48,8 @@ HEADERS += \
     Source/Pipe.h \
     Source/LuaMachine/Breakpoints.h \
     Source/LuaMachine/LuaMachine.h \
-    Source/Socket.h
+    Source/Net/NetNode.h \
+    Source/Net/Socket.h
 
 SOURCES += \
     Source/App.cpp \
@@ -82,7 +83,8 @@ SOURCES += \
     Source/Pipe.cpp \
     Source/LuaMachine/Breakpoints.cpp \
     Source/LuaMachine/LuaMachine.cpp \
-    Source/Socket.cpp
+    Source/Net/NetNode.cpp \
+    Source/Net/Socket.cpp
 
 win {
     INCLUDEPATH += Source/Windows
