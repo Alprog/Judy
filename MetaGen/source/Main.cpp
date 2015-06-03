@@ -6,6 +6,9 @@
 #include <QObject>
 #include <QString>
 #include <QDir>
+#include <QTextStream>
+
+#include "Parser.h"
 
 std::vector<QFileInfo> getFiles(QDir dir, const QStringList& nameFilters)
 {
@@ -35,6 +38,17 @@ int main(int argc, char *argv[])
     auto headers = getFiles(dir, {"*.h"});
     for (auto& header : headers)
     {
-        printf("%s\n", header.filePath().toStdString().c_str());
+        QFile file(header.absoluteFilePath());
+
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QTextStream stream(&file);
+            std::string text = stream.readAll().toStdString();
+            parse(text);
+        }
+
+        file.close();
+
+        break;
     }
 }

@@ -2,10 +2,12 @@
 #pragma once
 #include "App.h"
 
-
 class LinuxApp : public App
-{
-public:
+{/* fefe
+ *
+  gg
+   *//**/public: //
+    // elfe
     LinuxApp();
 };
 
