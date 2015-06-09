@@ -3,4 +3,4 @@
 
 #include <string>
 
-void parse(std::string& text);
+void parse(const std::string& text);
