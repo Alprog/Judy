@@ -10,7 +10,12 @@ const std::string multiLineComment = "[/][*][^]*?[*][/]";
 const std::string charLiteral = "'(\\\\'|[^'])*?'";        // '(\\'|[^'])*?'
 const std::string stringLiteral = "\"(\\\\\"|[^\"])*?\"";  // "(\\"|[^"])*?"
 
-void parse(const std::string& text)
+void removeLineContinuations(std::string& text)
+{
+    text = std::regex_replace(text, std::regex("\\\\\\n"), "");   // \\\n
+}
+
+void removeComments(const std::string& text)
 {
     auto comments = "(" + singleLineComment + ")|(" + multiLineComment + ")";
     auto literals = "(" + charLiteral + ")|(" + stringLiteral + ")";
@@ -33,6 +38,13 @@ void parse(const std::string& text)
         }
     }
     while (true);
+}
 
+void parse(std::string& text)
+{
+    removeLineContinuations(text);
+    //removeComments(text);
+
+    std::cout << text << std::endl;
     fflush(stdout);
 }
