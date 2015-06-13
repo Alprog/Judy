@@ -15,22 +15,27 @@ void removeLineContinuations(std::string& text)
     text = std::regex_replace(text, std::regex("\\\\\\n"), "");   // \\\n
 }
 
-void removeComments(const std::string& text)
+void removeComments(std::string& text)
 {
     auto comments = "(" + singleLineComment + ")|(" + multiLineComment + ")";
     auto literals = "(" + charLiteral + ")|(" + stringLiteral + ")";
     auto reg = std::regex(comments + "|" + literals);
 
-    std::smatch match;
-
+    std::match_results<std::string::iterator> match;
     auto it = std::begin(text);
     do
     {
         auto result = std::regex_search(it, std::end(text), match, reg);
         if (result)
         {
-            std::cout << match[0] << std::endl << std::endl;
-            it = match[0].second;
+            if (match[1].matched || match[2].matched) // is comment
+            {
+                it = text.erase(match[0].first, match[0].second);
+            }
+            else
+            {
+                it = match[0].second;
+            }
         }
         else
         {
@@ -43,7 +48,7 @@ void removeComments(const std::string& text)
 void parse(std::string& text)
 {
     removeLineContinuations(text);
-    //removeComments(text);
+    removeComments(text);
 
     std::cout << text << std::endl;
     fflush(stdout);
