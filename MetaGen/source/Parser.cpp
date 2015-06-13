@@ -10,7 +10,7 @@ const std::string multiLineComment = "[/][*][^]*?[*][/]";
 const std::string charLiteral = "'(\\\\'|[^'])*?'";        // '(\\'|[^'])*?'
 const std::string stringLiteral = "\"(\\\\\"|[^\"])*?\"";  // "(\\"|[^"])*?"
 
-void removeLineContinuations(std::string& text)
+void spliceLines(std::string& text)
 {
     text = std::regex_replace(text, std::regex("\\\\\\n"), "");   // \\\n
 }
@@ -47,7 +47,7 @@ void removeComments(std::string& text)
 
 void parse(std::string& text)
 {
-    removeLineContinuations(text);
+    spliceLines(text);
     removeComments(text);
 
     std::cout << text << std::endl;
