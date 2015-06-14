@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
     dir.cd(s);
 
     auto headers = getFiles(dir, {"*.h"});
+
+    int i = 0;
     for (auto& header : headers)
     {
         QFile file(header.absoluteFilePath());
@@ -49,6 +51,7 @@ int main(int argc, char *argv[])
 
         file.close();
 
-        break;
+        i++;
+        if (i == 15) break;
     }
 }

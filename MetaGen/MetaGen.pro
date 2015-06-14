@@ -5,7 +5,9 @@ TEMPLATE = app
 
 SOURCES += \
     Source/Main.cpp \
-    Source/Parser.cpp
+    Source/Parser.cpp \
+    Source/Statement.cpp \
+    Source/Snippet.cpp
 
 CONFIG += qt
 
@@ -14,4 +16,6 @@ win {
 }
 
 HEADERS += \
-    Source/Parser.h
+    Source/Parser.h \
+    Source/Statement.h \
+    Source/Snippet.h
