@@ -1,8 +1,5 @@
 
-#define Window W
 #include "App.h"
-#define Window Window
-
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
