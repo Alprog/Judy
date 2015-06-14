@@ -13,7 +13,8 @@ SOURCES += \
     Source/Info/MemberInfo.cpp \
     Source/Info/TypeInfo.cpp \
     Source/Info/MethodInfo.cpp \
-    Source/Info/ClassInfo.cpp
+    Source/Info/ClassInfo.cpp \
+    Source/Info/InheritanceInfo.cpp
 
 CONFIG += qt
 
@@ -32,4 +33,5 @@ HEADERS += \
     Source/Info/MemberInfo.h \
     Source/Info/TypeInfo.h \
     Source/Info/MethodInfo.h \
-    Source/Info/ClassInfo.h
+    Source/Info/ClassInfo.h \
+    Source/Info/InheritanceInfo.h
