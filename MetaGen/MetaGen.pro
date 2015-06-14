@@ -7,7 +7,8 @@ SOURCES += \
     Source/Main.cpp \
     Source/Parser.cpp \
     Source/Statement.cpp \
-    Source/Snippet.cpp
+    Source/Snippet.cpp \
+    Source/Token.cpp
 
 CONFIG += qt
 
@@ -18,4 +19,6 @@ win {
 HEADERS += \
     Source/Parser.h \
     Source/Statement.h \
-    Source/Snippet.h
+    Source/Snippet.h \
+    Source/Token.h \
+    Source/RegexConstants.h

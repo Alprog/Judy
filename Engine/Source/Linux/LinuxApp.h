@@ -3,11 +3,8 @@
 #include "App.h"
 
 class LinuxApp : public App
-{/* fefe
- *
-  gg
-   *//**/public: //
-    // elfe
+{
+public:
     LinuxApp();
 };
 

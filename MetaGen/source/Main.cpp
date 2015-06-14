@@ -50,8 +50,5 @@ int main(int argc, char *argv[])
         }
 
         file.close();
-
-        i++;
-        if (i == 15) break;
     }
 }

@@ -2,14 +2,24 @@
 #include "Snippet.h"
 
 #include <regex>
+#include "RegexConstants.h"
 
 Snippet::Snippet(std::string text)
     : text(text)
+    , escapedLiterals(nullptr)
+    , parsed(false)
+{
+    escapeLiterals();
+}
+
+Snippet::Snippet(std::string text, std::vector<std::string>* escapedLiterals)
+    : text(text)
+    , escapedLiterals(escapedLiterals)
     , parsed(false)
 {
 }
 
-std::vector<Statement> Snippet::getStatements()
+const std::vector<Statement>& Snippet::getStatements()
 {
     if (!parsed)
     {
@@ -17,6 +27,33 @@ std::vector<Statement> Snippet::getStatements()
         parsed = true;
     }
     return statements;
+}
+
+void Snippet::escapeLiterals()
+{
+    escapedLiterals = new std::vector<std::string>();
+
+    auto reg = std::regex(literals);
+    std::match_results<std::string::iterator> match;
+    auto it = std::begin(text);
+    do
+    {
+        auto result = std::regex_search(it, std::end(text), match, reg);
+        if (result)
+        {
+            auto literal = std::string(match[0].first, match[0].second);
+            escapedLiterals->push_back(literal);
+            auto index = escapedLiterals->size() - 1;
+            auto inset = std::to_string(index);
+            text.replace(match[0].first + 1, match[0].second - 1, inset);
+            it = match[0].first + inset.length() + 2;
+        }
+        else
+        {
+            break;
+        }
+    }
+    while (true);
 }
 
 void Snippet::parseStatements()
@@ -27,12 +64,14 @@ void Snippet::parseStatements()
 
     auto endStatement = [&]()
     {
-        trim(statementText);
-        if (!statementText.empty())
+        if (!std::regex_match(statementText, std::regex(spaceOrEmpty)))
         {
-            auto statement = hasChild ? Statement(statementText, childText) : Statement(statementText);
+            auto statement = hasChild
+                    ? Statement(statementText, childText, escapedLiterals)
+                    : Statement(statementText, escapedLiterals);
             statements.push_back(statement);
         }
+
         statementText.clear();
         childText.clear();
         hasChild = false;
@@ -74,10 +113,4 @@ void Snippet::parseStatements()
         }
     }
     endStatement();
-}
-
-void Snippet::trim(std::string& text)
-{
-    text = std::regex_replace(text, std::regex("( |\t|\v|\n|\r)+"), " ");
-    text = std::regex_replace(text, std::regex("(^ )|( $)"), "");
 }

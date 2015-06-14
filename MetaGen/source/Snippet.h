@@ -8,13 +8,15 @@
 struct Snippet
 {
     Snippet(std::string text);
-    std::vector<Statement> getStatements();
+    Snippet(std::string text, std::vector<std::string>* escapedLiterals);
+    const std::vector<Statement>& getStatements();
 
 private:
+    void escapeLiterals();
     void parseStatements();
-    void trim(std::string& text);
 
-    const std::string text;
+    std::string text;
     bool parsed;
     std::vector<Statement> statements;
+    std::vector<std::string>* escapedLiterals;
 };
