@@ -20,26 +20,43 @@ Statement::Statement(std::string& text, std::string& childSnippetText, std::vect
     robustTokenize();
 }
 
-const std::string& Statement::getText()
+const std::string& Statement::getText() const
 {
     return text;
 }
 
-const std::vector<Token>& Statement::getTokens()
+const std::vector<Token>& Statement::getTokens() const
 {
     return tokens;
 }
 
-bool Statement::isClass()
+Snippet* Statement::getChildSnippet() const
+{
+    return childSnippet;
+}
+
+bool Statement::containsToken(std::string text)
 {
     for (auto& token : tokens)
     {
-        if (token.text == "class" || token.text == "struct" || token.text == "union")
+        if (token.text == text)
         {
             return true;
         }
     }
     return false;
+}
+
+bool Statement::isClass()
+{
+    return containsToken("class")
+        || containsToken("struct")
+        || containsToken("union");
+}
+
+bool Statement::hasDefinition()
+{
+    return childSnippet != nullptr;
 }
 
 void Statement::robustTokenize()

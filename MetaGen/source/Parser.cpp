@@ -46,6 +46,16 @@ void removeDirectives(std::string& text)
     text = std::regex_replace(text, std::regex(directiveLine), "");
 }
 
+void parseClass(Statement& classStatement)
+{
+    auto definition = classStatement.getChildSnippet();
+
+    for (Statement statement : definition->getStatements())
+    {
+        std::cout << statement.getText() << std::endl;
+    }
+}
+
 void parse(std::string& text)
 {
     spliceLines(text);
@@ -55,27 +65,15 @@ void parse(std::string& text)
     auto snippet = Snippet(text);
     for (Statement statement : snippet.getStatements())
     {
-        if (statement.isClass())
+        if (statement.isClass() && statement.hasDefinition())
         {
-            std::cout << statement.getText() << std::endl;
+            if (statement.containsToken("META"))
+            {
+                std::cout << "-------------" << std::endl;
+                std::cout << statement.getText() << std::endl;
+                parseClass(statement);
+            }
         }
-
-
-        /*for (auto& t : s.getTokens())
-        {
-            std::cout << t.text << std::endl;
-        }*/
-
-        //std::cout << "--" << std::endl;
-
-//        if (s.childSnippet != nullptr)
-//        {
-//            for (auto& ss : s.childSnippet->getStatements())
-//            {
-//                std::cout << ss.text << std::endl;
-//                std::cout << "--" << std::endl;
-//            }
-//        }
     }
 
     fflush(stdout);

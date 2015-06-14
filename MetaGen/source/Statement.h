@@ -12,10 +12,13 @@ struct Statement
     Statement(std::string& text, std::vector<std::string>* escapedLiterals);
     Statement(std::string& text, std::string& childSnippetText, std::vector<std::string>* escapedLiterals);
 
-    const std::string& getText();
-    const std::vector<Token>& getTokens();
+    const std::string& getText() const;
+    const std::vector<Token>& getTokens() const;
+    Snippet* getChildSnippet() const;
 
+    bool containsToken(std::string text);
     bool isClass();
+    bool hasDefinition();
 
 private:
     void robustTokenize();
