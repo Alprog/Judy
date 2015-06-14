@@ -8,7 +8,12 @@ SOURCES += \
     Source/Parser.cpp \
     Source/Statement.cpp \
     Source/Snippet.cpp \
-    Source/Token.cpp
+    Source/Token.cpp \
+    Source/Info/ArgumentInfo.cpp \
+    Source/Info/MemberInfo.cpp \
+    Source/Info/TypeInfo.cpp \
+    Source/Info/MethodInfo.cpp \
+    Source/Info/ClassInfo.cpp
 
 CONFIG += qt
 
@@ -21,4 +26,10 @@ HEADERS += \
     Source/Statement.h \
     Source/Snippet.h \
     Source/Token.h \
-    Source/RegexConstants.h
+    Source/RegexConstants.h \
+    Source/Info/AccessModifier.h \
+    Source/Info/ArgumentInfo.h \
+    Source/Info/MemberInfo.h \
+    Source/Info/TypeInfo.h \
+    Source/Info/MethodInfo.h \
+    Source/Info/ClassInfo.h

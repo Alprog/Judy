@@ -61,7 +61,7 @@ bool Statement::hasDefinition()
 
 void Statement::robustTokenize()
 {
-    auto pattern = "[*&()<>\\[\\]+-.,:=/%|?!~]+";
+    auto pattern = "(" + simplexOperator + ")|(" + combinableOperator + "+)";
     text = std::regex_replace(text, std::regex(pattern), " $& ");
     text = std::regex_replace(text, std::regex(space), " ");
     text = std::regex_replace(text, std::regex("(^ )|( $)"), "");

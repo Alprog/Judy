@@ -14,3 +14,6 @@ const std::string directiveLine = "^(\s|\t|\v)*#.*$";
 
 const std::string space = "[ \t\v\n\r]+";
 const std::string spaceOrEmpty = "[ \t\v\n\r]*";
+
+const std::string simplexOperator = "[(){}\\[\\],~?]";      // (){}[],~?
+const std::string combinableOperator = "[*&<>+-/%|!=.:]";
