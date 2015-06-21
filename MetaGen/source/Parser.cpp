@@ -62,12 +62,15 @@ void parse(std::string& text)
     removeComments(text);
     removeDirectives(text);
 
+    text = std::regex_replace(text, std::regex("__ "), "]] ");
+    text = std::regex_replace(text, std::regex("__"), "[[");
+
     auto snippet = Snippet(text);
     for (Statement statement : snippet.getStatements())
     {
         if (statement.isClass() && statement.hasDefinition())
         {
-            if (statement.containsToken("META"))
+            if (statement.getTokens().contains("Meta"))
             {
                 std::cout << "-------------" << std::endl;
                 std::cout << statement.getText() << std::endl;

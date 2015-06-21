@@ -2,13 +2,13 @@
 #pragma once
 
 #include "AccessModifier.h"
-#include "TypeInfo.h"
+#include "AttributeInfo.h"
 #include <string>
+#include <vector>
 
 struct MemberInfo
 {
-    bool isStatic;
+    std::vector<AttributeInfo> attributes;
     AccessModifier accessModifier;
-    TypeInfo type;
     std::string name;
 };

@@ -5,13 +5,15 @@
 #include <vector>
 #include "InheritanceInfo.h"
 #include "MethodInfo.h"
+#include "FieldInfo.h"
+#include "MemberInfo.h"
 
-struct ClassInfo
+struct ClassInfo : MemberInfo
 {
-    std::string name;
+    bool isFinal;
     std::vector<InheritanceInfo> inheritances;
 
     std::vector<MethodInfo> constructors;
     std::vector<MethodInfo> methods;
-
+    std::vector<FieldInfo> fields;
 };

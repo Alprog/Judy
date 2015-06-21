@@ -25,7 +25,7 @@ const std::string& Statement::getText() const
     return text;
 }
 
-const std::vector<Token>& Statement::getTokens() const
+const Tokens& Statement::getTokens() const
 {
     return tokens;
 }
@@ -35,23 +35,11 @@ Snippet* Statement::getChildSnippet() const
     return childSnippet;
 }
 
-bool Statement::containsToken(std::string text)
-{
-    for (auto& token : tokens)
-    {
-        if (token.text == text)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool Statement::isClass()
 {
-    return containsToken("class")
-        || containsToken("struct")
-        || containsToken("union");
+    return tokens.contains("class")
+        || tokens.contains("struct")
+        || tokens.contains("union");
 }
 
 bool Statement::hasDefinition()
@@ -71,15 +59,9 @@ void Statement::robustTokenize()
     {
         if (*it == ' ')
         {
-            addToken(std::string(start, it));
+            tokens.add(std::string(start, it));
             start = it + 1;
         }
     }
-    addToken(std::string(start, std::end(text)));
-}
-
-void Statement::addToken(std::string& text)
-{
-    auto token = Token(text);
-    tokens.push_back(token);
+    tokens.add(std::string(start, std::end(text)));
 }

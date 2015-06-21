@@ -1,21 +1,21 @@
 
 #pragma once
 
-#define META(_)
-#define SERIALIZED
+#define __Meta__
+#define __Serialized__
 
-META(Serialize)
-struct Vector4
+
+struct __Meta__ Vector4
 {
     static const Vector4 Zero;
     static const Vector4 One;
 
     Vector4(float x = 0, float y = 0, float z = 0, float w = 0);
 
-    SERIALIZED float x;
-    SERIALIZED float y;
-    SERIALIZED float z;
-    SERIALIZED float w;
+    __Serialized__ float x;
+    __Serialized__ float y;
+    __Serialized__ float z;
+    __Serialized__ float w;
 
     float Length();
     float SquaredLength();

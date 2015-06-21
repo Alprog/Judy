@@ -7,8 +7,12 @@
 
 class MethodInfo : public MemberInfo
 {
+    bool isStatic;
     bool isVirtual;
+
+    TypeInfo returnType;
+    std::vector<ArgumentInfo> arguments;
+
     bool isConst;
     bool isOverride;
-    std::vector<ArgumentInfo> arguments;
 };
