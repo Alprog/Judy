@@ -7,9 +7,12 @@
 #include "MethodInfo.h"
 #include "FieldInfo.h"
 #include "MemberInfo.h"
+#include "../Tokens.h"
 
 struct ClassInfo : MemberInfo
 {
+    ClassInfo(Tokens tokens);
+
     bool isFinal;
     std::vector<InheritanceInfo> inheritances;
 

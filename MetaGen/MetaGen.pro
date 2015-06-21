@@ -17,7 +17,6 @@ SOURCES += \
     Source/Info/InheritanceInfo.cpp \
     Source/Info/FieldInfo.cpp \
     Source/Info/NamespaceInfo.cpp \
-    Source/Info/AttributeInfo.cpp \
     Source/Tokens.cpp
 
 CONFIG += qt
@@ -41,5 +40,4 @@ HEADERS += \
     Source/Info/InheritanceInfo.h \
     Source/Info/FieldInfo.h \
     Source/Info/NamespaceInfo.h \
-    Source/Info/AttributeInfo.h \
     Source/Tokens.h

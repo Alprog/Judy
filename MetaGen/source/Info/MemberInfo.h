@@ -8,7 +8,7 @@
 
 struct MemberInfo
 {
-    std::vector<AttributeInfo> attributes;
+    std::vector<std::string> attributes;
     AccessModifier accessModifier;
     std::string name;
 };
