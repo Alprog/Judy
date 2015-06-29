@@ -47,13 +47,26 @@ void removeDirectives(std::string& text)
     text = std::regex_replace(text, std::regex(directiveLine), "");
 }
 
-void parseClass(Statement& classStatement)
+void parseMembers(ClassInfo& classInfo, Statement& classStatement)
 {
     auto definition = classStatement.getChildSnippet();
 
     for (Statement statement : definition->getStatements())
     {
-        std::cout << statement.getTokens().getText() << std::endl;
+        if (statement.isFunction())
+        {
+            MethodInfo methodInfo(statement.getTokens());
+            if (methodInfo.name == classInfo.name)
+            {
+                classInfo.constructors.push_back(methodInfo);
+            }
+            else
+            {
+                classInfo.methods.push_back(methodInfo);
+            }
+        }
+
+        //std::cout << statement.getTokens().getText() << std::endl;
     }
 }
 
@@ -75,8 +88,8 @@ void parse(std::string& text)
             if (classInfo.containsAttribute("Meta"))
             {
                 std::cout << "-------------" << std::endl;
-                std::cout << statement.getText() << std::endl;
-                parseClass(statement);
+                std::cout << classInfo.name << std::endl;
+                parseMembers(classInfo, statement);
             }
         }
     }

@@ -31,6 +31,11 @@ TokenGroup::iterator TokenGroup::end()
     return std::end(tokens);
 }
 
+size_t TokenGroup::size()
+{
+    return tokens.size();
+}
+
 const std::string TokenGroup::getName() const
 {
     return name;
@@ -84,6 +89,18 @@ int TokenGroup::lastIndexOf(std::string tokenName, int startIndex) const
 bool TokenGroup::contains(std::string tokenName) const
 {
     return indexOf(tokenName) >= 0;
+}
+
+std::shared_ptr<Token> TokenGroup::extractAt(int index)
+{
+    auto token = tokens[index];
+    tokens.erase(std::begin(tokens) + index);
+    return token;
+}
+
+std::shared_ptr<Token> TokenGroup::extractLast()
+{
+    return extractAt(tokens.size() - 1);
 }
 
 std::vector<TokenGroup> TokenGroup::split(std::string delimeter)
@@ -142,13 +159,11 @@ std::vector<AttributeInfo> TokenGroup::extractAttributes()
         auto token = *it;
         if (token->getName() == "[]")
         {
-            auto group = (TokenGroup*)token.get();
+            auto group = token->cast<TokenGroup*>();
             if (group->tokens.size() == 3 && group->getName() == "[]")
             {
-                group = (TokenGroup*)group->tokens[1].get();
-
-                TokenGroup content(std::begin(*group) + 1, std::end(*group) - 1);
-                AttributeInfo attribute(content);
+                group = group->tokens[1]->cast<TokenGroup*>();
+                AttributeInfo attribute(group->getContent());
                 result.push_back(attribute);
                 it = tokens.erase(it) - 1;
             }
@@ -156,4 +171,9 @@ std::vector<AttributeInfo> TokenGroup::extractAttributes()
     }
 
     return result;
+}
+
+TokenGroup TokenGroup::getContent()
+{
+    return TokenGroup(std::begin(tokens) + 1, std::end(tokens) - 1);
 }

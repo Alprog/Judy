@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "ClassType.h"
 #include "InheritanceInfo.h"
 #include "MethodInfo.h"
 #include "FieldInfo.h"
@@ -14,12 +15,15 @@ struct ClassInfo : MemberInfo
 {
     ClassInfo(TokenGroup& tokens);
 
+    ClassType classType;
     bool isFinal;
     std::vector<InheritanceInfo> inheritances;
 
     std::vector<MethodInfo> constructors;
     std::vector<MethodInfo> methods;
     std::vector<FieldInfo> fields;
+
+    AccessModifier getDefaultAccessModifier();
 
 private:
     void processMainTokens(TokenGroup& tokens);

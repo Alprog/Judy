@@ -4,7 +4,9 @@
 #include "Vector2.h"
 #include "Matrix.h"
 
-struct Transform
+#define __Meta__
+
+struct __Meta__ Transform
 {
     Vector3 Pivot;
     Vector3 Translation;

@@ -44,4 +44,5 @@ HEADERS += \
     Source/Info/InheritanceInfo.h \
     Source/Info/FieldInfo.h \
     Source/Info/NamespaceInfo.h \
-    Source/Info/AttributeInfo.h
+    Source/Info/AttributeInfo.h \
+    Source/Info/ClassType.h

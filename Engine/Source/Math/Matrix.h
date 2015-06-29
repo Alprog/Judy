@@ -3,6 +3,8 @@
 
 #include "Vector3.h"
 
+#define __Meta__
+
 struct Matrix
 {
     static const Matrix Identity;

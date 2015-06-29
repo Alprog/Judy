@@ -6,9 +6,9 @@
 #include "ArgumentInfo.h"
 class TokenGroup;
 
-class MethodInfo : public MemberInfo
+struct MethodInfo : public MemberInfo
 {
-    MethodInfo(TokenGroup tokens);
+    MethodInfo(TokenGroup& tokens);
 
     bool isStatic;
     bool isVirtual;
@@ -19,4 +19,7 @@ class MethodInfo : public MemberInfo
 
     bool isConst;
     bool isOverride;
+
+private:
+    void processArguments(TokenGroup& tokens);
 };

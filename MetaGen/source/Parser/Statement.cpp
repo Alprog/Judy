@@ -36,14 +36,19 @@ Snippet* Statement::getChildSnippet() const
     return childSnippet;
 }
 
-bool Statement::isClass()
+bool Statement::isClass() const
 {
-    return tokens.contains("class")
+    return (tokens.contains("class") && !tokens.contains("enum"))
         || tokens.contains("struct")
         || tokens.contains("union");
 }
 
-bool Statement::hasDefinition()
+bool Statement::isFunction() const
+{
+     return tokens.contains("()");
+}
+
+bool Statement::hasDefinition() const
 {
     return childSnippet != nullptr;
 }

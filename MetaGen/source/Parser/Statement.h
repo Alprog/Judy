@@ -16,8 +16,9 @@ struct Statement
     TokenGroup& getTokens();
     Snippet* getChildSnippet() const;
 
-    bool isClass();
-    bool hasDefinition();
+    bool isClass() const;
+    bool isFunction() const;
+    bool hasDefinition() const;
 
 private:
     void robustTokenize();

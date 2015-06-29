@@ -4,7 +4,9 @@
 #include <string>
 #include "Meta/TypeMeta.h"
 
-struct Vector2
+#define __Meta__
+
+struct __Meta__ Vector2
 {
     static const Vector2 Zero;
     static const Vector2 One;

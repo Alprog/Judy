@@ -1,7 +1,9 @@
 
 #pragma once
 
-struct Vector3
+#define __Meta__
+
+struct __Meta__ Vector3
 {
     static const Vector3 Zero;
     static const Vector3 One;

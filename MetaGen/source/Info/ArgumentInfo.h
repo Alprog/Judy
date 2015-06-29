@@ -10,4 +10,8 @@ struct ArgumentInfo
 
     TypeInfo typeInfo;
     std::string name;
+    std::string defaultValue;
+
+private:
+    void proccessMainTokens(TokenGroup& tokens);
 };
