@@ -2,11 +2,11 @@
 #pragma once
 
 #include "TypeInfo.h"
-#include "../Parser/Tokens/TokenGroup.h"
+class TokenGroup;
 
 struct ArgumentInfo
 {
-    ArgumentInfo(TokenGroup tokens);
+    ArgumentInfo(TokenGroup& tokens);
 
     TypeInfo typeInfo;
     std::string name;

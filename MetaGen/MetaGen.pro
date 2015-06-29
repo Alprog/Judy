@@ -18,7 +18,8 @@ SOURCES += \
     Source/Info/ClassInfo.cpp \
     Source/Info/InheritanceInfo.cpp \
     Source/Info/FieldInfo.cpp \
-    Source/Info/NamespaceInfo.cpp
+    Source/Info/NamespaceInfo.cpp \
+    Source/Info/AttributeInfo.cpp
 
 CONFIG += qt
 
@@ -42,4 +43,5 @@ HEADERS += \
     Source/Info/ClassInfo.h \
     Source/Info/InheritanceInfo.h \
     Source/Info/FieldInfo.h \
-    Source/Info/NamespaceInfo.h
+    Source/Info/NamespaceInfo.h \
+    Source/Info/AttributeInfo.h

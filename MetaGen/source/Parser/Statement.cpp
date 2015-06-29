@@ -26,7 +26,7 @@ const std::string& Statement::getText() const
     return text;
 }
 
-const TokenGroup& Statement::getTokens() const
+TokenGroup& Statement::getTokens()
 {
     return tokens;
 }
@@ -66,6 +66,8 @@ void Statement::robustTokenize()
         }
     }
     addToken(std::string(start, std::end(text)));
+
+    tokens.makeBracketGroups();
 }
 
 void Statement::addToken(std::string text)

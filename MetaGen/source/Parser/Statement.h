@@ -13,7 +13,7 @@ struct Statement
     Statement(std::string& text, std::string& childSnippetText, std::vector<std::string>* escapedLiterals);
 
     const std::string& getText() const;
-    const TokenGroup& getTokens() const;
+    TokenGroup& getTokens();
     Snippet* getChildSnippet() const;
 
     bool isClass();

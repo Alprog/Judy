@@ -7,11 +7,12 @@
 #include "MethodInfo.h"
 #include "FieldInfo.h"
 #include "MemberInfo.h"
-#include "../Parser/Tokens/TokenGroup.h"
+
+class TokenGroup;
 
 struct ClassInfo : MemberInfo
 {
-    ClassInfo(TokenGroup tokens);
+    ClassInfo(TokenGroup& tokens);
 
     bool isFinal;
     std::vector<InheritanceInfo> inheritances;
@@ -19,4 +20,8 @@ struct ClassInfo : MemberInfo
     std::vector<MethodInfo> constructors;
     std::vector<MethodInfo> methods;
     std::vector<FieldInfo> fields;
+
+private:
+    void processMainTokens(TokenGroup& tokens);
+    void processInheritanceTokens(TokenGroup& tokens);
 };

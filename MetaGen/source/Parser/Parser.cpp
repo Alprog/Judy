@@ -8,6 +8,7 @@
 #include "RegexConstants.h"
 #include "Statement.h"
 #include "Snippet.h"
+#include "../Info/ClassInfo.h"
 
 void spliceLines(std::string& text)
 {
@@ -70,7 +71,8 @@ void parse(std::string& text)
     {
         if (statement.isClass() && statement.hasDefinition())
         {
-            if (statement.getTokens().contains("Meta"))
+            ClassInfo classInfo(statement.getTokens());
+            if (classInfo.containsAttribute("Meta"))
             {
                 std::cout << "-------------" << std::endl;
                 std::cout << statement.getText() << std::endl;
