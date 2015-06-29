@@ -4,11 +4,11 @@
 #include "MemberInfo.h"
 #include <vector>
 #include "ArgumentInfo.h"
-#include "../Tokens.h"
+#include "../Tokens/TokenGroup.h"
 
 class MethodInfo : public MemberInfo
 {
-    MethodInfo(Tokens tokens);
+    MethodInfo(TokenGroup tokens);
 
     bool isStatic;
     bool isVirtual;

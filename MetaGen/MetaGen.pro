@@ -8,7 +8,6 @@ SOURCES += \
     Source/Parser.cpp \
     Source/Statement.cpp \
     Source/Snippet.cpp \
-    Source/Token.cpp \
     Source/Info/ArgumentInfo.cpp \
     Source/Info/MemberInfo.cpp \
     Source/Info/TypeInfo.cpp \
@@ -17,7 +16,9 @@ SOURCES += \
     Source/Info/InheritanceInfo.cpp \
     Source/Info/FieldInfo.cpp \
     Source/Info/NamespaceInfo.cpp \
-    Source/Tokens.cpp
+    Source/Tokens/AtomToken.cpp \
+    Source/Tokens/Token.cpp \
+    Source/Tokens/TokenGroup.cpp
 
 CONFIG += qt
 
@@ -29,7 +30,6 @@ HEADERS += \
     Source/Parser.h \
     Source/Statement.h \
     Source/Snippet.h \
-    Source/Token.h \
     Source/RegexConstants.h \
     Source/Info/AccessModifier.h \
     Source/Info/ArgumentInfo.h \
@@ -40,4 +40,6 @@ HEADERS += \
     Source/Info/InheritanceInfo.h \
     Source/Info/FieldInfo.h \
     Source/Info/NamespaceInfo.h \
-    Source/Tokens.h
+    Source/Tokens/AtomToken.h \
+    Source/Tokens/Token.h \
+    Source/Tokens/TokenGroup.h

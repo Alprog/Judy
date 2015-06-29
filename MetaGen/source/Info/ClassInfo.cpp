@@ -1,7 +1,7 @@
 
 #include "ClassInfo.h"
 
-ClassInfo::ClassInfo(Tokens tokens)
+ClassInfo::ClassInfo(TokenGroup tokens)
 {
     auto arr = tokens.split(":");
 

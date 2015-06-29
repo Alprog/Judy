@@ -1,7 +1,7 @@
 
 #include "MethodInfo.h"
 
-MethodInfo::MethodInfo(Tokens tokens)
+MethodInfo::MethodInfo(TokenGroup tokens)
 {
     auto argumentsTokens = tokens.extract("(", ")");
     for (auto& argumentTokens : argumentsTokens.split(","))

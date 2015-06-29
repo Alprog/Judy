@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Tokens.h"
+#include "Tokens/TokenGroup.h"
 
 class Snippet;
 
@@ -13,7 +13,7 @@ struct Statement
     Statement(std::string& text, std::string& childSnippetText, std::vector<std::string>* escapedLiterals);
 
     const std::string& getText() const;
-    const Tokens& getTokens() const;
+    const TokenGroup& getTokens() const;
     Snippet* getChildSnippet() const;
 
     bool isClass();
@@ -21,9 +21,10 @@ struct Statement
 
 private:
     void robustTokenize();
+    void addToken(std::string text);
 
     std::string text;
-    Tokens tokens;
+    TokenGroup tokens;
     const std::vector<std::string>* const escapedLiterals;
     Snippet* childSnippet;
 };

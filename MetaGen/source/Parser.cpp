@@ -52,7 +52,7 @@ void parseClass(Statement& classStatement)
 
     for (Statement statement : definition->getStatements())
     {
-        std::cout << statement.getText() << std::endl;
+        std::cout << statement.getTokens().getText() << std::endl;
     }
 }
 

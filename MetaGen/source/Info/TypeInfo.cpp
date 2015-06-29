@@ -5,7 +5,7 @@ TypeInfo::TypeInfo()
 {
 }
 
-TypeInfo::TypeInfo(Tokens tokens)
+TypeInfo::TypeInfo(TokenGroup tokens)
 {
     name = tokens.getText();
 }

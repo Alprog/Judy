@@ -2,12 +2,12 @@
 #pragma once
 
 #include <string>
-#include "../Tokens.h"
+#include "../Tokens/TokenGroup.h"
 
 struct TypeInfo
 {
     TypeInfo();
-    TypeInfo(Tokens tokens);
+    TypeInfo(TokenGroup tokens);
 
     std::string name;
 };

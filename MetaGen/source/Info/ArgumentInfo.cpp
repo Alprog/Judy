@@ -3,7 +3,7 @@
 
 #include <vector>
 
-ArgumentInfo::ArgumentInfo(Tokens tokens)
+ArgumentInfo::ArgumentInfo(TokenGroup tokens)
 {
     auto arr = tokens.split("=");
 }

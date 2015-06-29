@@ -108,7 +108,7 @@ void Snippet::parseStatements()
             {
                 childText += std::string(start, it);
                 start = it + 1;
-                endStatement();
+                endStatement(); // not always correct
             }
         }
     }
