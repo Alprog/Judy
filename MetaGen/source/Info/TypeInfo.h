@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include "../Tokens/TokenGroup.h"
+#include "../Parser/Tokens/TokenGroup.h"
 
 struct TypeInfo
 {

@@ -5,9 +5,12 @@ TEMPLATE = app
 
 SOURCES += \
     Source/Main.cpp \
-    Source/Parser.cpp \
-    Source/Statement.cpp \
-    Source/Snippet.cpp \
+    Source/Parser/Parser.cpp \
+    Source/Parser/Statement.cpp \
+    Source/Parser/Snippet.cpp \
+    Source/Parser/Tokens/AtomToken.cpp \
+    Source/Parser/Tokens/Token.cpp \
+    Source/Parser/Tokens/TokenGroup.cpp \
     Source/Info/ArgumentInfo.cpp \
     Source/Info/MemberInfo.cpp \
     Source/Info/TypeInfo.cpp \
@@ -15,10 +18,7 @@ SOURCES += \
     Source/Info/ClassInfo.cpp \
     Source/Info/InheritanceInfo.cpp \
     Source/Info/FieldInfo.cpp \
-    Source/Info/NamespaceInfo.cpp \
-    Source/Tokens/AtomToken.cpp \
-    Source/Tokens/Token.cpp \
-    Source/Tokens/TokenGroup.cpp
+    Source/Info/NamespaceInfo.cpp
 
 CONFIG += qt
 
@@ -27,10 +27,13 @@ win {
 }
 
 HEADERS += \
-    Source/Parser.h \
-    Source/Statement.h \
-    Source/Snippet.h \
-    Source/RegexConstants.h \
+    Source/Parser/Parser.h \
+    Source/Parser/Statement.h \
+    Source/Parser/Snippet.h \
+    Source/Parser/RegexConstants.h \
+    Source/Parser/Tokens/AtomToken.h \
+    Source/Parser/Tokens/Token.h \
+    Source/Parser/Tokens/TokenGroup.h \
     Source/Info/AccessModifier.h \
     Source/Info/ArgumentInfo.h \
     Source/Info/MemberInfo.h \
@@ -39,7 +42,4 @@ HEADERS += \
     Source/Info/ClassInfo.h \
     Source/Info/InheritanceInfo.h \
     Source/Info/FieldInfo.h \
-    Source/Info/NamespaceInfo.h \
-    Source/Tokens/AtomToken.h \
-    Source/Tokens/Token.h \
-    Source/Tokens/TokenGroup.h
+    Source/Info/NamespaceInfo.h

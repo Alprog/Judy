@@ -2,7 +2,7 @@
 #pragma once
 
 #include "TypeInfo.h"
-#include "../Tokens/TokenGroup.h"
+#include "../Parser/Tokens/TokenGroup.h"
 
 struct ArgumentInfo
 {

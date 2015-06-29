@@ -7,7 +7,7 @@
 #include "MethodInfo.h"
 #include "FieldInfo.h"
 #include "MemberInfo.h"
-#include "../Tokens/TokenGroup.h"
+#include "../Parser/Tokens/TokenGroup.h"
 
 struct ClassInfo : MemberInfo
 {

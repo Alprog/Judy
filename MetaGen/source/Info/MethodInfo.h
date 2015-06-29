@@ -4,7 +4,7 @@
 #include "MemberInfo.h"
 #include <vector>
 #include "ArgumentInfo.h"
-#include "../Tokens/TokenGroup.h"
+#include "../Parser/Tokens/TokenGroup.h"
 
 class MethodInfo : public MemberInfo
 {
