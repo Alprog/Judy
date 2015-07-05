@@ -36,6 +36,7 @@ public:
 
     void makeBracketGroups();
     void makeGroups(std::string openName, std::string closeName);
+    std::vector<TokenGroup> splitDeclararion();
 
     std::vector<AttributeInfo> extractAttributes();
     TokenGroup getContent();

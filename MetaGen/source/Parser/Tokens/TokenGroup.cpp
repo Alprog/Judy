@@ -156,6 +156,34 @@ void TokenGroup::makeGroups(std::string openName, std::string closeName)
     }
 }
 
+std::vector<TokenGroup> TokenGroup::splitDeclararion()
+{
+    auto array = split(",");
+    if (array.size() > 1)
+    {
+        auto begin = std::begin(array[0]);
+        auto end = std::end(array[0]);
+
+        iterator it;
+        for (it = begin; it < end - 1; it++)
+        {
+            auto name = (*it)->getName();
+            if (name == "*" || name == "&")
+            {
+                break;
+            }
+        }
+
+        for (int i = 1; i < array.size(); i++)
+        {
+            auto& group = array[i];
+            group.tokens.insert(std::begin(group), begin, it);
+        }
+
+    }
+    return array;
+}
+
 std::vector<AttributeInfo> TokenGroup::extractAttributes()
 {
     std::vector<AttributeInfo> result;

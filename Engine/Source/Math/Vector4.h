@@ -14,8 +14,7 @@ struct __Meta__ Vector4
 
     float __Serialized__  x;
     __Serialized__ float y;
-    __Serialized__ float z;
-    __Serialized__ float w;
+    __Serialized__ float z, w;
 
     float Length();
     float SquaredLength();

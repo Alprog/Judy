@@ -6,4 +6,5 @@ FieldInfo::FieldInfo(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
 
+    printf("%s\n", tokens.getText().c_str());
 }

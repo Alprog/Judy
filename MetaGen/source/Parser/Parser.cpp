@@ -71,15 +71,12 @@ void parseMembers(ClassInfo& classInfo, Statement& classStatement)
         }
         else
         {
-            auto arr = statement.getTokens().split(",");
-            for (auto t : arr)
+            // field declaration
+            for (auto& tokens : statement.getTokens().splitDeclararion())
             {
-                printf("! %s\n", t.getText().c_str());
+                FieldInfo fieldInfo(tokens);
+                classInfo.fields.push_back(fieldInfo);
             }
-
-            //
-            //FieldInfo fieldInfo(statement.getTokens());
-            //classInfo.fields.push_back(fieldInfo);
         }
     }
 
