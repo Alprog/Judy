@@ -64,13 +64,26 @@ void parseMembers(ClassInfo& classInfo, Statement& classStatement)
             {
                 classInfo.methods.push_back(methodInfo);
             }
+        }
+        else if (statement.isClass())
+        {
+            printf("CLASS\n");
+        }
+        else
+        {
+            auto arr = statement.getTokens().split(",");
+            for (auto t : arr)
+            {
+                printf("! %s\n", t.getText().c_str());
+            }
 
-            std::cout << methodInfo.name << std::endl;
-
+            //
+            //FieldInfo fieldInfo(statement.getTokens());
+            //classInfo.fields.push_back(fieldInfo);
         }
     }
 
-    std::cout << classInfo.methods.size() << " " << classInfo.constructors.size() << std::endl;
+
 }
 
 void parse(std::string& text)

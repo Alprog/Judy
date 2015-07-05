@@ -33,20 +33,32 @@ void MethodInfo::processSpecifiers(TokenGroup& tokens)
         { "static", &isStatic },
         { "virtual", &isVirtual },
         { "operator", &isOperator },
-        { "const", &isConst },
         { "override", &isOverride },
+        { "const", &isConst },
     };
 
+    auto visitParenthesis = false;
     for (auto i = 0; i < tokens.size(); i++)
     {
         auto name = tokens[i]->getName();
+
+        if (name == "()")
+        {
+            visitParenthesis = true;
+            continue;
+        }
 
         for (pair& p : pairs)
         {
             if (name == p.keyword)
             {
+                if (name == "const" && !visitParenthesis)
+                {
+                    continue;
+                }
                 *p.flag = true;
                 tokens.extractAt(i--);
+                break;
             }
         }
     }

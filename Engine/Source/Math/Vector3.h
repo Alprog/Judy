@@ -10,9 +10,7 @@ struct __Meta__ Vector3
 
     Vector3(float x = 0, float y = 0, float z = 0);
 
-    float x;
-    float y;
-    float z;
+    float x, y, z;
 
     float Length();
     float SquaredLength();

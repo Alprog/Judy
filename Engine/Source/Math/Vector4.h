@@ -12,7 +12,7 @@ struct __Meta__ Vector4
 
     Vector4(float x = 0, float y = 0, float z = 0, float w = 0);
 
-    __Serialized__ float x;
+    float __Serialized__  x;
     __Serialized__ float y;
     __Serialized__ float z;
     __Serialized__ float w;

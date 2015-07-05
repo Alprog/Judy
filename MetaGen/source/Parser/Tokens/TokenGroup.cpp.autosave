@@ -49,7 +49,7 @@ const std::string TokenGroup::getText() const
     {
         if (first)
         {
-
+            
         }
         text += token->getText();
         first = true;
