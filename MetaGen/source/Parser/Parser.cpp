@@ -64,10 +64,13 @@ void parseMembers(ClassInfo& classInfo, Statement& classStatement)
             {
                 classInfo.methods.push_back(methodInfo);
             }
-        }
 
-        //std::cout << statement.getTokens().getText() << std::endl;
+            std::cout << methodInfo.name << std::endl;
+
+        }
     }
+
+    std::cout << classInfo.methods.size() << " " << classInfo.constructors.size() << std::endl;
 }
 
 void parse(std::string& text)

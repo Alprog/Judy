@@ -31,7 +31,7 @@ TokenGroup::iterator TokenGroup::end()
     return std::end(tokens);
 }
 
-size_t TokenGroup::size()
+std::vector<Token>::size_type TokenGroup::size()
 {
     return tokens.size();
 }

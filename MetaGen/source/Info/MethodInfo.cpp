@@ -2,11 +2,54 @@
 #include "MethodInfo.h"
 #include "../Parser/Tokens/TokenGroup.h"
 
+#include <iostream>
+
 MethodInfo::MethodInfo(TokenGroup& tokens)
+    : isStatic {false}
+    , isVirtual {false}
+    , isOperator {false}
+    , isConst {false}
+    , isOverride {false}
 {
     attributes = tokens.extractAttributes();
+    processSpecifiers(tokens);
     processArguments(tokens);
 
+    name = tokens.extractLast()->getName();
+    returnType = TypeInfo(tokens);
+}
+
+void MethodInfo::processSpecifiers(TokenGroup& tokens)
+{
+    struct pair
+    {
+        std::string keyword;
+        bool* flag;
+    };
+
+    std::vector<pair> pairs
+    {
+        { "friend", &isFriend },
+        { "static", &isStatic },
+        { "virtual", &isVirtual },
+        { "operator", &isOperator },
+        { "const", &isConst },
+        { "override", &isOverride },
+    };
+
+    for (auto i = 0; i < tokens.size(); i++)
+    {
+        auto name = tokens[i]->getName();
+
+        for (pair& p : pairs)
+        {
+            if (name == p.keyword)
+            {
+                *p.flag = true;
+                tokens.extractAt(i--);
+            }
+        }
+    }
 }
 
 void MethodInfo::processArguments(TokenGroup& tokens)

@@ -19,7 +19,7 @@ public:
     std::shared_ptr<Token>& operator[](int i);
     iterator begin();
     iterator end();
-    size_t size();
+    std::vector<Token>::size_type size();
 
     const std::string getName() const override;
     const std::string getText() const override;

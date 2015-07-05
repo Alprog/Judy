@@ -1,6 +1,11 @@
 
 #include "MemberInfo.h"
 
+MemberInfo::MemberInfo()
+    : isFriend(false)
+{
+}
+
 bool MemberInfo::containsAttribute(std::string name)
 {
     for (auto& attribute : attributes)
