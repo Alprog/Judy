@@ -47,12 +47,12 @@ const std::string TokenGroup::getText() const
     std::string text = "";
     for (auto& token : tokens)
     {
-        if (first)
+        if (!first)
         {
-
+            text += " ";
         }
         text += token->getText();
-        first = true;
+        first = false;
     }
     return text;
 }
