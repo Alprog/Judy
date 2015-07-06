@@ -97,6 +97,15 @@ bool TokenGroup::contains(std::string tokenName) const
     return indexOf(tokenName) >= 0;
 }
 
+TokenGroup TokenGroup::extract(int first, int last)
+{
+    auto f = std::begin(tokens) + first;
+    auto l = std::begin(tokens) + last;
+    auto group = TokenGroup(f, l);
+    tokens.erase(f, l);
+    return group;
+}
+
 std::shared_ptr<Token> TokenGroup::extractAt(int index)
 {
     auto token = tokens[index];

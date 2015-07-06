@@ -31,6 +31,7 @@ public:
 
     std::vector<TokenGroup> split(std::string delimeter);
     void add(std::shared_ptr<Token> token);
+    TokenGroup extract(int first, int last);
     std::shared_ptr<Token> extractAt(int index);
     std::shared_ptr<Token> extractLast();
 

@@ -13,11 +13,31 @@ MethodInfo::MethodInfo(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
 
+    processOperator(tokens);
     processArguments(tokens);
     processSpecifiers(tokens);
 
-    name = tokens.extractLast()->getName();
+    if (!isOperator)
+    {
+        name = tokens.extractLast()->getName();
+    }
     returnType = TypeInfo(tokens);
+}
+
+void MethodInfo::processOperator(TokenGroup& tokens)
+{
+    auto index = tokens.indexOf("operator");
+    if (index >= 0)
+    {
+        isOperator = true;
+
+        auto lastIndex = tokens.indexOf("()", index);
+        if (lastIndex >= 0)
+        {
+            auto group = tokens.extract(index, lastIndex);
+            name = group.getText();
+        }
+    }
 }
 
 void MethodInfo::processArguments(TokenGroup& tokens)
@@ -45,8 +65,7 @@ void MethodInfo::processSpecifiers(TokenGroup& tokens)
     {
       { "friend", &isFriend },
       { "static", &isStatic },
-      { "virtual", &isVirtual },
-      { "operator", &isOperator }
+      { "virtual", &isVirtual }
     });
 
     if (arr.size() > 1)
