@@ -21,6 +21,6 @@ struct MethodInfo : public MemberInfo
     bool isOverride;
 
 private:
-    void processSpecifiers(TokenGroup& tokens);
     void processArguments(TokenGroup& tokens);
+    void processSpecifiers(TokenGroup& tokens);
 };

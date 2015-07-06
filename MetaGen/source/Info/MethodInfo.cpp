@@ -12,56 +12,12 @@ MethodInfo::MethodInfo(TokenGroup& tokens)
     , isOverride {false}
 {
     attributes = tokens.extractAttributes();
-    processSpecifiers(tokens);
+
     processArguments(tokens);
+    processSpecifiers(tokens);
 
     name = tokens.extractLast()->getName();
     returnType = TypeInfo(tokens);
-}
-
-void MethodInfo::processSpecifiers(TokenGroup& tokens)
-{
-    struct pair
-    {
-        std::string keyword;
-        bool* flag;
-    };
-
-    std::vector<pair> pairs
-    {
-        { "friend", &isFriend },
-        { "static", &isStatic },
-        { "virtual", &isVirtual },
-        { "operator", &isOperator },
-        { "override", &isOverride },
-        { "const", &isConst },
-    };
-
-    auto visitParenthesis = false;
-    for (auto i = 0; i < tokens.size(); i++)
-    {
-        auto name = tokens[i]->getName();
-
-        if (name == "()")
-        {
-            visitParenthesis = true;
-            continue;
-        }
-
-        for (pair& p : pairs)
-        {
-            if (name == p.keyword)
-            {
-                if (name == "const" && !visitParenthesis)
-                {
-                    continue;
-                }
-                *p.flag = true;
-                tokens.extractAt(i--);
-                break;
-            }
-        }
-    }
 }
 
 void MethodInfo::processArguments(TokenGroup& tokens)
@@ -69,8 +25,8 @@ void MethodInfo::processArguments(TokenGroup& tokens)
     auto index = tokens.indexOf("()");
     if (index >= 0)
     {
-        auto token = tokens.extractAt(index);
-        auto content = token->cast<TokenGroup*>()->getContent();
+        auto& parentheses = tokens[index];
+        auto content = parentheses->cast<TokenGroup*>()->getContent();
         if (content.size() > 0)
         {
             for (auto& argumentTokens : content.split(","))
@@ -79,4 +35,28 @@ void MethodInfo::processArguments(TokenGroup& tokens)
             }
         }
     }
+}
+
+void MethodInfo::processSpecifiers(TokenGroup& tokens)
+{
+    auto arr = tokens.split("()");
+
+    MemberInfo::processSpecifiers(arr[0],
+    {
+      { "friend", &isFriend },
+      { "static", &isStatic },
+      { "virtual", &isVirtual },
+      { "operator", &isOperator }
+    });
+
+    if (arr.size() > 1)
+    {
+        MemberInfo::processSpecifiers(arr[1],
+        {
+            { "override", &isOverride },
+            { "const", &isConst }
+        });
+    }
+
+    tokens = arr[0];
 }

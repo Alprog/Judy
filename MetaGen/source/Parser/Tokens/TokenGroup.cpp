@@ -116,14 +116,16 @@ std::vector<TokenGroup> TokenGroup::split(std::string delimeter)
     auto start = std::begin(tokens);
     for (auto it = std::begin(tokens); it < std::end(tokens); it++)
     {
-        if ((*it)->getText() == delimeter)
+        if ((*it)->getName() == delimeter)
         {
             groups.push_back(TokenGroup(start, it));
             start = it + 1;
         }
     }
-    groups.push_back(TokenGroup(start, std::end(tokens)));
-
+    if (start != std::end(tokens))
+    {
+        groups.push_back(TokenGroup(start, std::end(tokens)));
+    }
     return groups;
 }
 
