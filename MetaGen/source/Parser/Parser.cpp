@@ -79,8 +79,6 @@ void parseMembers(ClassInfo& classInfo, Statement& classStatement)
             }
         }
     }
-
-
 }
 
 void parse(std::string& text)
