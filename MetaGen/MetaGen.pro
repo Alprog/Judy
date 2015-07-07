@@ -5,7 +5,6 @@ TEMPLATE = app
 
 SOURCES += \
     Source/Main.cpp \
-    Source/Parser/Parser.cpp \
     Source/Parser/Statement.cpp \
     Source/Parser/Snippet.cpp \
     Source/Parser/Tokens/AtomToken.cpp \
@@ -19,7 +18,9 @@ SOURCES += \
     Source/Info/InheritanceInfo.cpp \
     Source/Info/FieldInfo.cpp \
     Source/Info/NamespaceInfo.cpp \
-    Source/Info/AttributeInfo.cpp
+    Source/Info/AttributeInfo.cpp \
+    Source/Generator/CodeGenerator.cpp \
+    Source/Parser/CodeParser.cpp
 
 CONFIG += qt
 
@@ -28,7 +29,6 @@ win {
 }
 
 HEADERS += \
-    Source/Parser/Parser.h \
     Source/Parser/Statement.h \
     Source/Parser/Snippet.h \
     Source/Parser/RegexConstants.h \
@@ -45,4 +45,6 @@ HEADERS += \
     Source/Info/FieldInfo.h \
     Source/Info/NamespaceInfo.h \
     Source/Info/AttributeInfo.h \
-    Source/Info/ClassType.h
+    Source/Info/ClassType.h \
+    Source/Generator/CodeGenerator.h \
+    Source/Parser/CodeParser.h

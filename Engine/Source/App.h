@@ -62,9 +62,11 @@ private:
     }
 };
 
-class App
+#define __Meta__
+
+class __Meta__ App
 {
-    friend TypeMeta<App>;
+    friend class TypeMeta<App>;
 
 public:
     static App* Instance();

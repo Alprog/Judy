@@ -1,5 +1,5 @@
 
-#include "Parser.h"
+#include "CodeParser.h"
 #include <regex>
 
 #include <stdio.h>
@@ -9,6 +9,7 @@
 #include "Statement.h"
 #include "Snippet.h"
 #include "../Info/ClassInfo.h"
+#include "../Generator/CodeGenerator.h"
 
 void spliceLines(std::string& text)
 {
@@ -90,6 +91,8 @@ void parse(std::string& text)
     text = std::regex_replace(text, std::regex("__ "), "]] ");
     text = std::regex_replace(text, std::regex("__"), "[[");
 
+    CodeGenerator generator;
+
     auto snippet = Snippet(text);
     for (Statement statement : snippet.getStatements())
     {
@@ -98,9 +101,8 @@ void parse(std::string& text)
             ClassInfo classInfo(statement.getTokens());
             if (classInfo.containsAttribute("Meta"))
             {
-                std::cout << "-------------" << std::endl;
-                std::cout << classInfo.name << std::endl;
                 parseMembers(classInfo, statement);
+                generator.Generate(classInfo);
             }
         }
     }

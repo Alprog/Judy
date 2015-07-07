@@ -8,7 +8,7 @@
 #include <QDir>
 #include <QTextStream>
 
-#include "Parser/Parser.h"
+#include "Parser/CodeParser.h"
 
 std::vector<QFileInfo> getFiles(QDir dir, const QStringList& nameFilters)
 {

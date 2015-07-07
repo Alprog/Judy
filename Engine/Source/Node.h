@@ -7,9 +7,11 @@
 
 class Renderer;
 
-class Node
+#define __Meta__
+
+class __Meta__ Node
 {
-    friend TypeMeta<Node>;
+    friend class TypeMeta<Node>;
 
 public:
     Node();

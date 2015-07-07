@@ -6,9 +6,11 @@
 #include "Transform.h"
 #include "Meta/TypeMeta.h"
 
-class Quad : public Node
+#define __Meta__
+
+class __Meta__ Quad : public Node
 {
-    friend TypeMeta<Quad>;
+    friend class TypeMeta<Quad>;
 
 public:
     Quad();
