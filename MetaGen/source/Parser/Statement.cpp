@@ -58,9 +58,9 @@ void Statement::robustTokenize()
     auto pattern = "(" + simplexOperator + ")|(" + combinableOperator + "+)";
     auto text = this->text;
 
-    text = std::regex_replace(text, std::regex(pattern), std::string(" $& ")); // indents
-    text = std::regex_replace(text, std::regex(space), std::string(" "));      // space collapse
-    text = std::regex_replace(text, std::regex("(^ )|( $)"), std::string("")); // trim
+    text = std::regex_replace(text, std::regex(pattern), " $& "); // indents
+    text = std::regex_replace(text, std::regex(space), " ");      // space collapse
+    text = std::regex_replace(text, std::regex("(^ )|( $)"), ""); // trim
 
     auto start = std::begin(text);
     for (auto it = std::begin(text); it < std::end(text); it++)
