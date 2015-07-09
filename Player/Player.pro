@@ -7,7 +7,6 @@ TEMPLATE = app
 INCLUDEPATH += \
     ../3rd-party/lua/source \
 
-
 SOURCES += \
     Source/Main.cpp
 

@@ -38,7 +38,7 @@ Pipe::~Pipe()
 
 bool Pipe::isEof()
 {
-    return eof(descriptors[READ]);
+    return feof(descriptors[READ]);
 }
 
 std::string Pipe::readText()
@@ -47,7 +47,7 @@ std::string Pipe::readText()
     std::string result;
     char buffer[MAX + 1];
     int f = descriptors[READ];
-    while (!eof(f))
+    while (!feof(f))
     {
         int count = read(f, buffer, MAX);
         buffer[count] = 0;

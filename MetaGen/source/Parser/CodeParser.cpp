@@ -13,7 +13,7 @@
 
 void spliceLines(std::string& text)
 {
-    text = std::regex_replace(text, std::regex(lineContinuation), "");
+    text = std::regex_replace(text, std::regex(lineContinuation), std::string(""));
 }
 
 void removeComments(std::string& text)
@@ -45,7 +45,7 @@ void removeComments(std::string& text)
 
 void removeDirectives(std::string& text)
 {
-    text = std::regex_replace(text, std::regex(directiveLine), "");
+    text = std::regex_replace(text, std::regex(directiveLine), std::string(""));
 }
 
 void parseMembers(ClassInfo& classInfo, Statement& classStatement)
@@ -88,8 +88,8 @@ void parse(std::string& text)
     removeComments(text);
     removeDirectives(text);
 
-    text = std::regex_replace(text, std::regex("__ "), "]] ");
-    text = std::regex_replace(text, std::regex("__"), "[[");
+    text = std::regex_replace(text, std::regex("__ "), std::string("]] "));
+    text = std::regex_replace(text, std::regex("__"), std::string("[["));
 
     CodeGenerator generator;
 

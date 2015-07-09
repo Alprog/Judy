@@ -1,21 +1,16 @@
 
-#include "Socket.h"
 
-#include <cstring>
+#include "Socket.h"
 
 #if WIN
 #include <winsock2.h>
-#define ioctl ioctlsocket
 #else
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
 
 //#include <sys/socket.h>
+//#include <arpa/inet.h>
 //#include <netdb.h>
-using SOCKET = int;
-#define NO_ERROR 0;
 #endif
 
 int count = 0;
@@ -47,10 +42,8 @@ Socket::~Socket()
 
 bool Socket::SetBlockingMode(bool value)
 {
-
-
-    auto mode = value ? 0ul : 1ul;   
-    auto result = ioctl(handle, FIONBIO, &mode);
+    auto mode = value ? 0ul : 1ul;
+    auto result = ioctlsocket(handle, FIONBIO, &mode);
     return result == NO_ERROR;
 }
 
@@ -82,7 +75,6 @@ bool Socket::Accept()
     int clientSize = sizeof(clientAddress);
 
     SOCKET clientSocket = accept(handle, (struct sockaddr*)&clientAddress, (int*)&clientSize);
-#if WIN
     if (clientSocket == INVALID_SOCKET)
     {
         if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -91,7 +83,6 @@ bool Socket::Accept()
         }
         return false;
     }
-#endif
 
     return true;
 }

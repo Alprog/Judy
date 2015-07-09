@@ -209,7 +209,8 @@ std::vector<AttributeInfo> TokenGroup::extractAttributes()
             if (group->size() == 3 && group->tokens[1]->getName() == "[]")
             {
                 group = group->tokens[1]->cast<TokenGroup*>();
-                AttributeInfo attribute(group->getContent());
+                auto content = group->getContent();
+                AttributeInfo attribute(content);
                 result.push_back(attribute);
                 it = tokens.erase(it);
                 continue;
