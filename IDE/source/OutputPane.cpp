@@ -59,9 +59,9 @@ void OutputPane::work()
 {
     fflush(stdout);
 
-    if (!stdoutPipe.isEof())
+    auto text = stdoutPipe.readText();
+    if (text.size() > 0)
     {
-        auto text = stdoutPipe.readText();
         edit->moveCursor(QTextCursor::End);
         edit->insertPlainText(text.c_str());
     }

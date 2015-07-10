@@ -42,11 +42,6 @@ Pipe::~Pipe()
     close(descriptors[WRITE]);
 }
 
-bool Pipe::isEof()
-{
-    return false;//eof(descriptors[READ]);
-}
-
 std::string Pipe::readText()
 {
     const int MAX = 1024;
@@ -61,12 +56,17 @@ std::string Pipe::readText()
         result += buffer;
     }
 #else
-    auto count = read(f, buffer, MAX);
-    if (count > 0)
+    ssize_t count = 0;
+    do
     {
-        buffer[count] = 0;
-        result += buffer;
+        count = read(f, buffer, MAX);
+        if (count > 0)
+        {
+            buffer[count] = 0;
+            result += buffer;
+        }
     }
+    while (count == MAX);
 #endif
     return result;
 }
