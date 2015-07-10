@@ -47,8 +47,6 @@ Socket::~Socket()
 
 bool Socket::SetBlockingMode(bool value)
 {
-
-
     auto mode = value ? 0ul : 1ul;   
     auto result = ioctl(handle, FIONBIO, &mode);
     return result == NO_ERROR;
