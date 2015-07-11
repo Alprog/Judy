@@ -4,26 +4,21 @@
 #include <cstring>
 
 #if WIN
-#include <winsock2.h>
-#define ioctl ioctlsocket
+    #include <winsock2.h>
+    #define ioctl ioctlsocket
+    using socklen_t = int;
 #else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <sys/ioctl.h>
 
-//#include <sys/socket.h>
-//#include <netdb.h>
-using SOCKET = int;
-#define NO_ERROR 0;
-#endif
-
-#if WIN || LINUX
-using socklen_t = int;
+    #define NO_ERROR 0;
+    using SOCKET = int;
 #endif
 
 int count = 0;
-
+s
 Socket::Socket()
 {
 #if WIN
