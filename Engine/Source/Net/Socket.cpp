@@ -79,7 +79,7 @@ bool Socket::Accept()
     struct sockaddr_in clientAddress;
     int clientSize = sizeof(clientAddress);
 
-    SOCKET clientSocket = accept(handle, (struct sockaddr*)&clientAddress, (int*)&clientSize);
+    SOCKET clientSocket = accept(handle, (struct sockaddr*)&clientAddress, (socklen_t*)&clientSize);
 #if WIN
     if (clientSocket == INVALID_SOCKET)
     {
