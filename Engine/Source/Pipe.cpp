@@ -31,6 +31,7 @@ Pipe::Pipe(FILE* file)
     dup2(descriptors[WRITE], fileno(file));
 
 #if !WIN
+    // make none-blocking
     auto flags = fcntl(descriptors[READ], F_GETFL);
     fcntl(descriptors[READ], F_SETFL, flags | O_NONBLOCK);
 #endif

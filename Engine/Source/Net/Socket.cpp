@@ -18,6 +18,10 @@ using SOCKET = int;
 #define NO_ERROR 0;
 #endif
 
+#if WIN || LINUX
+using socklen_t = int;
+#endif
+
 int count = 0;
 
 Socket::Socket()
@@ -79,7 +83,7 @@ bool Socket::Accept()
     struct sockaddr_in clientAddress;
     int clientSize = sizeof(clientAddress);
 
-    SOCKET clientSocket = accept(handle, (struct sockaddr*)&clientAddress, (socklen_t*)&clientSize);
+    SOCKET clientSocket = accept(handle, (sockaddr*)&clientAddress, (socklen_t*)&clientSize);
 #if WIN
     if (clientSocket == INVALID_SOCKET)
     {
