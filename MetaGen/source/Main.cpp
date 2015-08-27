@@ -9,6 +9,7 @@
 #include <QTextStream>
 
 #include "Parser/CodeParser.h"
+#include "Generator/CodeGenerator.h"
 
 std::vector<QFileInfo> getFiles(QDir dir, const QStringList& nameFilters)
 {
@@ -28,27 +29,38 @@ std::vector<QFileInfo> getFiles(QDir dir, const QStringList& nameFilters)
     return result;
 }
 
+std::string getFileText(QFileInfo& fileInfo)
+{
+    std::string result = "";
+
+    QFile file(fileInfo.absoluteFilePath());
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        result = stream.readAll().toStdString();
+        file.close();
+    }
+
+    return result;
+}
+
 int main(int argc, char *argv[])
 {
+    CodeParser parser;
+
     auto dir = QDir::current();
-
-    QString s = "../Engine/source";
-    dir.cd(s);
-
+    dir.cd("../Engine/source");
     auto headers = getFiles(dir, {"*.h"});
-
-    int i = 0;
     for (auto& header : headers)
     {
-        QFile file(header.absoluteFilePath());
+        auto text = getFileText(header);
+        parser.parse(text);
+    }
 
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QTextStream stream(&file);
-            std::string text = stream.readAll().toStdString();
-            parse(text);
-        }
-
-        file.close();
+    CodeGenerator generator;
+    for (auto classInfo : parser.getClasses())
+    {
+        auto text = generator.Generate(classInfo);
+        printf("%s \n", text.c_str());
     }
 }

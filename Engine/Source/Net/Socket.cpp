@@ -18,7 +18,7 @@
 #endif
 
 int count = 0;
-s
+
 Socket::Socket()
 {
 #if WIN

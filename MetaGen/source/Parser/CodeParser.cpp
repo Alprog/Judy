@@ -4,19 +4,31 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <vector>
 #include "RegexConstants.h"
-#include "Statement.h"
-#include "Snippet.h"
-#include "../Info/ClassInfo.h"
-#include "../Generator/CodeGenerator.h"
 
-void spliceLines(std::string& text)
+void CodeParser::parse(std::string text)
+{
+    spliceLines(text);
+    removeComments(text);
+    removeDirectives(text);
+    fixAttributeSyntax(text);
+
+    auto snippet = new Snippet(text);
+    parseClasses(snippet);
+    delete snippet;
+}
+
+const std::vector<ClassInfo>& CodeParser::getClasses() const
+{
+    return classes;
+}
+
+void CodeParser::spliceLines(std::string& text)
 {
     text = std::regex_replace(text, std::regex(lineContinuation), "");
 }
 
-void removeComments(std::string& text)
+void CodeParser::removeComments(std::string& text)
 {
     auto reg = std::regex(comments + "|" + literals);
     std::match_results<std::string::iterator> match;
@@ -43,16 +55,37 @@ void removeComments(std::string& text)
     while (true);
 }
 
-void removeDirectives(std::string& text)
+void CodeParser::removeDirectives(std::string& text)
 {
     text = std::regex_replace(text, std::regex(directiveLine), "");
 }
 
-void parseMembers(ClassInfo& classInfo, Statement& classStatement)
+void CodeParser::fixAttributeSyntax(std::string& text)
 {
-    auto definition = classStatement.getChildSnippet();
+    text = std::regex_replace(text, std::regex("__ "), "]] ");
+    text = std::regex_replace(text, std::regex("__"), "[[");
+}
 
-    for (Statement statement : definition->getStatements())
+void CodeParser::parseClasses(Snippet* snippet)
+{
+    for (Statement statement : snippet->getStatements())
+    {
+        if (statement.isClass() && statement.hasDefinition())
+        {
+            ClassInfo classInfo(statement.getTokens());
+            if (classInfo.containsAttribute("Meta"))
+            {
+                auto definitionSnippet = statement.getChildSnippet();
+                parseClassMembers(classInfo, definitionSnippet);
+                classes.push_back(classInfo);
+            }
+        }
+    }
+}
+
+void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnippet)
+{
+    for (Statement statement : definitionSnippet->getStatements())
     {
         if (statement.isFunction())
         {
@@ -68,7 +101,7 @@ void parseMembers(ClassInfo& classInfo, Statement& classStatement)
         }
         else if (statement.isClass())
         {
-            printf("CLASS\n");
+            printf("Nested CLASS\n");
         }
         else
         {
@@ -82,30 +115,3 @@ void parseMembers(ClassInfo& classInfo, Statement& classStatement)
     }
 }
 
-void parse(std::string& text)
-{
-    spliceLines(text);
-    removeComments(text);
-    removeDirectives(text);
-
-    text = std::regex_replace(text, std::regex("__ "), "]] ");
-    text = std::regex_replace(text, std::regex("__"), "[[");
-
-    CodeGenerator generator;
-
-    auto snippet = Snippet(text);
-    for (Statement statement : snippet.getStatements())
-    {
-        if (statement.isClass() && statement.hasDefinition())
-        {
-            ClassInfo classInfo(statement.getTokens());
-            if (classInfo.containsAttribute("Meta"))
-            {
-                parseMembers(classInfo, statement);
-                generator.Generate(classInfo);
-            }
-        }
-    }
-
-    fflush(stdout);
-}
