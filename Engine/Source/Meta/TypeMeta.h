@@ -47,6 +47,12 @@ inline ITypeMeta* TypeMetaOf()
     return TypeMeta<typename std::decay<T>::type>::Instance();
 }
 
+//template <typename T, typename enable_pointer<T>::type>
+//inline ITypeMeta* TypeMetaOf()
+//{
+//    return nullptr;
+//}
+
 template <>
 inline ITypeMeta* TypeMetaOf<void>()
 {

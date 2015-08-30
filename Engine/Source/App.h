@@ -66,7 +66,8 @@ private:
 
 class __Meta__ App
 {
-    friend class TypeMeta<App>;
+    friend class Meta;
+    friend class TypeMeta<Meta>;
 
 public:
     static App* Instance();

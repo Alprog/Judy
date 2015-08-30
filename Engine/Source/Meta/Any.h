@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AnyData.h"
+#include "Sfinae.h"
 
 class ITypeMeta;
 
@@ -67,3 +68,15 @@ public:
 private:
     IAnyData* data;
 };
+
+//template <typename T>
+//Any Dereferencing(Any& object) override
+//{
+//    return *(object.as<T*>());
+//}
+
+//template <typename T, enable_pointer<T>::type>
+//Any Dereferencing(Any& object) override
+//{
+//    return *(object.as<T*>());
+//}

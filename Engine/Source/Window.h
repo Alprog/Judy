@@ -6,6 +6,9 @@
 
 class Window
 {
+    friend class Meta;
+    friend class TypeMeta<Window>;
+
 public:
     static Window* Create();
 

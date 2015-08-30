@@ -11,7 +11,6 @@ struct IAnyData
     virtual ~IAnyData() {}
 
     virtual ITypeMeta* GetType() = 0;
-
     virtual IAnyData* copy() = 0;
 };
 

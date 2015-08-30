@@ -61,8 +61,16 @@ Meta::Meta()
         .field("e", &SubStruct::e)
     ;
 
+    auto a = TypeMeta<Window>::Instance();
+
     ClassDefiner<App>(this, "App")
         .method("StartMainLoop", &App::StartMainLoop)
+//        .method("AddWindow", &App::AddWindow)
+//        .method("RemoveWindow", &App::RemoveWindow)
+//        .method("UpdateCollection", &App::UpdateCollection)
+//        .field("Windows", &App::Windows)
+//        .field("AddedWindows", &App::AddedWindows)
+//        .field("RemovedWindows", &App::RemovedWindows)
     ;
 
     ClassDefiner<Node>(this, "Node")

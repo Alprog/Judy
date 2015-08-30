@@ -49,7 +49,8 @@ HEADERS += \
     Source/LuaMachine/Breakpoints.h \
     Source/LuaMachine/LuaMachine.h \
     Source/Net/NetNode.h \
-    Source/Net/Socket.h
+    Source/Net/Socket.h \
+    Source/DeepPointer.h
 
 SOURCES += \
     Source/App.cpp \
@@ -84,7 +85,8 @@ SOURCES += \
     Source/LuaMachine/Breakpoints.cpp \
     Source/LuaMachine/LuaMachine.cpp \
     Source/Net/NetNode.cpp \
-    Source/Net/Socket.cpp
+    Source/Net/Socket.cpp \
+    Source/DeepPointer.cpp
 
 win {
     INCLUDEPATH += Source/Windows

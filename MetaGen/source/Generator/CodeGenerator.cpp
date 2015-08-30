@@ -77,8 +77,6 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
 
     stream << ";" << std::endl;
 
-    printf("%s\n", stream.str().c_str());
-
     return stream.str();
 }
 

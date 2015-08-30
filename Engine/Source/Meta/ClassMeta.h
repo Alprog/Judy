@@ -21,17 +21,19 @@ template <typename T>
 class TypeMeta<T, typename enable_class<T>::type> : public ClassMetaBase, public Singleton<TypeMeta<T>>
 {
 public:
-    Any CreateOnStack() override { return T(); }
-    Any CreateOnHeap() override { return new T(); }
+    Any CreateOnStack() override { throw std::exception(); }
+    Any CreateOnHeap() override { throw std::exception(); }
 
     virtual Any Dereferencing(Any& object) override
     {
-        return *(object.as<T*>());
+        throw std::exception();
+        //return *(object.as<T*>());
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        return &(object.as<T>());
+        throw std::exception();
+        //return &(object.as<T>());
     }
 
     virtual ITypeMeta* PointeeTypeMeta() override
