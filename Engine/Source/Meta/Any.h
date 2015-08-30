@@ -72,7 +72,7 @@ private:
 template <typename T, typename Enable = void>
 struct Dereferencer
 {
-    static Any Do(Any& object)
+    inline static Any Do(Any& object)
     {
         throw new std::exception();
     }
@@ -81,11 +81,17 @@ struct Dereferencer
 template <typename T>
 struct Dereferencer<T, typename enable_pointer<T>::type>
 {
-    static Any Do(Any& object)
+    inline static Any Do(Any& object)
     {
         return *(object.as<T>());
     }
 };
+
+template <typename T>
+Any Dereferencing(Any& object)
+{
+    return Dereferencer::Do(object);
+}
 
 //template <typename T>
 //IF(std::is_pointer<T>, Any) Dereferencing(Any& object)
