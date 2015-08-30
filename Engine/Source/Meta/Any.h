@@ -69,7 +69,7 @@ private:
     IAnyData* data;
 };
 
-template <typename T, typename a = void>
+template <typename T, typename Enable = void>
 struct Dereferencer
 {
     static Any Do(Any& object)
