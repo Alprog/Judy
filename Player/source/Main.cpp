@@ -4,6 +4,7 @@
 #include <chrono>
 
 #include "Net/Socket.h"
+#include "DeepPointer.h"
 
 void serverTask()
 {

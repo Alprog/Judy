@@ -13,17 +13,25 @@ public:
     {
     }
 
-    DeepPointer operator*()
+    T* operator*()
     {
-        return DeepPointer(*pointer, count - 1);
+        if (count == 2)
+        {
+            return *static_cast<T**>(pointer);
+        }
+        else
+        {
+            auto p = static_cast<void**>(pointer);
+            return *DeepPointer(*p, count - 1);
+        }
     }
 
-    DeepPointer operator&() const
+    DeepPointer operator&()
     {
         return DeepPointer(&pointer, count + 1);
     }
 
 private:
-    void** pointer;
+    void* pointer;
     int count;
 };
