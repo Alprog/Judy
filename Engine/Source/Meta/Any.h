@@ -69,14 +69,26 @@ private:
     IAnyData* data;
 };
 
-//template <typename T>
-//Any Dereferencing(Any& object) override
-//{
-//    return *(object.as<T*>());
-//}
+template <typename T, typename a = void>
+struct Dereferencer
+{
+    static Any Do(Any& object)
+    {
+        throw new std::exception();
+    }
+};
 
-//template <typename T, enable_pointer<T>::type>
-//Any Dereferencing(Any& object) override
+template <typename T>
+struct Dereferencer<T, typename enable_pointer<T>::type>
+{
+    static Any Do(Any& object)
+    {
+        return *(object.as<T>());
+    }
+};
+
+//template <typename T>
+//IF(std::is_pointer<T>, Any) Dereferencing(Any& object)
 //{
 //    return *(object.as<T*>());
 //}

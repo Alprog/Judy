@@ -21,8 +21,19 @@ public:
         }
         else
         {
-            auto p = static_cast<void**>(pointer);
-            return *DeepPointer(*p, count - 1);
+            return *DeepPointer(*static_cast<void**>(pointer), count - 1);
+        }
+    }
+
+    Any Dereferencing()
+    {
+        if (count == 2)
+        {
+            return *static_cast<T**>(pointer);
+        }
+        else
+        {
+            return DeepPointer(*static_cast<void**>(pointer), count - 1);
         }
     }
 

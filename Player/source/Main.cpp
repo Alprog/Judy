@@ -4,7 +4,8 @@
 #include <chrono>
 
 #include "Net/Socket.h"
-#include "DeepPointer.h"
+
+#include "Meta/TypeMeta.h"
 
 void serverTask()
 {
@@ -24,6 +25,12 @@ void clientTask()
 
 int main(int argc, char *argv[])
 {
+    Any a = new int { 4 };
+
+    auto b = Dereferencer<int*>::Do(a);
+
+    printf("%i \n", b.as<int>());
+
     auto server = new Socket();
     server->SetBlockingMode(false);
     server->Listen(2730);
