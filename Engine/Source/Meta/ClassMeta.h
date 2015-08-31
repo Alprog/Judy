@@ -26,13 +26,12 @@ public:
 
     virtual Any Dereferencing(Any& object) override
     {
-        throw std::exception();
+        return Deref<T>(object);
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        throw std::exception();
-        //return &(object.as<T>());
+        return MakePtr<T>(object);
     }
 
     virtual ITypeMeta* PointeeTypeMeta() override

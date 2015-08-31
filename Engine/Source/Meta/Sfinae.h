@@ -43,10 +43,12 @@ struct helper
 {
     enum { RealPointer = std::is_pointer<T>::value };
     enum { DeepPointer = is_deep_pointer<T>::value };
-    enum { Pointer = RealPointer || DeepPointer };
-
     enum { RealClass = std::is_class<T>::value };
+    enum { Abstract = std::is_abstract<T>::value };
+
+    enum { Pointer = RealPointer || DeepPointer };
     enum { Class = RealClass && !DeepPointer };
+    enum { AbstractClassOrRealPointer = Abstract || RealPointer };
 
     enum { PointerToVoid = std::is_same<T, void*>::value };
     enum { PointerToAbstract = std::is_abstract<std::remove_pointer<T>>::value };

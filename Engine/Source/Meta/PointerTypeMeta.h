@@ -27,12 +27,11 @@ public:
     virtual Any Dereferencing(Any& object) override
     {
         return Deref<T>(object);
-        //return *(object.as<T*>());
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        return DeepPointer<pointeeType>(&object.as<T>());
+        return MakePtr<T>(object);
     }
 
     virtual ITypeMeta* PointeeTypeMeta() override
@@ -50,12 +49,12 @@ public:
 
     virtual Any Dereferencing(Any& object) override
     {
-        return *object.as<T>();
+        return Deref<T>(object);
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        return &object.as<T>();
+        return MakePtr<T>(object);
     }
 
     virtual ITypeMeta* PointeeTypeMeta() override

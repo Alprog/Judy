@@ -70,21 +70,36 @@ private:
     IAnyData* data;
 };
 
+//---------------------------------------------------------------------------------
 
 template <typename T>
-Any Deref(Any& object, IF(T, AllowDereferencing)* a = nullptr)
+inline Any Deref(Any& object, IF(T, AllowDereferencing)* = nullptr)
 {
     return *(object.as<T>());
 }
 
 template <typename T>
-Any Deref(Any& object, IF_NOT(T, AllowDereferencing)* a = nullptr)
+inline Any Deref(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
 {
     throw std::exception("invalid dereferencing");
 }
 
-//template <typename T>
-//IF(std::is_pointer<T>, Any) Dereferencing(Any& object)
-//{
-//    return *(object.as<T*>());
-//}
+//---------------------------------------------------------------------------------
+
+template <typename T>
+inline Any MakePtr(Any& object, IF_NOT(T, AbstractClassOrRealPointer)* = nullptr)
+{
+    return &object.as<T>();
+}
+
+template <typename T>
+inline Any MakePtr(Any& object, IF(T, Abstract)* = nullptr)
+{
+    throw std::exception("invalid referencing");
+}
+
+template <typename T>
+inline Any MakePtr(Any& object, IF(T, RealPointer)* = nullptr)
+{
+    return DeepPointer<std::remove_pointer<T>::type>(&object.as<T>());
+}
