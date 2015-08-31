@@ -100,7 +100,7 @@ int FunctionInvoker(lua_State* L)
 
 void LuaBinder::Bind(Meta* meta)
 {
-    ClassMetaBase* type = (ClassMetaBase*)TypeMetaOf<Node>();
+    auto type = dynamic_cast<IClassMeta*>(TypeMetaOf<Node>());
 
     luaL_newmetatable(L, type->name.c_str()); // (1)
 

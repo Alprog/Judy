@@ -39,7 +39,7 @@ template <typename T, typename T2 = void>
 struct enable_pure_class : std::enable_if<std::is_class<T>::value && !is_deep_pointer<T>::value, T2> {};
 
 template<class T>
-struct helper
+struct is
 {
     enum { RealPointer = std::is_pointer<T>::value };
     enum { DeepPointer = is_deep_pointer<T>::value };
@@ -55,5 +55,5 @@ struct helper
     enum { AllowDereferencing = (RealPointer && !PointerToAbstract && !PointerToVoid) || DeepPointer };
 };
 
-#define IF(T, C) typename std::enable_if<helper<T>::C>::type
-#define IF_NOT(T, C) typename std::enable_if<!helper<T>::C>::type
+#define IF(T, C) typename std::enable_if<is<T>::C>::type
+#define IF_NOT(T, C) typename std::enable_if<!is<T>::C>::type

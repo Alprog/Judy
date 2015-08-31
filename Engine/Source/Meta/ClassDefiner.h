@@ -11,7 +11,7 @@ template <typename ClassType>
 class ClassDefiner
 {
 public:
-    ClassMetaBase* classMeta;
+    IClassMeta* classMeta;
 
     ClassDefiner(Meta* meta, const char* name)
         : classMeta { TypeMeta<ClassType>::Instance() }
