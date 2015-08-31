@@ -18,7 +18,7 @@ public:
 };
 
 template <typename T>
-class TypeMeta<T, typename enable_pure_class<T>::type> : public ClassMetaBase, public Singleton<TypeMeta<T>>
+class TypeMeta<T, IF(T, Class)> : public ClassMetaBase, public Singleton<TypeMeta<T>>
 {
 public:
     Any CreateOnStack() override { throw std::exception(); }
@@ -27,7 +27,6 @@ public:
     virtual Any Dereferencing(Any& object) override
     {
         throw std::exception();
-        //return *(object.as<T*>());
     }
 
     virtual Any MakePointerTo(Any& object) override

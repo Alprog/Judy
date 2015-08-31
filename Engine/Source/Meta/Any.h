@@ -70,46 +70,17 @@ private:
     IAnyData* data;
 };
 
-template <typename T, typename Enable = void>
-struct Dereferencer
-{
-    inline static Any Do(Any& object)
-    {
-        throw new std::exception("not pointer");
-    }
-};
 
 template <typename T>
-struct Dereferencer<T, typename enable_pointer<T>::type>
+Any Deref(Any& object, IF(T, AllowDereferencing)* a = nullptr)
 {
-    inline static Any Do(Any& object)
-    {
-        return *(object.as<T>());
-    }
-};
+    return *(object.as<T>());
+}
 
 template <typename T>
-struct Dereferencer<T, typename enable_deep_pointer<T>::type>
+Any Deref(Any& object, IF_NOT(T, AllowDereferencing)* a = nullptr)
 {
-    inline static Any Do(Any& object)
-    {
-        return *(object.as<T>());
-    }
-};
-
-template <>
-struct Dereferencer<void*>
-{
-    inline static Any Do(Any& object)
-    {
-        throw std::exception("can't dereference void");
-    }
-};
-
-template <typename T>
-Any Dereferencing(Any& object)
-{
-    return Dereferencer::Do(object);
+    throw std::exception("invalid dereferencing");
 }
 
 //template <typename T>

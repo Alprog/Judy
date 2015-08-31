@@ -26,7 +26,7 @@ public:
 
     virtual Any Dereferencing(Any& object) override
     {
-        return Dereferencer<T>::Do(object);
+        return Deref<T>(object);
         //return *(object.as<T*>());
     }
 
