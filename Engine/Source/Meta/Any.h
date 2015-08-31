@@ -88,6 +88,15 @@ struct Dereferencer<T, typename enable_pointer<T>::type>
     }
 };
 
+template <typename T>
+struct Dereferencer<T, typename enable_deep_pointer<T>::type>
+{
+    inline static Any Do(Any& object)
+    {
+        return *(object.as<T>());
+    }
+};
+
 template <>
 struct Dereferencer<void*>
 {
