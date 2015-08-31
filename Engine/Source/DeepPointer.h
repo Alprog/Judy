@@ -7,6 +7,14 @@ template <typename T>
 class DeepPointer
 {
 public:
+    using pointeeType = T;
+
+    DeepPointer()
+        : pointer{nullptr}
+        , count{2}
+    {
+    }
+
     DeepPointer(T** pointer)
         : pointer{pointer}
         , count{2}
@@ -19,19 +27,7 @@ public:
     {
     }
 
-    T* operator*()
-    {
-        if (count == 2)
-        {
-            return *static_cast<T**>(pointer);
-        }
-        else
-        {
-            return *DeepPointer(*static_cast<void**>(pointer), count - 1);
-        }
-    }
-
-    Any Dereferencing()
+    Any operator*()
     {
         if (count == 2)
         {

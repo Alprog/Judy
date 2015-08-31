@@ -34,3 +34,14 @@ struct enable_deep_pointer : std::enable_if<is_deep_pointer<T>::value, T2> {};
 
 template <typename T, typename T2 = void>
 struct enable_class : std::enable_if<std::is_class<T>::value, T2> {};
+
+template <typename T, typename T2 = void>
+struct enable_pure_class : std::enable_if<std::is_class<T>::value && !is_deep_pointer<T>::value, T2> {};
+
+//template<class T>
+//struct helper
+//{
+//    enum { Pointer = std::is_pointer<T>::value };
+//    enum { DeepPointer = is_deep_pointer<T>::value };
+//    enum { Class = std::is_class<T::value && !is_deep_pointer<T>::value };
+//};

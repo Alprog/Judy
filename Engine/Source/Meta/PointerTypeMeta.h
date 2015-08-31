@@ -40,3 +40,26 @@ public:
         return TypeMetaOf<pointeeType>();
     }
 };
+
+template <typename T>
+class TypeMeta<T, typename enable_deep_pointer<T>::type> : public PointerTypeMetaBase, public Singleton<TypeMeta<T>>
+{
+public:
+    Any CreateOnStack() override { return T(); }
+    Any CreateOnHeap() override { throw new std::exception(); }
+
+    virtual Any Dereferencing(Any& object) override
+    {
+        return *object.as<T>();
+    }
+
+    virtual Any MakePointerTo(Any& object) override
+    {
+        return &object.as<T>();
+    }
+
+    virtual ITypeMeta* PointeeTypeMeta() override
+    {
+        return TypeMetaOf<typename T::pointeeType>();
+    }
+};
