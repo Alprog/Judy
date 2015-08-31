@@ -23,7 +23,8 @@ public:
 
     virtual Any Dereferencing(Any& object) override
     {
-        return *(object.as<Type*>());
+        return std::exception();
+        //return *(object.as<Type*>());
     }
 
     virtual Any MakePointerTo(Any& object) override

@@ -3,6 +3,7 @@
 
 #include "AnyData.h"
 #include "Sfinae.h"
+#include <exception>
 
 class ITypeMeta;
 
@@ -74,7 +75,7 @@ struct Dereferencer
 {
     inline static Any Do(Any& object)
     {
-        throw new std::exception();
+        throw new std::exception("not pointer");
     }
 };
 
@@ -84,6 +85,15 @@ struct Dereferencer<T, typename enable_pointer<T>::type>
     inline static Any Do(Any& object)
     {
         return *(object.as<T>());
+    }
+};
+
+template <>
+struct Dereferencer<void*>
+{
+    inline static Any Do(Any& object)
+    {
+        throw std::exception("can't dereference void");
     }
 };
 

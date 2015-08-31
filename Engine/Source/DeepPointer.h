@@ -7,6 +7,12 @@ template <typename T>
 class DeepPointer
 {
 public:
+    DeepPointer(T** pointer)
+        : pointer{pointer}
+        , count{2}
+    {
+    }
+
     DeepPointer(void* pointer, int count)
         : pointer{pointer}
         , count{count}

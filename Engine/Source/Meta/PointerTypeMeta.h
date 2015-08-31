@@ -4,6 +4,8 @@
 #include "ITypeMeta.h"
 #include "Sfinae.h"
 #include "Singleton.h"
+#include "Any.h"
+#include "DeepPointer.h"
 
 class PointerTypeMetaBase : public ITypeMeta
 {
@@ -24,14 +26,13 @@ public:
 
     virtual Any Dereferencing(Any& object) override
     {
-        throw new std::exception();
+        return Dereferencer<T>::Do(object);
         //return *(object.as<T*>());
     }
 
     virtual Any MakePointerTo(Any& object) override
     {
-        throw new std::exception();
-        //return &(object.as<T>());
+        return DeepPointer<pointeeType>(&object.as<T>());
     }
 
     virtual ITypeMeta* PointeeTypeMeta() override
