@@ -9,7 +9,7 @@
 #include "Singleton.h"
 
 template <typename T>
-class TypeMetaBase : public virtual ITypeMeta
+class TypeMetaBase : public IClassMeta
 {
 public:
     virtual bool isPointer() override { return is<T>::Pointer; }

@@ -26,3 +26,11 @@ public:
     virtual Any Dereferencing(Any& object) = 0;
     virtual Any MakePointerTo(Any& object) = 0;
 };
+
+class IClassMeta : public ITypeMeta
+{
+public:
+    std::vector<IConstructorMeta*> constructors;
+    std::vector<IFieldMeta*> fields;
+    std::vector<IMethodMeta*> methods;
+};

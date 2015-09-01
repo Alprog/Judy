@@ -50,7 +50,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
 
         if (type->isClass())
         {
-            auto classMeta = dynamic_cast<IClassMeta*>(type);
+            auto classMeta = static_cast<IClassMeta*>(type);
             for (auto field : classMeta->fields)
             {
                 Any value = field->get_local(object);
@@ -101,7 +101,7 @@ Any Serializer::DeserializeUnknownTable()
             {
                 if (type->isClass())
                 {
-                    auto classMeta = dynamic_cast<IClassMeta*>(type);
+                    auto classMeta = static_cast<IClassMeta*>(type);
                     return DeserializeAsClass(classMeta);
                 }
             }
@@ -175,7 +175,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
     }
     else if (type->isClass())
     {
-        auto classMeta = dynamic_cast<IClassMeta*>(type);
+        auto classMeta = static_cast<IClassMeta*>(type);
 
         Any object = isPointer ? classMeta->CreateOnHeap() : classMeta->CreateOnStack();
 
