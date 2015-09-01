@@ -118,11 +118,14 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
     for (auto fieldMeta : classMeta->fields)
     {
-        printf("field: %s \n", fieldMeta->name);
+        printf("field: %s{ \n", fieldMeta->name);
 
         lua_getfield(L, -1, fieldMeta->name);
         Any value = Deserialize(fieldMeta->GetType());
         fieldMeta->set_local(object, value);
+
+        printf("field: %s} \n", fieldMeta->name);
+
         lua_pop(L, 1);
     }
 

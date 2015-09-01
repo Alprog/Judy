@@ -15,7 +15,7 @@ struct SubStruct
     int e;
 
     SubStruct()
-        : e { 0 }
+        : e { 7 }
     {
     }
 
@@ -55,7 +55,7 @@ public:
         arr.push_back(3);
     }
 
-private:
+protected:
     TestStruct()
     {
         this->dd = new SubStruct(22);

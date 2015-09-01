@@ -3,7 +3,6 @@
 
 #include "vector"
 #include "Any.h"
-#include "TypeMeta.h"
 #include "FunctionMeta.h"
 #include "MethodMeta.h"
 #include "Meta.h"
@@ -23,7 +22,7 @@ public:
     template <size_t... I>
     inline Any RealInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
-        return Meta::New<ClassType, ArgTypes...>( args.at(I)... );
+        return Meta::Create<ClassType, ArgTypes...>( args.at(I)... );
         //return TypeMeta<ClassType>::New<ArgTypes...>( args.at(I)... );
     }
 

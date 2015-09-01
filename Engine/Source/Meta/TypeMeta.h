@@ -9,6 +9,8 @@
 #include "Singleton.h"
 #include "DeepPointer.h"
 
+#include "ConstructorMeta.h"
+
 template <typename T, typename Enable = void>
 struct IBase
 {
@@ -45,9 +47,10 @@ private:
     }
 
     template <typename T>
-    static inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
+    inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
     {
-        throw std::exception("not implemented");
+        std::vector<Any> args;
+        return constructors[0]->Invoke(args);
     }
 
     //---------------------------------------------------------------------------------

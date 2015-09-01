@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Any.h"
-#include "TypeMeta.h"
 #include "FunctionMeta.h"
 #include <vector>
 

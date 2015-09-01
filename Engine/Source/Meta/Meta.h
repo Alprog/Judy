@@ -30,7 +30,13 @@ private:
 
 public:
     template <typename T, typename... Types>
-    inline static T* New(Types... args)
+    inline static T Create(Types... args)
+    {
+        return T(args...);
+    }
+
+    template <typename T, typename... Types>
+    inline static T* CreateNew(Types... args)
     {
         return new T(args...);
     }

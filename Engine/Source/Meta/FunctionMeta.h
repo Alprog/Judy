@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "TypeMeta.h"
+#include "ITypeMeta.h"
 #include "Meta.h"
 
 class IFunctionMeta
