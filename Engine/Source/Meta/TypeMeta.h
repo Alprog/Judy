@@ -8,8 +8,20 @@
 #include "Any.h"
 #include "Singleton.h"
 
+template <typename T, typename Enable = void>
+struct IBase
+{
+    using type = ITypeMeta;
+};
+
 template <typename T>
-class TypeMetaBase : public IClassMeta
+struct IBase<T, IF(T, Class)>
+{
+    using type = IClassMeta;
+};
+
+template <typename T>
+class TypeMetaBase : public IBase<T>::type
 {
 public:
     virtual bool isPointer() override { return is<T>::Pointer; }
@@ -38,6 +50,8 @@ private:
     {
         throw std::exception("invalid dereferencing");
     }
+
+    //---------------------------------------------------------------------------------
 
     template <typename T>
     inline Any MakePtr(Any& object, IF_NOT(T, AbstractClassOrRealPointer)* = nullptr)
