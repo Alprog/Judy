@@ -9,7 +9,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_newtable(L);
         lua_pushinteger(L, 1);
-        object = type->Dereferencing(object);
+        object = type->Dereference(object);
         Serialize(object, type->PointeeTypeMeta());
         lua_settable(L, -3);
         return;
@@ -40,7 +40,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         while (type->isPointer())
         {
             type = type->PointeeTypeMeta();
-            object = type->Dereferencing(object);
+            object = type->Dereference(object);
             modifiers += '*';
         }
 
@@ -147,7 +147,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
         printf("value %i\n", value.as<int>());
         fflush(stdout);
 
-        value = type->MakePointerTo(value);
+        value = type->MakePointer(value);
 
         printf("SUCCESS\n");
         fflush(stdout);

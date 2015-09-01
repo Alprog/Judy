@@ -28,25 +28,62 @@ public:
     virtual bool isClass() override { return is<T>::Class; }
     virtual bool isVector() override { return false; }
 
-    virtual Any Dereferencing(Any& object) override
-    {
-        return Deref<T>(object);
-    }
-
-    virtual Any MakePointerTo(Any& object) override
-    {
-        return MakePtr<T>(object);
-    }
+    virtual Any CreateOnStack() override { return CreateOnStackHelper<T>(); }
+    virtual Any CreateOnHeap() override { return CreateOnHeapHelper<T>(); }
+    virtual Any Dereference(Any& object) override { return DereferenceHelper<T>(object); }
+    virtual Any MakePointer(Any& object) override { return MakePointerHelper<T>(object); }
 
 private:
+    //---------------------------------------------------------------------------------
+
     template <typename T>
-    static inline Any Deref(Any& object, IF(T, AllowDereferencing)* = nullptr)
+    static inline Any CreateOnStackHelper(IF_NOT(T, Class)* = nullptr)
+    {
+        return T();
+    }
+
+    template <typename T>
+    static inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
+    {
+        throw std::exception("not implemented");
+    }
+
+    //---------------------------------------------------------------------------------
+
+    template <typename T>
+    static inline Any CreateOnHeapHelper(IF_NOT(T, ClassOrPointer)* = nullptr)
+    {
+        return new T();
+    }
+
+    template <typename T>
+    static inline Any CreateOnHeapHelper(IF(T, RealPointer)* = nullptr)
+    {
+        return DeepPointer<std::remove_pointer<T>::type>(new T());
+    }
+
+    template <typename T>
+    static inline Any CreateOnHeapHelper(IF(T, DeepPointer)* = nullptr)
+    {
+        throw std::exception("not implemented");
+    }
+
+    template <typename T>
+    static inline Any CreateOnHeapHelper(IF(T, Class)* = nullptr)
+    {
+        throw std::exception("not implemented");
+    }
+
+    //---------------------------------------------------------------------------------
+
+    template <typename T>
+    static inline Any DereferenceHelper(Any& object, IF(T, AllowDereferencing)* = nullptr)
     {
         return *(object.as<T>());
     }
 
     template <typename T>
-    static inline Any Deref(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
+    static inline Any DereferenceHelper(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
     {
         throw std::exception("invalid dereferencing");
     }
@@ -54,22 +91,24 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    inline Any MakePtr(Any& object, IF_NOT(T, AbstractClassOrRealPointer)* = nullptr)
+    inline Any MakePointerHelper(Any& object, IF_NOT(T, AbstractClassOrRealPointer)* = nullptr)
     {
         return &object.as<T>();
     }
 
     template <typename T>
-    static inline Any MakePtr(Any& object, IF(T, Abstract)* = nullptr)
+    static inline Any MakePointerHelper(Any& object, IF(T, Abstract)* = nullptr)
     {
         throw std::exception("invalid referencing");
     }
 
     template <typename T>
-    static inline Any MakePtr(Any& object, IF(T, RealPointer)* = nullptr)
+    static inline Any MakePointerHelper(Any& object, IF(T, RealPointer)* = nullptr)
     {
         return DeepPointer<std::remove_pointer<T>::type>(&object.as<T>());
     }
+
+    //---------------------------------------------------------------------------------
 };
 
 
@@ -79,9 +118,6 @@ class TypeMeta : public TypeMetaBase<T>, public Singleton<TypeMeta<T>>
     static_assert(std::is_same<Enable, void>::value, "Enable type must be void");
 
 public:
-    Any CreateOnStack() override { return T(); }
-    Any CreateOnHeap() override { return new T(); }
-
     virtual ITypeMeta* PointeeTypeMeta() override
     {
         throw new std::exception();

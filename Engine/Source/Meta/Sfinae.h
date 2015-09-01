@@ -48,6 +48,8 @@ struct is
 
     enum { Pointer = RealPointer || DeepPointer };
     enum { Class = RealClass && !DeepPointer };
+
+    enum { ClassOrPointer = Class || Pointer };
     enum { AbstractClassOrRealPointer = Abstract || RealPointer };
 
     enum { PointerToVoid = std::is_same<T, void*>::value };

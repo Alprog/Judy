@@ -23,8 +23,8 @@ public:
 
     virtual ITypeMeta* PointeeTypeMeta() = 0;
 
-    virtual Any Dereferencing(Any& object) = 0;
-    virtual Any MakePointerTo(Any& object) = 0;
+    virtual Any Dereference(Any& object) = 0;
+    virtual Any MakePointer(Any& object) = 0;
 };
 
 class IClassMeta : public ITypeMeta
