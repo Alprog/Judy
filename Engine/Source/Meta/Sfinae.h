@@ -53,7 +53,7 @@ struct is
     enum { AbstractClassOrRealPointer = Abstract || RealPointer };
 
     enum { PointerToVoid = std::is_same<T, void*>::value };
-    enum { PointerToAbstract = std::is_abstract<std::remove_pointer<T>>::value };
+    enum { PointerToAbstract = std::is_abstract<std::remove_pointer<T>::type>::value };
     enum { AllowDereferencing = (RealPointer && !PointerToAbstract && !PointerToVoid) || DeepPointer };
 };
 
