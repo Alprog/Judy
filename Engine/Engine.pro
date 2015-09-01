@@ -43,8 +43,6 @@ HEADERS += \
     Source/Meta/AnyData.h \
     Source/Singleton.h \
     Source/Meta/Sfinae.h \
-    Source/Meta/ClassMeta.h \
-    Source/Meta/PointerTypeMeta.h \
     Source/Pipe.h \
     Source/LuaMachine/Breakpoints.h \
     Source/LuaMachine/LuaMachine.h \

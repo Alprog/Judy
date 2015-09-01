@@ -7,6 +7,7 @@
 #include "ITypeMeta.h"
 #include "Any.h"
 #include "Singleton.h"
+#include "DeepPointer.h"
 
 template <typename T, typename Enable = void>
 struct IBase
@@ -21,7 +22,7 @@ struct IBase<T, IF(T, Class)>
 };
 
 template <typename T>
-class TypeMetaBase : public IBase<T>::type
+class TypeMeta : public IBase<T>::type, public Singleton<TypeMeta<T>>
 {
 public:
     virtual bool isPointer() override { return is<T>::Pointer; }
@@ -32,6 +33,7 @@ public:
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<T>(); }
     virtual Any Dereference(Any& object) override { return DereferenceHelper<T>(object); }
     virtual Any MakePointer(Any& object) override { return MakePointerHelper<T>(object); }
+    virtual ITypeMeta* GetPointeeType() override { return GetPointeeTypeHelper<T>(); }
 
 private:
     //---------------------------------------------------------------------------------
@@ -109,24 +111,27 @@ private:
     }
 
     //---------------------------------------------------------------------------------
-};
 
-
-template <typename T, typename Enable = void>
-class TypeMeta : public TypeMetaBase<T>, public Singleton<TypeMeta<T>>
-{
-    static_assert(std::is_same<Enable, void>::value, "Enable type must be void");
-
-public:
-    virtual ITypeMeta* PointeeTypeMeta() override
+    template <typename T>
+    static inline ITypeMeta* GetPointeeTypeHelper(IF_NOT(T, Pointer)* = nullptr)
     {
-        throw new std::exception();
+        throw std::exception("type is not pointer");
     }
-};
 
-// Template Specializations:
-#include "PointerTypeMeta.h"
-#include "ClassMeta.h"
+    template <typename T>
+    static inline ITypeMeta* GetPointeeTypeHelper(IF(T, RealPointer)* = nullptr)
+    {
+        return TypeMetaOf<typename std::remove_pointer<T>::type>();
+    }
+
+    template <typename T>
+    static inline ITypeMeta* GetPointeeTypeHelper(IF(T, DeepPointer)* = nullptr)
+    {
+        return TypeMetaOf<typename T::pointeeType>();
+    }
+
+    //---------------------------------------------------------------------------------
+};
 
 template <typename T>
 inline ITypeMeta* TypeMetaOf()
