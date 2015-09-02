@@ -11,7 +11,7 @@ class Renderer;
 
 class __Meta__ Node
 {
-    friend class TypeMeta<Node>;
+    friend class Meta;
 
 public:
     Node();

@@ -10,7 +10,7 @@
 
 class __Meta__ Quad : public Node
 {
-    friend class TypeMeta<Quad>;
+    friend class Meta;
 
 public:
     Quad();

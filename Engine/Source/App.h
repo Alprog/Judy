@@ -67,7 +67,6 @@ protected:
 class __Meta__ App
 {
     friend class Meta;
-    friend class TypeMeta<Meta>;
 
 public:
     static App* Instance();

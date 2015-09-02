@@ -28,6 +28,8 @@ private:
         typeMap.emplace(std::type_index(typeid(T)), meta);
     }
 
+    template <typename T> void regVector();
+
 public:
     template <typename T, typename... Types>
     inline static T Create(Types... args)

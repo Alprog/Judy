@@ -10,13 +10,27 @@
 
 #include <functional>
 
+#include "Renderer.h"
+
+template <typename T>
+void Meta::regVector()
+{
+    ClassDefiner<TestStruct>(this, "TestStruct")
+        .constructor()
+        .field("a", &TestStruct::a)
+        .field("b", &TestStruct::b)
+        .field("d", &TestStruct::d)
+        .field("g", &TestStruct::g)
+    ;
+}
+
 Meta::Meta()
 {
     DefineBuildInType<bool>("bool");
     DefineBuildInType<int>("int");
     DefineBuildInType<float>("float");
     DefineBuildInType<std::string>("string");
-    DefineBuildInType<char*>("char*");
+    DefineBuildInType<char>("char");
 
     /*
     //void (B::*p)(int) = &B::test;
@@ -48,6 +62,8 @@ Meta::Meta()
     //TypeMeta<int>::Instance()->name = "int";
     */
 
+    regVector<int>();
+
     ClassDefiner<TestStruct>(this, "TestStruct")
         .constructor()
         .field("a", &TestStruct::a)
@@ -61,23 +77,21 @@ Meta::Meta()
         .field("e", &SubStruct::e)
     ;
 
-    auto a = TypeMeta<Window>::Instance();
-
     ClassDefiner<App>(this, "App")
         .method("StartMainLoop", &App::StartMainLoop)
-//        .method("AddWindow", &App::AddWindow)
-//        .method("RemoveWindow", &App::RemoveWindow)
-//        .method("UpdateCollection", &App::UpdateCollection)
-//        .field("Windows", &App::Windows)
-//        .field("AddedWindows", &App::AddedWindows)
-//        .field("RemovedWindows", &App::RemovedWindows)
+        .method("AddWindow", &App::AddWindow)
+        .method("RemoveWindow", &App::RemoveWindow)
+        .method("UpdateCollection", &App::UpdateCollection)
+        .field("Windows", &App::Windows)
+        .field("AddedWindows", &App::AddedWindows)
+        .field("RemovedWindows", &App::RemovedWindows)
     ;
 
     ClassDefiner<Node>(this, "Node")
         .constructor()
         .constructor<int>()
         .method("Update", &Node::Update)
-        //.method("Render", &Node::Render)
+        .method("Render", &Node::Render)
         .method("ChildCount", &Node::ChildCount)
         .method("RemoveChild", &Node::RemoveChild)
         .method("AddChild", &Node::AddChild)
@@ -86,7 +100,7 @@ Meta::Meta()
     ClassDefiner<Quad>(this, "Quad")
         .constructor()
         .method("Update", &Quad::Update)
-        //.method("Render", &Quad::Render)
+        .method("Render", &Quad::Render)
     ;
 
     //Node* node = (Node*)TypeMeta<Node>::Instance()->constructors[1]->Invoke({1});
