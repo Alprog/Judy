@@ -2,10 +2,14 @@
 #include "CodeGenerator.h"
 #include <sstream>
 #include <cstdio>
+#include <set>
 
 #if WIN
     #define snprintf _snprintf
 #endif
+
+const std::string tab = "    ";
+const std::string tab2 = "        ";
 
 template <typename... ArgTypes>
 std::string format(const char* format, ArgTypes... args)
@@ -22,6 +26,50 @@ std::string format(const char* format, ArgTypes... args)
     return "";
 }
 
+std::string CodeGenerator::GenerateCpp(std::vector<ClassInfo>& classes)
+{
+    std::stringstream stream;
+    stream << GenerateIncludes(classes);
+
+    stream << "void Meta::regClasses()" << std::endl << "{" << std::endl;
+
+    for (int i = 0; i < classes.size(); i++)
+    {
+        if (i > 0)
+        {
+            stream << std::endl;
+        }
+        stream << Generate(classes[i]);
+    }
+    stream << "}" << std::endl;
+
+    return stream.str();
+}
+
+std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
+{
+    std::stringstream stream;
+    stream << std::endl;
+    stream << "#include \"Meta.h\"" << std::endl;
+    stream << "#include \"TypeMeta.h\"" << std::endl;
+    stream << "#include \"ClassDefiner.h\"" << std::endl;
+
+    std::set<std::string> set;
+    for (auto& classInfo : classes)
+    {
+        auto name = classInfo.headerName;
+        if (set.find(name) == set.end())
+        {
+            stream << "#include \"" << name << "\"" << std::endl;
+            set.insert(name);
+        }
+    }
+
+    stream << std::endl;
+
+    return stream.str();
+}
+
 std::string CodeGenerator::Generate(std::vector<ClassInfo>& classes)
 {
     std::string text;
@@ -36,11 +84,11 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
 {
     std::stringstream stream;
 
-    stream << "ClassDefiner<" << classInfo.name << ">" << "(this, \"" << classInfo.name << "\")" << std::endl;
+    stream << tab << "ClassDefiner<" << classInfo.name << ">" << "(this, \"" << classInfo.name << "\")" << std::endl;
 
     for (auto& constructor : classInfo.constructors)
     {
-        stream << "    .constructor";
+        stream << tab2 << ".constructor";
         if (constructor.arguments.size() > 0)
         {
             stream << "<";
@@ -64,21 +112,24 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
     {
         if (!method.isOperator && !method.isStatic)
         {
-            stream << "    .method(\"" << method.name << "\", &" <<
+            stream << tab2 << ".method(\"" << method.name << "\", &" <<
                 classInfo.name << "::" << method.name << ")" << std::endl;
         }
     }
 
-    for (auto& field : classInfo.fields)
+    if (!classInfo.isAbstract)
     {
-        if (!field.isStatic)
+        for (auto& field : classInfo.fields)
         {
-            stream << "    .field(\"" << field.name << "\", &" <<
-               classInfo.name << "::" << field.name << ")" << std::endl;
+            if (!field.isStatic)
+            {
+                stream << tab2 << ".field(\"" << field.name << "\", &" <<
+                   classInfo.name << "::" << field.name << ")" << std::endl;
+            }
         }
     }
 
-    stream << ";" << std::endl;
+    stream << tab << ";" << std::endl;
 
     return stream.str();
 }

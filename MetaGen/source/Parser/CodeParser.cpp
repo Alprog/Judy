@@ -6,7 +6,7 @@
 #include <iostream>
 #include "RegexConstants.h"
 
-void CodeParser::parse(std::string text)
+void CodeParser::parse(std::string text, std::string headerName)
 {
     spliceLines(text);
     removeComments(text);
@@ -14,7 +14,7 @@ void CodeParser::parse(std::string text)
     fixAttributeSyntax(text);
 
     auto snippet = new Snippet(text);
-    parseClasses(snippet);
+    parseClasses(snippet, headerName);
     delete snippet;
 }
 
@@ -66,13 +66,14 @@ void CodeParser::fixAttributeSyntax(std::string& text)
     text = std::regex_replace(text, std::regex("__"), "[[");
 }
 
-void CodeParser::parseClasses(Snippet* snippet)
+void CodeParser::parseClasses(Snippet* snippet, std::string headerName)
 {
     for (Statement statement : snippet->getStatements())
     {
         if (statement.isClass() && statement.hasDefinition())
         {
             ClassInfo classInfo(statement.getTokens());
+            classInfo.headerName = headerName;
             if (classInfo.containsAttribute("Meta"))
             {
                 auto definitionSnippet = statement.getChildSnippet();

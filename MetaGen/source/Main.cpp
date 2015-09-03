@@ -44,23 +44,33 @@ std::string getFileText(QFileInfo& fileInfo)
     return result;
 }
 
+void writeToFile(std::string fileName, std::string content)
+{
+    QFile file(QString(fileName.c_str()));
+    file.open(QIODevice::WriteOnly);
+    QTextStream stream(&file);
+    stream << QString(content.c_str());
+    file.close();
+}
+
 int main(int argc, char *argv[])
 {
     CodeParser parser;
 
     auto dir = QDir::current();
     dir.cd("../Engine/source");
-    auto headers = getFiles(dir, {"*.h"});
-    for (auto& header : headers)
+    auto headersInfo = getFiles(dir, {"*.h"});
+    for (auto& headerInfo : headersInfo)
     {
-        auto text = getFileText(header);
-        parser.parse(text);
+        auto text = getFileText(headerInfo);
+        auto fileName = headerInfo.fileName().toStdString();
+        parser.parse(text, fileName);
     }
 
     CodeGenerator generator;
-    for (auto classInfo : parser.getClasses())
-    {
-        auto text = generator.Generate(classInfo);
-        printf("%s \n", text.c_str());
-    }
+
+    auto classes = parser.getClasses();
+    auto text = generator.GenerateCpp(classes);
+    auto fileName = "../Engine/source/Meta/Meta.gen.cpp";
+    writeToFile(fileName, text);
 }

@@ -9,7 +9,9 @@ class Node;
 
 #include <unordered_map>
 
-class Renderer
+#define __Meta__
+
+class __Meta__ Renderer abstract
 {
 public:
     std::unordered_map<std::string, void*> textures;

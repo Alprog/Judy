@@ -37,6 +37,10 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
         {
             isFinal = true;
         }
+        else if (tokenName == "abstract")
+        {
+            isAbstract = true;
+        }
         else if (tokenName == "class")
         {
             classType = ClassType::Class;
