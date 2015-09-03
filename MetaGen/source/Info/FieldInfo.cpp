@@ -6,6 +6,11 @@ FieldInfo::FieldInfo(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
 
+    processSpecifiers(tokens,
+    {
+      { "static", &isStatic },
+    });
+
     name = tokens.extractLast()->getName();
     type = TypeInfo(tokens);
 }

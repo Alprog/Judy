@@ -28,7 +28,7 @@ private:
         typeMap.emplace(std::type_index(typeid(T)), meta);
     }
 
-    template <typename T> void regVector();
+    #include "Meta.gen.h"
 
 public:
     template <typename T, typename... Types>

@@ -48,7 +48,8 @@ HEADERS += \
     Source/LuaMachine/LuaMachine.h \
     Source/Net/NetNode.h \
     Source/Net/Socket.h \
-    Source/DeepPointer.h
+    Source/DeepPointer.h \
+    Source/Meta/Meta.gen.h
 
 SOURCES += \
     Source/App.cpp \
@@ -70,7 +71,6 @@ SOURCES += \
     Source/Meta/MethodMeta.cpp \
     Source/Meta/Any.cpp \
     Source/Meta/Meta.cpp \
-    Source/Meta/MetaGen.cpp \
     Source/Meta/Serializer.cpp \
     Source/Meta/Binder.cpp \
     Source/Meta/ConstructorMeta.cpp \
@@ -84,7 +84,8 @@ SOURCES += \
     Source/LuaMachine/LuaMachine.cpp \
     Source/Net/NetNode.cpp \
     Source/Net/Socket.cpp \
-    Source/DeepPointer.cpp
+    Source/DeepPointer.cpp \
+    Source/Meta/Meta.gen.cpp
 
 win {
     INCLUDEPATH += Source/Windows

@@ -24,12 +24,12 @@ std::string format(const char* format, ArgTypes... args)
 
 std::string CodeGenerator::Generate(std::vector<ClassInfo>& classes)
 {
+    std::string text;
     for (auto& classInfo : classes)
     {
-        std::string text = Generate(classInfo);
-        printf("%s \n", text.c_str());
+        text += Generate(classInfo);
     }
-    return nullptr;
+    return text;
 }
 
 std::string CodeGenerator::Generate(ClassInfo& classInfo)
@@ -62,7 +62,7 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
 
     for (auto& method : classInfo.methods)
     {
-        if (!method.isOperator)
+        if (!method.isOperator && !method.isStatic)
         {
             stream << "    .method(\"" << method.name << "\", &" <<
                 classInfo.name << "::" << method.name << ")" << std::endl;
@@ -71,8 +71,11 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
 
     for (auto& field : classInfo.fields)
     {
-        stream << "    .field(\"" << field.name << "\", &" <<
-           classInfo.name << "::" << field.name << ")" << std::endl;
+        if (!field.isStatic)
+        {
+            stream << "    .field(\"" << field.name << "\", &" <<
+               classInfo.name << "::" << field.name << ")" << std::endl;
+        }
     }
 
     stream << ";" << std::endl;
