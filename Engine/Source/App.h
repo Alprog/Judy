@@ -7,10 +7,11 @@
 #include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
 
-struct SubStruct
+#define __META__
+
+struct __META__ SubStruct
 {
     friend Meta;
-    friend TypeMeta<SubStruct>;
 
     int e;
 
@@ -25,10 +26,9 @@ struct SubStruct
     }
 };
 
-struct TestStruct
+struct __META__ TestStruct
 {
     friend Meta;
-    friend TypeMeta<TestStruct>;
 
     float a;
     int* c;
@@ -60,7 +60,7 @@ protected:
     {
         this->dd = new SubStruct(22);
     }
-};
+}; 
 
 #define __Meta__
 

@@ -1,6 +1,17 @@
 
 #include "Meta.h"
+#include "TypeMeta.h"
 
+Meta::Meta()
+{
+    DefineBuildInType<bool>("bool");
+    DefineBuildInType<int>("int");
+    DefineBuildInType<float>("float");
+    DefineBuildInType<std::string>("string");
+    DefineBuildInType<char>("char");
+
+    regClasses();
+}
 
 //Node* node = (Node*)TypeMeta<Node>::Instance()->constructors[1]->Invoke({1});
 

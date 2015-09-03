@@ -3,7 +3,19 @@
 #include <thread>
 #include <chrono>
 
+#include "Net/NetNode.h"
 #include "Net/Socket.h"
+
+int main(int argc, char *argv[])
+{
+    auto m = Meta::Instance();
+
+    auto node = new NetNode();
+
+    Any a = SubStruct();
+    node->Send(a);
+
+}
 
 //void serverTask()
 //{
@@ -41,58 +53,58 @@
 //    //LuaMachine::Instance()->Start("main.lua");
 //}
 
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
+//extern "C"
+//{
+//    #include "lua.h"
+//    #include "lualib.h"
+//    #include "lauxlib.h"
+//}
 
-#include "Meta/Meta.h"
-#include "Meta/Binder.h"
-#include "Meta/Serializer.h"
-#include "App.h"
-#include <iostream>
+//#include "Meta/Meta.h"
+//#include "Meta/Binder.h"
+//#include "Meta/Serializer.h"
+//#include "App.h"
+//#include <iostream>
 
-template <typename Type>
-void SerialzeToTable(lua_State* L, Type object)
-{
-    auto serializer = new Serializer(L);
-    serializer->Serialize(object);
+//template <typename Type>
+//void SerialzeToTable(lua_State* L, Type object)
+//{
+//    auto serializer = new Serializer(L);
+//    serializer->Serialize(object);
 
-    auto a = serializer->DeserializeUnknown();
-    lua_pop(L, 1);
-    serializer->Serialize(a);
+//    auto a = serializer->DeserializeUnknown();
+//    lua_pop(L, 1);
+//    serializer->Serialize(a);
 
-    lua_getglobal(L, "Test");
-    lua_insert(L, 2);
-    lua_pcall(L, 1, 0, 0);
-}
-
-
-int main(int argc, char *argv[])
-{
-    lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
-    lua_getglobal(L, "package");
-    lua_pushstring(L, "?.lua");
-    lua_setfield(L, -2, "path");
-
-    LuaBinder(L).Bind(Meta::Instance());
-    fflush(stdout);
+//    lua_getglobal(L, "Test");
+//    lua_insert(L, 2);
+//    lua_pcall(L, 1, 0, 0);
+//}
 
 
-    if (luaL_dofile(L, "Main.lua"))
-    {
-        std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
-        std::cerr << lua_tostring(L, -1) << std::endl;
-        lua_pop(L, 1);
-    }
+//int main(int argc, char *argv[])
+//{
+//    lua_State* L = luaL_newstate();
+//    luaL_openlibs(L);
+//    lua_getglobal(L, "package");
+//    lua_pushstring(L, "?.lua");
+//    lua_setfield(L, -2, "path");
 
-    TestStruct testStruct { 1.0, 2, "fff", SubStruct() };
-    SerialzeToTable(L, testStruct);
+//    LuaBinder(L).Bind(Meta::Instance());
+//    fflush(stdout);
 
-    fflush(stdout);
 
-    lua_close(L);
-}
+//    if (luaL_dofile(L, "Main.lua"))
+//    {
+//        std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
+//        std::cerr << lua_tostring(L, -1) << std::endl;
+//        lua_pop(L, 1);
+//    }
+
+//    TestStruct testStruct { 1.0, 2, "fff", SubStruct() };
+//    SerialzeToTable(L, testStruct);
+
+//    fflush(stdout);
+
+//    lua_close(L);
+//}

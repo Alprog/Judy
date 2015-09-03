@@ -1,8 +1,7 @@
 
 #include "Meta.h"
-
-#include "ClassDefiner.h"
 #include "TypeMeta.h"
+#include "ClassDefiner.h"
 
 #include "App.h"
 #include "Node.h"
@@ -19,13 +18,9 @@ void Meta::regVector()
 
 }
 
-Meta::Meta()
+void Meta::regClasses()
 {
-    DefineBuildInType<bool>("bool");
-    DefineBuildInType<int>("int");
-    DefineBuildInType<float>("float");
-    DefineBuildInType<std::string>("string");
-    DefineBuildInType<char>("char");
+   // DefineBuildInType<bool>("bool");
 
     ClassDefiner<TestStruct>(this, "TestStruct")
         .constructor()

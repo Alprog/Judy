@@ -19,6 +19,9 @@ class Meta : public Singleton<Meta>
 private:
     Meta();
 
+    void regClasses();
+    #include "Meta.gen.h"
+
     template <typename T>
     void DefineBuildInType(std::string name)
     {
@@ -27,8 +30,6 @@ private:
         types.push_back(meta);
         typeMap.emplace(std::type_index(typeid(T)), meta);
     }
-
-    #include "Meta.gen.h"
 
 public:
     template <typename T, typename... Types>
