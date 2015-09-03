@@ -8,19 +8,23 @@
 
 int main(int argc, char *argv[])
 {
+    Meta::Instance();
+
     auto server = new NetNode();
     server->listen(2730);
 
     auto client = new NetNode();
     client->connect("127.0.0.1", 2730);
 
-    while (!server->isConnnected())
-    {
+    while (!server->isConnnected()) {}
+    while (!client->isConnnected()) {}
 
-    }
-    while (!client->isConnnected())
-    {
+    Any a = SubStruct();
 
+    for (int i = 0; i < 10; i++)
+    {
+        server->send(a);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
     printf("connected \n");

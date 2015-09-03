@@ -100,12 +100,25 @@ bool Socket::Connect(std::string host, int port)
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
     auto result = connect(handle, (sockaddr*)&adress, sizeof(adress));
-    return result == NO_ERROR;
+    if(result != NO_ERROR)
+    {
+        auto error = WSAGetLastError();
+        if (error != WSAEISCONN)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 int Socket::Send(const char* buffer, int length)
 {
-    return send(handle, buffer, length, 0);
+    auto count = send(handle, buffer, length, 0);
+
+    //auto error = WSAGetLastError();
+    //printf("%i \n", error);
+
+    return count;
 }
 
 int Socket::Receive(char* buffer, int max)

@@ -73,7 +73,7 @@ void NetNode::send(Any& any)
     lua_pcall(L, 1, 1, 0);
     std::string text = lua_tostring(L, -1);
     output.append(text);
-    output.append('\0');
+    output.append("\0");
 }
 
 void NetNode::startWork()
@@ -120,6 +120,10 @@ void NetNode::sendWork()
         while (totalSend < length)
         {
             auto count = socket.Send(buffer + totalSend, length - totalSend);
+
+            printf("send %i %i \n", count, length);
+            fflush(stdout);
+
             if (count < 0)
             {
                 break;
@@ -137,6 +141,10 @@ void NetNode::receiveWork()
     do
     {
         count = socket.Receive(buffer, MAX);
+
+        printf("read %i \n", count);
+        fflush(stdout);
+
         if (count > 0)
         {
             input.append(buffer, count);
@@ -152,6 +160,8 @@ void NetNode::processMessages()
         auto index = input.find('\0');
         if (index >= 0)
         {
+            printf(input.c_str());
+            fflush(stdout);
             //input.substr(0, index);
         }
     }
