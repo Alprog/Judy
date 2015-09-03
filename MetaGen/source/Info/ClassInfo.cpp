@@ -3,7 +3,9 @@
 #include "../Parser/Tokens/TokenGroup.h"
 
 ClassInfo::ClassInfo(TokenGroup& tokens)
-    : classType(ClassType::Class)
+    : classType{ClassType::Class}
+    , isAbstract{false}
+    , isFinal{false}
 {
     auto arr = tokens.split(":");
     processMainTokens(arr[0]);
