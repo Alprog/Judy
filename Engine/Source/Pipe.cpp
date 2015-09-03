@@ -57,7 +57,7 @@ std::string Pipe::readText()
         result += buffer;
     }
 #else
-    ssize_t count = 0;
+    int count = 0;
     do
     {
         count = read(f, buffer, MAX);

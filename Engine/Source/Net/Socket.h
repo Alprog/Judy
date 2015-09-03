@@ -16,9 +16,13 @@ public:
 
     bool Connect(std::string host, int port);
 
-    bool Send(std::string& message);
-    void Send(char* buffer);
-    char* Receive();
+    int Send(const char* buffer, int length);
+    int Receive(char* buffer, int max);
+
+
+    //bool Send(std::string& message);
+    //void Send(char* buffer);
+    //char* Receive();
 
 private:
     unsigned int handle;

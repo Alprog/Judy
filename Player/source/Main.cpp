@@ -8,12 +8,30 @@
 
 int main(int argc, char *argv[])
 {
-    auto m = Meta::Instance();
+    auto server = new NetNode();
+    server->listen(2730);
 
-    auto node = new NetNode();
+    auto client = new NetNode();
+    client->connect("127.0.0.1", 2730);
 
-    Any a = SubStruct();
-    node->Send(a);
+    while (!server->isConnnected())
+    {
+
+    }
+    while (!client->isConnnected())
+    {
+
+    }
+
+    printf("connected \n");
+    fflush(stdout);
+
+//    auto m = Meta::Instance();
+
+//    auto node = new NetNode();
+
+//    Any a = SubStruct();
+//    //node->Send(a);
 
 }
 
@@ -35,17 +53,17 @@ int main(int argc, char *argv[])
 
 //int main(int argc, char *argv[])
 //{
-//    auto server = new Socket();
-//    server->SetBlockingMode(false);
-//    server->Listen(2730);
-//    server->Accept();
+////    auto server = new Socket();
+////    server->SetBlockingMode(false);
+////    server->Listen(2730);
+////    server->Accept();
 
-//    /*std::thread serverThread(serverTask);
+//    std::thread serverThread(serverTask);
 //    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 //    std::thread clientThread(clientTask);
 
 //    clientThread.join();
-//    serverThread.join();*/
+//    serverThread.join();
 
 //    printf("finish\n");
 //    fflush(stdout);

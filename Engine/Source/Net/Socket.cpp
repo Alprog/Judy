@@ -103,34 +103,44 @@ bool Socket::Connect(std::string host, int port)
     return result == NO_ERROR;
 }
 
-bool Socket::Send(std::string& message)
+int Socket::Send(const char* buffer, int length)
 {
-    const char* buffer = message.c_str();
-
-    auto length = strlen(buffer) + 1;
-
-    int totalSend = 0;
-    while (totalSend < length)
-    {
-        int count = send(handle, buffer + totalSend, length - totalSend, 0);
-        if (count < 0)
-        {
-            return false;
-        }
-        totalSend += count;
-    }
-
-    return true;
+    return send(handle, buffer, length, 0);
 }
 
-void Socket::Send(char* buffer)
+int Socket::Receive(char* buffer, int max)
 {
-    send(handle, buffer, strlen(buffer) + 1, 0);
+    return recv(handle, buffer, max, 0);
 }
 
-char* Socket::Receive()
-{
-    return nullptr;
-    //char[1024] buffer;
-    //recv(handle, buffer, max, 0);
-}
+//bool Socket::Send(std::string& message)
+//{
+//    const char* buffer = message.c_str();
+
+//    auto length = strlen(buffer) + 1;
+
+//    int totalSend = 0;
+//    while (totalSend < length)
+//    {
+//        int count = send(handle, buffer + totalSend, length - totalSend, 0);
+//        if (count < 0)
+//        {
+//            return false;
+//        }
+//        totalSend += count;
+//    }
+
+//    return true;
+//}
+
+//void Socket::Send(char* buffer)
+//{
+//    send(handle, buffer, strlen(buffer) + 1, 0);
+//}
+
+//char* Socket::Receive()
+//{
+//    return nullptr;
+//    //char[1024] buffer;
+//    //recv(handle, buffer, max, 0);
+//}
