@@ -13,7 +13,7 @@ private:
     enum class State
     {
         Disconnected,
-        Listening,
+        ClientWaiting,
         Connecting,
         Connected
     };
@@ -24,7 +24,7 @@ public:
 
     bool IsConnnected() const;
 
-    void Listen(int port);
+    void Start(int port);
     void Connect(std::string host, int port);
 
     void Send(Any& any);
@@ -34,6 +34,9 @@ private:
 
     void StartWork();
     void Work();
+
+    void ClientWaitWork();
+    void ConnectWork();
     void SendWork();
     void ReceiveWork();
     void ProcessMessages();

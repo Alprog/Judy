@@ -52,11 +52,11 @@ bool NetNode::IsConnnected() const
     return state == State::Connected;
 }
 
-void NetNode::Listen(int port)
+void NetNode::Start(int port)
 {
     this->port = port;
     socket->Listen(port);
-    this->state = State::Listening;
+    this->state = State::ClientWaiting;
     StartWork();
 }
 
@@ -75,7 +75,7 @@ void NetNode::Send(Any& any)
     lua_pcall(L, 1, 1, 0);
     std::string text = lua_tostring(L, -1);
     output.append(text);
-    output.append("\0");
+    output += '\0';
 }
 
 void NetNode::StartWork()
@@ -87,19 +87,13 @@ void NetNode::Work()
 {
     while (state != State::Disconnected)
     {
-        if (state == State::Listening)
+        if (state == State::ClientWaiting)
         {
-            if (socket->Accept())
-            {
-                state = State::Connected;
-            }
+            ClientWaitWork();
         }
         else if (state == State::Connecting)
         {
-            if (socket->Connect(host, port))
-            {
-                state = State::Connected;
-            }
+            ConnectWork();
         }
         else if (state == State::Connected)
         {
@@ -109,6 +103,34 @@ void NetNode::Work()
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
+}
+
+void NetNode::ClientWaitWork()
+{
+    auto clientSocket = socket->Accept();
+    if (clientSocket != nullptr)
+    {
+        clientSocket->SetBlockingMode(false);
+        delete socket;
+        socket = clientSocket;
+        state = State::Connected;
+    }
+}
+
+void NetNode::ConnectWork()
+{
+    if (socket->Connect(host, port))
+    {
+        state = State::Connected;
+    }
+    else
+    {
+        auto error = socket->GetLastError();
+        if (error == Socket::Error::AlreadyConnected)
+        {
+            state = State::Connected;
+        }
     }
 }
 
@@ -122,10 +144,6 @@ void NetNode::SendWork()
         while (totalSend < length)
         {
             auto count = socket->Send(buffer + totalSend, length - totalSend);
-
-            printf("send %i %i \n", count, length);
-            fflush(stdout);
-
             if (count < 0)
             {
                 break;
@@ -143,10 +161,6 @@ void NetNode::ReceiveWork()
     do
     {
         count = socket->Receive(buffer, MAX);
-
-        printf("read %i \n", count);
-        fflush(stdout);
-
         if (count > 0)
         {
             input.append(buffer, count);
@@ -157,14 +171,20 @@ void NetNode::ReceiveWork()
 
 void NetNode::ProcessMessages()
 {
-    if (input.size())
+    while (input.size())
     {
         auto index = input.find('\0');
         if (index >= 0)
         {
-            printf(input.c_str());
-            fflush(stdout);
-            //input.substr(0, index);
+            auto message = input.substr(0, index);
+
+
+
+            input.erase(0, index + 1);
+        }
+        else
+        {
+            break;
         }
     }
 }

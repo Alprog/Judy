@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     Meta::Instance();
 
     auto server = new NetNode();
-    server->Listen(2730);
+    server->Start(2730);
 
     auto client = new NetNode();
     client->Connect("127.0.0.1", 2730);

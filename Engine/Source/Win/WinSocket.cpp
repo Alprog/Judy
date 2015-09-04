@@ -1,9 +1,6 @@
 
 #include "WinSocket.h"
 
-#define ioctl ioctlsocket
-using socklen_t = int;
-
 int WinSocket::count = 0;
 
 WinSocket::WinSocket()
@@ -37,7 +34,7 @@ WinSocket::~WinSocket()
 bool WinSocket::SetBlockingMode(bool value)
 {
     auto mode = value ? 0ul : 1ul;
-    auto result = ioctl(handle, FIONBIO, &mode);
+    auto result = ioctlsocket(handle, FIONBIO, &mode);
     return result == NO_ERROR;
 }
 
@@ -65,18 +62,14 @@ void WinSocket::Listen(int port)
 
 Socket* WinSocket::Accept()
 {
-    struct sockaddr_in clientAddress;
+    sockaddr clientAddress;
     int clientSize = sizeof(clientAddress);
-
-    SOCKET clientSocket = accept(handle, (sockaddr*)&clientAddress, (socklen_t*)&clientSize);
+    SOCKET clientSocket = accept(handle, &clientAddress, &clientSize);
     if (clientSocket == INVALID_SOCKET)
     {
         return nullptr;
     }
-    else
-    {
-        return new WinSocket(clientSocket);
-    }
+    return new WinSocket(clientSocket);
 }
 
 bool WinSocket::Connect(std::string host, int port)
@@ -86,15 +79,7 @@ bool WinSocket::Connect(std::string host, int port)
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
     auto result = connect(handle, (sockaddr*)&adress, sizeof(adress));
-    if(result != NO_ERROR)
-    {
-        auto error = WSAGetLastError();
-        if (error != WSAEISCONN)
-        {
-            return false;
-        }
-    }
-    return true;
+    return result == NO_ERROR;
 }
 
 int WinSocket::Send(const char* buffer, int length)
@@ -107,16 +92,17 @@ int WinSocket::Receive(char* buffer, int max)
     return recv(handle, buffer, max, 0);
 }
 
-void WinSocket::SetLastError()
+Socket::Error WinSocket::GetLastError()
 {
     switch (WSAGetLastError())
     {
         case WSAEWOULDBLOCK:
-            error = Socket::Error::WouldBlock;
-            break;
+            return Error::WouldBlock;
+
+        case WSAEISCONN:
+            return Error::AlreadyConnected;
 
         default:
-            error = Socket::Error::Unknown;
-            break;
+            return Error::Unknown;
     }
 }

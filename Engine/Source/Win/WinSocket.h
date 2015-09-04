@@ -11,16 +11,15 @@ public:
     WinSocket(SOCKET handle);
     ~WinSocket();
 
-    bool SetBlockingMode(bool value) override;
-    void Listen(int port) override;
-    Socket* Accept() override;
-    bool Connect(std::string host, int port) override;
-    int Send(const char* buffer, int length) override;
-    int Receive(char* buffer, int max) override;
+    virtual bool SetBlockingMode(bool value) override;
+    virtual void Listen(int port) override;
+    virtual Socket* Accept() override;
+    virtual bool Connect(std::string host, int port) override;
+    virtual int Send(const char* buffer, int length) override;
+    virtual int Receive(char* buffer, int max) override;
+    virtual Error GetLastError() override;
 
 private:
-    void SetLastError();
-
     SOCKET handle;
     static int count;
 };
