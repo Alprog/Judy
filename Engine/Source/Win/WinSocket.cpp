@@ -18,6 +18,12 @@ WinSocket::WinSocket()
     handle = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 }
 
+WinSocket::WinSocket(SOCKET handle)
+    : handle{handle}
+{
+    count++;
+}
+
 WinSocket::~WinSocket()
 {
     closesocket(handle);
@@ -57,7 +63,7 @@ void WinSocket::Listen(int port)
     }
 }
 
-bool WinSocket::Accept()
+Socket* WinSocket::Accept()
 {
     struct sockaddr_in clientAddress;
     int clientSize = sizeof(clientAddress);
@@ -65,14 +71,12 @@ bool WinSocket::Accept()
     SOCKET clientSocket = accept(handle, (sockaddr*)&clientAddress, (socklen_t*)&clientSize);
     if (clientSocket == INVALID_SOCKET)
     {
-        if (WSAGetLastError() == WSAEWOULDBLOCK)
-        {
-
-        }
-        return false;
+        return nullptr;
     }
-
-    return true;
+    else
+    {
+        return new WinSocket(clientSocket);
+    }
 }
 
 bool WinSocket::Connect(std::string host, int port)
@@ -101,4 +105,18 @@ int WinSocket::Send(const char* buffer, int length)
 int WinSocket::Receive(char* buffer, int max)
 {
     return recv(handle, buffer, max, 0);
+}
+
+void WinSocket::SetLastError()
+{
+    switch (WSAGetLastError())
+    {
+        case WSAEWOULDBLOCK:
+            error = Socket::Error::WouldBlock;
+            break;
+
+        default:
+            error = Socket::Error::Unknown;
+            break;
+    }
 }
