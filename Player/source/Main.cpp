@@ -11,19 +11,19 @@ int main(int argc, char *argv[])
     Meta::Instance();
 
     auto server = new NetNode();
-    server->listen(2730);
+    server->Listen(2730);
 
     auto client = new NetNode();
-    client->connect("127.0.0.1", 2730);
+    client->Connect("127.0.0.1", 2730);
 
-    while (!server->isConnnected()) {}
-    while (!client->isConnnected()) {}
+    while (!server->IsConnnected()) {}
+    while (!client->IsConnnected()) {}
 
     Any a = SubStruct();
 
     for (int i = 0; i < 10; i++)
     {
-        server->send(a);
+        server->Send(a);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 

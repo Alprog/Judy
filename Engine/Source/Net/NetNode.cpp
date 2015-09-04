@@ -14,6 +14,7 @@ NetNode::NetNode()
     : state{State::Disconnected}
     , port{0}
     , workThread{nullptr}
+    , socket{nullptr}
 {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -23,7 +24,8 @@ NetNode::NetNode()
     luaL_dofile(L, "Serializer.lua");
     serializer = new Serializer(L);
 
-    socket.SetBlockingMode(false);
+    socket = Socket::Create();
+    socket->SetBlockingMode(false);
 }
 
 NetNode::~NetNode()
@@ -40,33 +42,33 @@ NetNode::~NetNode()
     L = nullptr;
 }
 
-NetNode::State NetNode::getState() const
+NetNode::State NetNode::GetState() const
 {
     return state;
 }
 
-bool NetNode::isConnnected() const
+bool NetNode::IsConnnected() const
 {
     return state == State::Connected;
 }
 
-void NetNode::listen(int port)
+void NetNode::Listen(int port)
 {
     this->port = port;
-    socket.Listen(port);
+    socket->Listen(port);
     this->state = State::Listening;
-    startWork();
+    StartWork();
 }
 
-void NetNode::connect(std::string host, int port)
+void NetNode::Connect(std::string host, int port)
 {
     this->host = host;
     this->port = port;
     this->state = State::Connecting;
-    startWork();
+    StartWork();
 }
 
-void NetNode::send(Any& any)
+void NetNode::Send(Any& any)
 {
     lua_getglobal(L, "TableToString");
     serializer->Serialize(any);
@@ -76,41 +78,41 @@ void NetNode::send(Any& any)
     output.append("\0");
 }
 
-void NetNode::startWork()
+void NetNode::StartWork()
 {
-    workThread = new std::thread(&NetNode::work, this);
+    workThread = new std::thread(&NetNode::Work, this);
 }
 
-void NetNode::work()
+void NetNode::Work()
 {
     while (state != State::Disconnected)
     {
         if (state == State::Listening)
         {
-            if (socket.Accept())
+            if (socket->Accept())
             {
                 state = State::Connected;
             }
         }
         else if (state == State::Connecting)
         {
-            if (socket.Connect(host, port))
+            if (socket->Connect(host, port))
             {
                 state = State::Connected;
             }
         }
         else if (state == State::Connected)
         {
-            sendWork();
-            receiveWork();
-            processMessages();
+            SendWork();
+            ReceiveWork();
+            ProcessMessages();
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 
-void NetNode::sendWork()
+void NetNode::SendWork()
 {
     auto length = output.size();
     if (length > 0)
@@ -119,7 +121,7 @@ void NetNode::sendWork()
         int totalSend = 0;
         while (totalSend < length)
         {
-            auto count = socket.Send(buffer + totalSend, length - totalSend);
+            auto count = socket->Send(buffer + totalSend, length - totalSend);
 
             printf("send %i %i \n", count, length);
             fflush(stdout);
@@ -134,13 +136,13 @@ void NetNode::sendWork()
     }
 }
 
-void NetNode::receiveWork()
+void NetNode::ReceiveWork()
 {
     char buffer[MAX];
     int count;
     do
     {
-        count = socket.Receive(buffer, MAX);
+        count = socket->Receive(buffer, MAX);
 
         printf("read %i \n", count);
         fflush(stdout);
@@ -153,7 +155,7 @@ void NetNode::receiveWork()
     while (count == MAX);
 }
 
-void NetNode::processMessages()
+void NetNode::ProcessMessages()
 {
     if (input.size())
     {

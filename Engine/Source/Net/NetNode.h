@@ -22,25 +22,25 @@ public:
     NetNode();
     ~NetNode();
 
-    bool isConnnected() const;
+    bool IsConnnected() const;
 
-    void listen(int port);
-    void connect(std::string host, int port);
+    void Listen(int port);
+    void Connect(std::string host, int port);
 
-    void send(Any& any);
+    void Send(Any& any);
 
 private:   
-    State getState() const;
+    State GetState() const;
 
-    void startWork();
-    void work();
-    void sendWork();
-    void receiveWork();
-    void processMessages();
+    void StartWork();
+    void Work();
+    void SendWork();
+    void ReceiveWork();
+    void ProcessMessages();
 
     lua_State* L;
     Serializer* serializer;
-    Socket socket;
+    Socket* socket;
     std::thread* workThread;
 
     std::atomic<State> state;

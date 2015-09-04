@@ -5,10 +5,12 @@
     #include "Win/WinApp.h"
     #include "Win/WinWindow.h"
     #include "Win/WinRenderTarget.h"
+    #include "Win/WinSocket.h"
 
     using PlatformApp = WinApp;
     using PlatformWindow = WinWindow;
     using PlatformRenderTarget = WinRenderTarget;
+    using PlatformSocket = WinSocket;
 #endif
 
 #ifdef LINUX
@@ -17,7 +19,7 @@
 
     using PlatformApp = LinuxApp;
     using PlatformWindow = LinuxWindow;
-
+    using PlatformSocket = UnixSocket;
 #endif
 
 #ifdef MAC
@@ -26,6 +28,7 @@
 
     using PlatformApp = MacApp;
     using PlatformWindow = MacWindow;
+    using PlatformSocket = UnixSocket;
 #endif
 
 

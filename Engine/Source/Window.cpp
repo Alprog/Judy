@@ -11,7 +11,7 @@
 
 Window* Window::Create()
 {
-    return (Window*)new PlatformWindow();
+    return new PlatformWindow();
 }
 
 Window::Window()

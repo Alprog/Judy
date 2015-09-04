@@ -1,13 +1,11 @@
 
 #pragma once
+
 #include "Window.h"
-
 #include "WinRenderTarget.h"
-
-
 #include <windows.h>
 
-class WinWindow : Window
+class WinWindow : public Window
 {
 public:
     WinWindow();

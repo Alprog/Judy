@@ -3,27 +3,16 @@
 
 #include <string>
 
-class Socket
+class Socket abstract
 {
 public:
-    Socket();
-    ~Socket();
+    static Socket* Create();
 
-    bool SetBlockingMode(bool value);
-
-    void Listen(int port);
-    bool Accept();
-
-    bool Connect(std::string host, int port);
-
-    int Send(const char* buffer, int length);
-    int Receive(char* buffer, int max);
-
-
-    //bool Send(std::string& message);
-    //void Send(char* buffer);
-    //char* Receive();
-
-private:
-    unsigned int handle;
+public:
+    virtual bool SetBlockingMode(bool value) = 0;
+    virtual void Listen(int port) = 0;
+    virtual bool Accept() = 0;
+    virtual bool Connect(std::string host, int port) = 0;
+    virtual int Send(const char* buffer, int length) = 0;
+    virtual int Receive(char* buffer, int max) = 0;
 };
