@@ -8,7 +8,7 @@ function TableToString( object, tab, replaceTable )
 	
 	local keys, values = {}, {}
 	for k, v in pairs(object) do
-		local pos = k == '@' and 1 or #keys + 1
+		local pos = k == 'class' and 1 or #keys + 1
 		table.insert(keys, pos, k)
 		table.insert(values, pos, v)
 	end

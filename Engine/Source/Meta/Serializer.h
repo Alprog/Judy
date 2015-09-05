@@ -17,29 +17,16 @@ class ITypeMeta;
 class Serializer
 {
 public:
-    lua_State* L;
-
-    Serializer(lua_State* L)
-    {
-        this->L = L;
-    }
+    Serializer(lua_State* L);
 
     template <typename Type>
-    void Serialize(Type object)
+    std::string Serialize(Type object)
     {
         ITypeMeta* typeMeta = TypeMetaOf<Type>();
         Serialize(object, typeMeta);
     }
 
-    void Serialize(Any object)
-    {
-        Serialize(object, object.GetType());
-    }
-
-    Any DeserializeUnknown();
-    Any DeserializeUnknownTable();
-
-    Any DeserializeAsClass(IClassMeta* classMeta);
+    std::string Serialize(Any object);
 
     template <typename Type>
     Type Deserialize()
@@ -48,7 +35,15 @@ public:
         return Deserialize(typeMeta);
     }
 
+    Any Deserialize(std::string text);
+
 private:
+    void Serialize(Any object, ITypeMeta* typeMeta);
+
+    Any DeserializeUnknown();
+    Any DeserializeUnknownTable();
+    Any DeserializeAsClass(IClassMeta* classMeta);
     Any Deserialize(ITypeMeta* const typeMeta);
-    void Serialize(Any object, ITypeMeta* const typeMeta);
+
+    lua_State* L;
 };

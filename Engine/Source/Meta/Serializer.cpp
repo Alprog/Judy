@@ -3,6 +3,19 @@
 #include "ITypeMeta.h"
 #include "Meta.h"
 
+Serializer::Serializer(lua_State* L)
+{
+    this->L = L;
+}
+
+std::string Serializer::Serialize(Any object)
+{
+    lua_getglobal(L, "TableToString");
+    Serialize(object, object.GetType());
+    lua_pcall(L, 1, 1, 0);
+    return lua_tostring(L, -1);
+}
+
 void Serializer::Serialize(Any object, ITypeMeta* type)
 {
     if (type->isPointer())
@@ -46,7 +59,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
 
         auto name = type->name + modifiers;
         lua_pushstring(L, name.c_str());
-        lua_setfield(L, -2, "@");
+        lua_setfield(L, -2, "class");
 
         if (type->isClass())
         {
@@ -61,6 +74,19 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         }
 
     }
+}
+
+Any Serializer::Deserialize(std::string text)
+{
+    text = "return " + text;
+    if (luaL_dostring(L, text.c_str()))
+    {
+        printf("%s \n", lua_tostring(L, -1));
+        fflush(stdout);
+        lua_pop(L, 1);
+        return Any::empty;
+    }
+    return DeserializeUnknown();
 }
 
 Any Serializer::DeserializeUnknown()
@@ -88,7 +114,7 @@ Any Serializer::DeserializeUnknown()
 
 Any Serializer::DeserializeUnknownTable()
 {
-    lua_getfield(L, -1, "@");
+    lua_getfield(L, -1, "class");
     auto type = lua_type(L, -1);
 
     if (type == LUA_TSTRING)
@@ -106,7 +132,6 @@ Any Serializer::DeserializeUnknownTable()
                 }
             }
         }
-
     }
 
     return Any::empty;
@@ -118,14 +143,9 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
     for (auto fieldMeta : classMeta->fields)
     {
-        printf("field: %s{ \n", fieldMeta->name);
-
         lua_getfield(L, -1, fieldMeta->name);
         Any value = Deserialize(fieldMeta->GetType());
         fieldMeta->set_local(object, value);
-
-        printf("field: %s} \n", fieldMeta->name);
-
         lua_pop(L, 1);
     }
 
@@ -134,9 +154,6 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
 Any Serializer::Deserialize(ITypeMeta* type)
 {
-    printf("DES %s\n", type->name.c_str());
-    fflush(stdout);
-
     bool isPointer = type->isPointer();
     if (isPointer)
     {
@@ -179,33 +196,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
     else if (type->isClass())
     {
         auto classMeta = static_cast<IClassMeta*>(type);
-
-        Any object = isPointer ? classMeta->CreateOnHeap() : classMeta->CreateOnStack();
-
-        while (type->isPointer())
-        {
-            type = type->GetPointeeType();
-        }
-
-        for (auto fieldMeta : classMeta->fields)
-        {
-            printf("F %s\n", fieldMeta->name);
-            fflush(stdout);
-
-            lua_getfield(L, -1, fieldMeta->name);
-            Any value = Deserialize(fieldMeta->GetType());
-            if (isPointer)
-            {
-                fieldMeta->set(object, value);
-            }
-            else
-            {
-                fieldMeta->set_local(object, value);
-            }
-            lua_pop(L, 1);
-        }
-
-        return object;
+        return DeserializeAsClass(classMeta);
     }
 
     return Any::empty;

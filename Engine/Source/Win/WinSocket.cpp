@@ -47,17 +47,8 @@ void WinSocket::Listen(int port)
 
     int size = (int)sizeof(adress);
 
-    if (bind(handle, (sockaddr*)&adress, size))
-    {
-        printf("!");
-        throw;
-    }
-
-    if (listen(handle, 2))
-    {
-        printf("@");
-        throw;
-    }
+    bind(handle, (sockaddr*)&adress, size);
+    listen(handle, 2);
 }
 
 Socket* WinSocket::Accept()

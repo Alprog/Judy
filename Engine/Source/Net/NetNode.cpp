@@ -70,10 +70,7 @@ void NetNode::Connect(std::string host, int port)
 
 void NetNode::Send(Any& any)
 {
-    lua_getglobal(L, "TableToString");
-    serializer->Serialize(any);
-    lua_pcall(L, 1, 1, 0);
-    std::string text = lua_tostring(L, -1);
+    auto text = serializer->Serialize(any);
     output.append(text);
     output += '\0';
 }
@@ -178,7 +175,10 @@ void NetNode::ProcessMessages()
         {
             auto message = input.substr(0, index);
 
+            Any obj = serializer->Deserialize(message);
 
+            printf("%s \n", obj.GetType()->name.c_str());
+            fflush(stdout);
 
             input.erase(0, index + 1);
         }
