@@ -10,6 +10,7 @@
 #include "Node.h"
 #include "Quad.h"
 #include "Renderer.h"
+#include "Window.h"
 
 void Meta::regClasses()
 {
@@ -110,5 +111,12 @@ void Meta::regClasses()
         .method("DrawQuad", &Renderer::DrawQuad)
         .method("Render", &Renderer::Render)
         .method("Clear", &Renderer::Clear)
+    ;
+
+    ClassDefiner<Window>(this, "Window")
+        .function("Create", &Window::Create)
+        .method("show", &Window::show)
+        .method("ProcessEvents", &Window::ProcessEvents)
+        .method("Render", &Window::Render)
     ;
 }

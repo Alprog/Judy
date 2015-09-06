@@ -4,7 +4,9 @@
 #include "Node.h"
 #include "RenderTarget.h"
 
-class Window
+#define __Meta__
+
+class __Meta__ Window
 {
     friend class Meta;
 
