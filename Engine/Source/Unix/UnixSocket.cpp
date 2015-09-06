@@ -5,15 +5,22 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
+#include <errno.h>
+#include <unistd.h>
 
 UnixSocket::UnixSocket()
 {
     handle = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 }
 
+UnixSocket::UnixSocket(int handle)
+    : handle{handle}
+{
+}
+
 UnixSocket::~UnixSocket()
 {
-    closesocket(handle);
+    close(handle);
 }
 
 bool UnixSocket::SetBlockingMode(bool value)
@@ -30,37 +37,20 @@ void UnixSocket::Listen(int port)
     adress.sin_addr.s_addr = INADDR_ANY;
     adress.sin_port = htons(port);
 
-    int size = (int)sizeof(adress);
-
-    if (bind(handle, (sockaddr*)&adress, size))
-    {
-        printf("!");
-        throw;
-    }
-
-    if (listen(handle, 2))
-    {
-        printf("@");
-        throw;
-    }
+    bind(handle, (sockaddr*)&adress, sizeof(adress));
+    listen(handle, 2);
 }
 
-bool UnixSocket::Accept()
+Socket* UnixSocket::Accept()
 {
     struct sockaddr_in clientAddress;
-    int clientSize = sizeof(clientAddress);
-
-    SOCKET clientSocket = accept(handle, (sockaddr*)&clientAddress, (socklen_t*)&clientSize);
-    if (clientSocket == INVALID_SOCKET)
+    auto clientSize = (socklen_t)sizeof(clientAddress);
+    auto clientSocket = accept(handle, (sockaddr*)&clientAddress, &clientSize);
+    if (clientSocket <= 0)
     {
-        if (WSAGetLastError() == WSAEWOULDBLOCK)
-        {
-
-        }
-        return false;
+        return nullptr;
     }
-
-    return true;
+    return new UnixSocket(clientSocket);
 }
 
 bool UnixSocket::Connect(std::string host, int port)
@@ -70,7 +60,7 @@ bool UnixSocket::Connect(std::string host, int port)
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
     auto result = connect(handle, (sockaddr*)&adress, sizeof(adress));
-    return true;
+    return result == 0;
 }
 
 int UnixSocket::Send(const char* buffer, int length)
@@ -82,3 +72,19 @@ int UnixSocket::Receive(char* buffer, int max)
 {
     return recv(handle, buffer, max, 0);
 }
+
+Socket::Error UnixSocket::GetLastError()
+{
+    switch (errno)
+    {
+        case EWOULDBLOCK:
+            return Error::WouldBlock;
+
+        case EISCONN:
+            return Error::AlreadyConnected;
+
+        default:
+            return Error::Unknown;
+    }
+}
+

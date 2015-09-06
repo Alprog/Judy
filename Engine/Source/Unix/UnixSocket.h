@@ -7,14 +7,16 @@ class UnixSocket : public Socket
 {
 public:
     UnixSocket();
+    UnixSocket(int handle);
     ~UnixSocket();
 
-    bool SetBlockingMode(bool value) override;
-    void Listen(int port) override;
-    bool Accept() override;
-    bool Connect(std::string host, int port) override;
-    int Send(const char* buffer, int length) override;
-    int Receive(char* buffer, int max) override;
+    virtual bool SetBlockingMode(bool value) override;
+    virtual void Listen(int port) override;
+    virtual Socket* Accept() override;
+    virtual bool Connect(std::string host, int port) override;
+    virtual int Send(const char* buffer, int length) override;
+    virtual int Receive(char* buffer, int max) override;
+    virtual Error GetLastError() override;
 
 private:
     int handle;

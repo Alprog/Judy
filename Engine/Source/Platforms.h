@@ -25,6 +25,7 @@
 #ifdef MAC
     #include "Mac/MacWindow.h"
     #include "Mac/MacApp.h"
+    #include "Unix/UnixSocket.h"
 
     using PlatformApp = MacApp;
     using PlatformWindow = MacWindow;
