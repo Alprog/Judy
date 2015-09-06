@@ -36,21 +36,26 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_pushnumber(L, object.as<float>());
     }
-    else if (type->isVector())
-    {
-        auto classMeta = static_cast<IClassMeta*>(type);
-
-        auto method = classMeta->methods["size"];
-        auto p = classMeta->MakePointer(object);
-        std::vector<Any> args = { p };
-        std::vector<int>::size_type size = method->Invoke(args);
-        printf("%i \n", size);
-
-        lua_pushnumber(L, 0);
-    }
     else if (type == TypeMetaOf<std::string>())
     {
         lua_pushstring(L, object.as<std::string>().c_str());
+    }
+    else if (type->isVector())
+    {
+        lua_newtable(L);
+
+        auto classMeta = static_cast<IClassMeta*>(type);
+        auto pointer = classMeta->MakePointer(object);
+        auto method = classMeta->methods["size"];
+
+        size_t size = method->Invoke(pointer);
+        method = classMeta->methods["at"];
+        for (size_t i = 0; i < size; i++)
+        {
+            Any value = method->Invoke(pointer, i);
+            Serialize(value, value.GetType());
+            lua_seti(L, -2, i + 1);
+        }
     }
     else
     {
@@ -146,6 +151,13 @@ Any Serializer::DeserializeUnknownTable()
     return Any::empty;
 }
 
+Any Serializer::DeserializeAsVector(IClassMeta* vectorMeta)
+{
+    auto object = vectorMeta->CreateOnStack();
+
+    return object;
+}
+
 Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 {
     auto object = classMeta->CreateOnStack();
@@ -194,14 +206,14 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return (float)lua_tonumber(L, -1);
     }
-    else if (type->isVector())
-    {
-        lua_tointeger(L, -1);
-        return std::vector<int>();
-    }
     else if (type == TypeMetaOf<std::string>())
     {
         return std::string( lua_tostring(L, -1) );
+    }
+    else if (type->isVector())
+    {
+        auto classMeta = static_cast<IClassMeta*>(type);
+        return DeserializeAsVector(classMeta);
     }
     else if (type->isClass())
     {

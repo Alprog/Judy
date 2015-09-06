@@ -106,7 +106,7 @@ void LuaBinder::Bind(Meta* meta)
 
     auto size = sizeof(void*);
 
-    for (auto& constructor : type->constructors)
+    for (auto constructor : type->constructors)
     {
         int argCount = constructor->GetArgCount();
         *(IFunctionMeta**)lua_newuserdata(L, size) = constructor;

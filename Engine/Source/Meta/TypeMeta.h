@@ -49,8 +49,7 @@ private:
     template <typename T>
     inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
     {
-        std::vector<Any> args;
-        return IClassMeta::constructors[0]->Invoke(args);
+        return IClassMeta::constructors[0]->Invoke();
     }
 
     //---------------------------------------------------------------------------------

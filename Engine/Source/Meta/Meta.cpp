@@ -15,6 +15,7 @@ void Meta::regVector()
     auto at = static_cast<VT::reference (VT::*)(VT::size_type)>(&VT::at);
 
     ClassDefiner<VT>(this, name.c_str())
+        .constructor()
         .method("size", &VT::size)
         .method("at", at)
     ;

@@ -30,7 +30,6 @@ public:
     template <int... I>
     inline ReturnType RealInvoke(void* object, std::vector<Any>& args, index_sequence<I...>)
     {
-        std::vector<Any> vv = { args.at(I)... };
         return ((ClassType*)object->*pointer)(args.at(I)...);
     }
 
@@ -58,7 +57,6 @@ public:
     template <size_t... I>
     inline void RealInvoke(void*& object, std::vector<Any>& args, index_sequence<I...>)
     {
-        std::vector<Any> vv = { args.at(I)... };
         ((ClassType*)object->*pointer)(args.at(I)...);
     }
 

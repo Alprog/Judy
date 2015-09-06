@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     Any a = SubStruct();
     a.as<SubStruct>().arr = std::vector<int> { 3, 4, 5 };
     auto text = node->serializer->Serialize(a);
+    auto des = node->serializer->Deserialize(text);
+    text = node->serializer->Serialize(des);
 
     printf("%s \n", text.c_str());
     fflush(stdout);
