@@ -12,11 +12,21 @@ window.scene = q
 local v = Vector2(3, 3)
 print(v.x)]]
 
---local n = Node.constructor0();
+local n = Node.constructor0();
 
 
-print(Node);
-local n = Node.constructor0()
+local app = App.Instance();
+local window = Window.Create();
+
+print(getmetatable(app));
+
+--app.AddWindow(window);
+
+print(window);
+
+--    Window* window = Window::Create();
+--    App::Instance()->AddWindow(window);
+--   App::Instance()->StartMainLoop();
 
 --local node = Node.constructor0()
 

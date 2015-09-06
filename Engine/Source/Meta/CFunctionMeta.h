@@ -10,13 +10,13 @@ class CFunctionMeta : public FunctionMeta<ReturnType, ArgTypes...>
 {
 public:
     template <int... I>
-    inline ReturnType RealInvoke(SELECT_IF(ReturnType, Void, int, std::vector<Any>&) args, index_sequence<I...>)
+    inline Any RealInvoke(SELECT_IF(ReturnType, Void, int, std::vector<Any>&) args, index_sequence<I...>)
     {
         return pointer(args.at(I)...);
     }
 
     template <int... I>
-    inline ReturnType RealInvoke(SELECT_IF(ReturnType, Void, std::vector<Any>&, int) args, index_sequence<I...>)
+    inline Any RealInvoke(SELECT_IF(ReturnType, Void, std::vector<Any>&, int) args, index_sequence<I...>)
     {
         pointer(args.at(I)...);
         return Any::empty;

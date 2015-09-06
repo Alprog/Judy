@@ -8,8 +8,6 @@
 #include "ConstructorMeta.h"
 #include "ITypeMeta.h"
 
-#include "App.h"
-
 extern "C"
 {
     #include "lua.h"
@@ -114,28 +112,26 @@ void LuaBinder::Bind(Meta* meta)
 void LuaBinder::BindClass(IClassMeta* classMeta)
 {
     auto className = classMeta->name.c_str();
+
     luaL_newmetatable(L, className); // (1)
-
-    printf("%s %i \n", classMeta->name.c_str(), lua_gettop(L));
-    fflush(stdout);
-
-    auto size = sizeof(void*);
 
     for (auto constructor : classMeta->constructors)
     {
         int argCount = constructor->GetArgCount();
-        *(IFunctionMeta**)lua_newuserdata(L, size) = constructor;
-        lua_pushcclosure(L, FunctionInvoker, 1);
-        std::string text = "constructor" + std::to_string(argCount);
-        lua_setfield(L, -2, text.c_str());
+        std::string name = "constructor" + std::to_string(argCount);
+        BindFunctionHelper(constructor, name);
     }
 
     for (auto& pair : classMeta->methods)
     {
         auto method = pair.second;
-        *(IFunctionMeta**)lua_newuserdata(L, size) = method;
-        lua_pushcclosure(L, FunctionInvoker, 1);
-        lua_setfield(L, -2, method->name.c_str());
+        BindFunctionHelper(method, method->name);
+    }
+
+    for (auto& pair : classMeta->functions)
+    {
+        auto function = pair.second;
+        BindFunctionHelper(function, function->name);
     }
 
     // fields
@@ -156,4 +152,11 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     lua_setfield(L, -2, "__index");
 
     lua_setglobal(L, className);
+}
+
+void LuaBinder::BindFunctionHelper(IFunctionMeta* function, std::string name)
+{
+    *(IFunctionMeta**)lua_newuserdata(L, sizeof(void*)) = function;
+    lua_pushcclosure(L, FunctionInvoker, 1);
+    lua_setfield(L, -2, name.c_str());
 }
