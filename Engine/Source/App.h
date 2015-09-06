@@ -14,6 +14,7 @@ struct __Meta__ SubStruct
     friend class Meta;
 
     int e;
+    std::vector<int> arr;
 
     SubStruct()
         : e { 7 }

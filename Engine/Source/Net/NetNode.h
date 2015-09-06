@@ -29,7 +29,7 @@ public:
 
     void Send(Any& any);
 
-private:   
+public:
     State GetState() const;
 
     void StartWork();

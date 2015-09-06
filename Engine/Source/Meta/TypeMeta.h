@@ -29,7 +29,7 @@ class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassT
 public:
     virtual bool isPointer() override { return is<ClassType>::Pointer; }
     virtual bool isClass() override { return is<ClassType>::Class; }
-    virtual bool isVector() override { return false; }
+    virtual bool isVector() override { return is<ClassType>::Vector; }
 
     virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
@@ -49,8 +49,7 @@ private:
     template <typename T>
     inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
     {
-        std::vector<Any> args;
-        return IClassMeta::constructors[0]->Invoke(args);
+        return IClassMeta::constructors[0]->Invoke();
     }
 
     //---------------------------------------------------------------------------------

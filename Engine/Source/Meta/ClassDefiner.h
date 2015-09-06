@@ -35,7 +35,7 @@ public:
     ClassDefiner& field(char* name, FieldType ClassType::*pointer)
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
-        classMeta->fields.push_back(field);
+        classMeta->fields[name] = field;
         return *this;
     }
 
@@ -45,7 +45,7 @@ public:
         auto method = new MethodMeta<ClassType, ReturnType, ArgTypes...>();
         method->name = name;
         method->pointer = pointer;
-        classMeta->methods.push_back(method);
+        classMeta->methods[name] = method;
         return *this;
     }
 
@@ -54,6 +54,13 @@ public:
     {
         auto nonconstpointer = reinterpret_cast<ReturnType(ClassType::*)(ArgTypes...)>(pointer);
         return method(name, nonconstpointer);
+    }
+
+    template <typename T>
+    ClassDefiner& valueType()
+    {
+        classMeta->valueType = TypeMetaOf<T>();
+        return *this;
     }
 };
 

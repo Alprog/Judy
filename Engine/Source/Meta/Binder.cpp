@@ -115,11 +115,12 @@ void LuaBinder::Bind(Meta* meta)
         lua_setfield(L, 1, text.c_str());
     }
 
-    for (auto method : type->methods)
+    for (auto& pair : type->methods)
     {
+        auto method = pair.second;
         *(IFunctionMeta**)lua_newuserdata(L, size) = method;
         lua_pushcclosure(L, FunctionInvoker, 1);
-        lua_setfield(L, 1, method->name);
+        lua_setfield(L, 1, method->name.c_str());
     }
 
     // fields

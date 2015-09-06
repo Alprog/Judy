@@ -18,7 +18,7 @@ public:
     virtual void set(Any& object, Any& value) = 0;
     virtual void* get(void* object) = 0;
     virtual ITypeMeta* const GetType() = 0;
-    char* name;
+    std::string name;
 };
 
 template <typename ClassType, typename FieldType>

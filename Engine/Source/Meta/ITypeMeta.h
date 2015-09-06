@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <map>
 #include <vector>
 #include <string>
 
@@ -29,8 +30,12 @@ public:
 
 class IClassMeta : public ITypeMeta
 {
+protected:
+    IClassMeta();
+
 public:
+    ITypeMeta* valueType;
     std::vector<IConstructorMeta*> constructors;
-    std::vector<IFieldMeta*> fields;
-    std::vector<IMethodMeta*> methods;
+    std::map<std::string, IFieldMeta*> fields;
+    std::map<std::string, IMethodMeta*> methods;
 };

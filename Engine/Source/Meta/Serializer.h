@@ -42,6 +42,7 @@ private:
 
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();
+    Any DeserializeAsVector(IClassMeta* vectorMeta);
     Any DeserializeAsClass(IClassMeta* classMeta);
     Any Deserialize(ITypeMeta* const typeMeta);
 

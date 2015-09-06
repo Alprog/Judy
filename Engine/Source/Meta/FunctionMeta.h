@@ -3,16 +3,24 @@
 
 #include "ITypeMeta.h"
 #include "Meta.h"
+#include "Any.h"
 
 class IFunctionMeta
 {
 public:
-    char* name;
+    std::string name;
     virtual ITypeMeta* GetReturnType() = 0;
     virtual size_t GetArgCount() = 0;
     virtual std::vector<ITypeMeta*> GetArgTypes() = 0;
 
     virtual Any Invoke(std::vector<Any>& args) = 0;
+
+    template <typename... ArgTypes>
+    inline Any Invoke(ArgTypes... args)
+    {
+        std::vector<Any> vector{args...};
+        return Invoke(vector);
+    }
 };
 
 template <typename ReturnType, typename... ArgTypes>

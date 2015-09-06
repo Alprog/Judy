@@ -36,13 +36,26 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_pushnumber(L, object.as<float>());
     }
-    else if (type->isVector())
-    {
-        return lua_pushnumber(L, 0);
-    }
     else if (type == TypeMetaOf<std::string>())
     {
         lua_pushstring(L, object.as<std::string>().c_str());
+    }
+    else if (type->isVector())
+    {
+        lua_newtable(L);
+
+        auto classMeta = static_cast<IClassMeta*>(type);
+        auto pointer = classMeta->MakePointer(object);
+        auto method = classMeta->methods["size"];
+
+        size_t size = method->Invoke(pointer);
+        method = classMeta->methods["at"];
+        for (size_t i = 0; i < size; i++)
+        {
+            Any value = method->Invoke(pointer, i);
+            Serialize(value, value.GetType());
+            lua_seti(L, -2, i + 1);
+        }
     }
     else
     {
@@ -64,12 +77,13 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         if (type->isClass())
         {
             auto classMeta = static_cast<IClassMeta*>(type);
-            for (auto field : classMeta->fields)
+            for (auto& pair : classMeta->fields)
             {
+                auto field = pair.second;
                 Any value = field->get_local(object);
                 auto fieldType = field->GetType();
                 Serialize(value, fieldType);
-                lua_setfield(L, -2, field->name);
+                lua_setfield(L, -2, field->name.c_str());
             }
         }
 
@@ -137,13 +151,31 @@ Any Serializer::DeserializeUnknownTable()
     return Any::empty;
 }
 
+Any Serializer::DeserializeAsVector(IClassMeta* vectorMeta)
+{
+    auto object = vectorMeta->CreateOnStack();
+    auto pointer = vectorMeta->MakePointer(object);
+    auto method = vectorMeta->methods["push_back"];
+
+    lua_pushnil(L);
+    while (lua_next(L, -2) != 0)
+    {
+        auto value = Deserialize(vectorMeta->valueType);
+        method->Invoke(pointer, value);
+        lua_pop(L, 1);
+    }
+
+    return object;
+}
+
 Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 {
     auto object = classMeta->CreateOnStack();
 
-    for (auto fieldMeta : classMeta->fields)
+    for (auto& pair : classMeta->fields)
     {
-        lua_getfield(L, -1, fieldMeta->name);
+        auto fieldMeta = pair.second;
+        lua_getfield(L, -1, fieldMeta->name.c_str());
         Any value = Deserialize(fieldMeta->GetType());
         fieldMeta->set_local(object, value);
         lua_pop(L, 1);
@@ -184,14 +216,14 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return (float)lua_tonumber(L, -1);
     }
-    else if (type->isVector())
-    {
-        lua_tointeger(L, -1);
-        return std::vector<int>();
-    }
     else if (type == TypeMetaOf<std::string>())
     {
         return std::string( lua_tostring(L, -1) );
+    }
+    else if (type->isVector())
+    {
+        auto classMeta = static_cast<IClassMeta*>(type);
+        return DeserializeAsVector(classMeta);
     }
     else if (type->isClass())
     {
