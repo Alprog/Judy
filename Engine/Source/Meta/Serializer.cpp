@@ -38,7 +38,19 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     }
     else if (type->isVector())
     {
-        return lua_pushnumber(L, 0);
+        auto classMeta = static_cast<IClassMeta*>(type);
+        for (auto& method : classMeta->methods)
+        {
+            if (method->name == "size")
+            {
+                auto p = classMeta->MakePointer(object);
+                std::vector<Any> args = { p };
+                std::vector<int>::size_type size = method->Invoke(args);
+                printf("%i \n", size);
+            }
+        }
+
+        lua_pushnumber(L, 0);
     }
     else if (type == TypeMetaOf<std::string>())
     {
@@ -69,7 +81,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
                 Any value = field->get_local(object);
                 auto fieldType = field->GetType();
                 Serialize(value, fieldType);
-                lua_setfield(L, -2, field->name);
+                lua_setfield(L, -2, field->name.c_str());
             }
         }
 
@@ -143,7 +155,7 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
     for (auto fieldMeta : classMeta->fields)
     {
-        lua_getfield(L, -1, fieldMeta->name);
+        lua_getfield(L, -1, fieldMeta->name.c_str());
         Any value = Deserialize(fieldMeta->GetType());
         fieldMeta->set_local(object, value);
         lua_pop(L, 1);

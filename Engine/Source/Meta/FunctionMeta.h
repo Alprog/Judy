@@ -7,7 +7,7 @@
 class IFunctionMeta
 {
 public:
-    char* name;
+    std::string name;
     virtual ITypeMeta* GetReturnType() = 0;
     virtual size_t GetArgCount() = 0;
     virtual std::vector<ITypeMeta*> GetArgTypes() = 0;

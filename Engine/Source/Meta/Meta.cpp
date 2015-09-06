@@ -2,6 +2,18 @@
 #include "Meta.h"
 #include "TypeMeta.h"
 
+#include "ClassDefiner.h"
+
+template <typename T>
+void Meta::regVector()
+{
+    auto name = TypeMetaOf<T>()->name;
+    name = "vector<" + name + ">";
+    ClassDefiner<std::vector<T>>(this, name.c_str())
+        .method("size", &std::vector<T>::size)
+    ;
+}
+
 Meta::Meta()
 {
     DefineBuildInType<bool>("bool");
@@ -9,6 +21,8 @@ Meta::Meta()
     DefineBuildInType<float>("float");
     DefineBuildInType<std::string>("string");
     DefineBuildInType<char>("char");
+
+    regVector<int>();
 
     regClasses();
 }

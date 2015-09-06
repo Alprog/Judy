@@ -19,6 +19,9 @@ class Meta : public Singleton<Meta>
 private:
     Meta();
 
+    template <typename T>
+    void regVector();
+
     void regClasses();
     #include "Meta.gen.h"
 

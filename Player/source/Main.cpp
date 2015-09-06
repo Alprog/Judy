@@ -5,30 +5,40 @@
 
 #include "Net/NetNode.h"
 #include "Net/Socket.h"
+#include "Meta/Serializer.h"
+
+class lua_State;
 
 int main(int argc, char *argv[])
 {
     Meta::Instance();
 
-    auto server = new NetNode();
-    server->Start(2730);
-
-    auto client = new NetNode();
-    client->Connect("127.0.0.1", 2730);
-
-    while (!server->IsConnnected()) {}
-    while (!client->IsConnnected()) {}
+    auto node = new NetNode();
 
     Any a = SubStruct();
+    auto text = node->serializer->Serialize(a);
 
-    for (int i = 0; i < 10; i++)
-    {
-        server->Send(a);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
-
-    printf("connected \n");
+    printf("%s \n", text.c_str());
     fflush(stdout);
+
+//    auto server = new NetNode();
+//    server->Start(2730);
+
+//    auto client = new NetNode();
+//    client->Connect("127.0.0.1", 2730);
+
+//    while (!server->IsConnnected()) {}
+//    while (!client->IsConnnected()) {}
+
+//    Any a = SubStruct();
+
+//    for (int i = 0; i < 10; i++)
+//    {
+//        server->Send(a);
+//        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//    }
+
+//    fflush(stdout);
 
 //    auto m = Meta::Instance();
 

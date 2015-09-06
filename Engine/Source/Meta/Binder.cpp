@@ -119,7 +119,7 @@ void LuaBinder::Bind(Meta* meta)
     {
         *(IFunctionMeta**)lua_newuserdata(L, size) = method;
         lua_pushcclosure(L, FunctionInvoker, 1);
-        lua_setfield(L, 1, method->name);
+        lua_setfield(L, 1, method->name.c_str());
     }
 
     // fields
