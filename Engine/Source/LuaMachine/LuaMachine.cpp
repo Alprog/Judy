@@ -23,7 +23,7 @@ LuaMachine::LuaMachine()
     lua_getglobal(L, "package");
     lua_pushstring(L, "?.lua");
     lua_setfield(L, -2, "path");
-
+    lua_pop(L, 1);
     LuaBinder(L).Bind(Meta::Instance());
 }
 
