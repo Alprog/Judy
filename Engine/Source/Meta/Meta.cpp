@@ -13,11 +13,14 @@ void Meta::regVector()
     name = "vector<" + name + ">";
 
     auto at = static_cast<VT::reference (VT::*)(VT::size_type)>(&VT::at);
+    auto push_back = static_cast<void (VT::*)(const VT::value_type&)>(&VT::push_back);
 
     ClassDefiner<VT>(this, name.c_str())
+        .valueType<T>()
         .constructor()
         .method("size", &VT::size)
         .method("at", at)
+        .method("push_back", push_back)
     ;
 }
 

@@ -55,6 +55,13 @@ public:
         auto nonconstpointer = reinterpret_cast<ReturnType(ClassType::*)(ArgTypes...)>(pointer);
         return method(name, nonconstpointer);
     }
+
+    template <typename T>
+    ClassDefiner& valueType()
+    {
+        classMeta->valueType = TypeMetaOf<T>();
+        return *this;
+    }
 };
 
 #include "ClassDefiner.tpp"

@@ -30,7 +30,11 @@ public:
 
 class IClassMeta : public ITypeMeta
 {
+protected:
+    IClassMeta();
+
 public:
+    ITypeMeta* valueType;
     std::vector<IConstructorMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;
     std::map<std::string, IMethodMeta*> methods;

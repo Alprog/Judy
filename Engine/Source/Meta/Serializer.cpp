@@ -154,6 +154,16 @@ Any Serializer::DeserializeUnknownTable()
 Any Serializer::DeserializeAsVector(IClassMeta* vectorMeta)
 {
     auto object = vectorMeta->CreateOnStack();
+    auto pointer = vectorMeta->MakePointer(object);
+    auto method = vectorMeta->methods["push_back"];
+
+    lua_pushnil(L);
+    while (lua_next(L, -2) != 0)
+    {
+        auto value = Deserialize(vectorMeta->valueType);
+        method->Invoke(pointer, value);
+        lua_pop(L, 1);
+    }
 
     return object;
 }
