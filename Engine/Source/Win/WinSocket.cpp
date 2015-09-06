@@ -45,9 +45,7 @@ void WinSocket::Listen(int port)
     adress.sin_addr.s_addr = INADDR_ANY;
     adress.sin_port = htons(port);
 
-    int size = (int)sizeof(adress);
-
-    bind(handle, (sockaddr*)&adress, size);
+    bind(handle, (sockaddr*)&adress, sizeof(adress));
     listen(handle, 2);
 }
 
