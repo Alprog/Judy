@@ -39,16 +39,12 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     else if (type->isVector())
     {
         auto classMeta = static_cast<IClassMeta*>(type);
-        for (auto& method : classMeta->methods)
-        {
-            if (method->name == "size")
-            {
-                auto p = classMeta->MakePointer(object);
-                std::vector<Any> args = { p };
-                std::vector<int>::size_type size = method->Invoke(args);
-                printf("%i \n", size);
-            }
-        }
+
+        auto method = classMeta->methods["size"];
+        auto p = classMeta->MakePointer(object);
+        std::vector<Any> args = { p };
+        std::vector<int>::size_type size = method->Invoke(args);
+        printf("%i \n", size);
 
         lua_pushnumber(L, 0);
     }
@@ -76,8 +72,9 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         if (type->isClass())
         {
             auto classMeta = static_cast<IClassMeta*>(type);
-            for (auto field : classMeta->fields)
+            for (auto& pair : classMeta->fields)
             {
+                auto field = pair.second;
                 Any value = field->get_local(object);
                 auto fieldType = field->GetType();
                 Serialize(value, fieldType);
@@ -153,8 +150,9 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 {
     auto object = classMeta->CreateOnStack();
 
-    for (auto fieldMeta : classMeta->fields)
+    for (auto& pair : classMeta->fields)
     {
+        auto fieldMeta = pair.second;
         lua_getfield(L, -1, fieldMeta->name.c_str());
         Any value = Deserialize(fieldMeta->GetType());
         fieldMeta->set_local(object, value);

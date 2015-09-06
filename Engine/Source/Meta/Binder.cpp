@@ -106,7 +106,7 @@ void LuaBinder::Bind(Meta* meta)
 
     auto size = sizeof(void*);
 
-    for (auto constructor : type->constructors)
+    for (auto& constructor : type->constructors)
     {
         int argCount = constructor->GetArgCount();
         *(IFunctionMeta**)lua_newuserdata(L, size) = constructor;
@@ -115,8 +115,9 @@ void LuaBinder::Bind(Meta* meta)
         lua_setfield(L, 1, text.c_str());
     }
 
-    for (auto method : type->methods)
+    for (auto& pair : type->methods)
     {
+        auto method = pair.second;
         *(IFunctionMeta**)lua_newuserdata(L, size) = method;
         lua_pushcclosure(L, FunctionInvoker, 1);
         lua_setfield(L, 1, method->name.c_str());
