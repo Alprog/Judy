@@ -110,9 +110,10 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
 
     for (auto& method : classInfo.methods)
     {
-        if (!method.isOperator && !method.isStatic)
+        if (!method.isOperator)
         {
-            stream << tab2 << ".method(\"" << method.name << "\", &" <<
+            auto type = method.isStatic ? "function" : "method";
+            stream << tab2 << "." << type << "(\"" << method.name << "\", &" <<
                 classInfo.name << "::" << method.name << ")" << std::endl;
         }
     }

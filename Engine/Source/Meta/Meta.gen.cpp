@@ -70,6 +70,7 @@ void Meta::regClasses()
     ;
 
     ClassDefiner<App>(this, "App")
+        .function("Instance", &App::Instance)
         .method("StartMainLoop", &App::StartMainLoop)
         .method("AddWindow", &App::AddWindow)
         .method("RemoveWindow", &App::RemoveWindow)

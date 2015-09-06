@@ -6,6 +6,7 @@
 #include "FieldMeta.h"
 #include "MethodMeta.h"
 #include "ConstructorMeta.h"
+#include "CFunctionMeta.h"
 
 template <typename ClassType>
 class ClassDefiner
@@ -54,6 +55,16 @@ public:
     {
         auto nonconstpointer = reinterpret_cast<ReturnType(ClassType::*)(ArgTypes...)>(pointer);
         return method(name, nonconstpointer);
+    }
+
+    template <typename ReturnType, typename... ArgTypes>
+    ClassDefiner& function(char* name, ReturnType(*pointer)(ArgTypes...))
+    {
+        auto function = new CFunctionMeta<ReturnType, ArgTypes...>();
+        function->name = name;
+        function->pointer = pointer;
+        classMeta->functions[name] = function;
+        return *this;
     }
 
     template <typename T>

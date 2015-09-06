@@ -37,4 +37,5 @@ public:
     std::vector<IFunctionMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;
     std::map<std::string, IFunctionMeta*> methods;
+    std::map<std::string, IFunctionMeta*> functions;
 };
