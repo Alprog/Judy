@@ -19,6 +19,7 @@ struct MethodInfo : public MemberInfo
 
     bool isConst;
     bool isOverride;
+    bool isPure;
 
 private:
     void processOperator(TokenGroup& tokens);

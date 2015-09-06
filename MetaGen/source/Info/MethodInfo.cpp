@@ -10,6 +10,7 @@ MethodInfo::MethodInfo(TokenGroup& tokens)
     , isOperator {false}
     , isConst {false}
     , isOverride {false}
+    , isPure {false}
 {
     attributes = tokens.extractAttributes();
 
@@ -73,7 +74,8 @@ void MethodInfo::processSpecifiers(TokenGroup& tokens)
         MemberInfo::processSpecifiers(arr[1],
         {
             { "override", &isOverride },
-            { "const", &isConst }
+            { "const", &isConst },
+            { "0", &isPure }
         });
     }
 

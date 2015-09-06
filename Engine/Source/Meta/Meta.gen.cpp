@@ -109,7 +109,5 @@ void Meta::regClasses()
         .method("DrawQuad", &Renderer::DrawQuad)
         .method("Render", &Renderer::Render)
         .method("Clear", &Renderer::Clear)
-        //.field("string", &Renderer::string)
-        //.field("textures", &Renderer::textures)
     ;
 }

@@ -102,7 +102,7 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
         }
         else if (statement.isClass())
         {
-            printf("Nested CLASS\n");
+            //printf("Nested CLASS\n");
         }
         else
         {

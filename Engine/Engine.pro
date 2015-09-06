@@ -50,7 +50,8 @@ HEADERS += \
     Source/Net/Socket.h \
     Source/DeepPointer.h \
     Source/Meta/Meta.gen.h \
-    Source/Net/RemotePlayer.h
+    Source/Net/RemotePlayer.h \
+    Source/Meta/CFunctionMeta.h
 
 SOURCES += \
     Source/App.cpp \
@@ -87,7 +88,8 @@ SOURCES += \
     Source/Net/Socket.cpp \
     Source/DeepPointer.cpp \
     Source/Meta/Meta.gen.cpp \
-    Source/Net/RemotePlayer.cpp
+    Source/Net/RemotePlayer.cpp \
+    Source/Meta/CFunctionMeta.cpp
 
 win {
     INCLUDEPATH += Source/Windows
