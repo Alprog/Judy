@@ -7,10 +7,16 @@
 template <typename T>
 void Meta::regVector()
 {
+    using VT = std::vector<T>;
+
     auto name = TypeMetaOf<T>()->name;
     name = "vector<" + name + ">";
-    ClassDefiner<std::vector<T>>(this, name.c_str())
-        .method("size", &std::vector<T>::size)
+
+    auto at = static_cast<VT::reference (VT::*)(VT::size_type)>(&VT::at);
+
+    ClassDefiner<VT>(this, name.c_str())
+        .method("size", &VT::size)
+        .method("at", at)
     ;
 }
 

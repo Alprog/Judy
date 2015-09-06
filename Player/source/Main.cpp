@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     auto node = new NetNode();
 
     Any a = SubStruct();
+    a.as<SubStruct>().arr = std::vector<int> { 3, 4, 5 };
     auto text = node->serializer->Serialize(a);
 
     printf("%s \n", text.c_str());
