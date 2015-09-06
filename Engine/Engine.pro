@@ -51,7 +51,8 @@ HEADERS += \
     Source/DeepPointer.h \
     Source/Meta/Meta.gen.h \
     Source/Net/RemotePlayer.h \
-    Source/Meta/CFunctionMeta.h
+    Source/Meta/CFunctionMeta.h \
+    Source/Meta/select_if.h
 
 SOURCES += \
     Source/App.cpp \

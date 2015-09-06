@@ -1,6 +1,7 @@
 
 #pragma once
 #include <type_traits>
+#include "select_if.h"
 #include <vector>
 
 template <typename T>
@@ -49,8 +50,9 @@ struct is
     enum { PointerToVoid = std::is_same<T, void*>::value };
     enum { PointerToAbstract = std::is_abstract<typename std::remove_pointer<T>::type>::value };
     enum { AllowDereferencing = (RealPointer && !PointerToAbstract && !PointerToVoid) || DeepPointer };
-
 };
 
 #define IF(T, C) typename std::enable_if<is<T>::C>::type
 #define IF_NOT(T, C) typename std::enable_if<!is<T>::C>::type
+
+#define SELECT_IF(T, C, T1, T2) typename select_if<is<T>::C, T1, T2>::type
