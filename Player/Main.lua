@@ -12,13 +12,13 @@ window.scene = q
 local v = Vector2(3, 3)
 print(v.x)]]
 
-require "Serializer"
+--local n = Node.constructor0();
 
-print("!!!")
 
-function Test(table)
-	print(TableToString(table))
-end
+print(Node);
+local n = Node.constructor0()
+
+--local node = Node.constructor0()
 
 --[[local index = function(udata, key)
 	local metatable = getmetatable(udata)

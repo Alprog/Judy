@@ -13,23 +13,37 @@ extern "C"
 }
 
 LuaMachine::LuaMachine()
-    : L(nullptr)
-    , executionThread(nullptr)
+    : L{nullptr}
+    , isStarted{false}
 {
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    // search path for required scipts
+    lua_getglobal(L, "package");
+    lua_pushstring(L, "?.lua");
+    lua_setfield(L, -2, "path");
+
+    LuaBinder(L).Bind(Meta::Instance());
 }
 
 LuaMachine::~LuaMachine()
 {
+    if (L != nullptr)
+    {
+        lua_close(L);
+        L = nullptr;
+    }
 }
 
 bool LuaMachine::IsStarted() const
 {
-    return L != nullptr;
+    return isStarted;
 }
 
 bool LuaMachine::IsBreaked() const
 {
-    return L != nullptr && suspended;
+    return isStarted && suspended;
 }
 
 void hook(lua_State *L, lua_Debug *ar)
@@ -52,45 +66,25 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
     }
 }
 
-void LuaMachine::Start(std::string scriptName, bool thread)
+void LuaMachine::EnableDebug()
 {
-    Stop();
-
-    L = luaL_newstate();
-    luaL_openlibs(L);
-
-    // search path for required scipts
-    lua_getglobal(L, "package");
-    lua_pushstring(L, "?.lua");
-    lua_setfield(L, -2, "path");
-
-    LuaBinder(L).Bind(Meta::Instance());
-
     int mask = LUA_MASKLINE;
     lua_sethook(L, hook, mask, 0);
-
-    if (thread)
-    {
-        executionThread = new std::thread(&LuaMachine::Execution, this, scriptName);
-    }
-    else
-    {
-        Execution(scriptName);
-    }
-
 }
 
-void LuaMachine::Execution(std::string scriptName)
+void LuaMachine::Start(std::string scriptName)
 {
+    isStarted = true;
+
     if (luaL_dofile(L, scriptName.c_str()))
     {
+        isStarted = false;
         std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
         std::cerr << lua_tostring(L, -1) << std::endl;
         lua_pop(L, 1);
     }
 
     printf("completed\n");
-    Stop();
 }
 
 void LuaMachine::Continue()
@@ -98,11 +92,16 @@ void LuaMachine::Continue()
     suspended = false;
 }
 
+void stopHook(lua_State *L, lua_Debug *ar)
+{
+    luaL_error(L, "Stop execution");
+}
+
 void LuaMachine::Stop()
 {
-    if (L != nullptr)
+    if (isStarted)
     {
-        lua_close(L);
-        L = nullptr;
+        suspended = false;
+        lua_sethook(L, stopHook, LUA_MASKCOUNT, 1);
     }
 }

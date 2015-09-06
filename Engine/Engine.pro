@@ -49,7 +49,8 @@ HEADERS += \
     Source/Net/NetNode.h \
     Source/Net/Socket.h \
     Source/DeepPointer.h \
-    Source/Meta/Meta.gen.h
+    Source/Meta/Meta.gen.h \
+    Source/Net/RemotePlayer.h
 
 SOURCES += \
     Source/App.cpp \
@@ -85,7 +86,8 @@ SOURCES += \
     Source/Net/NetNode.cpp \
     Source/Net/Socket.cpp \
     Source/DeepPointer.cpp \
-    Source/Meta/Meta.gen.cpp
+    Source/Meta/Meta.gen.cpp \
+    Source/Net/RemotePlayer.cpp
 
 win {
     INCLUDEPATH += Source/Windows

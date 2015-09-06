@@ -1,7 +1,7 @@
 
 #include "Serializer.h"
-#include "ITypeMeta.h"
-#include "Meta.h"
+#include "FieldMeta.h"
+#include "MethodMeta.h"
 
 Serializer::Serializer(lua_State* L)
 {

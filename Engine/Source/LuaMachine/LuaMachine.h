@@ -24,19 +24,19 @@ public:
    bool IsStarted() const;
    bool IsBreaked() const;
 
-   void Start(std::string scriptName, bool thread = true);
+   void EnableDebug();
+   void Start(std::string scriptName);
    void Continue();
    void Stop();
 
 private:
    void Hook(lua_State *L, lua_Debug *ar);
-   void Execution(std::string scriptName);
 
 public:
     Breakpoints Breakpoints;
 
 private:
    lua_State* L;
-   std::thread* executionThread;
+   bool isStarted;
    std::atomic_bool	suspended;
 };

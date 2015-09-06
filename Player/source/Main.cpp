@@ -1,145 +1,19 @@
 
 #include "LuaMachine/LuaMachine.h"
-#include <thread>
-#include <chrono>
-
 #include "Net/NetNode.h"
-#include "Net/Socket.h"
-#include "Meta/Serializer.h"
 
-class lua_State;
+#include "App.h"
+
+
+NetNode* server = nullptr;
 
 int main(int argc, char *argv[])
 {
-    Meta::Instance();
+    LuaMachine::Instance()->Start("main.lua");
 
-    auto node = new NetNode();
+    Window* window = Window::Create();
 
-    Any a = SubStruct();
-    a.as<SubStruct>().arr = std::vector<int> { 3, 4, 5 };
-    auto text = node->serializer->Serialize(a);
-    auto des = node->serializer->Deserialize(text);
-    text = node->serializer->Serialize(des);
+    App::Instance()->AddWindow(window);
 
-    printf("%s \n", text.c_str());
-    fflush(stdout);
-
-//    auto server = new NetNode();
-//    server->Start(2730);
-
-//    auto client = new NetNode();
-//    client->Connect("127.0.0.1", 2730);
-
-//    while (!server->IsConnnected()) {}
-//    while (!client->IsConnnected()) {}
-
-//    Any a = SubStruct();
-
-//    for (int i = 0; i < 10; i++)
-//    {
-//        server->Send(a);
-//        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-//    }
-
-//    fflush(stdout);
-
-//    auto m = Meta::Instance();
-
-//    auto node = new NetNode();
-
-//    Any a = SubStruct();
-//    //node->Send(a);
-
+    App::Instance()->StartMainLoop();
 }
-
-//void serverTask()
-//{
-//    auto server = new Socket();
-//    server->Listen(2730);
-//    server->Accept();
-//    const char* str = server->Receive();
-//    printf("%s\n", str);
-//}
-
-//void clientTask()
-//{
-//    auto client = new Socket();
-//    while (!client->Connect("127.0.0.1", 2730)) {}
-//    client->Send("Albukerke!");
-//}
-
-//int main(int argc, char *argv[])
-//{
-////    auto server = new Socket();
-////    server->SetBlockingMode(false);
-////    server->Listen(2730);
-////    server->Accept();
-
-//    std::thread serverThread(serverTask);
-//    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//    std::thread clientThread(clientTask);
-
-//    clientThread.join();
-//    serverThread.join();
-
-//    printf("finish\n");
-//    fflush(stdout);
-
-//    //LuaMachine::Instance()->Start("main.lua");
-//}
-
-//extern "C"
-//{
-//    #include "lua.h"
-//    #include "lualib.h"
-//    #include "lauxlib.h"
-//}
-
-//#include "Meta/Meta.h"
-//#include "Meta/Binder.h"
-//#include "Meta/Serializer.h"
-//#include "App.h"
-//#include <iostream>
-
-//template <typename Type>
-//void SerialzeToTable(lua_State* L, Type object)
-//{
-//    auto serializer = new Serializer(L);
-//    serializer->Serialize(object);
-
-//    auto a = serializer->DeserializeUnknown();
-//    lua_pop(L, 1);
-//    serializer->Serialize(a);
-
-//    lua_getglobal(L, "Test");
-//    lua_insert(L, 2);
-//    lua_pcall(L, 1, 0, 0);
-//}
-
-
-//int main(int argc, char *argv[])
-//{
-//    lua_State* L = luaL_newstate();
-//    luaL_openlibs(L);
-//    lua_getglobal(L, "package");
-//    lua_pushstring(L, "?.lua");
-//    lua_setfield(L, -2, "path");
-
-//    LuaBinder(L).Bind(Meta::Instance());
-//    fflush(stdout);
-
-
-//    if (luaL_dofile(L, "Main.lua"))
-//    {
-//        std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
-//        std::cerr << lua_tostring(L, -1) << std::endl;
-//        lua_pop(L, 1);
-//    }
-
-//    TestStruct testStruct { 1.0, 2, "fff", SubStruct() };
-//    SerialzeToTable(L, testStruct);
-
-//    fflush(stdout);
-
-//    lua_close(L);
-//}

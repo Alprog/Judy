@@ -3,6 +3,7 @@
 
 class Meta;
 class lua_State;
+class IClassMeta;
 
 class LuaBinder
 {
@@ -11,5 +12,7 @@ public:
     void Bind(Meta* meta);
 
 private:
+    void BindClass(IClassMeta* classMeta);
+
     lua_State* L;
 };
