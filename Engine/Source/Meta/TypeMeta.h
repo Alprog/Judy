@@ -23,19 +23,19 @@ struct IBase<T, IF(T, Class)>
     using type = IClassMeta;
 };
 
-template <typename T>
-class TypeMeta : public IBase<T>::type, public Singleton<TypeMeta<T>>
+template <typename ClassType>
+class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
 {
 public:
-    virtual bool isPointer() override { return is<T>::Pointer; }
-    virtual bool isClass() override { return is<T>::Class; }
+    virtual bool isPointer() override { return is<ClassType>::Pointer; }
+    virtual bool isClass() override { return is<ClassType>::Class; }
     virtual bool isVector() override { return false; }
 
-    virtual Any CreateOnStack() override { return CreateOnStackHelper<T>(); }
-    virtual Any CreateOnHeap() override { return CreateOnHeapHelper<T>(); }
-    virtual Any Dereference(Any& object) override { return DereferenceHelper<T>(object); }
-    virtual Any MakePointer(Any& object) override { return MakePointerHelper<T>(object); }
-    virtual ITypeMeta* GetPointeeType() override { return GetPointeeTypeHelper<T>(); }
+    virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
+    virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
+    virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
+    virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
+    virtual ITypeMeta* GetPointeeType() override { return GetPointeeTypeHelper<ClassType>(); }
 
 private:
     //---------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ private:
     inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
     {
         std::vector<Any> args;
-        return constructors[0]->Invoke(args);
+        return IClassMeta::constructors[0]->Invoke(args);
     }
 
     //---------------------------------------------------------------------------------
@@ -64,19 +64,19 @@ private:
     template <typename T>
     static inline Any CreateOnHeapHelper(IF(T, RealPointer)* = nullptr)
     {
-        return DeepPointer<std::remove_pointer<T>::type>(new T());
+        return DeepPointer<typename std::remove_pointer<T>::type>(new T());
     }
 
     template <typename T>
     static inline Any CreateOnHeapHelper(IF(T, DeepPointer)* = nullptr)
     {
-        throw std::exception("not implemented");
+        throw std::runtime_error("not implemented");
     }
 
     template <typename T>
     static inline Any CreateOnHeapHelper(IF(T, Class)* = nullptr)
     {
-        throw std::exception("not implemented");
+        throw std::runtime_error("not implemented");
     }
 
     //---------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ private:
     template <typename T>
     static inline Any DereferenceHelper(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
     {
-        throw std::exception("invalid dereferencing");
+        throw std::runtime_error("invalid dereferencing");
     }
 
     //---------------------------------------------------------------------------------
@@ -104,13 +104,13 @@ private:
     template <typename T>
     static inline Any MakePointerHelper(Any& object, IF(T, Abstract)* = nullptr)
     {
-        throw std::exception("invalid referencing");
+        throw std::runtime_error("invalid referencing");
     }
 
     template <typename T>
     static inline Any MakePointerHelper(Any& object, IF(T, RealPointer)* = nullptr)
     {
-        return DeepPointer<std::remove_pointer<T>::type>(&object.as<T>());
+        return DeepPointer<typename std::remove_pointer<T>::type>(&object.as<T>());
     }
 
     //---------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ private:
     template <typename T>
     static inline ITypeMeta* GetPointeeTypeHelper(IF_NOT(T, Pointer)* = nullptr)
     {
-        throw std::exception("type is not pointer");
+        throw std::runtime_error("type is not pointer");
     }
 
     template <typename T>

@@ -49,8 +49,7 @@ HEADERS += \
     Source/Net/NetNode.h \
     Source/Net/Socket.h \
     Source/DeepPointer.h \
-    Source/Meta/Meta.gen.h \
-    Source/Win/WinSocket.h
+    Source/Meta/Meta.gen.h
 
 SOURCES += \
     Source/App.cpp \
@@ -86,8 +85,7 @@ SOURCES += \
     Source/Net/NetNode.cpp \
     Source/Net/Socket.cpp \
     Source/DeepPointer.cpp \
-    Source/Meta/Meta.gen.cpp \
-    Source/Win/WinSocket.cpp
+    Source/Meta/Meta.gen.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -112,7 +110,8 @@ win {
     SOURCES += Source/GLRenderer.cpp
     SOURCES += Source/RenderTarget.cpp
 
-
+    HEADERS += Source/Win/WinSocket.h
+    SOURCES += Source/Win/WinSocket.cpp
 }
 
 linux {
@@ -121,6 +120,8 @@ linux {
     SOURCES += Source/Linux/LinuxWindow.cpp
     HEADERS += Source/Linux/LinuxApp.h
     SOURCES += Source/Linux/LinuxApp.cpp
+    HEADERS += Source/Unix/UnixSocket.h
+    SOURCES += Source/Unix/UnixSocket.cpp
 }
 
 mac {
@@ -128,7 +129,11 @@ mac {
 
     HEADERS += \
         Source/Mac/MacWindow.h \
-        Source/Mac/MacApp.h
+        Source/Mac/MacApp.h \
+        Source/Unix/UnixSocket.h
+
+    SOURCES += \
+        Source/Unix/UnixSocket.cpp
 
     OBJECTIVE_SOURCES += \
         Source/Mac/MacWindow.mm \
