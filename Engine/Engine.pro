@@ -50,7 +50,6 @@ HEADERS += \
     Source/Net/Socket.h \
     Source/DeepPointer.h \
     Source/Meta/Meta.gen.h \
-    Source/Net/RemotePlayer.h \
     Source/Meta/CFunctionMeta.h \
     Source/Meta/select_if.h
 
@@ -89,7 +88,6 @@ SOURCES += \
     Source/Net/Socket.cpp \
     Source/DeepPointer.cpp \
     Source/Meta/Meta.gen.cpp \
-    Source/Net/RemotePlayer.cpp \
     Source/Meta/CFunctionMeta.cpp
 
 win {

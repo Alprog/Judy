@@ -9,7 +9,7 @@
 #include <QEvent>
 #include "OutputPane.h"
 
-#include "Net/RemotePlayer.h"
+#include "RemotePlayer.h"
 
 #include "DocumentsPane.h"
 #include "../qt/ScintillaEditBase.h"
