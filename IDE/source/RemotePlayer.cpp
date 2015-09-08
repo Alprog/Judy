@@ -14,8 +14,6 @@ RemotePlayer::RemotePlayer()
 
 void CustomWork()
 {
-    int a = 4;
-    a = 3;
 }
 
 void MessageCallback(Any message)
