@@ -10,6 +10,7 @@
 #include "Node.h"
 #include "Quad.h"
 #include "Renderer.h"
+#include "Window.h"
 
 void Meta::regClasses()
 {
@@ -70,6 +71,7 @@ void Meta::regClasses()
     ;
 
     ClassDefiner<App>(this, "App")
+        .function("Instance", &App::Instance)
         .method("StartMainLoop", &App::StartMainLoop)
         .method("AddWindow", &App::AddWindow)
         .method("RemoveWindow", &App::RemoveWindow)
@@ -84,7 +86,7 @@ void Meta::regClasses()
         .constructor<int>()
         .method("Parent", &Node::Parent)
         .method("ChildCount", &Node::ChildCount)
-        //.method("Child", &Node::Child)
+        .method("Child", &Node::Child)
         .method("AddChild", &Node::AddChild)
         .method("RemoveChild", &Node::RemoveChild)
         .method("Unparent", &Node::Unparent)
@@ -109,5 +111,12 @@ void Meta::regClasses()
         .method("DrawQuad", &Renderer::DrawQuad)
         .method("Render", &Renderer::Render)
         .method("Clear", &Renderer::Clear)
+    ;
+
+    ClassDefiner<Window>(this, "Window")
+        .function("Create", &Window::Create)
+        .method("show", &Window::show)
+        .method("ProcessEvents", &Window::ProcessEvents)
+        .method("Render", &Window::Render)
     ;
 }

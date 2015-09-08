@@ -86,38 +86,43 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
 
     stream << tab << "ClassDefiner<" << classInfo.name << ">" << "(this, \"" << classInfo.name << "\")" << std::endl;
 
-    for (auto& constructor : classInfo.constructors)
-    {
-        stream << tab2 << ".constructor";
-        if (constructor.arguments.size() > 0)
-        {
-            stream << "<";
-            auto first = true;
-            for (auto& argumentInfo : constructor.arguments)
-            {
-                if (!first)
-                {
-                    stream << ", ";
-                }
-                stream << argumentInfo.typeInfo.name;
-                first = false;
-            }
-            stream << ">";
-        }
-        stream << "()" << std::endl;
+    bool isAbstract = classInfo.isAbstract();
 
+    if (!isAbstract)
+    {
+        for (auto& constructor : classInfo.constructors)
+        {
+            stream << tab2 << ".constructor";
+            if (constructor.arguments.size() > 0)
+            {
+                stream << "<";
+                auto first = true;
+                for (auto& argumentInfo : constructor.arguments)
+                {
+                    if (!first)
+                    {
+                        stream << ", ";
+                    }
+                    stream << argumentInfo.typeInfo.name;
+                    first = false;
+                }
+                stream << ">";
+            }
+            stream << "()" << std::endl;
+        }
     }
 
     for (auto& method : classInfo.methods)
     {
-        if (!method.isOperator && !method.isStatic)
+        if (!method.isOperator)
         {
-            stream << tab2 << ".method(\"" << method.name << "\", &" <<
+            auto type = method.isStatic ? "function" : "method";
+            stream << tab2 << "." << type << "(\"" << method.name << "\", &" <<
                 classInfo.name << "::" << method.name << ")" << std::endl;
         }
     }
 
-    if (!classInfo.isAbstract)
+    if (!isAbstract)
     {
         for (auto& field : classInfo.fields)
         {

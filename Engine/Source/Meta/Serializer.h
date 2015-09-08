@@ -9,8 +9,7 @@ extern "C"
 }
 
 #include "Any.h"
-#include "FieldMeta.h"
-#include "App.h"
+#include "ITypeMeta.h"
 
 class ITypeMeta;
 
@@ -18,13 +17,6 @@ class Serializer
 {
 public:
     Serializer(lua_State* L);
-
-    template <typename Type>
-    std::string Serialize(Type object)
-    {
-        ITypeMeta* typeMeta = TypeMetaOf<Type>();
-        Serialize(object, typeMeta);
-    }
 
     std::string Serialize(Any object);
 

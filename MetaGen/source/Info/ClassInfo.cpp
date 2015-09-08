@@ -4,7 +4,6 @@
 
 ClassInfo::ClassInfo(TokenGroup& tokens)
     : classType{ClassType::Class}
-    , isAbstract{false}
     , isFinal{false}
 {
     auto arr = tokens.split(":");
@@ -27,6 +26,18 @@ AccessModifier ClassInfo::getDefaultAccessModifier()
     }
 }
 
+bool ClassInfo::isAbstract()
+{
+    for (auto& method : methods)
+    {
+        if (method.isVirtual && method.isPure)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void ClassInfo::processMainTokens(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
@@ -38,10 +49,6 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
         if (tokenName == "final")
         {
             isFinal = true;
-        }
-        else if (tokenName == "abstract")
-        {
-            isAbstract = true;
         }
         else if (tokenName == "class")
         {

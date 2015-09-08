@@ -16,7 +16,6 @@ struct ClassInfo : MemberInfo
     ClassInfo(TokenGroup& tokens);
 
     ClassType classType;
-    bool isAbstract;
     bool isFinal;
     std::vector<InheritanceInfo> inheritances;
 
@@ -25,6 +24,7 @@ struct ClassInfo : MemberInfo
     std::vector<FieldInfo> fields;
 
     AccessModifier getDefaultAccessModifier();
+    bool isAbstract();
 
     std::string headerName;
 

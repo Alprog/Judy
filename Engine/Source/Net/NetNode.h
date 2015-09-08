@@ -4,6 +4,7 @@
 #include "Socket.h"
 #include "Meta/Any.h"
 #include "Meta/Serializer.h"
+#include "Singleton.h"
 #include <thread>
 #include <atomic>
 

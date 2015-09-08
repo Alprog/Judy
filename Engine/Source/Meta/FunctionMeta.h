@@ -24,7 +24,7 @@ public:
 };
 
 template <typename ReturnType, typename... ArgTypes>
-class FunctionMeta : virtual IFunctionMeta
+class FunctionMeta : public virtual IFunctionMeta
 {
     virtual size_t GetArgCount() override
     {
@@ -43,7 +43,7 @@ class FunctionMeta : virtual IFunctionMeta
 };
 
 template <typename ReturnType>
-class FunctionMeta<ReturnType> : virtual IFunctionMeta
+class FunctionMeta<ReturnType> : public virtual IFunctionMeta
 {
     virtual size_t GetArgCount() override
     {
@@ -60,3 +60,12 @@ class FunctionMeta<ReturnType> : virtual IFunctionMeta
         return {};
     }
 };
+
+template <size_t... I>
+struct index_sequence {};
+
+template <size_t N, size_t... I>
+struct make_index_sequence : public make_index_sequence<N - 1, N - 1, I...> {};
+
+template <size_t... I>
+struct make_index_sequence<0, I...> : public index_sequence<I...>{};

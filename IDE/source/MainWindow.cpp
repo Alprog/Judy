@@ -8,7 +8,8 @@
 #include <QFileDialog>
 #include <QEvent>
 #include "OutputPane.h"
-#include "LuaMachine/LuaMachine.h"
+
+#include "Net/RemotePlayer.h"
 
 #include "DocumentsPane.h"
 #include "../qt/ScintillaEditBase.h"
@@ -160,18 +161,20 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 
 void MainWindow::startDebug()
 {
-    auto machine = LuaMachine::Instance();
-    if (machine->IsStarted())
-    {
-        machine->Continue();
-    }
-    else
-    {
-        machine->Start("main.lua");
-    }
+    RemotePlayer::Instance()->Start();
+
+//    auto machine = LuaMachine::Instance();
+//    if (machine->IsStarted())
+//    {
+//        machine->Continue();
+//    }
+//    else
+//    {
+//        machine->Start("main.lua");
+//    }
 }
 
 void MainWindow::stopDebug()
 {
-    LuaMachine::Instance()->Stop();
+//    LuaMachine::Instance()->Stop();
 }
