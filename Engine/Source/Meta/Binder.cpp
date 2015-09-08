@@ -88,9 +88,18 @@ int FunctionInvoker(lua_State* L)
         }
         else
         {
-            *(void**)lua_newuserdata(L, sizeof(void*)) = result;
-            luaL_getmetatable(L, returnType->name.c_str());
-            lua_setmetatable(L, -2);
+            if (returnType->isPointer())
+            {
+                auto type = returnType->GetPointeeType();
+                auto data = (void**)lua_newuserdata(L, sizeof(void*));
+                *data = result.as<void*>();
+                luaL_getmetatable(L, type->name.c_str());
+                lua_setmetatable(L, -2);
+            }
+            else
+            {
+                throw std::runtime_error("not implemented");
+            }
         }
 
         return 1;
