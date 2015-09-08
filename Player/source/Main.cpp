@@ -1,11 +1,8 @@
 
 #include "LuaMachine/LuaMachine.h"
-#include "Net/NetNode.h"
+#include "RemoteDebbuger.h"
 
 #include "App.h"
-
-
-NetNode* server = nullptr;
 
 int main(int argc, char *argv[])
 {
@@ -20,10 +17,12 @@ int main(int argc, char *argv[])
 
     }
 
+    auto luaMachine = LuaMachine::Instance();
+
     if (debug)
     {
-
+        RemoteDebbuger::Instance()->Start(2730);
     }
 
-    LuaMachine::Instance()->Start("main.lua");
+    luaMachine->Start("main.lua");
 }

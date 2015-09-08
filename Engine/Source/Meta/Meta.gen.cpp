@@ -2,6 +2,7 @@
 #include "Meta.h"
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
+#include "LogMessage.h"
 #include "Transform.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -14,6 +15,12 @@
 
 void Meta::regClasses()
 {
+    ClassDefiner<LogMessage>(this, "LogMessage")
+        .constructor()
+        .constructor<std :: string>()
+        .field("text", &LogMessage::text)
+    ;
+
     ClassDefiner<Transform>(this, "Transform")
         .constructor()
         .method("GetMatrix", &Transform::GetMatrix)

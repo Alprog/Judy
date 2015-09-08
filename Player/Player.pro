@@ -8,10 +8,12 @@ INCLUDEPATH += \
     ../3rd-party/lua/source \
 
 SOURCES += \
-    Source/Main.cpp
+    Source/Main.cpp \
+    Source/RemoteDebbuger.cpp
 
 HEADERS += \
-    Windows.h
+    Windows.h \
+    Source/RemoteDebbuger.h
 
 win {
     QMAKE_LFLAGS += /ENTRY:"mainCRTStartup"

@@ -15,6 +15,8 @@ NetNode::NetNode()
     , port{0}
     , workThread{nullptr}
     , socket{nullptr}
+    , messageCallback{nullptr}
+    , customWork{nullptr}
 {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -94,6 +96,10 @@ void NetNode::Work()
         }
         else if (state == State::Connected)
         {
+            if (customWork != nullptr)
+            {
+                customWork();
+            }
             SendWork();
             ReceiveWork();
             ProcessMessages();
@@ -173,12 +179,13 @@ void NetNode::ProcessMessages()
         auto index = input.find('\0');
         if (index >= 0)
         {
-            auto message = input.substr(0, index);
+            auto messageText = input.substr(0, index);
 
-            Any obj = serializer->Deserialize(message);
-
-            printf("%s \n", obj.GetType()->name.c_str());
-            fflush(stdout);
+            auto message = serializer->Deserialize(messageText);
+            if (messageCallback != nullptr)
+            {
+                messageCallback(message);
+            }
 
             input.erase(0, index + 1);
         }

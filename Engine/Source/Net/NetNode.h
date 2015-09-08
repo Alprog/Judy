@@ -28,9 +28,9 @@ public:
     void Start(int port);
     void Connect(std::string host, int port);
 
-    void Send(Any& any);
+    void Send(Any& any); 
 
-public:
+private:
     State GetState() const;
 
     void StartWork();
@@ -42,6 +42,11 @@ public:
     void ReceiveWork();
     void ProcessMessages();
 
+public:
+    void (*messageCallback)(Any any);
+    void (*customWork)();
+
+private:
     lua_State* L;
     Serializer* serializer;
     Socket* socket;

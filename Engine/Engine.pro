@@ -7,7 +7,8 @@ CONFIG += staticlib
 INCLUDEPATH += \
     Source \
     Source/Math \
-    ../3rd-party/lua/source \
+    Source/LuaMachine \
+    ../3rd-party/lua/source
 
 HEADERS += \
     Source/App.h \
@@ -51,7 +52,8 @@ HEADERS += \
     Source/DeepPointer.h \
     Source/Meta/Meta.gen.h \
     Source/Meta/CFunctionMeta.h \
-    Source/Meta/select_if.h
+    Source/Meta/select_if.h \
+    Source/LuaMachine/LogMessage.h
 
 SOURCES += \
     Source/App.cpp \
@@ -88,7 +90,8 @@ SOURCES += \
     Source/Net/Socket.cpp \
     Source/DeepPointer.cpp \
     Source/Meta/Meta.gen.cpp \
-    Source/Meta/CFunctionMeta.cpp
+    Source/Meta/CFunctionMeta.cpp \
+    Source/LuaMachine/LogMessage.cpp
 
 win {
     INCLUDEPATH += Source/Windows

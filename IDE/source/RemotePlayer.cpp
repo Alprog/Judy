@@ -1,5 +1,7 @@
 
 #include "RemotePlayer.h"
+#include "Net/NetNode.h"
+#include "LuaMachine/LogMessage.h"
 
 #include <windows.h>
 #include <cstdio>
@@ -8,6 +10,21 @@
 RemotePlayer::RemotePlayer()
     : netNode{nullptr}
 {
+}
+
+void CustomWork()
+{
+    int a = 4;
+    a = 3;
+}
+
+void MessageCallback(Any message)
+{
+    if (message.GetType() == TypeMetaOf<LogMessage>())
+    {
+        auto text = message.as<LogMessage>().text;
+        printf("%s \n", text.c_str());
+    }
 }
 
 void RemotePlayer::Start()
@@ -23,8 +40,12 @@ void RemotePlayer::Start()
     PROCESS_INFORMATION pi;
     ZeroMemory(&(pi), sizeof(pi));
 
-    int result = CreateProcess(path, commandLine, 0, 0, FALSE, 0, 0, currentDirectory, &sti, &pi);
+    CreateProcess(path, commandLine, 0, 0, FALSE, 0, 0, currentDirectory, &sti, &pi);
 
+    netNode = new NetNode();
+    netNode->customWork = CustomWork;
+    netNode->messageCallback = MessageCallback;
+    netNode->Connect("127.0.0.1", 2730);
 }
 
 void RemotePlayer::Break()
