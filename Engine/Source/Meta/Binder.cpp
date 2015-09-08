@@ -27,24 +27,11 @@ T* CheckType(lua_State* L, int n)
     return *(T**)luaL_checkudata(L, n, name);
 }
 
-int GetterInvoker(lua_State* L)
+inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<Any>& args)
 {
-    auto field = *(IFieldMeta**)lua_touserdata(L, lua_upvalueindex(1));
-
-    void* object = *(void**)lua_touserdata(L, 1);
-
-    field->get(object);
-
-    return 1;
-}
-
-int FunctionInvoker(lua_State* L)
-{
-    auto method = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
-
-    int index = 1;
-    std::vector<Any> args = {};
-    for (auto argType : method->GetArgTypes())
+    auto types = function->GetArgTypes();
+    int index = -types.size();
+    for (auto argType : types)
     {
         if (argType == TypeMetaOf<int>())
         {
@@ -64,46 +51,81 @@ int FunctionInvoker(lua_State* L)
             args.push_back(p);
         }
     }
+}
 
-    auto returnType = method->GetReturnType();
+inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
+{
+    if (type == TypeMetaOf<int>())
+    {
+        lua_pushinteger(L, result.as<int>());
+    }
+    else if (type == TypeMetaOf<float>())
+    {
+        lua_pushnumber(L, result.as<float>());
+    }
+    else if (type == TypeMetaOf<char*>())
+    {
+        lua_pushstring(L, result.as<char*>());
+    }
+    else
+    {
+        if (type->isPointer())
+        {
+            type = type->GetPointeeType();
+            auto data = (void**)lua_newuserdata(L, sizeof(void*));
+            *data = result.as<void*>();
+            luaL_getmetatable(L, type->name.c_str());
+            lua_setmetatable(L, -2);
+        }
+        else
+        {
+            throw std::runtime_error("not implemented");
+        }
+    }
+}
+
+int GetterInvoker(lua_State* L)
+{
+    auto field = *(IFieldMeta**)lua_touserdata(L, lua_upvalueindex(1));
+    void* object = *(void**)lua_touserdata(L, 1);
+    Any result = field->get(object);
+    ProcessResult(L, result, field->GetType());
+    return 1;
+}
+
+int FunctionInvoker(lua_State* L)
+{
+    auto function = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
+
+    std::vector<Any> args = {};
+    ProcessArguments(L, function, args);
+
+    auto returnType = function->GetReturnType();
     if (returnType == nullptr)
     {
-        method->Invoke(args);
+        function->Invoke(args);
         return 0;
     }
     else
     {
-        Any result = method->Invoke(args);
-        if (returnType == TypeMetaOf<int>())
-        {
-            lua_pushinteger(L, result.as<int>());
-        }
-        else if (returnType == TypeMetaOf<float>())
-        {
-            lua_pushnumber(L, result.as<float>());
-        }
-        else if (returnType == TypeMetaOf<char*>())
-        {
-            lua_pushstring(L, result.as<char*>());
-        }
-        else
-        {
-            if (returnType->isPointer())
-            {
-                auto type = returnType->GetPointeeType();
-                auto data = (void**)lua_newuserdata(L, sizeof(void*));
-                *data = result.as<void*>();
-                luaL_getmetatable(L, type->name.c_str());
-                lua_setmetatable(L, -2);
-            }
-            else
-            {
-                throw std::runtime_error("not implemented");
-            }
-        }
-
+        auto result = function->Invoke(args);
+        ProcessResult(L, result, returnType);
         return 1;
     }
+}
+
+int NewInvoker(lua_State* L)
+{
+    auto function = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
+
+    std::vector<Any> args = {};
+    ProcessArguments(L, function, args);
+
+    auto constructor = dynamic_cast<IConstructorMeta*>(function);
+    auto result = constructor->New(args);
+    auto type = constructor->GetNewType();
+    ProcessResult(L, result, type);
+    return 1;
 }
 
 void LuaBinder::Bind(Meta* meta)
@@ -127,20 +149,20 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     for (auto constructor : classMeta->constructors)
     {
         int argCount = constructor->GetArgCount();
-        std::string name = "constructor" + std::to_string(argCount);
-        BindFunctionHelper(constructor, name);
+        std::string name = "new" + std::to_string(argCount);
+        BindHelper(constructor, name, NewInvoker);
     }
 
     for (auto& pair : classMeta->methods)
     {
         auto method = pair.second;
-        BindFunctionHelper(method, method->name);
+        BindHelper(method, method->name, FunctionInvoker);
     }
 
     for (auto& pair : classMeta->functions)
     {
         auto function = pair.second;
-        BindFunctionHelper(function, function->name);
+        BindHelper(function, function->name, FunctionInvoker);
     }
 
     // fields
@@ -163,9 +185,9 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     lua_setglobal(L, className);
 }
 
-void LuaBinder::BindFunctionHelper(IFunctionMeta* function, std::string name)
+void LuaBinder::BindHelper(IFunctionMeta* function, std::string name, luaClosure closure)
 {
-    *(IFunctionMeta**)lua_newuserdata(L, sizeof(void*)) = function;
-    lua_pushcclosure(L, FunctionInvoker, 1);
+    *(void**)lua_newuserdata(L, sizeof(void*)) = function;
+    lua_pushcclosure(L, closure, 1);
     lua_setfield(L, -2, name.c_str());
 }

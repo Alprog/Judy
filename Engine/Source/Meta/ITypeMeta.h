@@ -8,6 +8,7 @@
 class Any;
 class IFieldMeta;
 class IFunctionMeta;
+class IConstructorMeta;
 
 class ITypeMeta
 {
@@ -34,7 +35,7 @@ protected:
 
 public:
     ITypeMeta* valueType;
-    std::vector<IFunctionMeta*> constructors;
+    std::vector<IConstructorMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;
     std::map<std::string, IFunctionMeta*> methods;
     std::map<std::string, IFunctionMeta*> functions;

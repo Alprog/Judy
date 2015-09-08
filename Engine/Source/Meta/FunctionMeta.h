@@ -24,7 +24,7 @@ public:
 };
 
 template <typename ReturnType, typename... ArgTypes>
-class FunctionMeta : public IFunctionMeta
+class FunctionMeta : public virtual IFunctionMeta
 {
     virtual size_t GetArgCount() override
     {
@@ -43,7 +43,7 @@ class FunctionMeta : public IFunctionMeta
 };
 
 template <typename ReturnType>
-class FunctionMeta<ReturnType> : public IFunctionMeta
+class FunctionMeta<ReturnType> : public virtual IFunctionMeta
 {
     virtual size_t GetArgCount() override
     {
