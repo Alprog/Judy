@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <unordered_set>
 #include <string>
 #include <unordered_map>
 #include <typeindex>
@@ -21,6 +22,9 @@ private:
 
     template <typename T>
     void regVector();
+
+    template <typename T>
+    void regSet();
 
     void regClasses();
     #include "Meta.gen.h"

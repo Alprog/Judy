@@ -2,6 +2,7 @@
 #pragma once
 
 #include <set>
+#include <unordered_set>
 #include "Window.h"
 
 #include "Meta/Meta.h"
@@ -15,6 +16,7 @@ struct __Meta__ SubStruct
 
     int e;
     std::vector<int> arr;
+    std::unordered_set<int> set;
 
     SubStruct()
         : e { 7 }

@@ -63,6 +63,7 @@ void Meta::regClasses()
         .constructor<int>()
         .field("e", &SubStruct::e)
         .field("arr", &SubStruct::arr)
+        .field("set", &SubStruct::set)
     ;
 
     ClassDefiner<TestStruct>(this, "TestStruct")

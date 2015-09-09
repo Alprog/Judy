@@ -8,20 +8,32 @@ template <typename T>
 std::vector<Any> toAnyVector(T& arr)
 {
     std::vector<Any> result(arr.size());
-    for (auto i = 0; i < arr.size(); i++)
+    int i = 0;
+    for (auto& element : arr)
     {
-        result[i] = arr[i];
+        result[i++] = element;
     }
     return result;
 }
 
 template <typename T>
-T anyVectorToVector(std::vector<Any>& vector)
+std::vector<T> anyVectorToVector(std::vector<Any>& vector)
 {
-    T result;
+    std::vector<T> result;
     for (auto& element : vector)
     {
         result.push_back(element);
+    }
+    return result;
+}
+
+template <typename T>
+std::unordered_set<T> anyVectorToSet(std::vector<Any>& vector)
+{
+    std::unordered_set<T> result;
+    for (auto& element : vector)
+    {
+        result.insert(element.as<T>());
     }
     return result;
 }
@@ -41,10 +53,27 @@ void Meta::regVector()
         .valueType<T>()
         .constructor()
         .function("toAnyVector", &toAnyVector<VT>)
-        .function("fromAnyVector", &anyVectorToVector<VT>)
+        .function("fromAnyVector", &anyVectorToVector<T>)
         .method("size", &VT::size)
         .method("at", at)
         .method("push_back", push_back)
+    ;
+}
+
+template <typename T>
+void Meta::regSet()
+{
+    using ST = std::unordered_set<T>;
+
+    auto name = TypeMetaOf<T>()->name;
+    name = "unordered_set<" + name + ">";
+
+    ClassDefiner<ST>(this, name.c_str())
+        .valueType<T>()
+        .constructor()
+        .function("toAnyVector", &toAnyVector<ST>)
+        .function("fromAnyVector", &anyVectorToSet<T>)
+        .method("size", &ST::size)
     ;
 }
 
@@ -57,6 +86,7 @@ Meta::Meta()
     DefineBuildInType<char>("char");
 
     regVector<int>();
+    regSet<int>();
 
     regClasses();
 }

@@ -46,7 +46,7 @@ public:
     void (*messageCallback)(Any any);
     void (*customWork)();
 
-public:
+private:
     lua_State* L;
     Serializer* serializer;
     Socket* socket;
