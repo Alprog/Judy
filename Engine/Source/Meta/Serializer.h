@@ -31,10 +31,11 @@ public:
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);
+    void SerializeAsArray(Any& object, ITypeMeta* type);
 
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();
-    Any DeserializeAsVector(IClassMeta* vectorMeta);
+    Any DeserializeAsArray(IClassMeta* vectorMeta);
     Any DeserializeAsClass(IClassMeta* classMeta);
     Any Deserialize(ITypeMeta* const typeMeta);
 

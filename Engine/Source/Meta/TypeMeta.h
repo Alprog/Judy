@@ -29,7 +29,7 @@ class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassT
 public:
     virtual bool isPointer() override { return is<ClassType>::Pointer; }
     virtual bool isClass() override { return is<ClassType>::Class; }
-    virtual bool isVector() override { return is<ClassType>::Vector; }
+    virtual bool isArray() override { return is<ClassType>::Array; }
 
     virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }

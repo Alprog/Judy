@@ -5,6 +5,28 @@
 #include "ClassDefiner.h"
 
 template <typename T>
+std::vector<Any> toAnyVector(T& arr)
+{
+    std::vector<Any> result(arr.size());
+    for (auto i = 0; i < arr.size(); i++)
+    {
+        result[i] = arr[i];
+    }
+    return result;
+}
+
+template <typename T>
+T anyVectorToVector(std::vector<Any>& vector)
+{
+    T result;
+    for (auto& element : vector)
+    {
+        result.push_back(element);
+    }
+    return result;
+}
+
+template <typename T>
 void Meta::regVector()
 {
     using VT = std::vector<T>;
@@ -18,6 +40,8 @@ void Meta::regVector()
     ClassDefiner<VT>(this, name.c_str())
         .valueType<T>()
         .constructor()
+        .function("toAnyVector", &toAnyVector<VT>)
+        .function("fromAnyVector", &anyVectorToVector<VT>)
         .method("size", &VT::size)
         .method("at", at)
         .method("push_back", push_back)

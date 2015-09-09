@@ -21,8 +21,19 @@ int main(int argc, char *argv[])
 
     if (debug)
     {
+        luaMachine->EnableDebug();
         RemoteDebbuger::Instance()->Start(2730);
     }
+
+
+    SubStruct s;
+    s.arr.push_back(4);
+    s.arr.push_back(8);
+    RemoteDebbuger::netNode = new NetNode();
+    std::string text = RemoteDebbuger::netNode->serializer->Serialize(s);
+    auto f = RemoteDebbuger::netNode->serializer->Deserialize(text);
+    text = RemoteDebbuger::netNode->serializer->Serialize(f);
+    printf("%s \n", text.c_str());
 
     luaMachine->Start("main.lua");
 }

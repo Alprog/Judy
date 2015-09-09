@@ -40,22 +40,9 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_pushstring(L, object.as<std::string>().c_str());
     }
-    else if (type->isVector())
+    else if (type->isArray())
     {
-        lua_newtable(L);
-
-        auto classMeta = static_cast<IClassMeta*>(type);
-        auto pointer = classMeta->MakePointer(object);
-        auto method = classMeta->methods["size"];
-
-        size_t size = method->Invoke(pointer);
-        method = classMeta->methods["at"];
-        for (size_t i = 0; i < size; i++)
-        {
-            Any value = method->Invoke(pointer, i);
-            Serialize(value, value.GetType());
-            lua_seti(L, -2, i + 1);
-        }
+        SerializeAsArray(object, type);
     }
     else
     {
@@ -89,6 +76,23 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
 
     }
 }
+
+void Serializer::SerializeAsArray(Any& object, ITypeMeta* type)
+{
+    lua_newtable(L);
+
+    auto arrayMeta = static_cast<IClassMeta*>(type);
+    auto function = arrayMeta->functions["toAnyVector"];
+    std::vector<Any> elements = function->Invoke(object);
+    for (int i = 0; i < elements.size(); i++)
+    {
+        auto value = elements[i];
+        Serialize(value, value.GetType());
+        lua_seti(L, -2, i + 1);
+    }
+}
+
+//------------------------------------------------------------------------------------
 
 Any Serializer::Deserialize(std::string text)
 {
@@ -151,21 +155,21 @@ Any Serializer::DeserializeUnknownTable()
     return Any::empty;
 }
 
-Any Serializer::DeserializeAsVector(IClassMeta* vectorMeta)
+Any Serializer::DeserializeAsArray(IClassMeta* arrayMeta)
 {
-    auto object = vectorMeta->CreateOnStack();
-    auto pointer = vectorMeta->MakePointer(object);
-    auto method = vectorMeta->methods["push_back"];
-
     lua_pushnil(L);
+    std::vector<Any> vector;
     while (lua_next(L, -2) != 0)
     {
-        auto value = Deserialize(vectorMeta->valueType);
-        method->Invoke(pointer, value);
+        auto value = Deserialize(arrayMeta->valueType);
+        vector.push_back(value);
         lua_pop(L, 1);
     }
 
-    return object;
+    auto function = arrayMeta->functions["fromAnyVector"];
+    std::vector<Any> args;
+    args.push_back(vector);
+    return function->Invoke(args);
 }
 
 Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
@@ -220,10 +224,10 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return std::string( lua_tostring(L, -1) );
     }
-    else if (type->isVector())
+    else if (type->isArray())
     {
         auto classMeta = static_cast<IClassMeta*>(type);
-        return DeserializeAsVector(classMeta);
+        return DeserializeAsArray(classMeta);
     }
     else if (type->isClass())
     {
