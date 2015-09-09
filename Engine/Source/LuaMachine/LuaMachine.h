@@ -24,8 +24,7 @@ public:
    bool IsStarted() const;
    bool IsBreaked() const;
 
-   void EnableDebug();
-   void Start(std::string scriptName);
+   void Start(std::string scriptName, bool debug = false);
    void Continue();
    void Stop();
 
@@ -38,5 +37,6 @@ public:
 private:
    lua_State* L;
    bool isStarted;
+   std::atomic_bool pauseRequired;
    std::atomic_bool	suspended;
 };

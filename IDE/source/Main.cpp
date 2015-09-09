@@ -4,9 +4,12 @@
 #include <QFile>
 #include <QTextStream>
 #include "MainWindow.h"
+#include "Meta/Meta.h"
 
 int main(int argc, char *argv[])
 {
+    Meta::Instance();
+
     QApplication app(argc, argv);
 
     QFile file("style.css");

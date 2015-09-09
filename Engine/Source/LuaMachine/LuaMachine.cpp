@@ -54,10 +54,11 @@ void hook(lua_State *L, lua_Debug *ar)
 void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
 {
     lua_getinfo(L, "S", ar);
-    if (Breakpoints.IsSet(ar->source, ar->currentline))
+    if (pauseRequired || Breakpoints.IsSet(ar->source, ar->currentline))
     {
         printf("%s %i\n", ar->source, ar->currentline);
 
+        pauseRequired = false;
         suspended = true;
         while (suspended)
         {
@@ -66,15 +67,16 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
     }
 }
 
-void LuaMachine::EnableDebug()
-{
-    int mask = LUA_MASKLINE;
-    lua_sethook(L, hook, mask, 0);
-}
-
-void LuaMachine::Start(std::string scriptName)
+void LuaMachine::Start(std::string scriptName, bool debug)
 {
     isStarted = true;
+
+    if (debug)
+    {
+        int mask = LUA_MASKLINE;
+        lua_sethook(L, hook, mask, 0);
+        pauseRequired = true;
+    }
 
     if (luaL_dofile(L, scriptName.c_str()))
     {
@@ -83,8 +85,6 @@ void LuaMachine::Start(std::string scriptName)
         std::cerr << lua_tostring(L, -1) << std::endl;
         lua_pop(L, 1);
     }
-
-    printf("completed\n");
 }
 
 void LuaMachine::Continue()

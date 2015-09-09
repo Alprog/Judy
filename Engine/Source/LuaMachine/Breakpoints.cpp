@@ -1,6 +1,10 @@
 
 #include "Breakpoints.h"
 
+Breakpoints::Breakpoints()
+{
+}
+
 bool Breakpoints::IsSet(std::string fileName, int line)
 {
     auto& set = map[fileName];

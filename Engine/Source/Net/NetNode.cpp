@@ -180,7 +180,6 @@ void NetNode::ProcessMessages()
         if (index >= 0)
         {
             auto messageText = input.substr(0, index);
-
             auto message = serializer->Deserialize(messageText);
             if (messageCallback != nullptr)
             {

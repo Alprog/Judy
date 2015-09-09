@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 #include <unordered_set>
-#include <string>
 #include <unordered_map>
 #include <typeindex>
 #include "Singleton.h"
@@ -25,6 +25,9 @@ private:
 
     template <typename T>
     void regSet();
+
+    template <typename T1, typename T2>
+    void regMap();
 
     void regClasses();
     #include "Meta.gen.h"

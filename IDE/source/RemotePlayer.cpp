@@ -2,6 +2,8 @@
 #include "RemotePlayer.h"
 #include "Net/NetNode.h"
 #include "LuaMachine/LogMessage.h"
+#include "LuaMachine/Breakpoints.h"
+#include "LuaMachine/DebugCommand.h"
 
 #include <windows.h>
 #include <cstdio>
@@ -27,9 +29,9 @@ void MessageCallback(Any message)
 
 void RemotePlayer::Start()
 {
-    LPWSTR path = L"D:\\Judy\\Build\\Win\\Player\\Player.exe";
-    LPWSTR commandLine = L"player.exe -debug";
-    LPWSTR currentDirectory = L"D:\\Judy\\Player";
+    LPWSTR path = (LPWSTR)L"D:\\Judy\\Build\\Win\\Player\\Player.exe";
+    LPWSTR commandLine = (LPWSTR)L"player.exe -debug";
+    LPWSTR currentDirectory = (LPWSTR)L"D:\\Judy\\Player";
 
     STARTUPINFO sti;
     ZeroMemory(&sti, sizeof(sti));
@@ -44,6 +46,12 @@ void RemotePlayer::Start()
     netNode->customWork = CustomWork;
     netNode->messageCallback = MessageCallback;
     netNode->Connect("127.0.0.1", 2730);
+
+    Any breakpoints = Breakpoints();
+    netNode->Send(breakpoints);
+
+    Any command = DebugCommand("continue");
+    netNode->Send(command);
 }
 
 void RemotePlayer::Break()

@@ -5,9 +5,15 @@
 #include <unordered_set>
 #include <string>
 
-class Breakpoints
+#define __Meta__
+
+class __Meta__ Breakpoints
 {
+    friend class Meta;
+
 public:
+    Breakpoints();
+
     bool IsSet(std::string fileName, int line);
 
     void Add(std::string fileName, int line);
