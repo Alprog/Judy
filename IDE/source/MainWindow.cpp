@@ -14,10 +14,10 @@
 #include "DocumentsPane.h"
 #include "../qt/ScintillaEditBase.h"
 #include <iostream>
-#include "Utils.h"
 
-#include "Menu/DebugMenu.h"
 #include "Menu/FileMenu.h"
+#include "Menu/DebugMenu.h"
+#include "Menu/WindowMenu.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     delete debugMenu;
+    delete fileMenu;
+    delete windowMenu;
 }
 
 void MainWindow::createToolBar(QMenu* menu)
@@ -72,23 +74,12 @@ void MainWindow::createActions()
     menuBar()->addMenu(fileMenu);
     createToolBar(fileMenu);
 
-    //---------------
-
     debugMenu = new DebugMenu();
     menuBar()->addMenu(debugMenu);
     createToolBar(debugMenu);
 
-    //---------------
-
-    auto windowMenu = menuBar()->addMenu(tr("&Window"));
-    auto layoutMenu = windowMenu->addMenu(tr("&Layout"));
-    for (int i = 0; i < 4; i++)
-    {
-        auto str = std::to_string(i);
-        auto name = str.c_str();
-        createAction(name, "", SLOT(saveAsFile()));
-        layoutMenu->addAction(tr(name));
-    }
+    windowMenu = new WindowMenu();
+    menuBar()->addMenu(windowMenu);
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)

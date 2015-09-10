@@ -6,7 +6,7 @@ BaseMenu::BaseMenu(std::string name)
 {
 }
 
-QAction* BaseMenu::addAction(const char* name, std::string iconName, const char* slot, const QKeySequence& shortcut)
+QAction* BaseMenu::createAction(const char* name, std::string iconName, const char* slot, const QKeySequence& shortcut)
 {
     auto action = new QAction(QObject::tr(name), this);
     if (iconName != "")
@@ -22,6 +22,11 @@ QAction* BaseMenu::addAction(const char* name, std::string iconName, const char*
 
     action->setShortcut(shortcut);
     connect(action, SIGNAL(triggered()), this, slot);
+    return action;
+}
+
+QAction* BaseMenu::addAction(QAction* action)
+{
     QMenu::addAction(action);
     return action;
 }

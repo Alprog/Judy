@@ -19,10 +19,9 @@ private:
     bool eventFilter(QObject* obj, QEvent* event) override;
 
     QMenu* fileMenu;
-    QMenu* debugMenu;
-
     QMenu* editMenu;
-
+    QMenu* debugMenu;
+    QMenu* windowMenu;
 
     DocumentsPane* documents;
     bool modificationChecking;

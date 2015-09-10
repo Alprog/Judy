@@ -4,10 +4,14 @@
 FileMenu::FileMenu()
     : BaseMenu{"File"}
 {
-    addAction("New", "new", SLOT(NewFile()), QKeySequence::New);
-    addAction("Open", "open", SLOT(OpenFile()), QKeySequence::Open);
-    addAction("Save", "save", SLOT(SaveFile()), QKeySequence::Save);
-    addAction("Save As", "", SLOT(SaveAsFile()), QKeySequence::SaveAs);
+    QList<QAction*> actions
+    {
+        createAction("New", "new", SLOT(NewFile()), QKeySequence::New),
+        createAction("Open", "open", SLOT(OpenFile()), QKeySequence::Open),
+        createAction("Save", "save", SLOT(SaveFile()), QKeySequence::Save),
+        createAction("Save As", "", SLOT(SaveAsFile()), QKeySequence::SaveAs)
+    };
+    addActions(actions);
 }
 
 //QByteArray ba;

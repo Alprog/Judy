@@ -14,7 +14,7 @@ public:
     QAction* playAction;
     QAction* pauseAction;
     QAction* stopAction;
-    std::vector<QAction*> stepActions;
+    QList<QAction*> stepActions;
 
 private slots:
     void Play();

@@ -10,6 +10,8 @@ class BaseMenu : public QMenu
 public:
     BaseMenu(std::string name);
 
-    QAction* addAction(const char* name, std::string iconName, const char* slot,
-                       const QKeySequence& shortcut = QKeySequence::UnknownKey);
+    QAction* createAction(const char* name, std::string iconName, const char* slot,
+                          const QKeySequence& shortcut = QKeySequence::UnknownKey);
+
+    QAction* addAction(QAction* action);
 };
