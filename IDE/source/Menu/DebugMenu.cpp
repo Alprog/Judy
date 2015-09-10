@@ -52,12 +52,13 @@ void DebugMenu::Refresh()
     RemotePlayer* remotePlayer = RemotePlayer::Instance();
     bool isRunning = remotePlayer->IsRunning();
     bool isConnected = remotePlayer->IsConnected();
+    bool isPaused = remotePlayer->IsPaused();
 
-    playAction->setEnabled(!isRunning);
-    pauseAction->setEnabled(isConnected);
+    playAction->setEnabled(!isRunning || isPaused);
+    pauseAction->setEnabled(isConnected && !isPaused);
     stopAction->setEnabled(isRunning);
     for (auto& action : stepActions)
     {
-        action->setEnabled(isConnected);
+        action->setEnabled(isConnected && isPaused);
     }
 }
