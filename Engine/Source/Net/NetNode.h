@@ -10,7 +10,7 @@
 
 class NetNode
 {
-private:
+public:
     enum class State
     {
         Disconnected,
@@ -19,7 +19,6 @@ private:
         Connected
     };
 
-public:
     NetNode();
     ~NetNode();
 
@@ -29,9 +28,9 @@ public:
     void Connect(std::string host, int port);
     void Send(Any any);
 
-private:
     State GetState() const;
 
+private:
     void StartWork();
     void Work();
 

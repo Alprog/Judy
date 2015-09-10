@@ -35,7 +35,7 @@ NetNode::~NetNode()
     state = State::Disconnected;
     if (workThread != nullptr)
     {
-        workThread->join();
+        workThread->detach();
         delete workThread;
     }
 
@@ -164,7 +164,15 @@ void NetNode::ReceiveWork()
     do
     {
         count = socket->Receive(buffer, MAX);
-        if (count > 0)
+        if (count < 0)
+        {
+            auto error = socket->GetLastError();
+            if (error != Socket::Error::WouldBlock)
+            {
+                state = State::Disconnected;
+            }
+        }
+        else if (count > 0)
         {
             input.append(buffer, count);
         }

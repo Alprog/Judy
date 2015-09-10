@@ -4,6 +4,8 @@
 #include "DocumentsPane.h"
 #include "LuaMachine/LuaMachine.h"
 
+class DebugMenu;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -27,13 +29,10 @@ private:
 
     bool eventFilter(QObject* obj, QEvent* event) override;
 
-    QAction* createAction(const char* name, const char* icon, const char* slot,
-                          const QKeySequence& shortcut = QKeySequence::UnknownKey);
-
     QMenu* fileMenu;
     QToolBar* fileToolBar;
 
-    QMenu* debugMenu;
+    DebugMenu* debugMenu;
     QToolBar* debugToolBar;
 
     QMenu* editMenu;

@@ -16,11 +16,13 @@ protected:
 
 public:
     void Run();
-
-    void Break();
+    void Pause();
     void Continue();
-
     void Stop();
+
+    bool IsRunning();
+    bool IsConnected();
+    bool IsPaused();
 
 private:
     Process* process;

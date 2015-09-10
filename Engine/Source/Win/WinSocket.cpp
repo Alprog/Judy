@@ -83,7 +83,8 @@ int WinSocket::Receive(char* buffer, int max)
 
 Socket::Error WinSocket::GetLastError()
 {
-    switch (WSAGetLastError())
+    int a = WSAGetLastError();
+    switch (a)
     {
         case WSAEWOULDBLOCK:
             return Error::WouldBlock;

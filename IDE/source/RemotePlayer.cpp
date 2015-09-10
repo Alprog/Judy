@@ -57,7 +57,22 @@ void RemotePlayer::Run()
     Continue();
 }
 
-void RemotePlayer::Break()
+bool RemotePlayer::IsRunning()
+{
+    return process != nullptr && process->IsRunning();
+}
+
+bool RemotePlayer::IsConnected()
+{
+    return netNode != nullptr && netNode->GetState() == NetNode::State::Connected;
+}
+
+bool RemotePlayer::IsPaused()
+{
+    return false;
+}
+
+void RemotePlayer::Pause()
 {
     if (netNode != nullptr)
     {

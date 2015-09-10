@@ -13,7 +13,10 @@ HEADERS += \
     Source/TextEditor.h \
     Source/DocumentsPane.h \
     Source/OutputPane.h \
-    Source/RemotePlayer.h
+    Source/RemotePlayer.h \
+    Source/Utils.h \
+    Source/Menu/BaseMenu.h \
+    Source/Menu/DebugMenu.h
 
 SOURCES += \
     Source/MainWindow.cpp \
@@ -22,7 +25,10 @@ SOURCES += \
     Source/TextEditor.cpp \
     Source/DocumentsPane.cpp \
     Source/OutputPane.cpp \
-    Source/RemotePlayer.cpp
+    Source/RemotePlayer.cpp \
+    Source/Utils.cpp \
+    Source/Menu/BaseMenu.cpp \
+    Source/Menu/DebugMenu.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 
