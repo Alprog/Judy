@@ -70,7 +70,7 @@ void NetNode::Connect(std::string host, int port)
     StartWork();
 }
 
-void NetNode::Send(Any& any)
+void NetNode::Send(Any any)
 {
     auto text = serializer->Serialize(any);
     output.append(text);

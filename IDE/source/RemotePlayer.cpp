@@ -50,21 +50,20 @@ void RemotePlayer::Start()
     Any breakpoints = Breakpoints();
     netNode->Send(breakpoints);
 
-    Any command = DebugCommand("continue");
-    netNode->Send(command);
+    Continue();
 }
 
 void RemotePlayer::Break()
 {
-
+    netNode->Send(DebugCommand("break"));
 }
 
 void RemotePlayer::Continue()
 {
-
+    netNode->Send(DebugCommand("continue"));
 }
 
 void RemotePlayer::Stop()
 {
-
+    netNode->Send(DebugCommand("stop"));
 }

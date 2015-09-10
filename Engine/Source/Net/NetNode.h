@@ -27,8 +27,7 @@ public:
 
     void Start(int port);
     void Connect(std::string host, int port);
-
-    void Send(Any& any); 
+    void Send(Any any);
 
 private:
     State GetState() const;
