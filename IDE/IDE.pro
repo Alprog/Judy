@@ -16,7 +16,8 @@ HEADERS += \
     Source/RemotePlayer.h \
     Source/Utils.h \
     Source/Menu/BaseMenu.h \
-    Source/Menu/DebugMenu.h
+    Source/Menu/DebugMenu.h \
+    Source/Menu/FileMenu.h
 
 SOURCES += \
     Source/MainWindow.cpp \
@@ -28,7 +29,8 @@ SOURCES += \
     Source/RemotePlayer.cpp \
     Source/Utils.cpp \
     Source/Menu/BaseMenu.cpp \
-    Source/Menu/DebugMenu.cpp
+    Source/Menu/DebugMenu.cpp \
+    Source/Menu/FileMenu.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 

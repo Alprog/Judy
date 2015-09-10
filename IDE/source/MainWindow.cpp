@@ -17,6 +17,7 @@
 #include "Utils.h"
 
 #include "Menu/DebugMenu.h"
+#include "Menu/FileMenu.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -46,44 +47,36 @@ MainWindow::MainWindow(QWidget* parent)
     setCentralWidget(documents);
 }
 
-void MainWindow::createActions()
+MainWindow::~MainWindow()
 {
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileToolBar = addToolBar(tr("File"));
-    fileToolBar->setObjectName("fileToolBar");
-    fileToolBar->setIconSize(QSize(20, 20));
+    delete debugMenu;
+}
 
-    QAction* fileActions[]
+void MainWindow::createToolBar(QMenu* menu)
+{
+    auto toolBar = addToolBar(menu->title());
+    toolBar->setObjectName(menu->title() + "ToolBar");
+    toolBar->setIconSize(QSize(20, 20));
+    for (auto& action : menu->actions())
     {
-        createAction("New", "new", SLOT(newFile()), QKeySequence::New),
-        createAction("Open", "open", SLOT(openFile()), QKeySequence::Open),
-        createAction("Save", "save", SLOT(saveFile()), QKeySequence::Save),
-        createAction("Save As", "", SLOT(saveAsFile()), QKeySequence::SaveAs)
-    };
-
-    for (QAction* action : fileActions)
-    {
-        fileMenu->addAction(action);
         if (!action->icon().isNull())
         {
-            fileToolBar->addAction(action);
+            toolBar->addAction(action);
         }
     }
+}
+
+void MainWindow::createActions()
+{
+    fileMenu = new FileMenu();
+    menuBar()->addMenu(fileMenu);
+    createToolBar(fileMenu);
 
     //---------------
 
     debugMenu = new DebugMenu();
-
-    debugToolBar = addToolBar(tr("Debug"));
-    debugToolBar->setObjectName("debugToolBar");
-    debugToolBar->setIconSize(QSize(20, 20));
-
-//    for (auto action : debugActions)
-//    {
-//        debugToolBar->addAction(action);
-//    }
-
     menuBar()->addMenu(debugMenu);
+    createToolBar(debugMenu);
 
     //---------------
 
@@ -96,34 +89,6 @@ void MainWindow::createActions()
         createAction(name, "", SLOT(saveAsFile()));
         layoutMenu->addAction(tr(name));
     }
-}
-
-QByteArray ba;
-
-void MainWindow::newFile()
-{
-    this->restoreState(ba, 0);
-}
-
-void MainWindow::openFile()
-{
-    auto filter = tr("Any supported (*.lua *.hlsl *.scene);;Lua (*.lua);;HLSL (*.hlsl);;Scene (*.scene)");
-    auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter);
-    if (!fileName.isEmpty())
-    {
-        documents->Open(fileName.toUtf8().constData());
-    }
-}
-
-void MainWindow::saveFile()
-{
-    documents->SaveCurrentDocument();
-}
-
-void MainWindow::saveAsFile()
-{
-    printf("save!\n");
-    ba = this->saveState(0);
 }
 
 bool MainWindow::eventFilter(QObject* obj, QEvent* event)
@@ -139,24 +104,4 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
     }
 
     return QMainWindow::eventFilter(obj, event);
-}
-
-void MainWindow::startDebug()
-{
-    RemotePlayer::Instance()->Run();
-
-//    auto machine = LuaMachine::Instance();
-//    if (machine->IsStarted())
-//    {
-//        machine->Continue();
-//    }
-//    else
-//    {
-//        machine->Start("main.lua");
-//    }
-}
-
-void MainWindow::stopDebug()
-{
-    RemotePlayer::Instance()->Stop();
 }
