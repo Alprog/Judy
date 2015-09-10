@@ -2,7 +2,9 @@
 #pragma once
 
 #include "Singleton.h"
+
 class NetNode;
+class Process;
 
 class RemotePlayer : public Singleton<RemotePlayer>
 {
@@ -10,9 +12,10 @@ class RemotePlayer : public Singleton<RemotePlayer>
 
 protected:
     RemotePlayer();
+    ~RemotePlayer();
 
 public:
-    void Start();
+    void Run();
 
     void Break();
     void Continue();
@@ -20,5 +23,6 @@ public:
     void Stop();
 
 private:
+    Process* process;
     NetNode* netNode;
 };

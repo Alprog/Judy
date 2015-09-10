@@ -161,7 +161,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 
 void MainWindow::startDebug()
 {
-    RemotePlayer::Instance()->Start();
+    RemotePlayer::Instance()->Run();
 
 //    auto machine = LuaMachine::Instance();
 //    if (machine->IsStarted())
@@ -176,5 +176,5 @@ void MainWindow::startDebug()
 
 void MainWindow::stopDebug()
 {
-//    LuaMachine::Instance()->Stop();
+    RemotePlayer::Instance()->Stop();
 }

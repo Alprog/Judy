@@ -1,17 +1,21 @@
 
 #include "RemotePlayer.h"
+#include "Process.h"
 #include "Net/NetNode.h"
+
 #include "LuaMachine/LogMessage.h"
 #include "LuaMachine/Breakpoints.h"
 #include "LuaMachine/DebugCommand.h"
 
-#include <windows.h>
-#include <cstdio>
-#include <thread>
-
 RemotePlayer::RemotePlayer()
     : netNode{nullptr}
+    , process{nullptr}
 {
+}
+
+RemotePlayer::~RemotePlayer()
+{
+    Stop();
 }
 
 void CustomWork()
@@ -27,43 +31,58 @@ void MessageCallback(Any message)
     }
 }
 
-void RemotePlayer::Start()
+void RemotePlayer::Run()
 {
-    LPWSTR path = (LPWSTR)L"D:\\Judy\\Build\\Win\\Player\\Player.exe";
-    LPWSTR commandLine = (LPWSTR)L"player.exe -debug";
-    LPWSTR currentDirectory = (LPWSTR)L"D:\\Judy\\Player";
+    Stop();
 
-    STARTUPINFO sti;
-    ZeroMemory(&sti, sizeof(sti));
-    sti.cb = sizeof(STARTUPINFO);
+    auto path = "D:\\Judy\\Build\\Win\\Player\\Player.exe";
+    auto commandLine = "player.exe -debug";
+    auto directory = "D:\\Judy\\Player";
 
-    PROCESS_INFORMATION pi;
-    ZeroMemory(&(pi), sizeof(pi));
+    process = Process::Create();
+    process->Run(path, commandLine, directory);
 
-    CreateProcess(path, commandLine, 0, 0, FALSE, 0, 0, currentDirectory, &sti, &pi);
+    if (!process->IsRunning())
+    {
+        delete process;
+        return;
+    }
 
     netNode = new NetNode();
     netNode->customWork = CustomWork;
     netNode->messageCallback = MessageCallback;
     netNode->Connect("127.0.0.1", 2730);
 
-    Any breakpoints = Breakpoints();
-    netNode->Send(breakpoints);
-
+    netNode->Send(Breakpoints());
     Continue();
 }
 
 void RemotePlayer::Break()
 {
-    netNode->Send(DebugCommand("break"));
+    if (netNode != nullptr)
+    {
+        netNode->Send(DebugCommand("break"));
+    }
 }
 
 void RemotePlayer::Continue()
 {
-    netNode->Send(DebugCommand("continue"));
+    if (netNode != nullptr)
+    {
+        netNode->Send(DebugCommand("continue"));
+    }
 }
 
 void RemotePlayer::Stop()
 {
-    netNode->Send(DebugCommand("stop"));
+    if (netNode != nullptr)
+    {
+        delete netNode;
+        netNode = nullptr;
+    }
+    if (process != nullptr)
+    {
+        delete process;
+        process = nullptr;
+    }
 }
