@@ -10,6 +10,7 @@
 RemotePlayer::RemotePlayer()
     : netNode{nullptr}
     , process{nullptr}
+    , isPaused{false}
 {
 }
 
@@ -27,7 +28,7 @@ void MessageCallback(Any message)
     if (message.GetType() == TypeMetaOf<LogMessage>())
     {
         auto text = message.as<LogMessage>().text;
-        printf("%s \n", text.c_str());
+        printf("%s", text.c_str());
     }
 }
 
@@ -54,7 +55,7 @@ void RemotePlayer::Run()
     netNode->Connect("127.0.0.1", 2730);
 
     netNode->Send(Breakpoints());
-    Continue();
+    netNode->Send(DebugCommand("continue"));
 }
 
 bool RemotePlayer::IsRunning()
@@ -69,22 +70,24 @@ bool RemotePlayer::IsConnected()
 
 bool RemotePlayer::IsPaused()
 {
-    return false;
+    return isPaused;
 }
 
 void RemotePlayer::Pause()
 {
-    if (netNode != nullptr)
+    if (IsConnected())
     {
         netNode->Send(DebugCommand("break"));
+        isPaused = true;
     }
 }
 
 void RemotePlayer::Continue()
 {
-    if (netNode != nullptr)
+    if (IsConnected())
     {
         netNode->Send(DebugCommand("continue"));
+        isPaused = false;
     }
 }
 
@@ -100,4 +103,5 @@ void RemotePlayer::Stop()
         delete process;
         process = nullptr;
     }
+    isPaused = false;
 }

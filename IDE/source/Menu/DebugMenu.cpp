@@ -23,11 +23,20 @@ DebugMenu::DebugMenu(MainWindow* window)
 
 void DebugMenu::Play()
 {
-    RemotePlayer::Instance()->Run();
+    auto player = RemotePlayer::Instance();
+    if (!player->IsRunning())
+    {
+        player->Run();
+    }
+    else if (player->IsPaused())
+    {
+        player->Continue();
+    }
 }
 
 void DebugMenu::Pause()
 {
+    RemotePlayer::Instance()->Pause();
 }
 
 void DebugMenu::Stop()

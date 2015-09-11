@@ -55,7 +55,8 @@ HEADERS += \
     Source/Meta/select_if.h \
     Source/LuaMachine/LogMessage.h \
     Source/LuaMachine/DebugCommand.h \
-    Source/Process.h
+    Source/Process.h \
+    Source/LuaMachine/StackInfo.h
 
 SOURCES += \
     Source/App.cpp \
@@ -95,7 +96,8 @@ SOURCES += \
     Source/Meta/CFunctionMeta.cpp \
     Source/LuaMachine/LogMessage.cpp \
     Source/LuaMachine/DebugCommand.cpp \
-    Source/Process.cpp
+    Source/Process.cpp \
+    Source/LuaMachine/StackInfo.cpp
 
 win {
     INCLUDEPATH += Source/Windows

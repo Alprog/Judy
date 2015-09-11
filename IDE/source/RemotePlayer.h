@@ -27,4 +27,5 @@ public:
 private:
     Process* process;
     NetNode* netNode;
+    bool isPaused;
 };

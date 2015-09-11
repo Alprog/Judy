@@ -34,9 +34,19 @@ void MessageCallback(Any message)
     else if (type == TypeMetaOf<DebugCommand>())
     {
         auto command = message.as<DebugCommand>();
-        LuaMachine::Instance()->Continue();
-        printf("get command\n");
+        auto name = command.name;
+
+        printf("%s \n", name.c_str());
         fflush(stdout);
+
+        if (name == "continue")
+        {
+            LuaMachine::Instance()->Continue();
+        }
+        else if (name == "break")
+        {
+            LuaMachine::Instance()->Break();
+        }
     }
 }
 
