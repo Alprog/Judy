@@ -1,8 +1,8 @@
 
 #include "WindowMenu.h"
 
-WindowMenu::WindowMenu()
-    : BaseMenu{"Window"}
+WindowMenu::WindowMenu(MainWindow* window)
+    : BaseMenu{"Window", window}
 {
     auto layoutMenu = addMenu(tr("&Layout"));
     for (int i = 0; i < 4; i++)
@@ -18,3 +18,8 @@ void WindowMenu::Stub()
 {
 
 }
+
+//QByteArray ba;
+//window->restoreState(ba, 0);
+//    printf("save!\n");
+//    ba = this->saveState(0);

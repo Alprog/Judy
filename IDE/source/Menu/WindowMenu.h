@@ -8,7 +8,7 @@ class WindowMenu : public BaseMenu
     Q_OBJECT
 
 public:
-    WindowMenu();
+    WindowMenu(MainWindow* window);
 
 private slots:
     void Stub();

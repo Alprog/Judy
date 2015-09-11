@@ -12,6 +12,8 @@ public:
     explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
+    DocumentsPane* documents;
+
 private:
     void createToolBar(QMenu* menu);
     void createActions();
@@ -23,9 +25,6 @@ private:
     QMenu* debugMenu;
     QMenu* windowMenu;
 
-    DocumentsPane* documents;
     bool modificationChecking;
-
-    LuaMachine* luaMachine;
 };
 

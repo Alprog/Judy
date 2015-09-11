@@ -9,7 +9,7 @@ class DebugMenu : public BaseMenu
     Q_OBJECT
 
 public:
-    DebugMenu();
+    DebugMenu(MainWindow* window);
 
     QAction* playAction;
     QAction* pauseAction;

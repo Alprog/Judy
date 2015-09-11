@@ -8,7 +8,7 @@ class FileMenu : public BaseMenu
     Q_OBJECT
 
 public:
-    FileMenu();
+    FileMenu(MainWindow* window);
 
 private slots:
     void NewFile();

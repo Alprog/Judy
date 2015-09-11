@@ -2,8 +2,8 @@
 #include "DebugMenu.h"
 #include "../RemotePlayer.h"
 
-DebugMenu::DebugMenu()
-    : BaseMenu{"Debug"}
+DebugMenu::DebugMenu(MainWindow* window)
+    : BaseMenu{"Debug", window}
 {
     playAction = createAction("Start", "play", SLOT(Play()), Qt::Key_F5);
     pauseAction = createAction("Pause", "pause", SLOT(Pause()), Qt::Key_F6);

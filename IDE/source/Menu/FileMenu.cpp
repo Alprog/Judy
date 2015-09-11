@@ -1,8 +1,9 @@
 
 #include "FileMenu.h"
+#include <QFileDialog>
 
-FileMenu::FileMenu()
-    : BaseMenu{"File"}
+FileMenu::FileMenu(MainWindow* window)
+    : BaseMenu{"File", window}
 {
     QList<QAction*> actions
     {
@@ -14,30 +15,25 @@ FileMenu::FileMenu()
     addActions(actions);
 }
 
-//QByteArray ba;
-
 void FileMenu::NewFile()
 {
-    //this->restoreState(ba, 0);
 }
 
 void FileMenu::OpenFile()
 {
-//    auto filter = tr("Any supported (*.lua *.hlsl *.scene);;Lua (*.lua);;HLSL (*.hlsl);;Scene (*.scene)");
-//    auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", filter);
-//    if (!fileName.isEmpty())
-//    {
-//        documents->Open(fileName.toUtf8().constData());
-//    }
+    auto filter = tr("Any supported (*.lua *.hlsl *.scene);;Lua (*.lua);;HLSL (*.hlsl);;Scene (*.scene)");
+    auto fileName = QFileDialog::getOpenFileName(window, tr("Open File"), "", filter);
+    if (!fileName.isEmpty())
+    {
+        window->documents->Open(fileName.toUtf8().constData());
+    }
 }
 
 void FileMenu::SaveFile()
 {
-//    documents->SaveCurrentDocument();
+    window->documents->SaveCurrentDocument();
 }
 
 void FileMenu::SaveAsFile()
 {
-//    printf("save!\n");
-//    ba = this->saveState(0);
 }

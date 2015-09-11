@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget* parent)
     auto area = Qt::BottomDockWidgetArea;
     addDockWidget(area, new OutputPane());
 
-
     QDockWidget* dockWidget;
     dockWidget = new QDockWidget("Stack", 0, 0);
     dockWidget->setObjectName("Stack");
@@ -70,15 +69,15 @@ void MainWindow::createToolBar(QMenu* menu)
 
 void MainWindow::createActions()
 {
-    fileMenu = new FileMenu();
+    fileMenu = new FileMenu(this);
     menuBar()->addMenu(fileMenu);
     createToolBar(fileMenu);
 
-    debugMenu = new DebugMenu();
+    debugMenu = new DebugMenu(this);
     menuBar()->addMenu(debugMenu);
     createToolBar(debugMenu);
 
-    windowMenu = new WindowMenu();
+    windowMenu = new WindowMenu(this);
     menuBar()->addMenu(windowMenu);
 }
 
