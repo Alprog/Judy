@@ -48,9 +48,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    delete debugMenu;
-    delete fileMenu;
-    delete windowMenu;
 }
 
 void MainWindow::createToolBar(QMenu* menu)

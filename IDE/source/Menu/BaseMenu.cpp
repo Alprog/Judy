@@ -3,7 +3,7 @@
 #include "../MainWindow.h"
 
 BaseMenu::BaseMenu(std::string name, MainWindow* window)
-    : QMenu(tr(name.c_str()))
+    : QMenu(tr(name.c_str()), window)
     , window{window}
 {
 }
