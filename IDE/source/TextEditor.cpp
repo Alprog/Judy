@@ -158,10 +158,19 @@ void TextEditor::onLinesAdded(int arg)
 
 void TextEditor::onDwellStart(int x, int y)
 {
-    printf("%i %i \n", x, y);
+    auto pos = positionFromPoint(x, y);
+    auto startPos = wordStartPosition(pos, true);
+    auto endPos = wordEndPosition(pos, true);
+
+    std::string text = get_text_range(startPos, endPos);
+
+    if (text.length() > 0)
+    {
+        callTipCancel();
+        callTipShow(pos, text.c_str());
+    }
 
 
-    callTipShow(3, "Auto bar du");
 }
 
 void TextEditor::getBreakpointLines()

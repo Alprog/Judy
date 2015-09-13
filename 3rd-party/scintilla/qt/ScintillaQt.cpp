@@ -634,7 +634,7 @@ public:
 
     virtual void mousePressEvent(QMouseEvent *) override
     {
-        sc->TipClick();
+        //sc->TipClick();
         sc->GetCallTip()->CallTipCancel();
     }
 
