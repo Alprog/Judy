@@ -19,6 +19,7 @@ public:
 private slots:
     void onMarginClicked(int position, int modifiers, int margin);
     void onLinesAdded(int arg);
+    void onDwellStart(int x, int y);
 
 private:
     void init();

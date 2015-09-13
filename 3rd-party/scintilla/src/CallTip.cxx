@@ -113,11 +113,14 @@ void CallTip::DrawChunk(Surface *surface, int &x, const char *s,
 				bool upArrow = s[startSeg] == '\001';
 				rcClient.left = static_cast<XYPOSITION>(x);
 				rcClient.right = static_cast<XYPOSITION>(xEnd);
-				if (draw) {
+                if (true) {
 					const int halfWidth = widthArrow / 2 - 3;
 					const int quarterWidth = halfWidth / 2;
 					const int centreX = x + widthArrow / 2 - 1;
 					const int centreY = static_cast<int>(rcClient.top + rcClient.bottom) / 2;
+
+                    colourBG.Set(100, 0, 255);
+
 					surface->FillRectangle(rcClient, colourBG);
 					PRectangle rcClientInner(rcClient.left + 1, rcClient.top + 1,
 					                         rcClient.right - 2, rcClient.bottom - 1);
@@ -149,7 +152,7 @@ void CallTip::DrawChunk(Surface *surface, int &x, const char *s,
 				xEnd = NextTabPos(x);
 			} else {
 				xEnd = x + RoundXYPosition(surface->WidthText(font, s + startSeg, endSeg - startSeg));
-				if (draw) {
+                if (draw) {
 					rcClient.left = static_cast<XYPOSITION>(x);
 					rcClient.right = static_cast<XYPOSITION>(xEnd);
 					surface->DrawTextTransparent(rcClient, font, static_cast<XYPOSITION>(ytext),
@@ -222,7 +225,7 @@ void CallTip::PaintCT(Surface *surfaceWindow) {
 	                        rcClientPos.bottom - rcClientPos.top);
 	PRectangle rcClient(1.0f, 1.0f, rcClientSize.right - 1, rcClientSize.bottom - 1);
 
-	surfaceWindow->FillRectangle(rcClient, colourBG);
+    surfaceWindow->FillRectangle(rcClient, colourBG);
 
 	offsetMain = insetX;    // initial alignment assuming no arrows
 	PaintContents(surfaceWindow, true);
@@ -276,7 +279,7 @@ PRectangle CallTip::CallTipStart(int pos, Point pt, int textHeight, const char *
 	rectUp = PRectangle(0,0,0,0);
 	rectDown = PRectangle(0,0,0,0);
 	offsetMain = insetX;            // changed to right edge of any arrows
-	int width = PaintContents(surfaceMeasure, false) + insetX;
+    int width = PaintContents(surfaceMeasure, false) + insetX;
 	while ((newline = strchr(look, '\n')) != NULL) {
 		look = newline + 1;
 		numLines++;

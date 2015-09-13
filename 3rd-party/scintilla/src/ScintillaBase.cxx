@@ -312,7 +312,7 @@ void ScintillaBase::AutoCompleteStart(int lenEntered, const char *list) {
 	}
 	rcList.bottom = rcList.top + heightAlloced;
 	ac.lb->SetPositionRelative(rcList, wMain);
-	ac.Show(true);
+    ac.Show(true);
 	if (lenEntered != 0) {
 		AutoCompleteMoveToCurrentWord();
 	}
@@ -459,7 +459,7 @@ void ScintillaBase::CallTipShow(Point pt, const char *defn) {
 		rc.bottom += offset;
 	}
 	// Now display the window.
-	CreateCallTipWindow(rc);
+	CreateCallTipWindow(rc);    
 	ct.wCallTip.SetPositionRelative(rc, wMain);
 	ct.wCallTip.Show();
 }

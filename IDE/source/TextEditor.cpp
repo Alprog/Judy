@@ -95,6 +95,9 @@ void TextEditor::init()
     styleSetBack(STYLE_LINENUMBER, darkBack);
     styleSetBack(TextMarginStyle, lightBack);
     connect(this, SIGNAL(linesAdded(int)), this, SLOT(onLinesAdded(int)));
+    connect(this, SIGNAL(dwellStart(int, int)), this, SLOT(onDwellStart(int, int)));
+
+    setMouseDwellTime(100);
 
     int INDEX;
 
@@ -140,6 +143,9 @@ void TextEditor::init()
     markerSetBack(ActiveLine, sunglow);
 
     setMarginLeft(7);
+
+    callTipSetBack(red);
+    callTipSetFore(white);
 }
 
 void TextEditor::onLinesAdded(int arg)
@@ -148,6 +154,14 @@ void TextEditor::onLinesAdded(int arg)
     {
        marginSetStyle(i, TextMarginStyle);
     }
+}
+
+void TextEditor::onDwellStart(int x, int y)
+{
+    printf("%i %i \n", x, y);
+
+
+    callTipShow(3, "Auto bar du");
 }
 
 void TextEditor::getBreakpointLines()
