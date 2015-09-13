@@ -634,8 +634,8 @@ public:
 
     virtual void mousePressEvent(QMouseEvent *) override
     {
+        sc->TipClick();
         sc->GetCallTip()->CallTipCancel();
-        //sc->CallTipClick();
     }
 
     void paintEvent(QPaintEvent *event) override
@@ -657,9 +657,9 @@ CallTip* ScintillaQt::GetCallTip()
     return &ct;
 }
 
-void ScintillaQt::CallTipClick()
+void ScintillaQt::TipClick()
 {
-    ScintillaBase::CallTipClick();
+    CallTipClick();
 }
 
 void ScintillaQt::CreateCallTipWindow(PRectangle rc)

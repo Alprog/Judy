@@ -467,7 +467,7 @@ void ScintillaBase::CallTipShow(Point pt, const char *defn) {
 void ScintillaBase::CallTipClick() {
 	SCNotification scn = {};
 	scn.nmhdr.code = SCN_CALLTIPCLICK;
-	scn.position = ct.clickPlace;
+    scn.position = ct.clickPlace;
 	NotifyParent(scn);
 }
 

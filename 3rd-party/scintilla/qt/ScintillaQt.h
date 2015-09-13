@@ -76,7 +76,7 @@ public:
 	virtual ~ScintillaQt();
 
     CallTip* ScintillaQt::GetCallTip();
-    void ScintillaQt::CallTipClick();
+    void TipClick();
 
 signals:
 	void horizontalScrolled(int value);
