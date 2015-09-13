@@ -97,7 +97,7 @@ void TextEditor::init()
     connect(this, SIGNAL(linesAdded(int)), this, SLOT(onLinesAdded(int)));
     connect(this, SIGNAL(dwellStart(int, int)), this, SLOT(onDwellStart(int, int)));
 
-    setMouseDwellTime(100);
+    setMouseDwellTime(1000);
 
     int INDEX;
 
@@ -144,7 +144,7 @@ void TextEditor::init()
 
     setMarginLeft(7);
 
-    callTipSetBack(red);
+    callTipSetBack(lightBack);
     callTipSetFore(white);
 }
 

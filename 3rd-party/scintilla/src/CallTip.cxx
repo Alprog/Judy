@@ -299,10 +299,10 @@ PRectangle CallTip::CallTipStart(int pos, Point pt, int textHeight, const char *
 }
 
 void CallTip::CallTipCancel() {
-	inCallTipMode = false;
-	if (wCallTip.Created()) {
-		wCallTip.Destroy();
-	}
+    inCallTipMode = false;
+    if (wCallTip.Created()) {
+        wCallTip.Destroy();
+    }
 }
 
 void CallTip::SetHighlight(int start, int end) {

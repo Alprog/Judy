@@ -619,10 +619,10 @@ Window::~Window() {}
 
 void Window::Destroy()
 {
-	if (wid)
-		delete window(wid);
+    if (wid)
+        delete window(wid);
 
-	wid = 0;
+    wid = 0;
 }
 
 bool Window::HasFocus()

@@ -619,10 +619,10 @@ void ScintillaQt::StartDrag()
 class CallTipImpl : public QWidget
 {
 public:
-    CallTipImpl(CallTip* ct)
+    CallTipImpl(ScintillaQt* sc)
         : QWidget(0, Qt::ToolTip)
     {
-        this->ct = ct;
+        this->sc = sc;
         surface = Surface::Allocate(0);
         surface->Init(this);
     }
@@ -632,24 +632,44 @@ public:
         delete surface;
     }
 
-    void paintEvent(QPaintEvent *event)
+    virtual void mousePressEvent(QMouseEvent *) override
     {
-        ct->PaintCT(surface);
+        sc->GetCallTip()->CallTipCancel();
+        //sc->CallTipClick();
+    }
+
+    void paintEvent(QPaintEvent *event) override
+    {
+        auto ct = sc->GetCallTip();
+        if (ct->inCallTipMode)
+        {
+            ct->PaintCT(surface);
+        }
     }
 
 private:
-    CallTip* ct;
+    ScintillaQt* sc;
     Surface* surface;
 };
+
+CallTip* ScintillaQt::GetCallTip()
+{
+    return &ct;
+}
+
+void ScintillaQt::CallTipClick()
+{
+    ScintillaBase::CallTipClick();
+}
 
 void ScintillaQt::CreateCallTipWindow(PRectangle rc)
 {
     if (!ct.wCallTip.Created())
     {
-        QWidget* pCallTip =  new CallTipImpl(&ct);
-		ct.wCallTip = pCallTip;
-		pCallTip->move(rc.left, rc.top);
-		pCallTip->resize(rc.Width(), rc.Height());
+        CallTipImpl* pCallTip = new CallTipImpl(this);
+        ct.wCallTip = pCallTip;
+        pCallTip->move(rc.left, rc.top);
+        pCallTip->resize(rc.Width(), rc.Height());
     }
 }
 

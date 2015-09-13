@@ -460,8 +460,8 @@ void ScintillaBase::CallTipShow(Point pt, const char *defn) {
 	}
 	// Now display the window.
 	CreateCallTipWindow(rc);    
-	ct.wCallTip.SetPositionRelative(rc, wMain);
-	ct.wCallTip.Show();
+    ct.wCallTip.SetPositionRelative(rc, wMain);
+    ct.wCallTip.Show();
 }
 
 void ScintillaBase::CallTipClick() {
