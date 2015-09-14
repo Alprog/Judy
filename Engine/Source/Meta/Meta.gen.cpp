@@ -3,8 +3,10 @@
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
 #include "Breakpoints.h"
+#include "CallInfo.h"
 #include "DebugCommand.h"
 #include "LogMessage.h"
+#include "StackInfo.h"
 #include "Transform.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -26,6 +28,15 @@ void Meta::regClasses()
         .field("map", &Breakpoints::map)
     ;
 
+    ClassDefiner<CallInfo>(this, "CallInfo")
+        .constructor<std :: string, std :: string, int, int, int>()
+        .field("name", &CallInfo::name)
+        .field("source", &CallInfo::source)
+        .field("line", &CallInfo::line)
+        .field("startLine", &CallInfo::startLine)
+        .field("endLine", &CallInfo::endLine)
+    ;
+
     ClassDefiner<DebugCommand>(this, "DebugCommand")
         .constructor()
         .constructor<std :: string>()
@@ -36,6 +47,9 @@ void Meta::regClasses()
         .constructor()
         .constructor<std :: string>()
         .field("text", &LogMessage::text)
+    ;
+
+    ClassDefiner<StackInfo>(this, "StackInfo")
     ;
 
     ClassDefiner<Transform>(this, "Transform")

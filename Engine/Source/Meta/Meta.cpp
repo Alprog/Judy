@@ -3,6 +3,7 @@
 #include "TypeMeta.h"
 
 #include "ClassDefiner.h"
+#include "CallInfo.h"
 
 template <typename T>
 std::vector<Any> toAnyVector(T& in)
@@ -136,4 +137,6 @@ Meta::Meta()
     regMap<std::string, std::unordered_set<int>>();
 
     regClasses();
+
+    regVector<CallInfo>();
 }
