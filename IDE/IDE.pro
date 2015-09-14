@@ -17,7 +17,8 @@ HEADERS += \
     Source/Menu/BaseMenu.h \
     Source/Menu/DebugMenu.h \
     Source/Menu/FileMenu.h \
-    Source/Menu/WindowMenu.h
+    Source/Menu/WindowMenu.h \
+    Source/StackPane.h
 
 SOURCES += \
     Source/MainWindow.cpp \
@@ -30,7 +31,8 @@ SOURCES += \
     Source/Menu/BaseMenu.cpp \
     Source/Menu/DebugMenu.cpp \
     Source/Menu/FileMenu.cpp \
-    Source/Menu/WindowMenu.cpp
+    Source/Menu/WindowMenu.cpp \
+    Source/StackPane.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 

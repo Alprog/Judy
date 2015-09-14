@@ -31,11 +31,12 @@ private:
     void CustomNetWork();
     void OnGetMessage(Any message);
 
+public:
+    CallStack stack;
+    Breakpoints breakpoints;
+
 private:
     Process* process;
     NetNode* netNode;
     bool isPaused;
-
-    CallStack stack;
-    Breakpoints breakpoints;
 };

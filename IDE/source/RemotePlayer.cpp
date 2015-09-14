@@ -107,8 +107,8 @@ void RemotePlayer::OnGetMessage(Any message)
     }
     else if (message.GetType() == TypeMetaOf<CallStack>())
     {
+        stack = message.as<CallStack>();
         isPaused = true;
-        printf("breakpoint\n");
     }
     else if (message.GetType() == TypeMetaOf<DebugCommand>())
     {

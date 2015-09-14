@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QEvent>
 #include "OutputPane.h"
+#include "StackPane.h"
 
 #include "RemotePlayer.h"
 
@@ -32,15 +33,8 @@ MainWindow::MainWindow(QWidget* parent)
     this->setAnimated(true);
     this->setDockNestingEnabled(true);
 
-
-    auto area = Qt::BottomDockWidgetArea;
-    addDockWidget(area, new OutputPane());
-
-    QDockWidget* dockWidget;
-    dockWidget = new QDockWidget("Stack", 0, 0);
-    dockWidget->setObjectName("Stack");
-    dockWidget->setMinimumWidth(250);
-    addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
+    addDockWidget(Qt::BottomDockWidgetArea, new OutputPane());
+    addDockWidget(Qt::LeftDockWidgetArea, new StackPane());
 
     documents = new DocumentsPane;
     setCentralWidget(documents);
