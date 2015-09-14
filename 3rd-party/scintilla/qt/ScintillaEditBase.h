@@ -134,7 +134,7 @@ protected:
 	virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
 	virtual void scrollContentsBy(int, int) {}
 
-public:
+private:
 	ScintillaQt *sqt;
 
 	QTime time;
