@@ -15,6 +15,7 @@ extern "C"
 LuaMachine::LuaMachine()
     : L{nullptr}
     , isStarted{false}
+    , breakCallback{false}
 {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -54,22 +55,27 @@ void hook(lua_State *L, lua_Debug *ar)
 void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
 {
     lua_getinfo(L, "S", ar);
-    if (breakRequired || Breakpoints.IsSet(ar->source, ar->currentline))
+    if (breakRequired || breakpoints.IsSet(ar->source, ar->currentline))
     {
+        stack.clear();
+
         auto level = 0;
         while (lua_getstack(L, level, ar))
         {
             lua_getinfo(L, "nSl", ar);
-
-            printf("%s %s %i\n", ar->name, ar->source, ar->currentline);
-
+            CallInfo callInfo(ar->name, ar->source, ar->currentline, ar->linedefined, ar->lastlinedefined);
+            stack.push_back(callInfo);
             level++;
         }
 
-        fflush(stdout);
-
         breakRequired = false;
         suspended = true;
+
+        if (breakCallback != nullptr)
+        {
+            breakCallback(this);
+        }
+
         while (suspended)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(30));

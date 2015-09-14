@@ -225,7 +225,7 @@ void TextEditor::getBreakpointLines()
         line = markerNext(line + 1, mask);
     }
 
-    LuaMachine::Instance()->Breakpoints.Set(source, lines);
+    LuaMachine::Instance()->breakpoints.Set(source, lines);
 }
 
 void TextEditor::onMarginClicked(int position, int modifiers, int margin)
