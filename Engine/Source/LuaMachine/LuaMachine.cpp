@@ -58,6 +58,8 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
     lua_getinfo(L, "S", ar);
     if (breakRequired || breakpoints.IsSet(ar->source, ar->currentline))
     {
+        breakRequired = false;
+
         stack.calls.clear();
 
         auto level = 0;
@@ -74,17 +76,20 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
             level++;
         }
 
-        breakRequired = false;
-        suspended = true;
-
         if (breakCallback) breakCallback();
 
-        while (suspended)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(30));
-        }
+        SuspendExecution();
 
         if (resumeCallback) resumeCallback();
+    }
+}
+
+void LuaMachine::SuspendExecution()
+{
+    suspended = true;
+    while (suspended)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 
@@ -96,7 +101,7 @@ void LuaMachine::Start(std::string scriptName, bool debug)
     {
         int mask = LUA_MASKLINE;
         lua_sethook(L, hook, mask, 0);
-        breakRequired = true;
+        SuspendExecution();
     }
 
     if (luaL_dofile(L, scriptName.c_str()))

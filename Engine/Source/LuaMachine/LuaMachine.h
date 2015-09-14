@@ -31,6 +31,7 @@ public:
 
 private:
    void Hook(lua_State *L, lua_Debug *ar);
+   void SuspendExecution();
 
 public:
     Breakpoints breakpoints;
