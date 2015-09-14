@@ -50,9 +50,15 @@ void MessageCallback(Any message)
     }
 }
 
+void BreakCallback(LuaMachine* luaMachine)
+{
+    //RemoteDebbuger::netNode->Send(luaMachine->stack);
+}
+
 void RemoteDebbuger::Start(int port)
 {
     logPipe = new Pipe(stdout);
+    LuaMachine::Instance()->breakCallback = BreakCallback;
     netNode = new NetNode();
     netNode->customWork = CustomWork;
     netNode->messageCallback = MessageCallback;
