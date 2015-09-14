@@ -112,6 +112,7 @@ void RemotePlayer::OnGetMessage(Any message)
     }
     else if (message.GetType() == TypeMetaOf<DebugCommand>())
     {
+        stack.calls.clear();
         isPaused = false;
     }
     else
