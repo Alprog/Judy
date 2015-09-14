@@ -78,7 +78,7 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
 
         if (breakCallback != nullptr)
         {
-            breakCallback(this);
+            breakCallback();
         }
 
         while (suspended)

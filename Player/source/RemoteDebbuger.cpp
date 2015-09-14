@@ -8,26 +8,50 @@
 #include "Pipe.h"
 #include <regex>
 
-NetNode* RemoteDebbuger::netNode = nullptr;
-Pipe* logPipe = nullptr;
+using namespace std::placeholders;
 
-void CustomWork()
+RemoteDebbuger::RemoteDebbuger()
+    : luaMachine{nullptr}
+    , logPipe{nullptr}
+    , netNode{nullptr}
+{
+}
+
+void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
+{
+    this->luaMachine = luaMachine;
+    luaMachine->breakCallback = std::bind(&RemoteDebbuger::OnBreak, this);
+
+    logPipe = new Pipe(stdout);
+
+    netNode = new NetNode();
+    netNode->customWorkCallback = std::bind(&RemoteDebbuger::CustomNetWork, this);
+    netNode->messageCallback = std::bind(&RemoteDebbuger::OnGetMessage, this, _1);
+    netNode->Start(port);
+}
+
+void RemoteDebbuger::OnBreak()
+{
+    netNode->Send(luaMachine->stack);
+}
+
+void RemoteDebbuger::CustomNetWork()
 {
     auto text = logPipe->readText();
     if (text.size() > 0)
     {
         text = std::regex_replace(text, std::regex("(\\r\\n)|(\\n)|(\\r)"), "\\n");
         text = std::regex_replace(text, std::regex("\\'"), "\\'");
-        Any message = LogMessage {text};
-        RemoteDebbuger::netNode->Send(message);
+        netNode->Send(LogMessage(text));
     }
 }
 
-void MessageCallback(Any message)
+void RemoteDebbuger::OnGetMessage(Any message)
 {
     auto type = message.GetType();
     if (type == TypeMetaOf<Breakpoints>())
     {
+        luaMachine->breakpoints = message.as<Breakpoints>();
         printf("get breakpoints\n");
         fflush(stdout);
     }
@@ -41,26 +65,11 @@ void MessageCallback(Any message)
 
         if (name == "continue")
         {
-            LuaMachine::Instance()->Continue();
+            luaMachine->Continue();
         }
         else if (name == "break")
         {
-            LuaMachine::Instance()->Break();
+            luaMachine->Break();
         }
     }
-}
-
-void BreakCallback(LuaMachine* luaMachine)
-{
-    RemoteDebbuger::netNode->Send(luaMachine->stack);
-}
-
-void RemoteDebbuger::Start(int port)
-{
-    logPipe = new Pipe(stdout);
-    LuaMachine::Instance()->breakCallback = BreakCallback;
-    netNode = new NetNode();
-    netNode->customWork = CustomWork;
-    netNode->messageCallback = MessageCallback;
-    netNode->Start(port);
 }

@@ -16,7 +16,7 @@ NetNode::NetNode()
     , workThread{nullptr}
     , socket{nullptr}
     , messageCallback{nullptr}
-    , customWork{nullptr}
+    , customWorkCallback{nullptr}
 {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -96,9 +96,9 @@ void NetNode::Work()
         }
         else if (state == State::Connected)
         {
-            if (customWork != nullptr)
+            if (customWorkCallback != nullptr)
             {
-                customWork();
+                customWorkCallback();
             }
             SendWork();
             ReceiveWork();

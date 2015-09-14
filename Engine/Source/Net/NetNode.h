@@ -7,6 +7,7 @@
 #include "Singleton.h"
 #include <thread>
 #include <atomic>
+#include <functional>
 
 class NetNode
 {
@@ -41,8 +42,8 @@ private:
     void ProcessMessages();
 
 public:
-    void (*messageCallback)(Any any);
-    void (*customWork)();
+    std::function<void(Any)> messageCallback;
+    std::function<void()> customWorkCallback;
 
 private:
     lua_State* L;

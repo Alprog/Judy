@@ -2,6 +2,9 @@
 #pragma once
 
 #include "Singleton.h"
+#include "LuaMachine/Breakpoints.h"
+#include "LuaMachine/CallStack.h"
+#include "Meta/Any.h"
 
 class NetNode;
 class Process;
@@ -24,8 +27,15 @@ public:
     bool IsConnected();
     bool IsPaused();
 
+private:
+    void CustomNetWork();
+    void OnGetMessage(Any message);
+
 public:
     Process* process;
     NetNode* netNode;
     bool isPaused;
+
+    CallStack stack;
+    Breakpoints breakpoints;
 };

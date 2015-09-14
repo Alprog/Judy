@@ -35,7 +35,7 @@ private:
 public:
     Breakpoints breakpoints;
     CallStack stack;
-    void (*breakCallback)(LuaMachine*);
+    std::function<void()> breakCallback;
 
 private:
    lua_State* L;
