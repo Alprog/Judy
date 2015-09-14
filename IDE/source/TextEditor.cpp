@@ -2,6 +2,7 @@
 #include "TextEditor.h"
 #include <QWidget>
 #include "LuaMachine/LuaMachine.h"
+#include <QMouseEvent>
 
 int RGB(int r, int g, int b)
 {
@@ -22,13 +23,19 @@ const int sunglow = RGB(255, 216, 56);
 
 const int TextMarginStyle = 1;
 
+const int dwellStartTime = 500;
+const int tickInterval = 50;
+
 enum Markers
 {
     Breakpoint,
     ActiveLine
 };
 
-TextEditor::TextEditor(QWidget* parent) : ScintillaEdit(parent)
+TextEditor::TextEditor(QWidget* parent)
+    : ScintillaEdit(parent)
+    , mouseTime{0}
+    , mousePoint{0, 0}
 {
     init();
 }
@@ -95,10 +102,6 @@ void TextEditor::init()
     styleSetBack(STYLE_LINENUMBER, darkBack);
     styleSetBack(TextMarginStyle, lightBack);
     connect(this, SIGNAL(linesAdded(int)), this, SLOT(onLinesAdded(int)));
-    connect(this, SIGNAL(dwellStart(int, int)), this, SLOT(onDwellStart(int, int)));
-
-    setMouseDwellTime(1000);
-
     int INDEX;
 
     INDEX = 0;
@@ -144,8 +147,42 @@ void TextEditor::init()
 
     setMarginLeft(7);
 
+    setMouseDwellTime(500);
     callTipSetBack(lightBack);
     callTipSetFore(white);
+
+    connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
+    timer.start(tickInterval);
+}
+
+void TextEditor::tick()
+{
+    if (this->isVisible())
+    {
+        // dwellStart and dwellEnd signals not work properly
+        // with toggle visiblity, so provide own mechanism
+        auto point = this->mapFromGlobal(QCursor::pos());
+        if (point == mousePoint)
+        {
+            if (mouseTime < dwellStartTime)
+            {
+                mouseTime += tickInterval;
+                if (mouseTime >= dwellStartTime)
+                {
+                    onDwellStart(point.x(), point.y());
+                }
+            }
+        }
+        else
+        {
+            if (mouseTime >= dwellStartTime)
+            {
+                onDwellEnd(mousePoint.x(), mousePoint.y());
+            }
+            mousePoint = point;
+            mouseTime = 0;
+        }
+    }
 }
 
 void TextEditor::onLinesAdded(int arg)
@@ -161,16 +198,17 @@ void TextEditor::onDwellStart(int x, int y)
     auto pos = positionFromPoint(x, y);
     auto startPos = wordStartPosition(pos, true);
     auto endPos = wordEndPosition(pos, true);
-
-    std::string text = get_text_range(startPos, endPos);
-
-    if (text.length() > 0)
+    if (pos >= startPos && pos < endPos)
     {
+        std::string text = get_text_range(startPos, endPos);
         callTipCancel();
         callTipShow(pos, text.c_str());
     }
+}
 
-
+void TextEditor::onDwellEnd(int x, int y)
+{
+    callTipCancel();
 }
 
 void TextEditor::getBreakpointLines()

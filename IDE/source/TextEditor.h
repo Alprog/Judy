@@ -3,6 +3,7 @@
 
 #include "Document.h"
 #include "SciLexer.h"
+#include <QTimer>
 #include "../qt/ScintillaEdit.h"
 #include "string"
 
@@ -19,10 +20,16 @@ public:
 private slots:
     void onMarginClicked(int position, int modifiers, int margin);
     void onLinesAdded(int arg);
+
+    void tick();
     void onDwellStart(int x, int y);
+    void onDwellEnd(int x, int y);
 
 private:
     void init();
-
     std::string source;
+
+    QTimer timer;
+    int mouseTime;
+    QPoint mousePoint;
 };

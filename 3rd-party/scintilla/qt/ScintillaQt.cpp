@@ -634,7 +634,13 @@ public:
 
     virtual void mousePressEvent(QMouseEvent *) override
     {
-        //sc->TipClick();
+        sc->TipClick();
+        sc->GetCallTip()->CallTipCancel();
+    }
+
+    virtual void mouseDoubleClickEvent(QMouseEvent *) override
+    {
+        sc->TipClick();
         sc->GetCallTip()->CallTipCancel();
     }
 
@@ -804,7 +810,7 @@ void ScintillaQt::Drop(const Point &point, const QMimeData *data, bool move)
 
 void ScintillaQt::timerEvent(QTimerEvent *event)
 {
-	for (TickReason tr=tickCaret; tr<=tickDwell; tr = static_cast<TickReason>(tr+1)) {
+    for (TickReason tr=tickCaret; tr<=tickDwell; tr = static_cast<TickReason>(tr+1)) {
 		if (timers[tr] == event->timerId()) {
 			TickFor(tr);
 		}

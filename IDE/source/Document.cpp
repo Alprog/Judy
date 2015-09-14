@@ -42,6 +42,11 @@ DocumentM::DocumentM(std::string filePath)
     editor->setSource(source);
 }
 
+void DocumentM::toggle()
+{
+    editor->setVisible(!editor->isVisible());
+}
+
 void DocumentM::Reload()
 {
     QFile file(fullPath.c_str());
