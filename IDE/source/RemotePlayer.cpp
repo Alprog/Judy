@@ -6,6 +6,7 @@
 #include "LuaMachine/LogMessage.h"
 #include "LuaMachine/Breakpoints.h"
 #include "LuaMachine/DebugCommand.h"
+#include "LuaMachine/CallStack.h"
 
 RemotePlayer::RemotePlayer()
     : netNode{nullptr}
@@ -29,6 +30,15 @@ void MessageCallback(Any message)
     {
         auto text = message.as<LogMessage>().text;
         printf("%s", text.c_str());
+    }
+    else if (message.GetType() == TypeMetaOf<CallStack>())
+    {
+        RemotePlayer::Instance()->isPaused = true;
+        printf("breakpoint\n");
+    }
+    else
+    {
+        printf("new message \n");
     }
 }
 
@@ -78,7 +88,6 @@ void RemotePlayer::Pause()
     if (IsConnected())
     {
         netNode->Send(DebugCommand("break"));
-        isPaused = true;
     }
 }
 

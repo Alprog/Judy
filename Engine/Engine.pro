@@ -56,8 +56,8 @@ HEADERS += \
     Source/LuaMachine/LogMessage.h \
     Source/LuaMachine/DebugCommand.h \
     Source/Process.h \
-    Source/LuaMachine/StackInfo.h \
-    Source/LuaMachine/CallInfo.h
+    Source/LuaMachine/CallInfo.h \
+    Source/LuaMachine/CallStack.h
 
 SOURCES += \
     Source/App.cpp \
@@ -98,8 +98,8 @@ SOURCES += \
     Source/LuaMachine/LogMessage.cpp \
     Source/LuaMachine/DebugCommand.cpp \
     Source/Process.cpp \
-    Source/LuaMachine/StackInfo.cpp \
-    Source/LuaMachine/CallInfo.cpp
+    Source/LuaMachine/CallInfo.cpp \
+    Source/LuaMachine/CallStack.cpp
 
 win {
     INCLUDEPATH += Source/Windows

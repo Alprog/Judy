@@ -4,9 +4,9 @@
 #include "ClassDefiner.h"
 #include "Breakpoints.h"
 #include "CallInfo.h"
+#include "CallStack.h"
 #include "DebugCommand.h"
 #include "LogMessage.h"
-#include "StackInfo.h"
 #include "Transform.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -29,12 +29,18 @@ void Meta::regClasses()
     ;
 
     ClassDefiner<CallInfo>(this, "CallInfo")
+        .constructor()
         .constructor<std :: string, std :: string, int, int, int>()
         .field("name", &CallInfo::name)
         .field("source", &CallInfo::source)
         .field("line", &CallInfo::line)
         .field("startLine", &CallInfo::startLine)
         .field("endLine", &CallInfo::endLine)
+    ;
+
+    ClassDefiner<CallStack>(this, "CallStack")
+        .constructor()
+        .field("calls", &CallStack::calls)
     ;
 
     ClassDefiner<DebugCommand>(this, "DebugCommand")
@@ -47,9 +53,6 @@ void Meta::regClasses()
         .constructor()
         .constructor<std :: string>()
         .field("text", &LogMessage::text)
-    ;
-
-    ClassDefiner<StackInfo>(this, "StackInfo")
     ;
 
     ClassDefiner<Transform>(this, "Transform")

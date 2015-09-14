@@ -52,7 +52,7 @@ void MessageCallback(Any message)
 
 void BreakCallback(LuaMachine* luaMachine)
 {
-    //RemoteDebbuger::netNode->Send(luaMachine->stack);
+    RemoteDebbuger::netNode->Send(luaMachine->stack);
 }
 
 void RemoteDebbuger::Start(int port)

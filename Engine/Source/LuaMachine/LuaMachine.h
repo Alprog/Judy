@@ -5,7 +5,7 @@
 #include "Singleton.h"
 #include <thread>
 #include <atomic>
-#include "CallInfo.h"
+#include "CallStack.h"
 #include "Breakpoints.h"
 
 class lua_State;
@@ -34,7 +34,7 @@ private:
 
 public:
     Breakpoints breakpoints;
-    std::vector<CallInfo> stack;
+    CallStack stack;
     void (*breakCallback)(LuaMachine*);
 
 private:

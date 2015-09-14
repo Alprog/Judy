@@ -24,7 +24,7 @@ public:
     bool IsConnected();
     bool IsPaused();
 
-private:
+public:
     Process* process;
     NetNode* netNode;
     bool isPaused;
