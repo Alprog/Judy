@@ -76,7 +76,6 @@ void RemotePlayer::Continue()
     if (IsConnected())
     {
         netNode->Send(DebugCommand("continue"));
-        isPaused = false;
     }
 }
 
@@ -108,9 +107,12 @@ void RemotePlayer::OnGetMessage(Any message)
     }
     else if (message.GetType() == TypeMetaOf<CallStack>())
     {
-        RemotePlayer::Instance()->isPaused = true;
-        //stack = message.as<CallStack>();
+        isPaused = true;
         printf("breakpoint\n");
+    }
+    else if (message.GetType() == TypeMetaOf<DebugCommand>())
+    {
+        isPaused = false;
     }
     else
     {

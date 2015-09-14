@@ -16,6 +16,7 @@ LuaMachine::LuaMachine()
     : L{nullptr}
     , isStarted{false}
     , breakCallback{nullptr}
+    , resumeCallback{nullptr}
 {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -76,15 +77,14 @@ void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
         breakRequired = false;
         suspended = true;
 
-        if (breakCallback != nullptr)
-        {
-            breakCallback();
-        }
+        if (breakCallback) breakCallback();
 
         while (suspended)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(30));
         }
+
+        if (resumeCallback) resumeCallback();
     }
 }
 

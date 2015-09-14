@@ -21,6 +21,7 @@ void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
 {
     this->luaMachine = luaMachine;
     luaMachine->breakCallback = std::bind(&RemoteDebbuger::OnBreak, this);
+    luaMachine->resumeCallback = std::bind(&RemoteDebbuger::OnResume, this);
 
     logPipe = new Pipe(stdout);
 
@@ -33,6 +34,11 @@ void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
 void RemoteDebbuger::OnBreak()
 {
     netNode->Send(luaMachine->stack);
+}
+
+void RemoteDebbuger::OnResume()
+{
+    netNode->Send(DebugCommand("resumed"));
 }
 
 void RemoteDebbuger::CustomNetWork()

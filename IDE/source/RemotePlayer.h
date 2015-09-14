@@ -31,7 +31,7 @@ private:
     void CustomNetWork();
     void OnGetMessage(Any message);
 
-public:
+private:
     Process* process;
     NetNode* netNode;
     bool isPaused;
