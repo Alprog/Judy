@@ -46,7 +46,6 @@ public:
     std::function<void()> customWorkCallback;
 
 private:
-    lua_State* L;
     Serializer* serializer;
     Socket* socket;
     std::thread* workThread;

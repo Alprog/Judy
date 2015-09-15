@@ -623,22 +623,9 @@ public:
         : QWidget(0, Qt::ToolTip)
     {
         this->sc = sc;
-        surface = Surface::Allocate(0);
-        surface->Init(this);
-    }
-
-    ~CallTipImpl()
-    {
-        delete surface;
     }
 
     virtual void mousePressEvent(QMouseEvent *) override
-    {
-        sc->TipClick();
-        sc->GetCallTip()->CallTipCancel();
-    }
-
-    virtual void mouseDoubleClickEvent(QMouseEvent *) override
     {
         sc->TipClick();
         sc->GetCallTip()->CallTipCancel();
@@ -649,13 +636,15 @@ public:
         auto ct = sc->GetCallTip();
         if (ct->inCallTipMode)
         {
+            auto surface = Surface::Allocate(0);
+            surface->Init(this);
             ct->PaintCT(surface);
+            delete surface;
         }
     }
 
 private:
     ScintillaQt* sc;
-    Surface* surface;
 };
 
 CallTip* ScintillaQt::GetCallTip()

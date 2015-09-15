@@ -16,7 +16,8 @@ class ITypeMeta;
 class Serializer
 {
 public:
-    Serializer(lua_State* L);
+    Serializer();
+    ~Serializer();
 
     std::string Serialize(Any object);
 

@@ -3,9 +3,20 @@
 #include "FieldMeta.h"
 #include "MethodMeta.h"
 
-Serializer::Serializer(lua_State* L)
+Serializer::Serializer()
 {
-    this->L = L;
+    L = luaL_newstate();
+    luaL_openlibs(L);
+    lua_getglobal(L, "package");
+    lua_pushstring(L, "?.lua");
+    lua_setfield(L, -2, "path");
+    luaL_dofile(L, "Serializer.lua");
+}
+
+Serializer::~Serializer()
+{
+    lua_close(L);
+    L = nullptr;
 }
 
 std::string Serializer::Serialize(Any object)

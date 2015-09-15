@@ -18,14 +18,7 @@ NetNode::NetNode()
     , messageCallback{nullptr}
     , customWorkCallback{nullptr}
 {
-    L = luaL_newstate();
-    luaL_openlibs(L);
-    lua_getglobal(L, "package");
-    lua_pushstring(L, "?.lua");
-    lua_setfield(L, -2, "path");
-    luaL_dofile(L, "Serializer.lua");
-    serializer = new Serializer(L);
-
+    serializer = new Serializer();
     socket = Socket::Create();
     socket->SetBlockingMode(false);
 }
@@ -40,8 +33,6 @@ NetNode::~NetNode()
     }
 
     delete serializer;
-    lua_close(L);
-    L = nullptr;
 }
 
 NetNode::State NetNode::GetState() const

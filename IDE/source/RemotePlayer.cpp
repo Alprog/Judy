@@ -7,6 +7,7 @@
 #include "LuaMachine/Breakpoints.h"
 #include "LuaMachine/DebugCommand.h"
 #include "LuaMachine/CallStack.h"
+#include "IDE.h"
 
 using namespace std::placeholders;
 
@@ -26,9 +27,10 @@ void RemotePlayer::Run()
 {
     Stop();
 
-    auto path = "D:\\Judy\\Build\\Win\\Player\\Player.exe";
-    auto commandLine = "player.exe -debug";
-    auto directory = "D:\\Judy\\Player";
+    auto& settings = IDE::Instance()->settings;
+    auto path = settings.playerPath;
+    auto directory = settings.projectPath;
+    auto commandLine = "player -debug";
 
     process = Process::Create();
     process->Run(path, commandLine, directory);
@@ -92,6 +94,7 @@ void RemotePlayer::Stop()
         process = nullptr;
     }
     isPaused = false;
+    stack.calls.clear();
 }
 
 void RemotePlayer::CustomNetWork()
