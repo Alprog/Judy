@@ -39,6 +39,12 @@ void DocumentsPane::Open(std::string path)
     this->setCurrentWidget(document);
 }
 
+void DocumentsPane::OpenAtLine(std::string path, int line)
+{
+    Open(path);
+    GetCurrentDocument()->GoToLine(line);
+}
+
 DocumentM* DocumentsPane::GetDocument(int index)
 {
     return (DocumentM*)widget(index);

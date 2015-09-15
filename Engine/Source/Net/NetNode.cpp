@@ -63,9 +63,11 @@ void NetNode::Connect(std::string host, int port)
 
 void NetNode::Send(Any any)
 {
+    mutex.lock();
     auto text = serializer->Serialize(any);
     output.append(text);
     output += '\0';
+    mutex.unlock();
 }
 
 void NetNode::StartWork()
@@ -144,7 +146,9 @@ void NetNode::SendWork()
             }
             totalSend += count;
         }
+        mutex.lock();
         output.erase(0, totalSend);
+        mutex.unlock();
     }
 }
 
@@ -179,7 +183,9 @@ void NetNode::ProcessMessages()
         if (index >= 0)
         {
             auto messageText = input.substr(0, index);
+            mutex.lock();
             auto message = serializer->Deserialize(messageText);
+            mutex.unlock();
             if (messageCallback != nullptr)
             {
                 messageCallback(message);

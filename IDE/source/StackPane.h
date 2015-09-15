@@ -4,6 +4,7 @@
 #include <QDockWidget>
 #include <QTableWidget>
 #include <QTimer>
+#include "LuaMachine/CallInfo.h"
 
 class StackPane : public QDockWidget
 {
@@ -14,10 +15,12 @@ public:
     ~StackPane();
 
 private:
-    void set(int row, int col, std::string text);
+    void Set(int row, int col, std::string text);
+    void FollowToCall(CallInfo callInfo);
 
 private slots:
-    void work();
+    void OnDoubleClicked(const QModelIndex& index);
+    void Work();
 
 private:
     QTableWidget* table;

@@ -116,3 +116,9 @@ void DocumentM::OnModified()
 {
     this->Modified();
 }
+
+void DocumentM::GoToLine(int line)
+{
+    editor->gotoLine(line - 1);
+    editor->setFocus(true);
+}

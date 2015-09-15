@@ -19,15 +19,16 @@ protected:
 
 public:
     void Run();
-    void Pause();
-    void Continue();
     void Stop();
 
     bool IsRunning();
     bool IsConnected();
     bool IsPaused();
 
+    void SendCommand(std::string name);
+
 private:
+
     void CustomNetWork();
     void OnGetMessage(Any message);
 

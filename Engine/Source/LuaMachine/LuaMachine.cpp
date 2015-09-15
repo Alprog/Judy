@@ -123,6 +123,22 @@ void LuaMachine::Continue()
     suspended = false;
 }
 
+void LuaMachine::StepInto()
+{
+    breakRequired = true;
+    suspended = false;
+}
+
+void LuaMachine::StepOver()
+{
+
+}
+
+void LuaMachine::StepOut()
+{
+
+}
+
 void stopHook(lua_State *L, lua_Debug *ar)
 {
     luaL_error(L, "Stop execution");

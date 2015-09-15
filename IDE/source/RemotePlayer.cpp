@@ -65,19 +65,11 @@ bool RemotePlayer::IsPaused()
     return isPaused;
 }
 
-void RemotePlayer::Pause()
+void RemotePlayer::SendCommand(std::string name)
 {
     if (IsConnected())
     {
-        netNode->Send(DebugCommand("break"));
-    }
-}
-
-void RemotePlayer::Continue()
-{
-    if (IsConnected())
-    {
-        netNode->Send(DebugCommand("continue"));
+        netNode->Send(DebugCommand(name));
     }
 }
 

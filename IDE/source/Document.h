@@ -17,6 +17,7 @@ public:
     std::string GetName() { return name; }
     std::string GetFullPath() { return fullPath; }
 
+    void GoToLine(int line);
     std::string GetTabName();
 
     bool IsModifiedOutside();

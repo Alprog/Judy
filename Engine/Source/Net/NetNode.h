@@ -8,6 +8,7 @@
 #include <thread>
 #include <atomic>
 #include <functional>
+#include <mutex>
 
 class NetNode
 {
@@ -56,4 +57,5 @@ private:
 
     std::string output;
     std::string input;
+    std::mutex mutex;
 };

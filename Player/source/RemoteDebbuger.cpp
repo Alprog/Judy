@@ -77,5 +77,17 @@ void RemoteDebbuger::OnGetMessage(Any message)
         {
             luaMachine->Break();
         }
+        else if (name == "stepInto")
+        {
+            luaMachine->StepInto();
+        }
+        else if (name == "stepOver")
+        {
+            luaMachine->StepOver();
+        }
+        else if (name == "stepOut")
+        {
+            luaMachine->StepOut();
+        }
     }
 }

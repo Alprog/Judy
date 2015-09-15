@@ -27,6 +27,9 @@ public:
    void Start(std::string scriptName, bool debug = false);
    void Break();
    void Continue();
+   void StepInto();
+   void StepOver();
+   void StepOut();
    void Stop();
 
 private:

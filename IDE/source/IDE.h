@@ -17,6 +17,7 @@ public:
     static IDE* Instance();
     int Start();
     void SaveSettings();
+    MainWindow* GetMainWindow();
 
 private:
     void LoadStyle();

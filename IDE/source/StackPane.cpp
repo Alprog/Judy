@@ -2,6 +2,7 @@
 #include "StackPane.h"
 #include "RemotePlayer.h"
 #include "QHeaderView.h"
+#include "IDE.h"
 
 StackPane::StackPane()
     : QDockWidget("Stack", 0, 0)
@@ -35,11 +36,32 @@ StackPane::StackPane()
 
     setWidget(table);
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(work()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(Work()));
+    connect(table, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(OnDoubleClicked(const QModelIndex&)));
     timer.start(100);
 }
 
-void StackPane::work()
+void StackPane::FollowToCall(CallInfo callInfo)
+{
+    auto mainWindow = IDE::Instance()->GetMainWindow();
+    auto projectPath = IDE::Instance()->settings.projectPath;
+    auto filePath = callInfo.source.substr(1);
+    auto fullPath = projectPath + "/" + filePath;
+    mainWindow->documents->OpenAtLine(fullPath, callInfo.line);
+
+}
+
+void StackPane::OnDoubleClicked(const QModelIndex& index)
+{
+    auto row = index.row();
+    auto& calls = RemotePlayer::Instance()->stack.calls;
+    if (row < calls.size())
+    {
+        FollowToCall(calls[row]);
+    }
+}
+
+void StackPane::Work()
 {
     auto& calls = RemotePlayer::Instance()->stack.calls;
 
@@ -47,16 +69,16 @@ void StackPane::work()
     for (int i = 0; i < calls.size(); i++)
     {
         auto& callInfo = calls[i];
-        set(i, 0, std::to_string(i));
-        set(i, 1, callInfo.name);
-        set(i, 2, callInfo.source);
-        set(i, 3, std::to_string(callInfo.line));
+        Set(i, 0, std::to_string(i));
+        Set(i, 1, callInfo.name);
+        Set(i, 2, callInfo.source);
+        Set(i, 3, std::to_string(callInfo.line));
 
         table->setRowHeight(i, 20);
     }
 }
 
-void StackPane::set(int row, int col, std::string text)
+void StackPane::Set(int row, int col, std::string text)
 {
     auto* item = new QTableWidgetItem();
     item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);

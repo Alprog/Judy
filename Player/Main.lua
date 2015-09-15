@@ -11,14 +11,14 @@ print(count)]]
 function a()
 	while (true) do
 		local a = 0;
-		for i = 1, 1000 do
-			for j = 1, 300 do
-				a = a + 1
+		for i = 1, 60000 do
+			for j = 1, 5 do
+				a = a + 1
 				a = a - 1
 			end
 		end
 		print("one")
-	end
+	end
 end
 
 function b()

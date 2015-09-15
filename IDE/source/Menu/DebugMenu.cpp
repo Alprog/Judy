@@ -30,13 +30,8 @@ void DebugMenu::Play()
     }
     else if (player->IsPaused())
     {
-        player->Continue();
+        player->SendCommand("continue");
     }
-}
-
-void DebugMenu::Pause()
-{
-    RemotePlayer::Instance()->Pause();
 }
 
 void DebugMenu::Stop()
@@ -44,16 +39,24 @@ void DebugMenu::Stop()
     RemotePlayer::Instance()->Stop();
 }
 
+void DebugMenu::Pause()
+{
+    RemotePlayer::Instance()->SendCommand("break");
+}
+
 void DebugMenu::StepInto()
 {
+    RemotePlayer::Instance()->SendCommand("stepInto");
 }
 
 void DebugMenu::StepOver()
 {
+    RemotePlayer::Instance()->SendCommand("stepOver");
 }
 
 void DebugMenu::StepOut()
 {
+    RemotePlayer::Instance()->SendCommand("stepOut");
 }
 
 void DebugMenu::Refresh()

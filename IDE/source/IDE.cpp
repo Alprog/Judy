@@ -60,3 +60,8 @@ int IDE::Start()
     windows.push_back(mainWindow);
     return exec();
 }
+
+MainWindow* IDE::GetMainWindow()
+{
+    return windows[0];
+}
