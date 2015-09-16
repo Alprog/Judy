@@ -8,7 +8,23 @@ a:AddChild(b)
 local count = a:ChildCount()
 print(count)]]
 
-function a()
+function d()
+	local a = 3;
+	a = 4;
+	a = 5;
+	return a;
+end
+
+function r()
+	local a = 3;
+	a = 4;
+	d()
+	a = 4;
+end
+
+local a = r()
+
+--[[function a()
 	while (true) do
 		local a = 0;
 		for i = 1, 60000 do
@@ -18,12 +34,12 @@ function a()
 			end
 		end
 		print("one")
-	end
+	end
 end
 
 function b()
 	a()
-end
+end]]
 
 b()
 

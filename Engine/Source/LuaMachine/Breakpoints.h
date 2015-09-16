@@ -14,6 +14,7 @@ class __Meta__ Breakpoints
 public:
     Breakpoints();
 
+    bool IsEmpty();
     bool IsSet(std::string fileName, int line);
 
     void Add(std::string fileName, int line);

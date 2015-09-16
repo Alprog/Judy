@@ -5,6 +5,11 @@ Breakpoints::Breakpoints()
 {
 }
 
+bool Breakpoints::IsEmpty()
+{
+    return true;
+}
+
 bool Breakpoints::IsSet(std::string fileName, int line)
 {
     auto& set = map[fileName];

@@ -35,6 +35,7 @@ public:
 private:
    void Hook(lua_Debug *ar);
    void Break(lua_Debug *ar);
+   CallInfo GetCallInfo(lua_Debug *ar);
    void SuspendExecution();
 
 public:
@@ -45,7 +46,8 @@ public:
 
 private:
    lua_State* L;
+   std::atomic<bool> suspended;
    bool isStarted;
-   std::atomic_bool breakRequired;
-   std::atomic_bool	suspended;
+   int level;
+   int breakRequiredLevel;
 };

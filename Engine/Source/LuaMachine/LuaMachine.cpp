@@ -12,11 +12,15 @@ extern "C"
     #include "lauxlib.h"
 }
 
+int const maxStackSize = 256;
+
 LuaMachine::LuaMachine()
     : L{nullptr}
     , isStarted{false}
     , breakCallback{nullptr}
     , resumeCallback{nullptr}
+    , level{0}
+    , breakRequiredLevel{0}
 {
     L = luaL_newstate();
     luaL_openlibs(L);
@@ -55,37 +59,43 @@ void hook(lua_State *L, lua_Debug *ar)
 
 void LuaMachine::Hook(lua_Debug *ar)
 {
-    if (breakRequired)
+    if (ar->event == LUA_HOOKCALL)
     {
-        breakRequired = false;
-        Break(ar);
+        level++;
+    }
+    else if (ar->event == LUA_HOOKRET)
+    {
+        level--;
     }
     else
     {
-        lua_getinfo(L, "S", ar);
-        if (breakpoints.IsSet(ar->source, ar->currentline))
+        if (level <= breakRequiredLevel)
         {
             Break(ar);
+        }
+        else
+        {
+            lua_getinfo(L, "S", ar);
+            if (breakpoints.IsSet(ar->source, ar->currentline))
+            {
+                Break(ar);
+            }
         }
     }
 }
 
 void LuaMachine::Break(lua_Debug *ar)
 {
+    breakRequiredLevel = 0;
+
     stack.calls.clear();
 
-    auto level = 0;
-    while (lua_getstack(L, level, ar))
+    auto index = 0;
+    while (lua_getstack(L, index, ar))
     {
         lua_getinfo(L, "nSl", ar);
-        auto name = ar->name ? ar->name : "";
-        auto source = ar->source ? ar->source : "";
-        auto line = ar->currentline;
-        auto startLine = ar->linedefined;
-        auto endLien = ar->lastlinedefined;
-        CallInfo callInfo(name, source, line, startLine, endLien);
-        stack.calls.push_back(callInfo);
-        level++;
+        stack.calls.push_back(GetCallInfo(ar));
+        index++;
     }
 
     if (breakCallback) breakCallback();
@@ -93,6 +103,16 @@ void LuaMachine::Break(lua_Debug *ar)
     SuspendExecution();
 
     if (resumeCallback) resumeCallback();
+}
+
+CallInfo LuaMachine::GetCallInfo(lua_Debug *ar)
+{
+    auto name = ar->name ? ar->name : "";
+    auto source = ar->source ? ar->source : "";
+    auto line = ar->currentline;
+    auto startLine = ar->linedefined;
+    auto endLine = ar->lastlinedefined;
+    return CallInfo(name, source, line, startLine, endLine);
 }
 
 void LuaMachine::SuspendExecution()
@@ -110,9 +130,10 @@ void LuaMachine::Start(std::string scriptName, bool debug)
 
     if (debug)
     {
-        int mask = LUA_MASKLINE;
+        int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE;
         lua_sethook(L, hook, mask, 0);
         SuspendExecution();
+        breakRequiredLevel = maxStackSize;
     }
 
     if (luaL_dofile(L, scriptName.c_str()))
@@ -122,38 +143,51 @@ void LuaMachine::Start(std::string scriptName, bool debug)
         std::cerr << lua_tostring(L, -1) << std::endl;
         lua_pop(L, 1);
     }
+
+    isStarted = false;
 }
 
 void LuaMachine::Pause()
 {
     if (!suspended)
     {
-        breakRequired = true;
+        breakRequiredLevel = maxStackSize;
     }
 }
 
 void LuaMachine::Continue()
 {
-    suspended = false;
+    if (suspended)
+    {
+        suspended = false;
+    }
 }
 
 void LuaMachine::StepInto()
 {
     if (suspended)
     {
-        breakRequired = true;
+        breakRequiredLevel = maxStackSize;
         suspended = false;
     }
 }
 
 void LuaMachine::StepOver()
 {
-
+    if (suspended)
+    {
+        breakRequiredLevel = level;
+        suspended = false;
+    }
 }
 
 void LuaMachine::StepOut()
 {
-
+    if (suspended)
+    {
+        breakRequiredLevel = level - 1;
+        suspended = false;
+    }
 }
 
 void stopHook(lua_State *L, lua_Debug *ar)
