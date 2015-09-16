@@ -52,7 +52,18 @@ void RemotePlayer::Run()
 
 bool RemotePlayer::IsRunning()
 {
-    return process != nullptr && process->IsRunning();
+    if (process != nullptr)
+    {
+        if (process->IsRunning())
+        {
+            return true;
+        }
+        else
+        {
+            Stop();
+        }
+    }
+    return false;
 }
 
 bool RemotePlayer::IsConnected()
@@ -70,6 +81,18 @@ void RemotePlayer::SendCommand(std::string name)
     if (IsConnected())
     {
         netNode->Send(DebugCommand(name));
+    }
+}
+
+CallInfo* RemotePlayer::GetActiveCall()
+{
+    if (stack.calls.size() > 0)
+    {
+        return &stack.calls[0];
+    }
+    else
+    {
+        return nullptr;
     }
 }
 

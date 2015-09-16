@@ -27,6 +27,7 @@ private slots:
 
 private:
     void init();
+    void updateActiveLine();
     std::string source;
 
     QTimer timer;

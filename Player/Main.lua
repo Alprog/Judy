@@ -8,21 +8,22 @@ a:AddChild(b)
 local count = a:ChildCount()
 print(count)]]
 
+require "Data/Math"
+
 function d()
 	local a = 3;
-	a = 4;
-	a = 5;
 	return a;
 end
 
 function r()
 	local a = 3;
-	a = 4;
-	d()
-	a = 4;
+	local e = d()
+	print("3")
+	return 4
 end
 
-local a = r()
+local a = sum(3, 3)
+print("sum: "..a)
 
 --[[function a()
 	while (true) do
@@ -40,7 +41,5 @@ end
 function b()
 	a()
 end]]
-
-b()
 
 --app:StartMainLoop()

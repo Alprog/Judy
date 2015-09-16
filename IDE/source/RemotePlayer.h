@@ -26,6 +26,7 @@ public:
     bool IsPaused();
 
     void SendCommand(std::string name);
+    CallInfo* GetActiveCall();
 
 private:
 

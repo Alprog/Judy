@@ -3,6 +3,7 @@
 #include <QWidget>
 #include "LuaMachine/LuaMachine.h"
 #include <QMouseEvent>
+#include "RemotePlayer.h"
 
 int RGB(int r, int g, int b)
 {
@@ -62,7 +63,7 @@ void TextEditor::init()
 
     setCaretFore(white);
     styleSetFont(STYLE_DEFAULT, "Consolas");
-    styleSetSize(STYLE_DEFAULT, 12);
+    styleSetSize(STYLE_DEFAULT, 11);
     styleSetBack(STYLE_DEFAULT, darkBack);
     styleClearAll();
 
@@ -182,6 +183,19 @@ void TextEditor::tick()
             mousePoint = point;
             mouseTime = 0;
         }
+    }
+
+    updateActiveLine();
+}
+
+void TextEditor::updateActiveLine()
+{
+    markerDeleteAll(ActiveLine);
+
+    auto call = RemotePlayer::Instance()->GetActiveCall();
+    if (call != nullptr && call->source == source)
+    {
+        markerAdd(call->line - 1, ActiveLine);
     }
 }
 
