@@ -73,9 +73,9 @@ void RemoteDebbuger::OnGetMessage(Any message)
         {
             luaMachine->Continue();
         }
-        else if (name == "break")
+        else if (name == "pause")
         {
-            luaMachine->Break();
+            luaMachine->Pause();
         }
         else if (name == "stepInto")
         {

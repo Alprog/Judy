@@ -25,7 +25,7 @@ public:
    bool IsBreaked() const;
 
    void Start(std::string scriptName, bool debug = false);
-   void Break();
+   void Pause();
    void Continue();
    void StepInto();
    void StepOver();
@@ -33,7 +33,8 @@ public:
    void Stop();
 
 private:
-   void Hook(lua_State *L, lua_Debug *ar);
+   void Hook(lua_Debug *ar);
+   void Break(lua_Debug *ar);
    void SuspendExecution();
 
 public:

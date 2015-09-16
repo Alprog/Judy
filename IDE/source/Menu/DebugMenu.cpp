@@ -41,7 +41,7 @@ void DebugMenu::Stop()
 
 void DebugMenu::Pause()
 {
-    RemotePlayer::Instance()->SendCommand("break");
+    RemotePlayer::Instance()->SendCommand("pause");
 }
 
 void DebugMenu::StepInto()

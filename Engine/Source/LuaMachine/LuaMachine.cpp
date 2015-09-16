@@ -50,38 +50,49 @@ bool LuaMachine::IsBreaked() const
 
 void hook(lua_State *L, lua_Debug *ar)
 {
-    LuaMachine::Instance()->Hook(L, ar);
+    LuaMachine::Instance()->Hook(ar);
 }
 
-void LuaMachine::Hook(lua_State *L, lua_Debug *ar)
+void LuaMachine::Hook(lua_Debug *ar)
 {
-    lua_getinfo(L, "S", ar);
-    if (breakRequired || breakpoints.IsSet(ar->source, ar->currentline))
+    if (breakRequired)
     {
         breakRequired = false;
-
-        stack.calls.clear();
-
-        auto level = 0;
-        while (lua_getstack(L, level, ar))
-        {
-            lua_getinfo(L, "nSl", ar);
-            auto name = ar->name ? ar->name : "";
-            auto source = ar->source ? ar->source : "";
-            auto line = ar->currentline;
-            auto startLine = ar->linedefined;
-            auto endLien = ar->lastlinedefined;
-            CallInfo callInfo(name, source, line, startLine, endLien);
-            stack.calls.push_back(callInfo);
-            level++;
-        }
-
-        if (breakCallback) breakCallback();
-
-        SuspendExecution();
-
-        if (resumeCallback) resumeCallback();
+        Break(ar);
     }
+    else
+    {
+        lua_getinfo(L, "S", ar);
+        if (breakpoints.IsSet(ar->source, ar->currentline))
+        {
+            Break(ar);
+        }
+    }
+}
+
+void LuaMachine::Break(lua_Debug *ar)
+{
+    stack.calls.clear();
+
+    auto level = 0;
+    while (lua_getstack(L, level, ar))
+    {
+        lua_getinfo(L, "nSl", ar);
+        auto name = ar->name ? ar->name : "";
+        auto source = ar->source ? ar->source : "";
+        auto line = ar->currentline;
+        auto startLine = ar->linedefined;
+        auto endLien = ar->lastlinedefined;
+        CallInfo callInfo(name, source, line, startLine, endLien);
+        stack.calls.push_back(callInfo);
+        level++;
+    }
+
+    if (breakCallback) breakCallback();
+
+    SuspendExecution();
+
+    if (resumeCallback) resumeCallback();
 }
 
 void LuaMachine::SuspendExecution()
@@ -113,9 +124,12 @@ void LuaMachine::Start(std::string scriptName, bool debug)
     }
 }
 
-void LuaMachine::Break()
+void LuaMachine::Pause()
 {
-    breakRequired = true;
+    if (!suspended)
+    {
+        breakRequired = true;
+    }
 }
 
 void LuaMachine::Continue()
@@ -125,8 +139,11 @@ void LuaMachine::Continue()
 
 void LuaMachine::StepInto()
 {
-    breakRequired = true;
-    suspended = false;
+    if (suspended)
+    {
+        breakRequired = true;
+        suspended = false;
+    }
 }
 
 void LuaMachine::StepOver()
