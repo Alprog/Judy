@@ -58,17 +58,11 @@ void RemoteDebbuger::OnGetMessage(Any message)
     if (type == TypeMetaOf<Breakpoints>())
     {
         luaMachine->breakpoints = message.as<Breakpoints>();
-        printf("get breakpoints\n");
-        fflush(stdout);
     }
     else if (type == TypeMetaOf<DebugCommand>())
     {
         auto command = message.as<DebugCommand>();
         auto name = command.name;
-
-        printf("%s \n", name.c_str());
-        fflush(stdout);
-
         if (name == "continue")
         {
             luaMachine->Continue();
