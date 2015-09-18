@@ -6,6 +6,7 @@
 #include "CallInfo.h"
 #include "CallStack.h"
 #include "DebugCommand.h"
+#include "FileBreakpoints.h"
 #include "LogMessage.h"
 #include "Transform.h"
 #include "Vector2.h"
@@ -21,11 +22,14 @@ void Meta::regClasses()
 {
     ClassDefiner<Breakpoints>(this, "Breakpoints")
         .constructor()
+        .method("IsEmpty", &Breakpoints::IsEmpty)
         .method("IsSet", &Breakpoints::IsSet)
         .method("Add", &Breakpoints::Add)
         .method("Remove", &Breakpoints::Remove)
-        .method("Set", &Breakpoints::Set)
-        .field("map", &Breakpoints::map)
+        .method("Clear", &Breakpoints::Clear)
+        //.method("Set", &Breakpoints::Set)
+        //.method("Set", &Breakpoints::Set)
+        //.field("map", &Breakpoints::map)
     ;
 
     ClassDefiner<CallInfo>(this, "CallInfo")
@@ -47,6 +51,12 @@ void Meta::regClasses()
         .constructor()
         .constructor<std :: string>()
         .field("name", &DebugCommand::name)
+    ;
+
+    ClassDefiner<FileBreakpoints>(this, "FileBreakpoints")
+        .constructor()
+        .field("fileName", &FileBreakpoints::fileName)
+        .field("lines", &FileBreakpoints::lines)
     ;
 
     ClassDefiner<LogMessage>(this, "LogMessage")

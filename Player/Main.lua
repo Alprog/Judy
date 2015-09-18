@@ -21,6 +21,8 @@ function r()
 	print("3")
 	return 4
 end
+
+r()
 
 local a = sum(3, 3)
 print("sum: "..a)

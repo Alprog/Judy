@@ -133,8 +133,8 @@ Meta::Meta()
     regVector<int>();
     regSet<int>();
 
-    regMap<std::string, int>();
-    regMap<std::string, std::unordered_set<int>>();
+    //regMap<std::string, int>();
+    //regMap<std::string, std::unordered_set<int>>();
 
     regClasses();
 

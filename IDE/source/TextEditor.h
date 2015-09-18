@@ -15,7 +15,7 @@ public:
     TextEditor(QWidget* parent = 0);
     void setSource(std::string source);
 
-    void getBreakpointLines();
+    void pushBreakpoints();
 
 private slots:
     void onMarginClicked(int position, int modifiers, int margin);

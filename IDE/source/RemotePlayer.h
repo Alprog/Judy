@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Singleton.h"
+#include <unordered_set>
 #include "LuaMachine/Breakpoints.h"
 #include "LuaMachine/CallStack.h"
 #include "Meta/Any.h"
@@ -27,18 +28,18 @@ public:
 
     void SendCommand(std::string name);
     CallInfo* GetActiveCall();
+    void SetBreakpoints(std::string source, std::unordered_set<int> lines);
 
 private:
-
     void CustomNetWork();
     void OnGetMessage(Any message);
 
 public:
     CallStack stack;
-    Breakpoints breakpoints;
 
 private:
     Process* process;
     NetNode* netNode;
+    Breakpoints breakpoints;
     bool isPaused;
 };

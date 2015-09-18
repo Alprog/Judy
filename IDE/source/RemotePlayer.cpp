@@ -5,6 +5,7 @@
 
 #include "LuaMachine/LogMessage.h"
 #include "LuaMachine/Breakpoints.h"
+#include "LuaMachine/Filebreakpoints.h"
 #include "LuaMachine/DebugCommand.h"
 #include "LuaMachine/CallStack.h"
 #include "IDE.h"
@@ -46,7 +47,10 @@ void RemotePlayer::Run()
     netNode->messageCallback = std::bind(&RemotePlayer::OnGetMessage, this, _1);
     netNode->Connect("127.0.0.1", 2730);
 
-    netNode->Send(Breakpoints());
+    for (auto& pair : breakpoints.getMap())
+    {
+        netNode->Send(FileBreakpoints(pair.first, pair.second));
+    }
     netNode->Send(DebugCommand("continue"));
 }
 
@@ -136,5 +140,14 @@ void RemotePlayer::OnGetMessage(Any message)
     else
     {
         printf("new message \n");
+    }
+}
+
+void RemotePlayer::SetBreakpoints(std::string source, std::unordered_set<int> lines)
+{
+    bool changed = breakpoints.Set(source, lines);
+    if (changed && IsConnected())
+    {
+        netNode->Send(FileBreakpoints(source, lines));
     }
 }

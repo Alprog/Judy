@@ -205,6 +205,7 @@ void TextEditor::onLinesAdded(int arg)
     {
        marginSetStyle(i, TextMarginStyle);
     }
+    pushBreakpoints();
 }
 
 void TextEditor::onDwellStart(int x, int y)
@@ -225,7 +226,7 @@ void TextEditor::onDwellEnd(int x, int y)
     callTipCancel();
 }
 
-void TextEditor::getBreakpointLines()
+void TextEditor::pushBreakpoints()
 {
     std::unordered_set<int> lines;
 
@@ -234,12 +235,11 @@ void TextEditor::getBreakpointLines()
     line = markerNext(line, mask);
     while (line >= 0)
     {
-        printf("%i\n", line);
         lines.insert(line + 1);
         line = markerNext(line + 1, mask);
     }
 
-    LuaMachine::Instance()->breakpoints.Set(source, lines);
+    RemotePlayer::Instance()->SetBreakpoints(source, lines);
 }
 
 void TextEditor::onMarginClicked(int position, int modifiers, int margin)
@@ -254,5 +254,5 @@ void TextEditor::onMarginClicked(int position, int modifiers, int margin)
         markerAdd(line, Breakpoint);
     }
 
-    getBreakpointLines();
+    pushBreakpoints();
 }

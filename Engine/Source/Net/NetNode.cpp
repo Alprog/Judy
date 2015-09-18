@@ -40,7 +40,7 @@ NetNode::State NetNode::GetState() const
     return state;
 }
 
-bool NetNode::IsConnnected() const
+bool NetNode::IsConnected() const
 {
     return state == State::Connected;
 }

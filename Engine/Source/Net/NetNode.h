@@ -24,7 +24,7 @@ public:
     NetNode();
     ~NetNode();
 
-    bool IsConnnected() const;
+    bool IsConnected() const;
 
     void Start(int port);
     void Connect(std::string host, int port);

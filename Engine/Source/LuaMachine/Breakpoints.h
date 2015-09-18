@@ -5,23 +5,30 @@
 #include <unordered_set>
 #include <string>
 
-#define __Meta__
-
-class __Meta__ Breakpoints
+class Breakpoints
 {
-    friend class Meta;
+    using MapType = std::unordered_map<std::string, std::unordered_set<int>>;
 
 public:
     Breakpoints();
 
     bool IsEmpty();
-    bool IsSet(std::string fileName, int line);
+    bool IsAnySet(int line);
+    bool IsSet(std::string source, int line);
 
     void Add(std::string fileName, int line);
     void Remove(std::string fileName, int line);
 
-    void Set(std::string fileName, std::unordered_set<int> lines);
+    bool Clear(std::string fileName);
+    bool Set(std::string fileName, std::unordered_set<int> lines);
+    const MapType& getMap() const;
+
+    void Update(Breakpoints breakpoints);
 
 private:
-    std::unordered_map<std::string, std::unordered_set<int>> map;
+    void UpdateLines();
+
+    MapType map;
+    bool linesDirty;
+    std::unordered_set<int> lines;
 };

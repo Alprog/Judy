@@ -3,7 +3,7 @@
 #include "Meta/Any.h"
 #include "LuaMachine/LuaMachine.h"
 #include "LuaMachine/LogMessage.h"
-#include "LuaMachine/Breakpoints.h"
+#include "LuaMachine/FileBreakpoints.h"
 #include "LuaMachine/DebugCommand.h"
 #include "Pipe.h"
 #include <regex>
@@ -55,11 +55,7 @@ void RemoteDebbuger::CustomNetWork()
 void RemoteDebbuger::OnGetMessage(Any message)
 {
     auto type = message.GetType();
-    if (type == TypeMetaOf<Breakpoints>())
-    {
-        luaMachine->breakpoints = message.as<Breakpoints>();
-    }
-    else if (type == TypeMetaOf<DebugCommand>())
+    if (type == TypeMetaOf<DebugCommand>())
     {
         auto command = message.as<DebugCommand>();
         auto name = command.name;
@@ -83,5 +79,13 @@ void RemoteDebbuger::OnGetMessage(Any message)
         {
             luaMachine->StepOut();
         }
+    }
+    else if (type == TypeMetaOf<FileBreakpoints>())
+    {
+        auto fileBreakpoints = message.as<FileBreakpoints>();
+        luaMachine->breakpoints.Set(fileBreakpoints.fileName, fileBreakpoints.lines);
+
+        printf("breaks get\n");
+        fflush(stdout);
     }
 }
