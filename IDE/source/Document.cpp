@@ -11,6 +11,7 @@
 
 DocumentM::DocumentM(std::string filePath)
 {
+
     fullPath = QDir(QString::fromStdString(filePath)).absolutePath().toStdString();
 
     auto index = filePath.find_last_of("\\/");
