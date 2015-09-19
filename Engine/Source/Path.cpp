@@ -2,27 +2,26 @@
 #include "Path.h"
 #include "regex"
 
-// using unix-style slash /
+// absolute - "C:/path" or "/path"
+// relative - "path" or "./path" or "../path"
+// using unix-style forward slash /
 
 Path::Path(const char*& pathCString)
-    : path(pathCString)
+    : pathString(pathCString)
 {
+    FixSlashes();
 }
 
 Path::Path(const std::string& pathString)
-    : path(pathString)
+    : pathString(pathString)
 {
+    FixSlashes();
 }
 
 Path::operator std::string&()
 {
-    return path;
+    return pathString;
 }
-
-//explicit Path::Path(const std::string& pathString)
-//{
-//    return Path(pathString);
-//}
 
 Path Path::Combine(Path lhs, Path rhs)
 {
@@ -36,7 +35,7 @@ Path* const Path::Combine(Path other)
 
 void Path::CdUp()
 {
-    throw; // not implemented
+    Cd("..");
 }
 
 void Path::Cd(Path path)
@@ -46,15 +45,28 @@ void Path::Cd(Path path)
 
 bool Path::IsAbsolute() const
 {
+    if (pathString.size() > 0)
+    {
+        auto firstChar = pathString[0];
+        if (firstChar == '/') { return true; }
+        if (firstChar == '.') { return false; }
+        auto index = pathString.find('/');
+        if (index != std::string::npos)
+        {
+            return pathString[index - 1] == ':'; // drive (or url?)
+        }
+    }
     return false;
 }
 
 bool Path::IsRelative() const
 {
-    return false;
+    return !IsAbsolute();
 }
 
 void Path::FixSlashes()
 {
-    path = std::regex_replace(path, std::regex("\\\\"), "/");
+    // change this later
+    pathString = std::regex_replace(pathString, std::regex("\\\\"), "/");
+    pathString = std::regex_replace(pathString, std::regex("//"), "/");
 }

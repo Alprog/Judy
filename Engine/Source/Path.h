@@ -11,10 +11,6 @@ public:
 
     operator std::string&();
 
-    //explicit Path (const std::string& x);
-
-    //static operator Path(std::string a);
-
     static Path Combine(Path lhs, Path rhs);
     Path* const Combine(Path other);
 
@@ -26,6 +22,6 @@ public:
 
 private:
     void FixSlashes();
-    std::string path;
 
+    std::string pathString;
 };
