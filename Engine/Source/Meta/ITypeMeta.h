@@ -16,8 +16,9 @@ public:
     std::string name;
 
     virtual bool isPointer() = 0;
-    virtual bool isVector() = 0;
     virtual bool isClass() = 0;
+    virtual bool isArray() = 0;
+    virtual bool isMap() = 0;
 
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;

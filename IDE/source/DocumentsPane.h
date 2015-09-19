@@ -16,6 +16,7 @@ public:
     DocumentsPane();
 
     void Open(std::string path);
+    void OpenAtLine(std::string path, int line);
     DocumentM* GetCurrentDocument();
     DocumentM* GetDocument(int index);
 

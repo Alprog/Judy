@@ -2,6 +2,8 @@
 #include "TextEditor.h"
 #include <QWidget>
 #include "LuaMachine/LuaMachine.h"
+#include <QMouseEvent>
+#include "RemotePlayer.h"
 
 int RGB(int r, int g, int b)
 {
@@ -22,13 +24,19 @@ const int sunglow = RGB(255, 216, 56);
 
 const int TextMarginStyle = 1;
 
+const int dwellStartTime = 500;
+const int tickInterval = 50;
+
 enum Markers
 {
     Breakpoint,
     ActiveLine
 };
 
-TextEditor::TextEditor(QWidget* parent) : ScintillaEdit(parent)
+TextEditor::TextEditor(QWidget* parent)
+    : ScintillaEdit(parent)
+    , mouseTime{0}
+    , mousePoint{0, 0}
 {
     init();
 }
@@ -55,7 +63,7 @@ void TextEditor::init()
 
     setCaretFore(white);
     styleSetFont(STYLE_DEFAULT, "Consolas");
-    styleSetSize(STYLE_DEFAULT, 12);
+    styleSetSize(STYLE_DEFAULT, 11);
     styleSetBack(STYLE_DEFAULT, darkBack);
     styleClearAll();
 
@@ -95,7 +103,6 @@ void TextEditor::init()
     styleSetBack(STYLE_LINENUMBER, darkBack);
     styleSetBack(TextMarginStyle, lightBack);
     connect(this, SIGNAL(linesAdded(int)), this, SLOT(onLinesAdded(int)));
-
     int INDEX;
 
     INDEX = 0;
@@ -140,6 +147,56 @@ void TextEditor::init()
     markerSetBack(ActiveLine, sunglow);
 
     setMarginLeft(7);
+
+    setMouseDwellTime(500);
+    callTipSetBack(lightBack);
+    callTipSetFore(white);
+
+    connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
+    timer.start(tickInterval);
+
+    connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(updateActiveLine()));
+}
+
+void TextEditor::tick()
+{
+    if (this->isVisible())
+    {
+        // dwellStart and dwellEnd signals not work properly
+        // with toggle visiblity, so provide own mechanism
+        auto point = this->mapFromGlobal(QCursor::pos());
+        if (point == mousePoint)
+        {
+            if (mouseTime < dwellStartTime)
+            {
+                mouseTime += tickInterval;
+                if (mouseTime >= dwellStartTime)
+                {
+                    onDwellStart(point.x(), point.y());
+                }
+            }
+        }
+        else
+        {
+            if (mouseTime >= dwellStartTime)
+            {
+                onDwellEnd(mousePoint.x(), mousePoint.y());
+            }
+            mousePoint = point;
+            mouseTime = 0;
+        }
+    }
+}
+
+void TextEditor::updateActiveLine()
+{
+    markerDeleteAll(ActiveLine);
+
+    auto call = RemotePlayer::Instance()->GetActiveCall();
+    if (call != nullptr && call->source == source)
+    {
+        markerAdd(call->line - 1, ActiveLine);
+    }
 }
 
 void TextEditor::onLinesAdded(int arg)
@@ -148,9 +205,41 @@ void TextEditor::onLinesAdded(int arg)
     {
        marginSetStyle(i, TextMarginStyle);
     }
+    pushBreakpoints();
 }
 
-void TextEditor::getBreakpointLines()
+void TextEditor::onDwellStart(int x, int y)
+{
+    return; // disable function
+
+    auto pos = positionFromPoint(x, y);
+    auto startPos = wordStartPosition(pos, true);
+    auto endPos = wordEndPosition(pos, true);
+    if (pos >= startPos && pos < endPos)
+    {
+        std::string text = get_text_range(startPos, endPos);
+        callTipCancel();
+        callTipShow(pos, text.c_str());
+    }
+}
+
+void TextEditor::onDwellEnd(int x, int y)
+{
+    callTipCancel();
+}
+
+void TextEditor::pullBreakpoints()
+{
+    markerDeleteAll(Breakpoint);
+
+    auto lines = RemotePlayer::Instance()->GetBreakpoints(source);
+    for (auto line : lines)
+    {
+        markerAdd(line - 1, Breakpoint);
+    }
+}
+
+void TextEditor::pushBreakpoints()
 {
     std::unordered_set<int> lines;
 
@@ -159,12 +248,11 @@ void TextEditor::getBreakpointLines()
     line = markerNext(line, mask);
     while (line >= 0)
     {
-        printf("%i\n", line);
         lines.insert(line + 1);
         line = markerNext(line + 1, mask);
     }
 
-    LuaMachine::Instance()->Breakpoints.Set(source, lines);
+    RemotePlayer::Instance()->SetBreakpoints(source, lines);
 }
 
 void TextEditor::onMarginClicked(int position, int modifiers, int margin)
@@ -179,5 +267,5 @@ void TextEditor::onMarginClicked(int position, int modifiers, int margin)
         markerAdd(line, Breakpoint);
     }
 
-    getBreakpointLines();
+    pushBreakpoints();
 }

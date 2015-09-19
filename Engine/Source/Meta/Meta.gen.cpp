@@ -2,6 +2,12 @@
 #include "Meta.h"
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
+#include "Breakpoints.h"
+#include "CallInfo.h"
+#include "CallStack.h"
+#include "DebugCommand.h"
+#include "FileBreakpoints.h"
+#include "LogMessage.h"
 #include "Transform.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -14,6 +20,51 @@
 
 void Meta::regClasses()
 {
+    ClassDefiner<Breakpoints>(this, "Breakpoints")
+        .constructor()
+        .method("IsEmpty", &Breakpoints::IsEmpty)
+        .method("IsSet", &Breakpoints::IsSet)
+        .method("Add", &Breakpoints::Add)
+        .method("Remove", &Breakpoints::Remove)
+        .method("Clear", &Breakpoints::Clear)
+        //.method("Set", &Breakpoints::Set)
+        //.method("Set", &Breakpoints::Set)
+        //.field("map", &Breakpoints::map)
+    ;
+
+    ClassDefiner<CallInfo>(this, "CallInfo")
+        .constructor()
+        .constructor<std :: string, std :: string, int, int, int>()
+        .field("name", &CallInfo::name)
+        .field("source", &CallInfo::source)
+        .field("line", &CallInfo::line)
+        .field("startLine", &CallInfo::startLine)
+        .field("endLine", &CallInfo::endLine)
+    ;
+
+    ClassDefiner<CallStack>(this, "CallStack")
+        .constructor()
+        .field("calls", &CallStack::calls)
+    ;
+
+    ClassDefiner<DebugCommand>(this, "DebugCommand")
+        .constructor()
+        .constructor<std :: string>()
+        .field("name", &DebugCommand::name)
+    ;
+
+    ClassDefiner<FileBreakpoints>(this, "FileBreakpoints")
+        .constructor()
+        .field("fileName", &FileBreakpoints::fileName)
+        .field("lines", &FileBreakpoints::lines)
+    ;
+
+    ClassDefiner<LogMessage>(this, "LogMessage")
+        .constructor()
+        .constructor<std :: string>()
+        .field("text", &LogMessage::text)
+    ;
+
     ClassDefiner<Transform>(this, "Transform")
         .constructor()
         .method("GetMatrix", &Transform::GetMatrix)
@@ -36,8 +87,6 @@ void Meta::regClasses()
         .constructor<float, float, float>()
         .method("Length", &Vector3::Length)
         .method("SquaredLength", &Vector3::SquaredLength)
-        .field("x", &Vector3::x)
-        .field("y", &Vector3::y)
         .field("z", &Vector3::z)
     ;
 
@@ -47,7 +96,6 @@ void Meta::regClasses()
         .method("SquaredLength", &Vector4::SquaredLength)
         .field("x", &Vector4::x)
         .field("y", &Vector4::y)
-        .field("z", &Vector4::z)
         .field("w", &Vector4::w)
     ;
 
@@ -56,6 +104,8 @@ void Meta::regClasses()
         .constructor<int>()
         .field("e", &SubStruct::e)
         .field("arr", &SubStruct::arr)
+        .field("set", &SubStruct::set)
+        .field("map", &SubStruct::map)
     ;
 
     ClassDefiner<TestStruct>(this, "TestStruct")
@@ -67,6 +117,7 @@ void Meta::regClasses()
         .field("dd", &TestStruct::dd)
         .field("g", &TestStruct::g)
         .field("arr", &TestStruct::arr)
+        .field("map", &TestStruct::map)
         .field("b", &TestStruct::b)
     ;
 

@@ -6,11 +6,13 @@
     #include "Win/WinWindow.h"
     #include "Win/WinRenderTarget.h"
     #include "Win/WinSocket.h"
+    #include "Win/WinProcess.h"
 
     using PlatformApp = WinApp;
     using PlatformWindow = WinWindow;
     using PlatformRenderTarget = WinRenderTarget;
     using PlatformSocket = WinSocket;
+    using PlatformProcess = WinProcess;
 #endif
 
 #ifdef LINUX

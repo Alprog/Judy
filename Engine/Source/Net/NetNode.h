@@ -7,10 +7,12 @@
 #include "Singleton.h"
 #include <thread>
 #include <atomic>
+#include <functional>
+#include <mutex>
 
 class NetNode
 {
-private:
+public:
     enum class State
     {
         Disconnected,
@@ -19,20 +21,18 @@ private:
         Connected
     };
 
-public:
     NetNode();
     ~NetNode();
 
-    bool IsConnnected() const;
+    bool IsConnected() const;
 
     void Start(int port);
     void Connect(std::string host, int port);
+    void Send(Any any);
 
-    void Send(Any& any);
-
-public:
     State GetState() const;
 
+private:
     void StartWork();
     void Work();
 
@@ -42,7 +42,11 @@ public:
     void ReceiveWork();
     void ProcessMessages();
 
-    lua_State* L;
+public:
+    std::function<void(Any)> messageCallback;
+    std::function<void()> customWorkCallback;
+
+private:
     Serializer* serializer;
     Socket* socket;
     std::thread* workThread;
@@ -53,4 +57,5 @@ public:
 
     std::string output;
     std::string input;
+    std::mutex mutex;
 };

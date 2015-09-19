@@ -7,7 +7,8 @@ CONFIG += staticlib
 INCLUDEPATH += \
     Source \
     Source/Math \
-    ../3rd-party/lua/source \
+    Source/LuaMachine \
+    ../3rd-party/lua/source
 
 HEADERS += \
     Source/App.h \
@@ -50,9 +51,14 @@ HEADERS += \
     Source/Net/Socket.h \
     Source/DeepPointer.h \
     Source/Meta/Meta.gen.h \
-    Source/Net/RemotePlayer.h \
     Source/Meta/CFunctionMeta.h \
-    Source/Meta/select_if.h
+    Source/Meta/select_if.h \
+    Source/LuaMachine/LogMessage.h \
+    Source/LuaMachine/DebugCommand.h \
+    Source/Process.h \
+    Source/LuaMachine/CallInfo.h \
+    Source/LuaMachine/CallStack.h \
+    Source/LuaMachine/FileBreakpoints.h
 
 SOURCES += \
     Source/App.cpp \
@@ -89,8 +95,13 @@ SOURCES += \
     Source/Net/Socket.cpp \
     Source/DeepPointer.cpp \
     Source/Meta/Meta.gen.cpp \
-    Source/Net/RemotePlayer.cpp \
-    Source/Meta/CFunctionMeta.cpp
+    Source/Meta/CFunctionMeta.cpp \
+    Source/LuaMachine/LogMessage.cpp \
+    Source/LuaMachine/DebugCommand.cpp \
+    Source/Process.cpp \
+    Source/LuaMachine/CallInfo.cpp \
+    Source/LuaMachine/CallStack.cpp \
+    Source/LuaMachine/FileBreakpoints.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -117,6 +128,8 @@ win {
 
     HEADERS += Source/Win/WinSocket.h
     SOURCES += Source/Win/WinSocket.cpp
+    HEADERS += Source/Win/WinProcess.h
+    SOURCES += Source/Win/WinProcess.cpp
 }
 
 linux {

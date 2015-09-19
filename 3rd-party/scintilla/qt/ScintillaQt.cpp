@@ -616,15 +616,56 @@ void ScintillaQt::StartDrag()
 	SetDragPosition(SelectionPosition(invalidPosition));
 }
 
+class CallTipImpl : public QWidget
+{
+public:
+    CallTipImpl(ScintillaQt* sc)
+        : QWidget(0, Qt::ToolTip)
+    {
+        this->sc = sc;
+    }
+
+    virtual void mousePressEvent(QMouseEvent *) override
+    {
+        sc->TipClick();
+        sc->GetCallTip()->CallTipCancel();
+    }
+
+    void paintEvent(QPaintEvent *event) override
+    {
+        auto ct = sc->GetCallTip();
+        if (ct->inCallTipMode)
+        {
+            auto surface = Surface::Allocate(0);
+            surface->Init(this);
+            ct->PaintCT(surface);
+            delete surface;
+        }
+    }
+
+private:
+    ScintillaQt* sc;
+};
+
+CallTip* ScintillaQt::GetCallTip()
+{
+    return &ct;
+}
+
+void ScintillaQt::TipClick()
+{
+    CallTipClick();
+}
+
 void ScintillaQt::CreateCallTipWindow(PRectangle rc)
 {
-
-	if (!ct.wCallTip.Created()) {
-		QWidget *pCallTip =  new QWidget(0, Qt::ToolTip);
-		ct.wCallTip = pCallTip;
-		pCallTip->move(rc.left, rc.top);
-		pCallTip->resize(rc.Width(), rc.Height());
-	}
+    if (!ct.wCallTip.Created())
+    {
+        CallTipImpl* pCallTip = new CallTipImpl(this);
+        ct.wCallTip = pCallTip;
+        pCallTip->move(rc.left, rc.top);
+        pCallTip->resize(rc.Width(), rc.Height());
+    }
 }
 
 void ScintillaQt::AddToPopUp(const char *label,
@@ -758,7 +799,7 @@ void ScintillaQt::Drop(const Point &point, const QMimeData *data, bool move)
 
 void ScintillaQt::timerEvent(QTimerEvent *event)
 {
-	for (TickReason tr=tickCaret; tr<=tickDwell; tr = static_cast<TickReason>(tr+1)) {
+    for (TickReason tr=tickCaret; tr<=tickDwell; tr = static_cast<TickReason>(tr+1)) {
 		if (timers[tr] == event->timerId()) {
 			TickFor(tr);
 		}

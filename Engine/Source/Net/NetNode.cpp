@@ -15,15 +15,10 @@ NetNode::NetNode()
     , port{0}
     , workThread{nullptr}
     , socket{nullptr}
+    , messageCallback{nullptr}
+    , customWorkCallback{nullptr}
 {
-    L = luaL_newstate();
-    luaL_openlibs(L);
-    lua_getglobal(L, "package");
-    lua_pushstring(L, "?.lua");
-    lua_setfield(L, -2, "path");
-    luaL_dofile(L, "Serializer.lua");
-    serializer = new Serializer(L);
-
+    serializer = new Serializer();
     socket = Socket::Create();
     socket->SetBlockingMode(false);
 }
@@ -33,13 +28,11 @@ NetNode::~NetNode()
     state = State::Disconnected;
     if (workThread != nullptr)
     {
-        workThread->join();
+        workThread->detach();
         delete workThread;
     }
 
     delete serializer;
-    lua_close(L);
-    L = nullptr;
 }
 
 NetNode::State NetNode::GetState() const
@@ -47,7 +40,7 @@ NetNode::State NetNode::GetState() const
     return state;
 }
 
-bool NetNode::IsConnnected() const
+bool NetNode::IsConnected() const
 {
     return state == State::Connected;
 }
@@ -68,11 +61,13 @@ void NetNode::Connect(std::string host, int port)
     StartWork();
 }
 
-void NetNode::Send(Any& any)
+void NetNode::Send(Any any)
 {
+    mutex.lock();
     auto text = serializer->Serialize(any);
     output.append(text);
     output += '\0';
+    mutex.unlock();
 }
 
 void NetNode::StartWork()
@@ -94,6 +89,10 @@ void NetNode::Work()
         }
         else if (state == State::Connected)
         {
+            if (customWorkCallback != nullptr)
+            {
+                customWorkCallback();
+            }
             SendWork();
             ReceiveWork();
             ProcessMessages();
@@ -147,7 +146,9 @@ void NetNode::SendWork()
             }
             totalSend += count;
         }
+        mutex.lock();
         output.erase(0, totalSend);
+        mutex.unlock();
     }
 }
 
@@ -158,7 +159,15 @@ void NetNode::ReceiveWork()
     do
     {
         count = socket->Receive(buffer, MAX);
-        if (count > 0)
+        if (count < 0)
+        {
+            auto error = socket->GetLastError();
+            if (error != Socket::Error::WouldBlock)
+            {
+                state = State::Disconnected;
+            }
+        }
+        else if (count > 0)
         {
             input.append(buffer, count);
         }
@@ -173,12 +182,14 @@ void NetNode::ProcessMessages()
         auto index = input.find('\0');
         if (index >= 0)
         {
-            auto message = input.substr(0, index);
-
-            Any obj = serializer->Deserialize(message);
-
-            printf("%s \n", obj.GetType()->name.c_str());
-            fflush(stdout);
+            auto messageText = input.substr(0, index);
+            mutex.lock();
+            auto message = serializer->Deserialize(messageText);
+            mutex.unlock();
+            if (messageCallback != nullptr)
+            {
+                messageCallback(message);
+            }
 
             input.erase(0, index + 1);
         }

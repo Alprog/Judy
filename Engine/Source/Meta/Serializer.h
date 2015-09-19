@@ -16,7 +16,8 @@ class ITypeMeta;
 class Serializer
 {
 public:
-    Serializer(lua_State* L);
+    Serializer();
+    ~Serializer();
 
     std::string Serialize(Any object);
 
@@ -31,10 +32,13 @@ public:
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);
+    void SerializeAsArray(Any& object, ITypeMeta* type);
+    void SerializeAsMap(Any& object, ITypeMeta* type);
 
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();
-    Any DeserializeAsVector(IClassMeta* vectorMeta);
+    Any DeserializeAsArray(IClassMeta* arrayMeta);
+    Any DeserializeAsMap(IClassMeta* mapMeta);
     Any DeserializeAsClass(IClassMeta* classMeta);
     Any Deserialize(ITypeMeta* const typeMeta);
 

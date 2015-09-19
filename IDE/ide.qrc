@@ -11,5 +11,10 @@
         <file>images/stop.png</file>
         <file>images/play.png</file>
         <file>images/play_disabled.png</file>
+        <file>images/pause_disabled.png</file>
+        <file>images/stepinto_disabled.png</file>
+        <file>images/stepout_disabled.png</file>
+        <file>images/stepover_disabled.png</file>
+        <file>images/stop_disabled.png</file>
     </qresource>
 </RCC>

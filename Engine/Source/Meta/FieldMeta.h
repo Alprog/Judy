@@ -30,7 +30,7 @@ public:
         return TypeMetaOf<FieldType>();
     }
 
-    FieldMeta(char* name, FieldType ClassType::*pointer)
+    FieldMeta(std::string name, FieldType ClassType::*pointer)
     {
         this->name = name;
         this->pointer = pointer;

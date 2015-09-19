@@ -7,10 +7,12 @@
 #include <QFileInfo>
 #include <QDir>
 #include "LuaMachine/LuaMachine.h"
+#include "IDE.h"
 
 DocumentM::DocumentM(std::string filePath)
-    : fullPath ( filePath )
 {
+    fullPath = QDir(QString::fromStdString(filePath)).absolutePath().toStdString();
+
     auto index = filePath.find_last_of("\\/");
     if (index == std::string::npos)
     {
@@ -37,9 +39,16 @@ DocumentM::DocumentM(std::string filePath)
 
     connect(editor, SIGNAL(notifyChange()), this, SLOT(OnModified()));
 
-    auto projectPath = QDir::currentPath().toStdString();
-    auto source = "@" + fullPath.substr(projectPath.length() + 1);
+
+    auto projectPath = IDE::Instance()->settings.projectPath;
+
+    auto absProjectPath = QDir(tr(projectPath.c_str())).absolutePath().toStdString();
+    auto absFilePath = QDir(tr(filePath.c_str())).absolutePath().toStdString();
+
+    auto source = "@" + absFilePath.substr(absProjectPath.length() + 1);
     editor->setSource(source);
+    editor->pullBreakpoints();
+    editor->updateActiveLine();
 }
 
 void DocumentM::Reload()
@@ -110,4 +119,10 @@ bool DocumentM::HaveChanges()
 void DocumentM::OnModified()
 {
     this->Modified();
+}
+
+void DocumentM::GoToLine(int line)
+{
+    editor->gotoLine(line - 1);
+    editor->setFocus(true);
 }

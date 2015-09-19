@@ -33,7 +33,7 @@ public:
     }
 
     template <typename FieldType>
-    ClassDefiner& field(char* name, FieldType ClassType::*pointer)
+    ClassDefiner& field(std::string name, FieldType ClassType::*pointer)
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
         classMeta->fields[name] = field;
@@ -41,7 +41,7 @@ public:
     }
 
     template <typename ReturnType, typename... ArgTypes>
-    ClassDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...))
+    ClassDefiner& method(std::string name, ReturnType(ClassType::*pointer)(ArgTypes...))
     {
         auto method = new MethodMeta<ClassType, ReturnType, ArgTypes...>();
         method->name = name;
@@ -51,14 +51,14 @@ public:
     }
 
     template <typename ReturnType, typename... ArgTypes>
-    ClassDefiner& method(char* name, ReturnType(ClassType::*pointer)(ArgTypes...) const)
+    ClassDefiner& method(std::string name, ReturnType(ClassType::*pointer)(ArgTypes...) const)
     {
         auto nonconstpointer = reinterpret_cast<ReturnType(ClassType::*)(ArgTypes...)>(pointer);
         return method(name, nonconstpointer);
     }
 
     template <typename ReturnType, typename... ArgTypes>
-    ClassDefiner& function(char* name, ReturnType(*pointer)(ArgTypes...))
+    ClassDefiner& function(std::string name, ReturnType(*pointer)(ArgTypes...))
     {
         auto function = new CFunctionMeta<ReturnType, ArgTypes...>();
         function->name = name;

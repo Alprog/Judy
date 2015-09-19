@@ -5,7 +5,7 @@
 #include "Singleton.h"
 #include <thread>
 #include <atomic>
-
+#include "CallStack.h"
 #include "Breakpoints.h"
 
 class lua_State;
@@ -24,19 +24,30 @@ public:
    bool IsStarted() const;
    bool IsBreaked() const;
 
-   void EnableDebug();
-   void Start(std::string scriptName);
+   void Start(std::string scriptName, bool debug = false);
+   void Pause();
    void Continue();
+   void StepInto();
+   void StepOver();
+   void StepOut();
    void Stop();
 
 private:
-   void Hook(lua_State *L, lua_Debug *ar);
+   void Hook(lua_Debug *ar);
+   void Break(lua_Debug *ar);
+   CallInfo GetCallInfo(lua_Debug *ar);
+   void SuspendExecution();
 
 public:
-    Breakpoints Breakpoints;
+    Breakpoints breakpoints;
+    CallStack stack;
+    std::function<void()> breakCallback;
+    std::function<void()> resumeCallback;
 
 private:
    lua_State* L;
+   std::atomic<bool> suspended;
    bool isStarted;
-   std::atomic_bool	suspended;
+   int level;
+   int breakRequiredLevel;
 };

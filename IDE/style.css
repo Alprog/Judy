@@ -44,3 +44,8 @@ QTabBar::tab:hover
 {
 	background: #1C97EA;	
 }
+
+QHeaderView::section 
+{
+	background-color: #2D2D2D;
+}

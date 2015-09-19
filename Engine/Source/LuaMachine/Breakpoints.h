@@ -7,14 +7,29 @@
 
 class Breakpoints
 {
+    using MapType = std::unordered_map<std::string, std::unordered_set<int>>;
+
 public:
-    bool IsSet(std::string fileName, int line);
+    Breakpoints();
+
+    bool IsEmpty();
+    bool IsAnySet(int line);
+    bool IsSet(std::string source, int line);
 
     void Add(std::string fileName, int line);
     void Remove(std::string fileName, int line);
 
-    void Set(std::string fileName, std::unordered_set<int> lines);
+    bool Clear(std::string fileName);
+    std::unordered_set<int> Get(std::string fileName);
+    bool Set(std::string fileName, std::unordered_set<int> lines);
+    const MapType& getMap() const;
+
+    void Update(Breakpoints breakpoints);
 
 private:
-    std::unordered_map<std::string, std::unordered_set<int>> map;
+    void UpdateLines();
+
+    MapType map;
+    bool linesDirty;
+    std::unordered_set<int> lines;
 };

@@ -10,38 +10,21 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget* parent = 0);
+    ~MainWindow();
 
-signals:
-
-private slots:
-    void newFile();
-    void openFile();
-    void saveFile();
-    void saveAsFile();
-
-    void startDebug();
-    void stopDebug();
+    DocumentsPane* documents;
 
 private:
+    void createToolBar(QMenu* menu);
     void createActions();
 
     bool eventFilter(QObject* obj, QEvent* event) override;
 
-    QAction* createAction(const char* name, const char* icon, const char* slot,
-                          const QKeySequence& shortcut = QKeySequence::UnknownKey);
-
     QMenu* fileMenu;
-    QToolBar* fileToolBar;
-
-    QMenu* debugMenu;
-    QToolBar* debugToolBar;
-
     QMenu* editMenu;
+    QMenu* debugMenu;
+    QMenu* windowMenu;
 
-
-    DocumentsPane* documents;
     bool modificationChecking;
-
-    LuaMachine* luaMachine;
 };
 

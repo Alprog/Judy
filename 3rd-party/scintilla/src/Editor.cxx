@@ -4590,6 +4590,9 @@ void Editor::ButtonUp(Point pt, unsigned int curTime, bool ctrl) {
 // Called frequently to perform background UI including
 // caret blinking and automatic scrolling.
 void Editor::Tick() {
+
+    printf("g\n");
+
 	if (HaveMouseCapture()) {
 		// Auto scroll
 		ButtonMove(ptMouseLast);
