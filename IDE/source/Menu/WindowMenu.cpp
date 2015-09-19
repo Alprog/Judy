@@ -16,8 +16,6 @@ WindowMenu::WindowMenu(MainWindow* window)
 
 void WindowMenu::Stub()
 {
-    window->documents->GetCurrentDocument()->toggle();
-    window->documents->GetCurrentDocument()->toggle();
 }
 
 //QByteArray ba;

@@ -40,7 +40,7 @@ void Breakpoints::Remove(std::string fileName, int line)
 
 bool Breakpoints::Clear(std::string fileName)
 {
-    bool exist = map.find(fileName) != std::end(map);
+    auto exist = map.find(fileName) != std::end(map);
     if (exist)
     {
         map.erase(fileName);
@@ -50,6 +50,19 @@ bool Breakpoints::Clear(std::string fileName)
     return false;
 }
 
+std::unordered_set<int> Breakpoints::Get(std::string fileName)
+{
+    auto exist = map.find(fileName) != std::end(map);
+    if (exist)
+    {
+        return map[fileName];
+    }
+    else
+    {
+        return {};
+    }
+}
+
 bool Breakpoints::Set(std::string fileName, std::unordered_set<int> lines)
 {
     if (lines.size() == 0)
@@ -57,7 +70,7 @@ bool Breakpoints::Set(std::string fileName, std::unordered_set<int> lines)
         return Clear(fileName);
     }
 
-    bool exist = map.find(fileName) != std::end(map);
+    auto exist = map.find(fileName) != std::end(map);
     if (exist)
     {
         if (map[fileName] == lines)

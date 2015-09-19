@@ -4,12 +4,15 @@
 #include <QTextStream>
 #include "MainWindow.h"
 #include "Meta/Meta.h"
+#include "RemotePlayer.h"
 
 IDE::IDE(int argc, char *argv[])
     : QApplication(argc, argv)
 {
     LoadStyle();
     LoadSettings();
+
+    connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(OnPlayerStateChanged()));
 }
 
 IDE* IDE::Instance()
@@ -64,4 +67,20 @@ int IDE::Start()
 MainWindow* IDE::GetMainWindow()
 {
     return windows[0];
+}
+
+void IDE::FollowToCall(CallInfo callInfo)
+{
+    auto mainWindow = windows[0];
+    auto fullPath = settings.projectPath + "/" + callInfo.source.substr(1);
+    mainWindow->documents->OpenAtLine(fullPath, callInfo.line);
+}
+
+void IDE::OnPlayerStateChanged()
+{
+    auto& calls = RemotePlayer::Instance()->stack.calls;
+    if (calls.size() > 0)
+    {
+        FollowToCall(calls[0]);
+    }
 }

@@ -154,6 +154,8 @@ void TextEditor::init()
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
     timer.start(tickInterval);
+
+    connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(updateActiveLine()));
 }
 
 void TextEditor::tick()
@@ -184,8 +186,6 @@ void TextEditor::tick()
             mouseTime = 0;
         }
     }
-
-    updateActiveLine();
 }
 
 void TextEditor::updateActiveLine()
@@ -210,6 +210,8 @@ void TextEditor::onLinesAdded(int arg)
 
 void TextEditor::onDwellStart(int x, int y)
 {
+    return; // disable function
+
     auto pos = positionFromPoint(x, y);
     auto startPos = wordStartPosition(pos, true);
     auto endPos = wordEndPosition(pos, true);
@@ -224,6 +226,17 @@ void TextEditor::onDwellStart(int x, int y)
 void TextEditor::onDwellEnd(int x, int y)
 {
     callTipCancel();
+}
+
+void TextEditor::pullBreakpoints()
+{
+    markerDeleteAll(Breakpoint);
+
+    auto lines = RemotePlayer::Instance()->GetBreakpoints(source);
+    for (auto line : lines)
+    {
+        markerAdd(line - 1, Breakpoint);
+    }
 }
 
 void TextEditor::pushBreakpoints()

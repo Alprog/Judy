@@ -11,6 +11,7 @@
 #include <string>
 
 #include "Document.h"
+#include <QDir.h>
 
 DocumentsPane::DocumentsPane()
 {
@@ -23,6 +24,8 @@ DocumentsPane::DocumentsPane()
 
 void DocumentsPane::Open(std::string path)
 {
+    path = QDir(QString::fromStdString(path)).absolutePath().toStdString();
+
     for (int i = 0; i < count(); i++)
     {
         auto document = GetDocument(i);

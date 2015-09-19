@@ -24,5 +24,5 @@ int main(int argc, char *argv[])
         RemoteDebbuger::Instance()->Start(luaMachine, 2730);
     }
 
-    luaMachine->Start("main.lua", debug);
+    luaMachine->Start("Main.lua", debug);
 }

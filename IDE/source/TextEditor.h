@@ -15,6 +15,7 @@ public:
     TextEditor(QWidget* parent = 0);
     void setSource(std::string source);
 
+    void pullBreakpoints();
     void pushBreakpoints();
 
 private slots:
@@ -25,11 +26,13 @@ private slots:
     void onDwellStart(int x, int y);
     void onDwellEnd(int x, int y);
 
+public slots:
+    void updateActiveLine();
+
 private:
     void init();
-    void updateActiveLine();
-    std::string source;
 
+    std::string source;
     QTimer timer;
     int mouseTime;
     QPoint mousePoint;

@@ -20,6 +20,7 @@ public:
     void Remove(std::string fileName, int line);
 
     bool Clear(std::string fileName);
+    std::unordered_set<int> Get(std::string fileName);
     bool Set(std::string fileName, std::unordered_set<int> lines);
     const MapType& getMap() const;
 

@@ -133,8 +133,6 @@ void LuaMachine::Start(std::string scriptName, bool debug)
         int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE;
         lua_sethook(L, hook, mask, 0);
         SuspendExecution();
-
-        breakRequiredLevel = maxStackSize;
     }
 
     if (luaL_dofile(L, scriptName.c_str()))

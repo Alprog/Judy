@@ -114,6 +114,7 @@ void RemotePlayer::Stop()
     }
     isPaused = false;
     stack.calls.clear();
+    StateChanged();
 }
 
 void RemotePlayer::CustomNetWork()
@@ -129,18 +130,25 @@ void RemotePlayer::OnGetMessage(Any message)
     }
     else if (message.GetType() == TypeMetaOf<CallStack>())
     {
-        stack = message.as<CallStack>();
         isPaused = true;
+        stack = message.as<CallStack>();
+        StateChanged();
     }
     else if (message.GetType() == TypeMetaOf<DebugCommand>())
     {
         stack.calls.clear();
         isPaused = false;
+        StateChanged();
     }
     else
     {
         printf("new message \n");
     }
+}
+
+std::unordered_set<int> RemotePlayer::GetBreakpoints(std::string source)
+{
+    return breakpoints.Get(source);
 }
 
 void RemotePlayer::SetBreakpoints(std::string source, std::unordered_set<int> lines)

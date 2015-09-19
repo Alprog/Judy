@@ -41,23 +41,13 @@ StackPane::StackPane()
     timer.start(100);
 }
 
-void StackPane::FollowToCall(CallInfo callInfo)
-{
-    auto mainWindow = IDE::Instance()->GetMainWindow();
-    auto projectPath = IDE::Instance()->settings.projectPath;
-    auto filePath = callInfo.source.substr(1);
-    auto fullPath = projectPath + "/" + filePath;
-    mainWindow->documents->OpenAtLine(fullPath, callInfo.line);
-
-}
-
 void StackPane::OnDoubleClicked(const QModelIndex& index)
 {
     auto row = index.row();
     auto& calls = RemotePlayer::Instance()->stack.calls;
     if (row < calls.size())
     {
-        FollowToCall(calls[row]);
+        IDE::Instance()->FollowToCall(calls[row]);
     }
 }
 

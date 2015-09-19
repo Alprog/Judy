@@ -10,8 +10,9 @@
 #include "IDE.h"
 
 DocumentM::DocumentM(std::string filePath)
-    : fullPath ( filePath )
 {
+    fullPath = QDir(QString::fromStdString(filePath)).absolutePath().toStdString();
+
     auto index = filePath.find_last_of("\\/");
     if (index == std::string::npos)
     {
@@ -46,11 +47,8 @@ DocumentM::DocumentM(std::string filePath)
 
     auto source = "@" + absFilePath.substr(absProjectPath.length() + 1);
     editor->setSource(source);
-}
-
-void DocumentM::toggle()
-{
-    editor->setVisible(!editor->isVisible());
+    editor->pullBreakpoints();
+    editor->updateActiveLine();
 }
 
 void DocumentM::Reload()

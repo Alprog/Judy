@@ -28,8 +28,6 @@ public:
 
     void Reload();
 
-    void toggle();
-
 private:
     QDateTime GetLastModifiedTime();
 
