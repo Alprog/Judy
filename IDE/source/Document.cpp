@@ -8,23 +8,11 @@
 #include <QDir>
 #include "LuaMachine/LuaMachine.h"
 #include "IDE.h"
+#include "Utils.h"
 
-DocumentM::DocumentM(std::string filePath)
+DocumentM::DocumentM(Path documentPath)
 {
-
-    fullPath = QDir(QString::fromStdString(filePath)).absolutePath().toStdString();
-
-    auto index = filePath.find_last_of("\\/");
-    if (index == std::string::npos)
-    {
-        name = fullPath;
-    }
-    else
-    {
-        index += 1;
-        auto size = fullPath.size() - index;
-        name = fullPath.substr(index, size);
-    }
+    this->documentPath = documentPath;
 
     editor = new TextEditor(nullptr);
 
@@ -40,21 +28,21 @@ DocumentM::DocumentM(std::string filePath)
 
     connect(editor, SIGNAL(notifyChange()), this, SLOT(OnModified()));
 
+    auto projectPath = Path(IDE::Instance()->settings.projectPath);
+    if (StartsWith(documentPath, projectPath))
+    {
+        auto size = projectPath.str().size();
+        auto source = "@" + documentPath.str().substr(size + 1);
+        editor->setSource(source);
+    }
 
-    auto projectPath = IDE::Instance()->settings.projectPath;
-
-    auto absProjectPath = QDir(tr(projectPath.c_str())).absolutePath().toStdString();
-    auto absFilePath = QDir(tr(filePath.c_str())).absolutePath().toStdString();
-
-    auto source = "@" + absFilePath.substr(absProjectPath.length() + 1);
-    editor->setSource(source);
     editor->pullBreakpoints();
     editor->updateActiveLine();
 }
 
 void DocumentM::Reload()
 {
-    QFile file(fullPath.c_str());
+    QFile file(documentPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
@@ -79,13 +67,13 @@ bool DocumentM::IsModifiedOutside()
 
 QDateTime DocumentM::GetLastModifiedTime()
 {
-    QFileInfo info(fullPath.c_str());
+    QFileInfo info(documentPath.c_str());
     return info.lastModified();
 }
 
 std::string DocumentM::GetTabName()
 {
-    return HaveChanges() ? name + "*" : name;
+    return HaveChanges() ? GetName() + "*" : GetName();
 }
 
 void DocumentM::CloseTab(int index)
@@ -95,7 +83,7 @@ void DocumentM::CloseTab(int index)
 
 void DocumentM::Save()
 {
-    QFile file(fullPath.c_str());
+    QFile file(documentPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
         auto length = editor->length();

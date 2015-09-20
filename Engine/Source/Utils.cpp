@@ -73,3 +73,26 @@ void ToUpper(std::string& string)
 {
     std::transform(std::begin(string), std::end(string), std::begin(string), toupper);
 }
+
+bool CaseInsensitiveCompare(std::string string1, std::string string2)
+{
+    ToLower(string1);
+    ToLower(string2);
+    return string1 == string2;
+}
+
+bool StartsWith(const std::string& string, const std::string& pattern)
+{
+    return string.substr(0, pattern.size()) == pattern;
+}
+
+bool EndsWith(const std::string& string, const std::string& pattern)
+{
+    auto stringSize = string.size();
+    auto patternSize = string.size();
+    if (stringSize >= patternSize)
+    {
+        return string.substr(stringSize - patternSize, patternSize) == pattern;
+    }
+    return false;
+}

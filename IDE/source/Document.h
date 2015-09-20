@@ -4,6 +4,7 @@
 #include <string>
 #include <QWidget>
 #include <QDateTime>
+#include "Path.h"
 
 class TextEditor;
 
@@ -12,10 +13,10 @@ class DocumentM : public QWidget
     Q_OBJECT
 
 public:
-    DocumentM(std::string filePath);
+    DocumentM(Path documentPath);
 
-    std::string GetName() { return name; }
-    std::string GetFullPath() { return fullPath; }
+    Path GetPath() { return documentPath; }
+    std::string GetName() { return documentPath.GetName(); }
 
     void GoToLine(int line);
     std::string GetTabName();
@@ -31,8 +32,7 @@ public:
 private:
     QDateTime GetLastModifiedTime();
 
-    std::string name;
-    std::string fullPath;
+    Path documentPath;
     QDateTime modifiedTime;
 
     TextEditor* editor;

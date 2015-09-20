@@ -12,6 +12,7 @@
 
 #include "Document.h"
 #include <QDir.h>
+#include "IDE.h"
 
 DocumentsPane::DocumentsPane()
 {
@@ -22,30 +23,49 @@ DocumentsPane::DocumentsPane()
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
 }
 
-void DocumentsPane::Open(std::string path)
+void DocumentsPane::Open(Path path)
 {
-    path = QDir(QString::fromStdString(path)).absolutePath().toStdString();
-
-    for (int i = 0; i < count(); i++)
+    if (!path.IsAbsolute())
     {
-        auto document = GetDocument(i);
-        if (document->GetFullPath() == path)
-        {
-            setCurrentWidget(document);
-            return;
-        }
+        path = Path::Combine(IDE::Instance()->settings.projectPath, path);
     }
 
-    auto document = new DocumentM(path);
-    connect(document, SIGNAL(Modified()), this, SLOT(UpdateTabNames()));
-    addTab(document, document->GetName().c_str());
-    this->setCurrentWidget(document);
+    auto document = GetDocument(path);
+    if (document != nullptr)
+    {
+        setCurrentWidget(document);
+    }
+    else
+    {
+        document = new DocumentM(path);
+        connect(document, SIGNAL(Modified()), this, SLOT(UpdateTabNames()));
+        addTab(document, document->GetName().c_str());
+        setCurrentWidget(document);
+    }
 }
 
-void DocumentsPane::OpenAtLine(std::string path, int line)
+void DocumentsPane::OpenAtLine(Path path, int line)
 {
     Open(path);
     GetCurrentDocument()->GoToLine(line);
+}
+
+DocumentM* DocumentsPane::GetDocument(Path path)
+{
+#if WIN
+    const bool caseSensitive = false;
+#else
+    const bool caseSensitive = true;
+#endif
+    for (int i = 0; i < count(); i++)
+    {
+        auto document = GetDocument(i);
+        if (Path::IsEqual(document->GetPath(), path, caseSensitive))
+        {
+            return document;
+        }
+    }
+    return nullptr;
 }
 
 DocumentM* DocumentsPane::GetDocument(int index)

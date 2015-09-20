@@ -6,6 +6,8 @@
 class Path
 {
 public:
+    Path();
+
     Path(const char* pathCString);
     Path(const std::string& pathString);
 
@@ -21,9 +23,13 @@ public:
     friend Path operator+(const Path& lhs, const Path& rhs);
     Path& operator+=(const Path& rhs);
 
+    std::string GetName() const;
 
+    bool IsEmpty() const;
     bool IsAbsolute() const;
     bool IsRelative() const;
+
+    static bool IsEqual(const Path& path1, const Path& path2, bool caseSensitive = true);
 
     inline operator std::string&()
     {

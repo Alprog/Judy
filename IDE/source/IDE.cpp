@@ -72,8 +72,8 @@ MainWindow* IDE::GetMainWindow()
 void IDE::FollowToCall(CallInfo callInfo)
 {
     auto mainWindow = windows[0];
-    auto fullPath = settings.projectPath + "/" + callInfo.source.substr(1);
-    mainWindow->documents->OpenAtLine(fullPath, callInfo.line);
+    auto path = Path::Combine(settings.projectPath, callInfo.source.substr(1));
+    mainWindow->documents->OpenAtLine(path, callInfo.line);
 }
 
 void IDE::OnPlayerStateChanged()

@@ -8,9 +8,9 @@ a:AddChild(b)
 local count = a:ChildCount()
 print(count)]]
 
-require "Data/Math"
-
-
+require "Data/math"
+
+
 
 function d()
 	local a = 3;
