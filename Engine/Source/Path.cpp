@@ -4,7 +4,7 @@
 
 // absolute - "C:/path" or "/path"
 // relative - "path" or "./path" or "../path"
-// using unix-style forward slash /
+// in canonical form using unix-style forward slash /
 
 Path::Path(const char* pathCString)
 {
@@ -108,25 +108,17 @@ bool Path::IsAbsolute(const std::string& pathString)
     return false;
 }
 
-
-Path Path::Combine(Path lhs, Path rhs)
+Path Path::Combine(const std::string lhs, const std::string rhs)
 {
-    lhs.str() + "/" + rhs.str();
-
-    throw; // not implemented
+    return Path(lhs + "/" + rhs);
 }
 
-Path* const Path::Combine(Path other)
+void Path::Append(const std::string pathString)
 {
-    return this;
+    canonicalPath = GetCanonical(canonicalPath + "/" + pathString);
 }
 
-Path& Path::CdUp()
-{
-    return Cd("..");
-}
-
-Path& Path::Cd(Path path)
+void Path::Cd(const Path path)
 {
     if (path.IsAbsolute())
     {
@@ -134,8 +126,23 @@ Path& Path::Cd(Path path)
     }
     else
     {
-        Combine(path);
+        Append(path);
     }
+}
+
+void Path::CdUp()
+{
+    Cd("..");
+}
+
+Path operator+(const Path& lhs, const Path& rhs)
+{
+    return Path::Combine(lhs, rhs);
+}
+
+Path& Path::operator+=(const Path& rhs)
+{
+    Append(rhs.canonicalPath);
     return *this;
 }
 
@@ -147,20 +154,4 @@ bool Path::IsAbsolute() const
 bool Path::IsRelative() const
 {
     return !IsAbsolute(canonicalPath);
-}
-
-
-Path::operator std::string&()
-{
-    return canonicalPath;
-}
-
-std::string Path::str() const
-{
-    return canonicalPath;
-}
-
-const char* Path::c_str() const
-{
-    return canonicalPath.c_str();
 }

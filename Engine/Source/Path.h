@@ -12,19 +12,38 @@ public:
     static std::string GetCanonical(std::string pathString);
     static bool IsAbsolute(const std::string& pathString);
 
-    static Path Combine(Path lhs, Path rhs);
-    Path* const Combine(Path other);
+    static Path Combine(const std::string lhs, const std::string rhs);
+    void Append(const std::string pathString);
 
-    Path& CdUp();
-    Path& Cd(Path path);
+    void Cd(const Path pathString);
+    void CdUp();
+
+    friend Path operator+(const Path& lhs, const Path& rhs);
+    Path& operator+=(const Path& rhs);
+
 
     bool IsAbsolute() const;
     bool IsRelative() const;
 
-    operator std::string&();
+    inline operator std::string&()
+    {
+        return canonicalPath;
+    }
 
-    std::string str() const;
-    const char* c_str() const;
+    inline operator const std::string&() const
+    {
+        return canonicalPath;
+    }
+
+    inline std::string str() const
+    {
+        return canonicalPath;
+    }
+
+    inline const char* c_str() const
+    {
+        return canonicalPath.c_str();
+    }
 
     inline friend bool operator ==(const Path& lhs, const Path& rhs)
     {
