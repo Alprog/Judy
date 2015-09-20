@@ -5,29 +5,18 @@
 
 #include "Path.h"
 #include <QDir>
+#include <iostream>
+#include <stdio.h>
+#include "Utils.h"
 
 int main(int argc, char *argv[])
 {
+    auto p1 = Path("D:\\Test\\../../../value//ef/efe");
+    auto p2 = Path("./Test/../../efeg\\.././eg/");
 
-
-    //auto a = QDir("D:\\Test").absolutePath().toStdString();
-
-    auto absPath = Path("D:/Test");
-
-
-    auto relPath = Path("/Test");
-
-    absPath.Combine(relPath);
-
-    std::string a = "some";
-    absPath.Combine(a);
-
-
-
-    auto relPath2 = Path("../Test");
-
+    printf("%s %s\n", p1.c_str(), p2.c_str());
+    fflush(stdout);
 }
-
 
 //int main(int argc, char *argv[])
 //{

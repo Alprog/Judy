@@ -59,7 +59,8 @@ HEADERS += \
     Source/LuaMachine/CallInfo.h \
     Source/LuaMachine/CallStack.h \
     Source/LuaMachine/FileBreakpoints.h \
-    Source/Path.h
+    Source/Path.h \
+    Source/Utils.h
 
 SOURCES += \
     Source/App.cpp \
@@ -103,7 +104,8 @@ SOURCES += \
     Source/LuaMachine/CallInfo.cpp \
     Source/LuaMachine/CallStack.cpp \
     Source/LuaMachine/FileBreakpoints.cpp \
-    Source/Path.cpp
+    Source/Path.cpp \
+    Source/Utils.cpp
 
 win {
     INCLUDEPATH += Source/Windows

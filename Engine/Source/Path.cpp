@@ -1,30 +1,118 @@
 
 #include "Path.h"
-#include "regex"
+#include "Utils.h"
 
 // absolute - "C:/path" or "/path"
 // relative - "path" or "./path" or "../path"
 // using unix-style forward slash /
 
-Path::Path(const char*& pathCString)
-    : pathString(pathCString)
+Path::Path(const char* pathCString)
 {
-    FixSlashes();
+    canonicalPath = GetCanonical(pathCString);
 }
 
 Path::Path(const std::string& pathString)
-    : pathString(pathString)
 {
-    FixSlashes();
+    canonicalPath = GetCanonical(pathString);
 }
 
-Path::operator std::string&()
+std::string Path::GetCanonical(std::string pathString)
 {
+    FixSlashes(pathString);
+    ApplyDots(pathString);
+
+#if WIN
+    ToLower(pathString);
+#endif
+
     return pathString;
 }
 
+void Path::FixSlashes(std::string& pathString)
+{
+    // fix backslashes
+    Replace(pathString, "\\", "/");
+
+    // remove slash duplicates
+    Replace(pathString, "//", "/");
+
+    // remove last slash
+    auto size = pathString.size();
+    if (size > 1 && pathString[size - 1] == '/')
+    {
+        pathString.erase(size - 1);
+    }
+}
+
+void Path::ApplyDots(std::string& pathString)
+{
+    auto components = Split(pathString, "/");
+    auto begin = std::begin(components);
+    bool changed = false;
+
+    bool isAbsolute = IsAbsolute(pathString);
+    auto lastIndex = isAbsolute ? 1 : 0;
+
+    auto upCount = 0;
+    for (int i = components.size() - 1; i >= lastIndex; i--)
+    {
+        auto component = components[i];
+        if (component == ".")
+        {
+            components.erase(begin + i);
+            changed = true;
+        }
+        else if (component == "..")
+        {
+            upCount++;
+        }
+        else if (upCount > 0)
+        {
+            auto start = begin + i;
+            components.erase(start, start + 2);
+            changed = true;
+            upCount--;
+        }
+    }
+
+    if (isAbsolute)
+    {
+        auto start = begin + 1;
+        components.erase(start, start + upCount);
+        changed = true;
+    }
+
+    if (changed)
+    {
+        pathString = Join(components, "/");
+    }
+}
+
+bool Path::IsAbsolute(const std::string& pathString)
+{
+    auto size = pathString.size();
+    if (size > 0)
+    {
+        if (pathString[0] == '/' || pathString[0] == '\\')
+        {
+            return true;
+        }
+
+        auto index = pathString.find_first_of('\\/');
+        if (index == std::string::npos)
+        {
+            index = size;
+        }
+        return pathString[index - 1] == ':'; // drive
+    }
+    return false;
+}
+
+
 Path Path::Combine(Path lhs, Path rhs)
 {
+    lhs.str() + "/" + rhs.str();
+
     throw; // not implemented
 }
 
@@ -33,40 +121,46 @@ Path* const Path::Combine(Path other)
     return this;
 }
 
-void Path::CdUp()
+Path& Path::CdUp()
 {
-    Cd("..");
+    return Cd("..");
 }
 
-void Path::Cd(Path path)
+Path& Path::Cd(Path path)
 {
-    throw; // not implemented
+    if (path.IsAbsolute())
+    {
+        canonicalPath = path.str();
+    }
+    else
+    {
+        Combine(path);
+    }
+    return *this;
 }
 
 bool Path::IsAbsolute() const
 {
-    if (pathString.size() > 0)
-    {
-        auto firstChar = pathString[0];
-        if (firstChar == '/') { return true; }
-        if (firstChar == '.') { return false; }
-        auto index = pathString.find('/');
-        if (index != std::string::npos)
-        {
-            return pathString[index - 1] == ':'; // drive (or url?)
-        }
-    }
-    return false;
+    return IsAbsolute(canonicalPath);
 }
 
 bool Path::IsRelative() const
 {
-    return !IsAbsolute();
+    return !IsAbsolute(canonicalPath);
 }
 
-void Path::FixSlashes()
+
+Path::operator std::string&()
 {
-    // change this later
-    pathString = std::regex_replace(pathString, std::regex("\\\\"), "/");
-    pathString = std::regex_replace(pathString, std::regex("//"), "/");
+    return canonicalPath;
+}
+
+std::string Path::str() const
+{
+    return canonicalPath;
+}
+
+const char* Path::c_str() const
+{
+    return canonicalPath.c_str();
 }

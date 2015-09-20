@@ -9,6 +9,8 @@ local count = a:ChildCount()
 print(count)]]
 
 require "Data/Math"
+
+
 
 function d()
 	local a = 3;
@@ -21,8 +23,8 @@ function r()
 	print("3")
 	return 4
 end
-
-r()
+
+r()
 
 local a = sum(3, 3)
 print("sum: "..a)
