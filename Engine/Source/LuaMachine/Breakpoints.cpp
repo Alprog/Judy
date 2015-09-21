@@ -1,9 +1,14 @@
 
 #include "Breakpoints.h"
+#include "Utils.h"
 
 Breakpoints::Breakpoints()
     : linesDirty{true}
+    , caseSensitive{true}
 {
+#if WIN
+    caseSensitive = false;
+#endif
 }
 
 bool Breakpoints::IsEmpty()
@@ -22,24 +27,15 @@ bool Breakpoints::IsAnySet(int line)
 
 bool Breakpoints::IsSet(std::string fileName, int line)
 {
+    if (!caseSensitive) ToLower(fileName);
     auto& set = map[fileName];
     return set.find(line) != std::end(set);
 }
 
-void Breakpoints::Add(std::string fileName, int line)
-{
-    map[fileName].insert(line);
-    linesDirty = true;
-}
-
-void Breakpoints::Remove(std::string fileName, int line)
-{
-    map[fileName].erase(line);
-    linesDirty = true;
-}
-
 bool Breakpoints::Clear(std::string fileName)
 {
+    if (!caseSensitive) ToLower(fileName);
+
     auto exist = map.find(fileName) != std::end(map);
     if (exist)
     {
@@ -52,6 +48,8 @@ bool Breakpoints::Clear(std::string fileName)
 
 std::unordered_set<int> Breakpoints::Get(std::string fileName)
 {
+    if (!caseSensitive) ToLower(fileName);
+
     auto exist = map.find(fileName) != std::end(map);
     if (exist)
     {
@@ -65,6 +63,8 @@ std::unordered_set<int> Breakpoints::Get(std::string fileName)
 
 bool Breakpoints::Set(std::string fileName, std::unordered_set<int> lines)
 {
+    if (!caseSensitive) ToLower(fileName);
+
     if (lines.size() == 0)
     {
         return Clear(fileName);
@@ -100,4 +100,9 @@ void Breakpoints::UpdateLines()
 const Breakpoints::MapType& Breakpoints::getMap() const
 {
     return map;
+}
+
+void Breakpoints::SetCaseSensitive(bool value)
+{
+    this->caseSensitive = value;
 }

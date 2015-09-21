@@ -15,9 +15,10 @@ class DocumentsPane : public QTabWidget
 public:
     DocumentsPane();
 
-    void Open(std::string path);
-    void OpenAtLine(std::string path, int line);
+    void Open(Path path);
+    void OpenAtLine(Path path, int line);
     DocumentM* GetCurrentDocument();
+    DocumentM* GetDocument(Path path);
     DocumentM* GetDocument(int index);
 
     void SaveCurrentDocument();

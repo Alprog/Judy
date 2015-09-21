@@ -16,15 +16,12 @@ public:
     bool IsAnySet(int line);
     bool IsSet(std::string source, int line);
 
-    void Add(std::string fileName, int line);
-    void Remove(std::string fileName, int line);
-
     bool Clear(std::string fileName);
     std::unordered_set<int> Get(std::string fileName);
     bool Set(std::string fileName, std::unordered_set<int> lines);
     const MapType& getMap() const;
 
-    void Update(Breakpoints breakpoints);
+    void SetCaseSensitive(bool value);
 
 private:
     void UpdateLines();
@@ -32,4 +29,5 @@ private:
     MapType map;
     bool linesDirty;
     std::unordered_set<int> lines;
+    bool caseSensitive;
 };
