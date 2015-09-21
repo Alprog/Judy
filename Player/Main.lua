@@ -10,8 +10,6 @@ print(count)]]
 
 require "Data/math"
 
-
-
 function d()
 	local a = 3;
 	return a;

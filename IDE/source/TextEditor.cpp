@@ -4,6 +4,7 @@
 #include "LuaMachine/LuaMachine.h"
 #include <QMouseEvent>
 #include "RemotePlayer.h"
+#include "Utils.h"
 
 int RGB(int r, int g, int b)
 {
@@ -193,7 +194,7 @@ void TextEditor::updateActiveLine()
     markerDeleteAll(ActiveLine);
 
     auto call = RemotePlayer::Instance()->GetActiveCall();
-    if (call != nullptr && call->source == source)
+    if (call != nullptr && CaseInsensitiveCompare(call->source, source))
     {
         markerAdd(call->line - 1, ActiveLine);
     }

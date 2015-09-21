@@ -75,10 +75,13 @@ void LuaMachine::Hook(lua_Debug *ar)
         }
         else
         {
-            lua_getinfo(L, "S", ar);
-            if (breakpoints.IsSet(ar->source, ar->currentline))
+            if (breakpoints.IsAnySet(ar->currentline))
             {
-                Break(ar);
+                lua_getinfo(L, "S", ar);
+                if (breakpoints.IsSet(ar->source, ar->currentline))
+                {
+                    Break(ar);
+                }
             }
         }
     }

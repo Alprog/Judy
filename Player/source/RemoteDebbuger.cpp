@@ -79,6 +79,10 @@ void RemoteDebbuger::OnGetMessage(Any message)
         {
             luaMachine->StepOut();
         }
+        else if (name == "win")
+        {
+            luaMachine->breakpoints.SetCaseSensitive(false);
+        }
     }
     else if (type == TypeMetaOf<FileBreakpoints>())
     {
