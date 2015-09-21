@@ -73,11 +73,11 @@ void Meta::regVector()
     auto name = TypeMetaOf<T>()->name;
     name = "vector<" + name + ">";
 
-    auto at = static_cast<VT::reference (VT::*)(VT::size_type)>(&VT::at);
-    auto push_back = static_cast<void (VT::*)(const VT::value_type&)>(&VT::push_back);
+    auto at = static_cast<typename VT::reference (VT::*)(typename VT::size_type)>(&VT::at);
+    auto push_back = static_cast<void (VT::*)(const typename VT::value_type&)>(&VT::push_back);
 
-    ClassDefiner<VT>(this, name.c_str())
-        .valueType<T>()
+    ClassDefiner<VT> a = ClassDefiner<VT>(this, name.c_str())
+        .template valueType<T>()
         .constructor()
         .function("toAnyVector", &toAnyVector<VT>)
         .function("fromAnyVector", &anyVectorToVector<T>)
@@ -96,7 +96,7 @@ void Meta::regSet()
     name = "unordered_set<" + name + ">";
 
     ClassDefiner<ST>(this, name.c_str())
-        .valueType<T>()
+        .template valueType<T>()
         .constructor()
         .function("toAnyVector", &toAnyVector<ST>)
         .function("fromAnyVector", &anyVectorToSet<T>)
@@ -114,7 +114,7 @@ void Meta::regMap()
     auto name = "unordered_map<" + name1 + ", " + name2 + ">";
 
     ClassDefiner<MT>(this, name.c_str())
-        .valueType<T2>()
+        .template valueType<T2>()
         .constructor()
         .function("toAnyVector", &mapToAnyVector<T1, T2>)
         .function("fromAnyVector", &anyVectorToMap<T1, T2>)
