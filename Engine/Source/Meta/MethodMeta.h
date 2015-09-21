@@ -9,13 +9,13 @@ template <typename ClassType, typename ReturnType, typename... ArgTypes>
 class MethodMeta : public FunctionMeta<ReturnType, ClassType*, ArgTypes...>
 {
 public:
-    template <int... I>
+    template <size_t... I>
     inline Any RealInvoke(void* object, SELECT_IF(ReturnType, Void, int, std::vector<Any>&) args, index_sequence<I...>)
     {
         return ((ClassType*)object->*pointer)(args.at(I)...);
     }
 
-    template <int... I>
+    template <size_t... I>
     inline Any RealInvoke(void* object, SELECT_IF(ReturnType, Void, std::vector<Any>&, int) args, index_sequence<I...>)
     {
         ((ClassType*)object->*pointer)(args.at(I)...);
