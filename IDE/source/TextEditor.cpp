@@ -218,7 +218,7 @@ void TextEditor::onDwellStart(int x, int y)
     auto endPos = wordEndPosition(pos, true);
     if (pos >= startPos && pos < endPos)
     {
-        std::string text = get_text_range(startPos, endPos);
+        std::string text = get_text_range(startPos, endPos).constData();
         callTipCancel();
         callTipShow(pos, text.c_str());
     }
