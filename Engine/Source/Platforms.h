@@ -4,34 +4,39 @@
 #ifdef WIN
     #include "Win/WinApp.h"
     #include "Win/WinWindow.h"
-    #include "Win/WinRenderTarget.h"
-    #include "Win/WinSocket.h"
     #include "Win/WinProcess.h"
+    #include "Win/WinSocket.h"
+    #include "Win/WinRenderTarget.h"
 
     using PlatformApp = WinApp;
     using PlatformWindow = WinWindow;
-    using PlatformRenderTarget = WinRenderTarget;
-    using PlatformSocket = WinSocket;
     using PlatformProcess = WinProcess;
+    using PlatformSocket = WinSocket;
+    using PlatformRenderTarget = WinRenderTarget;
+#endif
+
+#if defined(LINUX) || defined(MAC)
+    #include "Unix/UnixProcess.h"
+    #include "Unix/UnixSocket.h"
+
+    using PlatformProcess = UnixProcess;
+    using PlatformSocket = UnixSocket;
 #endif
 
 #ifdef LINUX
-    #include "Linux/LinuxWindow.h"
     #include "Linux/LinuxApp.h"
+    #include "Linux/LinuxWindow.h"
 
     using PlatformApp = LinuxApp;
     using PlatformWindow = LinuxWindow;
-    using PlatformSocket = UnixSocket;
 #endif
 
 #ifdef MAC
-    #include "Mac/MacWindow.h"
     #include "Mac/MacApp.h"
-    #include "Unix/UnixSocket.h"
+    #include "Mac/MacWindow.h"
 
     using PlatformApp = MacApp;
     using PlatformWindow = MacWindow;
-    using PlatformSocket = UnixSocket;
 #endif
 
 
