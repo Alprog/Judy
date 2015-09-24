@@ -6,13 +6,15 @@
 #include "Meta/Meta.h"
 #include "RemotePlayer.h"
 
-IDE::IDE(int argc, char *argv[])
+IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
 {
     LoadStyle();
     LoadSettings();
 
-    connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(OnPlayerStateChanged()));
+    //connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(OnPlayerStateChanged()));
+
+    Start();
 }
 
 IDE* IDE::Instance()
@@ -56,12 +58,11 @@ void IDE::SaveSettings()
     file.close();
 }
 
-int IDE::Start()
+void IDE::Start()
 {
     auto mainWindow = new MainWindow();
     mainWindow->showMaximized();
     windows.push_back(mainWindow);
-    return exec();
 }
 
 MainWindow* IDE::GetMainWindow()

@@ -1,8 +1,11 @@
 
 #include "UnixProcess.h"
+#include "Utils.h"
+
+#include <unistd.h>
 
 UnixProcess::UnixProcess()
-//    : handle{0}
+    : pid{0}
 {
 }
 
@@ -16,6 +19,23 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
     Stop();
 
 
+
+    auto argsVector = Split(commandLine, ' ');
+
+    auto size = argsVector.size();
+    auto argv = new char*[size + 1];
+
+    for (auto i = 0; i < size; i++)
+    {
+        argv[i] = argsVector[i].c_str();
+    }
+    argv[size] = nullptr;
+
+    pid = fork();
+    if (pid == 0)
+    {
+        //exec()
+    }
 }
 
 bool UnixProcess::IsRunning()
@@ -30,5 +50,5 @@ void UnixProcess::Stop()
     {
 
     }
-    //handle = 0;
+    pid = 0;
 }

@@ -11,7 +11,6 @@
 #include <string>
 
 #include "Document.h"
-#include <QDir.h>
 #include "IDE.h"
 
 DocumentsPane::DocumentsPane()

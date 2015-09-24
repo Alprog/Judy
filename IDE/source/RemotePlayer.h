@@ -40,7 +40,7 @@ signals:
 
 private:
     void CustomNetWork();
-    void OnGetMessage(Any message);
+    void OnGetMessage(Any& message);
 
 public:
     CallStack stack;

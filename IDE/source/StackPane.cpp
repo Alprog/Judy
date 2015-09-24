@@ -1,7 +1,7 @@
 
 #include "StackPane.h"
 #include "RemotePlayer.h"
-#include "QHeaderView.h"
+#include <QHeaderView>
 #include "IDE.h"
 
 StackPane::StackPane()

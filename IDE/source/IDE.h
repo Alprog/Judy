@@ -14,16 +14,16 @@ class IDE : public QApplication
 
     friend int main(int argc, char *argv[]);
 
-    IDE(int argc, char *argv[]);
+    IDE(int argc, char** argv);
 
 public:
     static IDE* Instance();
-    int Start();
     void SaveSettings();
     MainWindow* GetMainWindow();
     void FollowToCall(CallInfo callInfo);
 
 private:
+    void Start();
     void LoadStyle();
     void LoadSettings();
 

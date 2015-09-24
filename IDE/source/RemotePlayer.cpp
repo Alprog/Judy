@@ -121,7 +121,7 @@ void RemotePlayer::CustomNetWork()
 {
 }
 
-void RemotePlayer::OnGetMessage(Any message)
+void RemotePlayer::OnGetMessage(Any& message)
 {
     if (message.GetType() == TypeMetaOf<LogMessage>())
     {
