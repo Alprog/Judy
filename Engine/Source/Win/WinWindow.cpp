@@ -6,7 +6,7 @@
 
 #include <windows.h>
 
-Window* currentEventWindow = NULL;
+WindowM* currentEventWindow = NULL;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
