@@ -6,12 +6,12 @@
 
 #define __Meta__
 
-class __Meta__ Window
+class __Meta__ WindowM
 {
     friend class Meta;
 
 public:
-    static Window* Create();
+    static WindowM* Create();
 
     void show();
 
@@ -21,7 +21,7 @@ public:
     Node* scene;
 
 protected:
-    Window();    
+    WindowM();
     RenderTarget* RenderTarget1;
     RenderTarget* RenderTarget2;
 };

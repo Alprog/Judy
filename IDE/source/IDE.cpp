@@ -11,9 +11,6 @@ IDE::IDE(int argc, char** argv)
 {
     LoadStyle();
     LoadSettings();
-
-    //connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(OnPlayerStateChanged()));
-
     Start();
 }
 

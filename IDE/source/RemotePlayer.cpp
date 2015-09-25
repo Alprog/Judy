@@ -17,6 +17,7 @@ RemotePlayer::RemotePlayer()
     , process{nullptr}
     , isPaused{false}
 {
+    connect(this, SIGNAL(StateChanged()), IDE::Instance(), SLOT(OnPlayerStateChanged()));
 }
 
 RemotePlayer::~RemotePlayer()

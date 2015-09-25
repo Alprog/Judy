@@ -152,10 +152,10 @@ void Meta::regClasses()
         .method("Clear", &Renderer::Clear)
     ;
 
-    ClassDefiner<Window>(this, "Window")
-        .function("Create", &Window::Create)
-        .method("show", &Window::show)
-        .method("ProcessEvents", &Window::ProcessEvents)
-        .method("Render", &Window::Render)
+    ClassDefiner<WindowM>(this, "WindowM")
+        .function("Create", &WindowM::Create)
+        .method("show", &WindowM::show)
+        .method("ProcessEvents", &WindowM::ProcessEvents)
+        .method("Render", &WindowM::Render)
     ;
 }

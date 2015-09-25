@@ -9,13 +9,14 @@
 
 #include "Quad.h"
 
-Window* Window::Create()
+WindowM* WindowM::Create()
 {
     return new PlatformWindow();
 }
 
-Window::Window()
+WindowM::WindowM()
 {
+
 }
 
 #ifdef WIN
@@ -23,7 +24,7 @@ Window::Window()
 auto glRenderer = new GLRenderer();
 auto dxRenderer = new DXRenderer();
 
-void Window::Render()
+void WindowM::Render()
 {
 //    auto quad = (Quad*)scene;
 //    quad->Transform.Rotation += 0.04f;
@@ -32,14 +33,14 @@ void Window::Render()
 }
 #else
 
-void Window::Render()
+void WindowM::Render()
 {
 }
 
 
 #endif
 
-void Window::show()
+void WindowM::show()
 {
 }
 

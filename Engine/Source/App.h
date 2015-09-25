@@ -76,13 +76,13 @@ public:
 
     void StartMainLoop();
 
-    void AddWindow(Window* window);
-    void RemoveWindow(Window* window);
+    void AddWindow(WindowM* window);
+    void RemoveWindow(WindowM* window);
 
 private:
     void UpdateCollection();
 
-    std::set<Window*> Windows;
-    std::set<Window*> AddedWindows;
-    std::set<Window*> RemovedWindows;
+    std::set<WindowM*> Windows;
+    std::set<WindowM*> AddedWindows;
+    std::set<WindowM*> RemovedWindows;
 };

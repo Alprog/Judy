@@ -8,12 +8,12 @@ App* App::Instance()
     return &instance;
 }
 
-void App::AddWindow(Window* window)
+void App::AddWindow(WindowM* window)
 {
     AddedWindows.insert(window);
 }
 
-void App::RemoveWindow(Window* window)
+void App::RemoveWindow(WindowM* window)
 {
     RemovedWindows.insert(window);
 }
