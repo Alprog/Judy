@@ -43,7 +43,7 @@ private:
     void ProcessMessages();
 
 public:
-    std::function<void(Any)> messageCallback;
+    std::function<void(Any&)> messageCallback;
     std::function<void()> customWorkCallback;
 
 private:

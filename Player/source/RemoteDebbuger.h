@@ -19,7 +19,7 @@ private:
     void OnBreak();
     void OnResume();
     void CustomNetWork();
-    void OnGetMessage(Any message);
+    void OnGetMessage(Any& message);
 
 private:
     LuaMachine* luaMachine;

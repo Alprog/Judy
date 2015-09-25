@@ -129,6 +129,7 @@ Meta::Meta()
     DefineBuildInType<float>("float");
     DefineBuildInType<std::string>("string");
     DefineBuildInType<char>("char");
+    DefineBuildInType<double>("double");
 
     regVector<int>();
     regSet<int>();

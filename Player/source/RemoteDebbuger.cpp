@@ -7,6 +7,7 @@
 #include "LuaMachine/DebugCommand.h"
 #include "Pipe.h"
 #include <regex>
+#include <functional>
 
 using namespace std::placeholders;
 
@@ -52,7 +53,7 @@ void RemoteDebbuger::CustomNetWork()
     }
 }
 
-void RemoteDebbuger::OnGetMessage(Any message)
+void RemoteDebbuger::OnGetMessage(Any& message)
 {
     auto type = message.GetType();
     if (type == TypeMetaOf<DebugCommand>())

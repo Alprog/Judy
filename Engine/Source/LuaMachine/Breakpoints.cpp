@@ -57,7 +57,7 @@ std::unordered_set<int> Breakpoints::Get(std::string fileName)
     }
     else
     {
-        return {};
+        return std::unordered_set<int>();
     }
 }
 

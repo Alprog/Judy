@@ -17,6 +17,7 @@ RemotePlayer::RemotePlayer()
     , process{nullptr}
     , isPaused{false}
 {
+    connect(this, SIGNAL(StateChanged()), IDE::Instance(), SLOT(OnPlayerStateChanged()));
 }
 
 RemotePlayer::~RemotePlayer()
@@ -121,7 +122,7 @@ void RemotePlayer::CustomNetWork()
 {
 }
 
-void RemotePlayer::OnGetMessage(Any message)
+void RemotePlayer::OnGetMessage(Any& message)
 {
     if (message.GetType() == TypeMetaOf<LogMessage>())
     {

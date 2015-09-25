@@ -13,5 +13,5 @@ public:
     virtual void Stop();
     virtual bool IsRunning();
 
-    //HANDLE handle;
+    pid_t pid;
 };

@@ -2,7 +2,6 @@
 #include "Meta.h"
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
-#include "Breakpoints.h"
 #include "CallInfo.h"
 #include "CallStack.h"
 #include "DebugCommand.h"
@@ -20,16 +19,6 @@
 
 void Meta::regClasses()
 {
-    ClassDefiner<Breakpoints>(this, "Breakpoints")
-        .constructor()
-        .method("IsEmpty", &Breakpoints::IsEmpty)
-        .method("IsSet", &Breakpoints::IsSet)
-        .method("Clear", &Breakpoints::Clear)
-        //.method("Set", &Breakpoints::Set)
-        //.method("Set", &Breakpoints::Set)
-        //.field("map", &Breakpoints::map)
-    ;
-
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
         .constructor<std :: string, std :: string, int, int, int>()
@@ -53,6 +42,7 @@ void Meta::regClasses()
 
     ClassDefiner<FileBreakpoints>(this, "FileBreakpoints")
         .constructor()
+        .constructor<std :: string, std :: unordered_set < int >>()
         .field("fileName", &FileBreakpoints::fileName)
         .field("lines", &FileBreakpoints::lines)
     ;
@@ -162,10 +152,10 @@ void Meta::regClasses()
         .method("Clear", &Renderer::Clear)
     ;
 
-    ClassDefiner<Window>(this, "Window")
-        .function("Create", &Window::Create)
-        .method("show", &Window::show)
-        .method("ProcessEvents", &Window::ProcessEvents)
-        .method("Render", &Window::Render)
+    ClassDefiner<WindowM>(this, "WindowM")
+        .function("Create", &WindowM::Create)
+        .method("show", &WindowM::show)
+        .method("ProcessEvents", &WindowM::ProcessEvents)
+        .method("Render", &WindowM::Render)
     ;
 }
