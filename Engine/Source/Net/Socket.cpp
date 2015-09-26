@@ -6,3 +6,7 @@ Socket* Socket::Create()
 {
     return new PlatformSocket();
 }
+
+Socket::~Socket()
+{
+}

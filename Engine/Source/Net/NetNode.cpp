@@ -28,10 +28,14 @@ NetNode::~NetNode()
     state = State::Disconnected;
     if (workThread != nullptr)
     {
-        workThread->detach();
+        if (workThread->joinable())
+        {
+            workThread->join();
+        }
         delete workThread;
     }
 
+    delete socket;
     delete serializer;
 }
 
@@ -130,6 +134,11 @@ void NetNode::ConnectWork()
     }
 }
 
+bool NetNode::HasOutput() const
+{
+    return output.size() > 0;
+}
+
 void NetNode::SendWork()
 {
     auto length = output.size();
@@ -159,7 +168,11 @@ void NetNode::ReceiveWork()
     do
     {
         count = socket->Receive(buffer, MAX);
-        if (count < 0)
+        if (count == 0)
+        {
+            state = State::Disconnected;
+        }
+        else if (count < 0)
         {
             auto error = socket->GetLastError();
             if (error != Socket::Error::WouldBlock)

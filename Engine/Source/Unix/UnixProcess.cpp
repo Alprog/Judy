@@ -3,6 +3,8 @@
 #include "Utils.h"
 
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 UnixProcess::UnixProcess()
     : pid{0}
@@ -18,13 +20,9 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
 {
     Stop();
 
-
-
-    auto argsVector = Split(commandLine, ' ');
-
+    auto argsVector = Split(commandLine, " ");
     auto size = argsVector.size();
-    auto argv = new char*[size + 1];
-
+    char* argv[size + 1];
     for (auto i = 0; i < size; i++)
     {
         argv[i] = argsVector[i].c_str();
@@ -32,15 +30,36 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
     argv[size] = nullptr;
 
     pid = fork();
-    if (pid == 0)
+
+    if (pid == 0) // child
     {
-        //exec()
+        chdir(directory.c_str());
+        execv(path.c_str(), argv);
+        _exit(1);
+    }
+    else // parent
+    {
+        if (pid < 0) // failed
+        {
+            pid = 0;
+        }
     }
 }
 
 bool UnixProcess::IsRunning()
 {
-
+    if (pid != 0)
+    {
+        auto result = waitpid(pid, nullptr, WNOHANG);
+        if (result == 0)
+        {
+            return true;
+        }
+        else if (result == pid)
+        {
+            pid = 0;
+        }
+    }
     return false;
 }
 
@@ -48,7 +67,10 @@ void UnixProcess::Stop()
 {
     if (IsRunning())
     {
-
+        if (kill(pid, SIGKILL) == 0) // send kill signal
+        {
+            waitpid(pid, nullptr, 0); // remove zombie
+        }
     }
     pid = 0;
 }
