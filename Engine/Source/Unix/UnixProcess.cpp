@@ -36,16 +36,8 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
 
     if (pid == 0) // child
     {
-
-        auto p = getpid();
-        printf("%i\n", p);
-        fflush(stdout);
-
         char* argv[] = {"player", "-debug", nullptr };
-        auto result = execv("/media/sf_Judy/Build/Linux/Player/Player", argv);
-
-        printf("%i forked! \n", result);
-        fflush(stdout);
+        execv("/media/sf_Judy/Build/Linux/Player/Player", argv);
         _exit(1);
     }
     else // parent

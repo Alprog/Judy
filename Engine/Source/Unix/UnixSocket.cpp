@@ -11,6 +11,10 @@
 UnixSocket::UnixSocket()
 {
     handle = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    // allow reuse
+    int value = 1;
+    setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value));
 }
 
 UnixSocket::UnixSocket(int handle)
@@ -41,6 +45,13 @@ void UnixSocket::Listen(int port)
     if (result == 0)
     {
         listen(handle, 2);
+    }
+    else
+    {
+        if (errno == EADDRINUSE)
+        {
+            exit(1);
+        }
     }
 }
 
