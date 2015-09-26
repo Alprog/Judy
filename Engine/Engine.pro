@@ -19,7 +19,8 @@ HEADERS += \
     Source/Win/*.h \
     Source/Linux/*.h \
     Source/Mac/*.h \
-    Source/Net/*.h
+    Source/Net/*.h \
+    Source/Platform.h
 
 SOURCES += \
     Source/App.cpp \
@@ -64,7 +65,8 @@ SOURCES += \
     Source/LuaMachine/CallStack.cpp \
     Source/LuaMachine/FileBreakpoints.cpp \
     Source/Path.cpp \
-    Source/Utils.cpp
+    Source/Utils.cpp \
+    Source/Platform.cpp
 
 win {
     INCLUDEPATH += Source/Windows

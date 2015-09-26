@@ -5,6 +5,7 @@
 #include "MainWindow.h"
 #include "Meta/Meta.h"
 #include "RemotePlayer.h"
+#include "Platform.h"
 
 IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
@@ -31,11 +32,17 @@ void IDE::LoadStyle()
     file.close();
 }
 
+std::string IDE::GetSettingsFilename()
+{
+    return "settings." + GetPlatformName() + ".lua";
+}
+
 void IDE::LoadSettings()
 {
     Settings::InitMeta();
 
-    QFile file("settings.lua");
+    auto fileName = GetSettingsFilename();
+    QFile file(QString::fromStdString(fileName));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
@@ -47,7 +54,8 @@ void IDE::LoadSettings()
 
 void IDE::SaveSettings()
 {
-    QFile file(tr("settings.lua"));
+    auto fileName = GetSettingsFilename();
+    QFile file(QString::fromStdString(fileName));
     file.open(QIODevice::WriteOnly);
     QTextStream stream(&file);
     auto text = serializer.Serialize(settings);

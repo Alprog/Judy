@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <vector>
+#include <string>
 #include "Settings.h"
 #include "MainWindow.h"
 #include "Meta/Serializer.h"
@@ -23,6 +24,8 @@ public:
     void FollowToCall(CallInfo callInfo);
 
 private:
+    std::string GetSettingsFilename();
+
     void Start();
     void LoadStyle();
     void LoadSettings();
