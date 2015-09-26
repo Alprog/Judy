@@ -141,8 +141,8 @@ void LuaMachine::Do(std::string scriptName, bool debug)
     if (luaL_dofile(L, scriptName.c_str()))
     {
         isStarted = false;
-        std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
-        std::cerr << lua_tostring(L, -1) << std::endl;
+        printf("Something went wrong loading the chunk (syntax error?)\n");
+        printf("%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);
     }
 
