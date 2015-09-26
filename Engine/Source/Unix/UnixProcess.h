@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Process.h"
+#include <unistd.h>
 
 class UnixProcess : public Process
 {
