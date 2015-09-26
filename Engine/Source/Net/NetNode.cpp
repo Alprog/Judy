@@ -82,10 +82,6 @@ void NetNode::Work()
 {
     while (state != State::Disconnected)
     {
-        //int i = (int)(State)state;
-        //printf("status: %i\n", i);
-        //fflush(stdout);
-
         if (state == State::ClientWaiting)
         {
             ClientWaitWork();
@@ -129,6 +125,7 @@ void NetNode::ConnectWork()
     }
     else
     {
+        printf("con:");
         auto error = socket->GetLastError();
         if (error == Socket::Error::AlreadyConnected)
         {
@@ -171,8 +168,13 @@ void NetNode::ReceiveWork()
     do
     {
         count = socket->Receive(buffer, MAX);
-        if (count < 0)
+        if (count == 0)
         {
+            state = State::Disconnected;
+        }
+        else if (count < 0)
+        {
+            printf("rec:");
             auto error = socket->GetLastError();
             if (error != Socket::Error::WouldBlock)
             {
