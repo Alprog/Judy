@@ -20,24 +20,21 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
 {
     Stop();
 
-
     auto argsVector = Split(commandLine, " ");
-
-//    auto size = argsVector.size();
-//    auto argv = new char*[size + 1];
-
-//    for (auto i = 0; i < size; i++)
-//    {
-//        argv[i] = argsVector[i].c_str();
-//    }
-//    argv[size] = nullptr;
+    auto size = argsVector.size();
+    char* argv[size + 1];
+    for (auto i = 0; i < size; i++)
+    {
+        argv[i] = argsVector[i].c_str();
+    }
+    argv[size] = nullptr;
 
     pid = fork();
 
     if (pid == 0) // child
     {
-        char* argv[] = {"player", "-debug", nullptr };
-        execv("/media/sf_Judy/Build/Linux/Player/Player", argv);
+        chdir(directory.c_str());
+        execv(path.c_str(), argv);
         _exit(1);
     }
     else // parent

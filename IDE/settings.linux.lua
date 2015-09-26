@@ -1,5 +1,5 @@
 {
     class = 'Settings',
-    projectPath = 'D:\\Judy\\Player',
-    playerPath = 'D:\\Judy\\Build\\Win\\Player\\Player.exe'
+    projectPath = '/media/sf_Judy/Player',
+    playerPath = '/media/sf_Judy/Build/Linux/Player/Player'
 }
