@@ -14,6 +14,7 @@ public:
         Ok,
         WouldBlock,
         AlreadyConnected,
+        InvalidArgument,
         Unknown
     };
 

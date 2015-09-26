@@ -25,7 +25,7 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
     char* argv[size + 1];
     for (auto i = 0; i < size; i++)
     {
-        argv[i] = argsVector[i].c_str();
+        argv[i] = &argsVector[i][0];
     }
     argv[size] = nullptr;
 

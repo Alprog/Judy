@@ -131,6 +131,12 @@ void NetNode::ConnectWork()
         {
             state = State::Connected;
         }
+        else if (error == Socket::Error::InvalidArgument)
+        {
+            delete socket;
+            socket = Socket::Create();
+            socket->SetBlockingMode(false);
+        }
     }
 }
 

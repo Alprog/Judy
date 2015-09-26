@@ -50,7 +50,7 @@ void UnixSocket::Listen(int port)
     {
         if (errno == EADDRINUSE)
         {
-            exit(1);
+            _exit(1);
         }
     }
 }
@@ -90,12 +90,15 @@ int UnixSocket::Receive(char* buffer, int max)
 Socket::Error UnixSocket::GetLastError()
 {
     switch (errno)
-    {
+    {   
         case EWOULDBLOCK:
             return Error::WouldBlock;
 
         case EISCONN:
             return Error::AlreadyConnected;
+
+        case EINVAL:
+            return Error::InvalidArgument;
 
         default:
             return Error::Unknown;
