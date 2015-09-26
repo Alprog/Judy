@@ -35,6 +35,7 @@ NetNode::~NetNode()
         delete workThread;
     }
 
+    delete socket;
     delete serializer;
 }
 
@@ -125,7 +126,6 @@ void NetNode::ConnectWork()
     }
     else
     {
-        printf("con:");
         auto error = socket->GetLastError();
         if (error == Socket::Error::AlreadyConnected)
         {
@@ -174,7 +174,6 @@ void NetNode::ReceiveWork()
         }
         else if (count < 0)
         {
-            printf("rec:");
             auto error = socket->GetLastError();
             if (error != Socket::Error::WouldBlock)
             {
