@@ -11,28 +11,10 @@
 
 using namespace std::placeholders;
 
-RemoteDebbuger::RemoteDebbuger()
+RemoteDebbuger::RemoteDebbuger(LuaMachine* luaMachine, int port)
     : luaMachine{nullptr}
     , logPipe{nullptr}
     , netNode{nullptr}
-{
-}
-
-RemoteDebbuger::~RemoteDebbuger()
-{
-    if (netNode != nullptr)
-    {
-        delete netNode;
-        netNode = nullptr;
-    }
-    if (logPipe != nullptr)
-    {
-        delete logPipe;
-        logPipe = nullptr;
-    }
-}
-
-void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
 {
     this->luaMachine = luaMachine;
     luaMachine->breakCallback = std::bind(&RemoteDebbuger::OnBreak, this);
@@ -44,6 +26,22 @@ void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
     netNode->customWorkCallback = std::bind(&RemoteDebbuger::CustomNetWork, this);
     netNode->messageCallback = std::bind(&RemoteDebbuger::OnGetMessage, this, _1);
     netNode->Start(port);
+}
+
+RemoteDebbuger::~RemoteDebbuger()
+{
+    WaitForFinish();
+
+    if (netNode != nullptr)
+    {
+        delete netNode;
+        netNode = nullptr;
+    }
+    if (logPipe != nullptr)
+    {
+        delete logPipe;
+        logPipe = nullptr;
+    }
 }
 
 void RemoteDebbuger::WaitForFinish()

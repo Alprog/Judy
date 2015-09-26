@@ -6,18 +6,15 @@
 #include "Pipe.h"
 #include "Net/NetNode.h"
 
-class RemoteDebbuger : public Singleton<RemoteDebbuger>
+class RemoteDebbuger
 {
-    friend class Singleton<RemoteDebbuger>;
-
-    RemoteDebbuger();
+public:
+    RemoteDebbuger(LuaMachine* luaMachine, int port);
     ~RemoteDebbuger();
 
-public:
-    void Start(LuaMachine* luaMachine, int port);
+private:
     void WaitForFinish();
 
-private:
     void OnBreak();
     void OnResume();
     void CustomNetWork();

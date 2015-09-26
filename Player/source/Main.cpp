@@ -14,17 +14,15 @@ int main(int argc, char *argv[])
         {
             debug = true;
         }
-
     }
 
     auto luaMachine = LuaMachine::Instance();
 
     if (debug)
     {
-        auto debugger = RemoteDebbuger::Instance();
-        debugger->Start(luaMachine, 2730);
+        auto debugger = new RemoteDebbuger(luaMachine, 2730);
         luaMachine->Do("Main.lua", true);
-        debugger->WaitForFinish();
+        delete debugger;
     }
     else
     {

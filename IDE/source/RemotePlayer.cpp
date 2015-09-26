@@ -39,7 +39,6 @@ void RemotePlayer::Run()
 
     process = Process::Create();
     process->Run(path, commandLine, directory);
-
     if (!process->IsRunning())
     {
         delete process;

@@ -28,7 +28,10 @@ NetNode::~NetNode()
     state = State::Disconnected;
     if (workThread != nullptr)
     {
-        workThread->detach();
+        if (workThread->joinable())
+        {
+            workThread->join();
+        }
         delete workThread;
     }
 
