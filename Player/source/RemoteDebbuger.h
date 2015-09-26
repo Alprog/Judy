@@ -11,9 +11,11 @@ class RemoteDebbuger : public Singleton<RemoteDebbuger>
     friend class Singleton<RemoteDebbuger>;
 
     RemoteDebbuger();
+    ~RemoteDebbuger();
 
 public:
     void Start(LuaMachine* luaMachine, int port);
+    void WaitForFinish();
 
 private:
     void OnBreak();

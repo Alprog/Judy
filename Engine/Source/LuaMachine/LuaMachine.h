@@ -24,7 +24,7 @@ public:
    bool IsStarted() const;
    bool IsBreaked() const;
 
-   void Start(std::string scriptName, bool debug = false);
+   void Do(std::string scriptName, bool debug = false);
    void Pause();
    void Continue();
    void StepInto();

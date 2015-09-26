@@ -21,8 +21,14 @@ int main(int argc, char *argv[])
 
     if (debug)
     {
-        RemoteDebbuger::Instance()->Start(luaMachine, 2730);
+        auto debugger = RemoteDebbuger::Instance();
+        debugger->Start(luaMachine, 2730);
+        luaMachine->Do("Main.lua", true);
+        debugger->WaitForFinish();
+    }
+    else
+    {
+        luaMachine->Do("Main.lua");
     }
 
-    luaMachine->Start("Main.lua", debug);
 }

@@ -127,7 +127,7 @@ void LuaMachine::SuspendExecution()
     }
 }
 
-void LuaMachine::Start(std::string scriptName, bool debug)
+void LuaMachine::Do(std::string scriptName, bool debug)
 {
     isStarted = true;
 

@@ -79,6 +79,10 @@ void NetNode::Work()
 {
     while (state != State::Disconnected)
     {
+        //int i = (int)(State)state;
+        //printf("status: %i\n", i);
+        //fflush(stdout);
+
         if (state == State::ClientWaiting)
         {
             ClientWaitWork();
@@ -128,6 +132,11 @@ void NetNode::ConnectWork()
             state = State::Connected;
         }
     }
+}
+
+bool NetNode::HasOutput() const
+{
+    return output.size() > 0;
 }
 
 void NetNode::SendWork()

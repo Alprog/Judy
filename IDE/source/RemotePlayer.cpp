@@ -34,12 +34,16 @@ void RemotePlayer::Run()
     auto directory = settings.projectPath;
     auto commandLine = "player -debug";
 
+    printf("%s %s %s\n", path.c_str(), directory.c_str(), commandLine);
+    fflush(stdout);
+
     process = Process::Create();
     process->Run(path, commandLine, directory);
 
     if (!process->IsRunning())
     {
         delete process;
+        process = nullptr;
         return;
     }
 
@@ -57,9 +61,9 @@ void RemotePlayer::Run()
 
 bool RemotePlayer::IsRunning()
 {
-    if (process != nullptr)
+    if (netNode != nullptr)
     {
-        if (process->IsRunning())
+        if (netNode->GetState() != NetNode::State::Disconnected)
         {
             return true;
         }

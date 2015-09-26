@@ -75,6 +75,9 @@ int UnixSocket::Receive(char* buffer, int max)
 
 Socket::Error UnixSocket::GetLastError()
 {
+    printf("err: %i\n", errno);
+    fflush(stdout);
+
     switch (errno)
     {
         case EWOULDBLOCK:
