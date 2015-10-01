@@ -20,7 +20,8 @@ HEADERS += \
     Source/Linux/*.h \
     Source/Mac/*.h \
     Source/Net/*.h \
-    Source/Platform.h
+    Source/Platform.h \
+    Source/Math/Quaternion.h
 
 SOURCES += \
     Source/App.cpp \
@@ -66,7 +67,8 @@ SOURCES += \
     Source/LuaMachine/FileBreakpoints.cpp \
     Source/Path.cpp \
     Source/Utils.cpp \
-    Source/Platform.cpp
+    Source/Platform.cpp \
+    Source/Math/Quaternion.cpp
 
 win {
     INCLUDEPATH += Source/Windows

@@ -92,12 +92,8 @@ void WinWindow::Render()
     static auto glRenderer = new GLRenderer();
     static auto dxRenderer = new DXRenderer();
 
-    static auto quad = new Quad();
-    quad->Size = Vector2(0.3f, 0.3f);
-
-    quad->Transform.Rotation += 0.04f;
-    glRenderer->Render(quad, RenderTarget2);
-    dxRenderer->Render(quad, RenderTarget1);
+    glRenderer->Render(scene, RenderTarget2);
+    dxRenderer->Render(scene, RenderTarget1);
 }
 
 WinWindow::~WinWindow()

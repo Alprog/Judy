@@ -12,11 +12,13 @@ class __Meta__ WindowM
 
 public:
     static WindowM* Create();
+    virtual ~WindowM();
 
     void show();
 
     virtual void ProcessEvents() = 0;
 
+    void Update();
     virtual void Render();
     Node* scene;
 

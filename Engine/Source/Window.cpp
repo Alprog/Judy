@@ -16,12 +16,24 @@ WindowM* WindowM::Create()
 
 WindowM::WindowM()
 {
+    auto quad = new Quad();
+    quad->Size = Vector2(0.3f, 0.3f);
+    scene = quad;
+}
 
+WindowM::~WindowM()
+{
+    delete scene;
+}
+
+void WindowM::Update()
+{
+    scene->Update(0.0);
 }
 
 void WindowM::Render()
 {
-
+    // scene->Transform.Rotation += 0.04f;
 }
 
 void WindowM::show()
