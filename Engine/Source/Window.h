@@ -17,7 +17,7 @@ public:
 
     virtual void ProcessEvents() = 0;
 
-    void Render();
+    virtual void Render();
     Node* scene;
 
 protected:
