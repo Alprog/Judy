@@ -58,9 +58,9 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
 
     context->MakeCurrent();
 
-    glViewport(-400, 0, 800, 800);
-    glScissor(0, 0, 400, 800);
-    glEnable(GL_SCISSOR_TEST);
+    //glViewport(-400, 0, 800, 800);
+    //glScissor(0, 0, 400, 800);
+    //glEnable(GL_SCISSOR_TEST);
 
     Color color { 0.0f, 1.0f, 0.0f, 1.0f };
     Clear(color);

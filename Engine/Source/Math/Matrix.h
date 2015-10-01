@@ -31,7 +31,7 @@ struct Matrix
     static Matrix RotationZ(float rotation);
     static Matrix Scaling(Vector3 scaling);
 
-    static Matrix TRS(Vector3 translation, Quaternion rotation, Vector3 scaling);
+    static Matrix TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling);
 
     friend Matrix operator*(const Matrix& lhs, const Matrix& rhs);
 

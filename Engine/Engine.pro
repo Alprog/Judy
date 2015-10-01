@@ -21,7 +21,8 @@ HEADERS += \
     Source/Mac/*.h \
     Source/Net/*.h \
     Source/Platform.h \
-    Source/Math/Quaternion.h
+    Source/Math/Quaternion.h \
+    Source/Math/Transform.h
 
 SOURCES += \
     Source/App.cpp \
@@ -37,7 +38,6 @@ SOURCES += \
     Source/Math/Vector3.cpp \
     Source/Math/Vector4.cpp \
     Source/Keyframe.cpp \
-    Source/Math/Transform.cpp \
     Source/Meta/TypeMeta.cpp \
     Source/Meta/FieldMeta.cpp \
     Source/Meta/MethodMeta.cpp \
@@ -68,7 +68,9 @@ SOURCES += \
     Source/Path.cpp \
     Source/Utils.cpp \
     Source/Platform.cpp \
-    Source/Math/Quaternion.cpp
+    Source/Math/Quaternion.cpp \
+    Source/Math/Transform2D.cpp \
+    Source/Math/Transform.cpp
 
 win {
     INCLUDEPATH += Source/Windows

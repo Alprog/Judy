@@ -129,7 +129,7 @@ Matrix Matrix::Scaling(Vector3 s)
     };
 }
 
-Matrix Matrix::TRS(Vector3 translation, Quaternion rotation, Vector3 scaling)
+Matrix Matrix::TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling)
 {
     return Translation(translation) * Rotation(rotation) * Scaling(scaling);
 }

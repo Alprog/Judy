@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "GLContext.h"
 
-class GLRenderer : Renderer
+class GLRenderer : public Renderer
 {
 public:
     std::unordered_map<RenderTarget*, GLContext*> contexts;

@@ -33,7 +33,7 @@ void WindowM::Update()
 
 void WindowM::Render()
 {
-    // scene->Transform.Rotation += 0.04f;
+    renderer->Render(scene, renderTarget);
 }
 
 void WindowM::show()

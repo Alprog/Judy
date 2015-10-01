@@ -7,7 +7,7 @@
 #include "DebugCommand.h"
 #include "FileBreakpoints.h"
 #include "LogMessage.h"
-#include "Transform.h"
+#include "Transform2D.h"
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
@@ -53,13 +53,13 @@ void Meta::regClasses()
         .field("text", &LogMessage::text)
     ;
 
-    ClassDefiner<Transform>(this, "Transform")
+    ClassDefiner<Transform2D>(this, "Transform2D")
         .constructor()
-        .method("GetMatrix", &Transform::GetMatrix)
-        .field("Pivot", &Transform::Pivot)
-        .field("Translation", &Transform::Translation)
-        .field("Rotation", &Transform::Rotation)
-        .field("Scaling", &Transform::Scaling)
+        .method("GetMatrix", &Transform2D::GetMatrix)
+        .field("Pivot", &Transform2D::Pivot)
+        .field("Translation", &Transform2D::Translation)
+        .field("Rotation", &Transform2D::Rotation)
+        .field("Scaling", &Transform2D::Scaling)
     ;
 
     ClassDefiner<Vector2>(this, "Vector2")

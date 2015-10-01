@@ -79,21 +79,15 @@ WinWindow::WinWindow()
 
     dwStyle = WS_CHILD | WS_VISIBLE;
 
-    auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    renderTarget = new WinRenderTarget(hWnd);
 
-    RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
+    renderer = new GLRenderer();
 
-    auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
-}
+    //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
 
-void WinWindow::Render()
-{
-    static auto glRenderer = new GLRenderer();
-    static auto dxRenderer = new DXRenderer();
-
-    glRenderer->Render(scene, RenderTarget2);
-    dxRenderer->Render(scene, RenderTarget1);
+    //auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    //RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
 }
 
 WinWindow::~WinWindow()

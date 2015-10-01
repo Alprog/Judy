@@ -10,7 +10,7 @@
 
 class DXSwapChain;
 
-class DXRenderer : Renderer
+class DXRenderer : public Renderer
 {
 public:
     std::unordered_map<RenderTarget*, DXSwapChain*> swapChains;

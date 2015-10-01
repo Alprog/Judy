@@ -1,7 +1,7 @@
 
-#include "Transform.h"
+#include "Transform2D.h"
 
-Transform::Transform()
+Transform2D::Transform2D()
     : Pivot {Vector3::Zero}
     , Translation {Vector3::Zero}
     , Rotation {0}
@@ -9,7 +9,7 @@ Transform::Transform()
 {
 }
 
-Matrix Transform::GetMatrix()
+Matrix Transform2D::GetMatrix()
 {
     Matrix matrix = Matrix::Translation(-Pivot);
     matrix *= Matrix::Scaling(Scaling);

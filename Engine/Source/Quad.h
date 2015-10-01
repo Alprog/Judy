@@ -3,7 +3,7 @@
 
 #include "Node.h"
 #include "string"
-#include "Transform.h"
+#include "Math/Transform2D.h"
 #include "Meta/TypeMeta.h"
 
 #define __Meta__
@@ -19,7 +19,7 @@ public:
     virtual void Render(Renderer* renderer) override;
 
     Vector2 Size;
-    Transform Transform;
+    Transform2D Transform;
 
     std::string Shader;
     std::string Texture;
