@@ -2,6 +2,7 @@
 #include "Serializer.h"
 #include "FieldMeta.h"
 #include "MethodMeta.h"
+#include <cassert>
 
 Serializer::Serializer()
 {
@@ -98,6 +99,9 @@ void Serializer::SerializeAsArray(Any& object, ITypeMeta* type)
 
     auto arrayMeta = static_cast<IClassMeta*>(type);
     auto function = arrayMeta->functions["toAnyVector"];
+
+    assert(function != nullptr);
+
     std::vector<Any> elements = function->Invoke(object);
     for (int i = 0; i < elements.size(); i++)
     {

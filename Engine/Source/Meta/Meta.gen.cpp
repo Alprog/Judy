@@ -76,8 +76,8 @@ void Meta::regClasses()
         .field("translation", &Transform::translation)
         .field("rotation", &Transform::rotation)
         .field("scaling", &Transform::scaling)
-        .field("invalidateMatrix", &Transform::invalidateMatrix)
-        .field("matrix", &Transform::matrix)
+        //.field("invalidateMatrix", &Transform::invalidateMatrix)
+        //.field("matrix", &Transform::matrix)
     ;
 
     ClassDefiner<Vector2>(this, "Vector2")
@@ -162,7 +162,7 @@ void Meta::regClasses()
         .method("Update", &Node::Update)
         .method("Render", &Node::Render)
         .field("transform", &Node::transform)
-        .field("parent", &Node::parent)
+        //.field("parent", &Node::parent)
         .field("childs", &Node::childs)
     ;
 

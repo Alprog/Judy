@@ -9,6 +9,7 @@
 
 #include "Quad.h"
 #include "Model.h"
+#include "Meta/Serializer.h"
 
 WindowM* WindowM::Create()
 {
@@ -36,6 +37,11 @@ WindowM::WindowM()
 
     c2->transform.setTranslation(Vector3(-2, 0, 0));
     c2->transform.setScaling(Vector3::One * 0.4f);
+
+    auto serializer = new Serializer();
+    auto text = serializer->Serialize(scene);
+    printf(text.c_str());
+    fflush(stdout);
 }
 
 WindowM::~WindowM()

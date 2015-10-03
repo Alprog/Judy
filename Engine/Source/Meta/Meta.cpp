@@ -4,6 +4,7 @@
 
 #include "ClassDefiner.h"
 #include "CallInfo.h"
+#include "Node.h"
 
 template <typename T>
 std::vector<Any> toAnyVector(T& in)
@@ -138,6 +139,8 @@ Meta::Meta()
     //regMap<std::string, std::unordered_set<int>>();
 
     regClasses();
+
+    regVector<Node*>();
 
     regVector<CallInfo>();
 }
