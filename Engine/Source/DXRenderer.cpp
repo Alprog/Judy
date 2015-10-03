@@ -163,6 +163,11 @@ void DXRenderer::InitQuad()
     quadInited = true;
 }
 
+void DXRenderer::Draw(Mesh* mesh, Material* material, Matrix matrix)
+{
+
+}
+
 void DXRenderer::DrawQuad(Quad* quad)
 {
     if (!quadInited) InitQuad();

@@ -3,6 +3,9 @@
 
 Transform::Transform()
     : invalidateMatrix{true}
+    , translation{Vector3::Zero}
+    , rotation{Quaternion::Identity}
+    , scaling{Vector3::One}
 {
 }
 

@@ -16,7 +16,7 @@ public:
     Quad();
 
     virtual void Update(double delta) override;
-    virtual void Render(Renderer* renderer) override;
+    virtual void Render(Matrix matrix, Renderer* renderer) override;
 
     Vector2 Size;
     Transform2D Transform;

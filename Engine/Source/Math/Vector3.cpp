@@ -51,3 +51,13 @@ Vector3 operator-(const Vector3& lhs, const Vector3& rhs)
         lhs.z - rhs.z
     };
 }
+
+Vector3 operator*(const Vector3& vector, const float& value)
+{
+    return
+    {
+        vector.x * value,
+        vector.y * value,
+        vector.z * value
+    };
+}

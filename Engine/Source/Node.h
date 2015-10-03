@@ -30,7 +30,7 @@ public:
     Transform transform;
 
     virtual void Update(double delta);
-    virtual void Render(Renderer* renderer);
+    virtual void Render(Matrix matrix, Renderer* renderer);
 
 private:
     Node* parent;

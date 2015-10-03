@@ -55,3 +55,14 @@ Vector4 operator-(const Vector4& lhs, const Vector4& rhs)
         lhs.w - rhs.w
     };
 }
+
+Vector4 operator*(const Vector4& vector, const float& value)
+{
+    return
+    {
+        vector.x * value,
+        vector.y * value,
+        vector.z * value,
+        vector.w * value
+    };
+}

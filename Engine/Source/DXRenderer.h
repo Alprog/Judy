@@ -21,8 +21,9 @@ public:
 
     std::unordered_map<std::string, DXShaderResource*> shaders;
 
-    void DrawQuad(Quad* quad) override;
-    void Render(Node* scene, RenderTarget* renderTarget) override;
+    virtual void Draw(Mesh* mesh, Material* material, Matrix matrix) override;
+    virtual void DrawQuad(Quad* quad) override;
+    virtual void Render(Node* scene, RenderTarget* renderTarget) override;
 
     void Clear(Color color) override;
     void SetTexture(std::string name);

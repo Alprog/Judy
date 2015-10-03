@@ -52,3 +52,12 @@ Vector2 operator-(const Vector2& lhs, const Vector2& rhs)
         lhs.y - rhs.y
     };
 }
+
+Vector2 operator*(const Vector2& vector, const float& value)
+{
+    return
+    {
+        vector.x * value,
+        vector.y * value
+    };
+}

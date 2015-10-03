@@ -20,4 +20,6 @@ struct __Meta__ Vector4
     friend Vector4 operator-(const Vector4& vector);
     friend Vector4 operator+(const Vector4& lhs, const Vector4& rhs);
     friend Vector4 operator-(const Vector4& lhs, const Vector4& rhs);
+
+    friend Vector4 operator*(const Vector4& vector, const float& value);
 };

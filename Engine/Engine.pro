@@ -22,7 +22,11 @@ HEADERS += \
     Source/Net/*.h \
     Source/Platform.h \
     Source/Math/Quaternion.h \
-    Source/Math/Transform.h
+    Source/Math/Transform.h \
+    Source/Vertex.h \
+    Source/Mesh.h \
+    Source/Material.h \
+    Source/Model.h
 
 SOURCES += \
     Source/App.cpp \
@@ -70,7 +74,11 @@ SOURCES += \
     Source/Platform.cpp \
     Source/Math/Quaternion.cpp \
     Source/Math/Transform2D.cpp \
-    Source/Math/Transform.cpp
+    Source/Math/Transform.cpp \
+    Source/Vertex.cpp \
+    Source/Mesh.cpp \
+    Source/Material.cpp \
+    Source/Model.cpp
 
 win {
     INCLUDEPATH += Source/Windows

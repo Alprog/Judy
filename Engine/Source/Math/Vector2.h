@@ -22,4 +22,6 @@ struct __Meta__ Vector2
     friend Vector2 operator-(const Vector2& vector);
     friend Vector2 operator+(const Vector2& lhs, const Vector2& rhs);
     friend Vector2 operator-(const Vector2& lhs, const Vector2& rhs);
+
+    friend Vector2 operator*(const Vector2& vector, const float& value);
 };

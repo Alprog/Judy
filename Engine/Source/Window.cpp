@@ -8,6 +8,7 @@
 #endif
 
 #include "Quad.h"
+#include "Model.h"
 
 WindowM* WindowM::Create()
 {
@@ -16,9 +17,13 @@ WindowM* WindowM::Create()
 
 WindowM::WindowM()
 {
-    auto quad = new Quad();
-    quad->Size = Vector2(0.3f, 0.3f);
-    scene = quad;
+    auto model = new Model();
+
+//    auto quad = new Quad();
+//    quad->Size = Vector2(0.3f, 0.3f);
+
+    scene = model;
+    scene->transform.setScaling(Vector3::One * 0.3f);
 }
 
 WindowM::~WindowM()

@@ -9,4 +9,6 @@ public:
     float x, y, z, w;
 
     Quaternion(float x = 0, float y = 0, float z = 0, float w = 1);
+
+    static Quaternion YawPitchRoll(float yaw, float pitch, float roll);
 };
