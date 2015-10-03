@@ -131,6 +131,6 @@ Matrix Matrix::Scaling(Vector3 s)
 
 Matrix Matrix::TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling)
 {
-    return Translation(translation) * Rotation(rotation) * Scaling(scaling);
+    return Scaling(scaling) * Rotation(rotation) * Translation(translation);
 }
 

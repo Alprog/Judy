@@ -77,6 +77,6 @@ void Node::Render(Matrix matrix, Renderer* renderer)
     for (auto child : childs)
     {
         auto& childMatrix = child->transform.getMatrix();
-        child->Render(matrix * childMatrix, renderer);
+        child->Render(childMatrix * matrix, renderer);
     }
 }
