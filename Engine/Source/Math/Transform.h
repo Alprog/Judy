@@ -6,8 +6,12 @@
 
 #include "Matrix.h"
 
-struct Transform
+#define __Meta__
+
+struct __Meta__ Transform
 {
+    friend class Meta;
+
     Transform();
 
     Vector3 getTranslation() const;
@@ -24,8 +28,6 @@ private:
     Vector3 translation;
     Quaternion rotation;
     Vector3 scaling;
-
-    void CalcMatrix();
 
     bool invalidateMatrix;
     Matrix matrix;

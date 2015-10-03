@@ -12,7 +12,10 @@ struct __Meta__ Vector4
 
     Vector4(float x = 0, float y = 0, float z = 0, float w = 0);
 
-    float x, y, z, w;
+    float x;
+    float y;
+    float z;
+    float w;
 
     float Length();
     float SquaredLength();

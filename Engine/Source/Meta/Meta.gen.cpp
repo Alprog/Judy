@@ -7,11 +7,13 @@
 #include "DebugCommand.h"
 #include "FileBreakpoints.h"
 #include "LogMessage.h"
-#include "Transform2D.h"
+#include "Quaternion.h"
+#include "Transform.h"
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include "App.h"
+#include "Model.h"
 #include "Node.h"
 #include "Quad.h"
 #include "Renderer.h"
@@ -53,13 +55,29 @@ void Meta::regClasses()
         .field("text", &LogMessage::text)
     ;
 
-    ClassDefiner<Transform2D>(this, "Transform2D")
+    ClassDefiner<Quaternion>(this, "Quaternion")
+        .constructor<float, float, float, float>()
+        .function("YawPitchRoll", &Quaternion::YawPitchRoll)
+        .field("x", &Quaternion::x)
+        .field("y", &Quaternion::y)
+        .field("z", &Quaternion::z)
+        .field("w", &Quaternion::w)
+    ;
+
+    ClassDefiner<Transform>(this, "Transform")
         .constructor()
-        .method("GetMatrix", &Transform2D::GetMatrix)
-        .field("Pivot", &Transform2D::Pivot)
-        .field("Translation", &Transform2D::Translation)
-        .field("Rotation", &Transform2D::Rotation)
-        .field("Scaling", &Transform2D::Scaling)
+        .method("getTranslation", &Transform::getTranslation)
+        .method("getRotation", &Transform::getRotation)
+        .method("getScaling", &Transform::getScaling)
+        .method("setTranslation", &Transform::setTranslation)
+        .method("setRotation", &Transform::setRotation)
+        .method("setScaling", &Transform::setScaling)
+        .method("getMatrix", &Transform::getMatrix)
+        .field("translation", &Transform::translation)
+        .field("rotation", &Transform::rotation)
+        .field("scaling", &Transform::scaling)
+        .field("invalidateMatrix", &Transform::invalidateMatrix)
+        .field("matrix", &Transform::matrix)
     ;
 
     ClassDefiner<Vector2>(this, "Vector2")
@@ -75,6 +93,8 @@ void Meta::regClasses()
         .constructor<float, float, float>()
         .method("Length", &Vector3::Length)
         .method("SquaredLength", &Vector3::SquaredLength)
+        .field("x", &Vector3::x)
+        .field("y", &Vector3::y)
         .field("z", &Vector3::z)
     ;
 
@@ -84,6 +104,7 @@ void Meta::regClasses()
         .method("SquaredLength", &Vector4::SquaredLength)
         .field("x", &Vector4::x)
         .field("y", &Vector4::y)
+        .field("z", &Vector4::z)
         .field("w", &Vector4::w)
     ;
 
@@ -120,6 +141,14 @@ void Meta::regClasses()
         .field("RemovedWindows", &App::RemovedWindows)
     ;
 
+    ClassDefiner<Model>(this, "Model")
+        .constructor()
+        .method("Update", &Model::Update)
+        .method("Render", &Model::Render)
+        .field("mesh", &Model::mesh)
+        .field("material", &Model::material)
+    ;
+
     ClassDefiner<Node>(this, "Node")
         .constructor()
         .constructor<int>()
@@ -132,6 +161,7 @@ void Meta::regClasses()
         .method("Reparent", &Node::Reparent)
         .method("Update", &Node::Update)
         .method("Render", &Node::Render)
+        .field("transform", &Node::transform)
         .field("parent", &Node::parent)
         .field("childs", &Node::childs)
     ;
@@ -148,6 +178,7 @@ void Meta::regClasses()
 
     ClassDefiner<Renderer>(this, "Renderer")
         .method("DrawQuad", &Renderer::DrawQuad)
+        .method("Draw", &Renderer::Draw)
         .method("Render", &Renderer::Render)
         .method("Clear", &Renderer::Clear)
     ;
@@ -156,6 +187,7 @@ void Meta::regClasses()
         .function("Create", &WindowM::Create)
         .method("show", &WindowM::show)
         .method("ProcessEvents", &WindowM::ProcessEvents)
+        .method("Update", &WindowM::Update)
         .method("Render", &WindowM::Render)
     ;
 }
