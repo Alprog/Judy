@@ -23,7 +23,7 @@ void Meta::regClasses()
 {
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
-        .constructor<std :: string, std :: string, int, int, int>()
+        .constructor<std::string, std::string, int, int, int>()
         .field("name", &CallInfo::name)
         .field("source", &CallInfo::source)
         .field("line", &CallInfo::line)
@@ -38,20 +38,20 @@ void Meta::regClasses()
 
     ClassDefiner<DebugCommand>(this, "DebugCommand")
         .constructor()
-        .constructor<std :: string>()
+        .constructor<std::string>()
         .field("name", &DebugCommand::name)
     ;
 
     ClassDefiner<FileBreakpoints>(this, "FileBreakpoints")
         .constructor()
-        .constructor<std :: string, std :: unordered_set < int >>()
+        .constructor<std::string, std::unordered_set<int>>()
         .field("fileName", &FileBreakpoints::fileName)
         .field("lines", &FileBreakpoints::lines)
     ;
 
     ClassDefiner<LogMessage>(this, "LogMessage")
         .constructor()
-        .constructor<std :: string>()
+        .constructor<std::string>()
         .field("text", &LogMessage::text)
     ;
 
@@ -76,8 +76,8 @@ void Meta::regClasses()
         .field("translation", &Transform::translation)
         .field("rotation", &Transform::rotation)
         .field("scaling", &Transform::scaling)
-        //.field("invalidateMatrix", &Transform::invalidateMatrix)
-        //.field("matrix", &Transform::matrix)
+        .field("invalidateMatrix", &Transform::invalidateMatrix)
+        .field("matrix", &Transform::matrix)
     ;
 
     ClassDefiner<Vector2>(this, "Vector2")
@@ -118,7 +118,7 @@ void Meta::regClasses()
     ;
 
     ClassDefiner<TestStruct>(this, "TestStruct")
-        .constructor<float, int, char *, SubStruct>()
+        .constructor<float, int, char*, SubStruct>()
         .constructor()
         .field("a", &TestStruct::a)
         .field("c", &TestStruct::c)
@@ -162,7 +162,7 @@ void Meta::regClasses()
         .method("Update", &Node::Update)
         .method("Render", &Node::Render)
         .field("transform", &Node::transform)
-        //.field("parent", &Node::parent)
+        .field("parent", &Node::parent)
         .field("childs", &Node::childs)
     ;
 
