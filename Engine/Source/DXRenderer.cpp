@@ -163,6 +163,11 @@ void DXRenderer::InitQuad()
     quadInited = true;
 }
 
+void DXRenderer::Draw(Mesh* mesh, Material* material, Matrix matrix)
+{
+
+}
+
 void DXRenderer::DrawQuad(Quad* quad)
 {
     if (!quadInited) InitQuad();
@@ -283,7 +288,7 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
     device->CreateSamplerState(&samplerDesc, &state);
     deviceContext->PSSetSamplers(0, 1, &state);
 
-    scene->Render(this);
+    //scene->Render(this);
 
     swapChain->swapChain->Present(1, 0);
 

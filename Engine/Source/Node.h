@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Math/Vector2.h"
+#include "Math/Transform.h"
 #include "Meta/TypeMeta.h"
 
 class Renderer;
@@ -26,8 +27,10 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
+    Transform transform;
+
     virtual void Update(double delta);
-    virtual void Render(Renderer* renderer);
+    virtual void Render(Matrix matrix, Renderer* renderer);
 
 private:
     Node* parent;

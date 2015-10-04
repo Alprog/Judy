@@ -53,3 +53,5 @@ mac {
 }
 
 RESOURCES = ide.qrc
+
+LIBS += -lglew32s

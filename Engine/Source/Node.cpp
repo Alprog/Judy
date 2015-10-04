@@ -72,10 +72,11 @@ void Node::Update(double delta)
     }
 }
 
-void Node::Render(Renderer* renderer)
+void Node::Render(Matrix matrix, Renderer* renderer)
 {
     for (auto child : childs)
     {
-        child->Render(renderer);
+        auto& childMatrix = child->transform.getMatrix();
+        child->Render(childMatrix * matrix, renderer);
     }
 }

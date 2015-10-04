@@ -4,16 +4,20 @@
 #include "Renderer.h"
 #include "GLContext.h"
 
-class GLRenderer : Renderer
+class GLRenderer : public Renderer
 {
 public:
+    GLRenderer();
+
     std::unordered_map<RenderTarget*, GLContext*> contexts;
 
     GLContext* GetContext(RenderTarget* renderTarget);
 
-    void DrawQuad(Quad* quad) override;
-    void Render(Node* scene, RenderTarget* renderTarget) override;
+    virtual void Draw(Mesh* mesh, Material* material, Matrix matrix) override;
 
-    void Clear(Color color) override;
+    virtual void DrawQuad(Quad* quad) override;
+    virtual void Render(Node* scene, RenderTarget* renderTarget) override;
+
+    virtual void Clear(Color color) override;
 };
 

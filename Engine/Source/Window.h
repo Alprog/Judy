@@ -3,6 +3,7 @@
 
 #include "Node.h"
 #include "RenderTarget.h"
+#include "Renderer.h"
 
 #define __Meta__
 
@@ -12,16 +13,22 @@ class __Meta__ WindowM
 
 public:
     static WindowM* Create();
+    virtual ~WindowM();
 
     void show();
 
     virtual void ProcessEvents() = 0;
 
+    void Update();
     void Render();
-    Node* scene;
 
 protected:
     WindowM();
-    RenderTarget* RenderTarget1;
-    RenderTarget* RenderTarget2;
+
+    RenderTarget* renderTarget;
+    Node* scene;
+    Renderer* renderer;
+
+    //RenderTarget* RenderTarget1;
+    //RenderTarget* RenderTarget2;
 };

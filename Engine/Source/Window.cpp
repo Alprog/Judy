@@ -8,6 +8,7 @@
 #endif
 
 #include "Quad.h"
+#include "Model.h"
 
 WindowM* WindowM::Create()
 {
@@ -16,29 +17,47 @@ WindowM* WindowM::Create()
 
 WindowM::WindowM()
 {
+    auto model = new Model();
 
+    auto c1 = new Model();
+    auto c2 = new Model();
+
+//    auto quad = new Quad();
+//    quad->Size = Vector2(0.3f, 0.3f);
+
+    scene = model;
+    scene->transform.setScaling(Vector3::One * 0.3f);
+
+    scene->AddChild(c1);
+    scene->AddChild(c2);
+
+    c1->transform.setTranslation(Vector3(2, 0, 0));
+    c1->transform.setScaling(Vector3::One * 0.3f);
+
+    c2->transform.setTranslation(Vector3(-2, 0, 0));
+    c2->transform.setScaling(Vector3::One * 0.4f);
 }
 
-#ifdef WIN
+WindowM::~WindowM()
+{
+    delete scene;
+}
 
-auto glRenderer = new GLRenderer();
-auto dxRenderer = new DXRenderer();
+void WindowM::Update()
+{
+    scene->Update(0.0);
+
+    static float a = 0;
+    a += 0.003f;
+    auto rotation = Quaternion::YawPitchRoll(a / 2, a, a / 2);
+    scene->transform.setRotation(rotation);
+
+}
 
 void WindowM::Render()
 {
-//    auto quad = (Quad*)scene;
-//    quad->Transform.Rotation += 0.04f;
-//    glRenderer->Render(scene, RenderTarget2);
-//    dxRenderer->Render(scene, RenderTarget1);
+    renderer->Render(scene, renderTarget);
 }
-#else
-
-void WindowM::Render()
-{
-}
-
-
-#endif
 
 void WindowM::show()
 {

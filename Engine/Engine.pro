@@ -20,7 +20,13 @@ HEADERS += \
     Source/Linux/*.h \
     Source/Mac/*.h \
     Source/Net/*.h \
-    Source/Platform.h
+    Source/Platform.h \
+    Source/Math/Quaternion.h \
+    Source/Math/Transform.h \
+    Source/Vertex.h \
+    Source/Mesh.h \
+    Source/Material.h \
+    Source/Model.h
 
 SOURCES += \
     Source/App.cpp \
@@ -36,7 +42,6 @@ SOURCES += \
     Source/Math/Vector3.cpp \
     Source/Math/Vector4.cpp \
     Source/Keyframe.cpp \
-    Source/Math/Transform.cpp \
     Source/Meta/TypeMeta.cpp \
     Source/Meta/FieldMeta.cpp \
     Source/Meta/MethodMeta.cpp \
@@ -66,7 +71,14 @@ SOURCES += \
     Source/LuaMachine/FileBreakpoints.cpp \
     Source/Path.cpp \
     Source/Utils.cpp \
-    Source/Platform.cpp
+    Source/Platform.cpp \
+    Source/Math/Quaternion.cpp \
+    Source/Math/Transform2D.cpp \
+    Source/Math/Transform.cpp \
+    Source/Vertex.cpp \
+    Source/Mesh.cpp \
+    Source/Material.cpp \
+    Source/Model.cpp
 
 win {
     INCLUDEPATH += Source/Windows

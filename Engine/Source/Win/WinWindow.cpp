@@ -6,6 +6,9 @@
 
 #include <windows.h>
 
+#include "GLRenderer.h"
+#include "DXRenderer.h"
+
 WindowM* currentEventWindow = NULL;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -76,11 +79,15 @@ WinWindow::WinWindow()
 
     dwStyle = WS_CHILD | WS_VISIBLE;
 
-    auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
+    renderTarget = new WinRenderTarget(hWnd);
 
-    auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
+    renderer = new GLRenderer();
+
+    //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
+
+    //auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
+    //RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
 }
 
 WinWindow::~WinWindow()

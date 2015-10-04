@@ -3,7 +3,7 @@
 
 #include "Node.h"
 #include "string"
-#include "Transform.h"
+#include "Math/Transform2D.h"
 #include "Meta/TypeMeta.h"
 
 #define __Meta__
@@ -16,10 +16,10 @@ public:
     Quad();
 
     virtual void Update(double delta) override;
-    virtual void Render(Renderer* renderer) override;
+    virtual void Render(Matrix matrix, Renderer* renderer) override;
 
     Vector2 Size;
-    Transform Transform;
+    Transform2D Transform;
 
     std::string Shader;
     std::string Texture;

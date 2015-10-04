@@ -18,4 +18,6 @@ struct __Meta__ Vector3
     friend Vector3 operator-(const Vector3& vector);
     friend Vector3 operator+(const Vector3& lhs, const Vector3& rhs);
     friend Vector3 operator-(const Vector3& lhs, const Vector3& rhs);
+
+    friend Vector3 operator*(const Vector3& vector, const float& value);
 };

@@ -45,6 +45,7 @@ void App::StartMainLoop()
 
         for (auto window : Windows)
         {
+            window->Update();
             window->Render();
         }
     }

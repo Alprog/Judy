@@ -11,8 +11,8 @@ Vector2::Vector2()
 }
 
 Vector2::Vector2(float x, float y)
-    : x {x}
-    , y {y}
+    : x{x}
+    , y{y}
 {
 }
 
@@ -50,5 +50,14 @@ Vector2 operator-(const Vector2& lhs, const Vector2& rhs)
     {
         lhs.x - rhs.x,
         lhs.y - rhs.y
+    };
+}
+
+Vector2 operator*(const Vector2& vector, const float& value)
+{
+    return
+    {
+        vector.x * value,
+        vector.y * value
     };
 }

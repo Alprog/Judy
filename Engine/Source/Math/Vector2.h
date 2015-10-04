@@ -14,8 +14,7 @@ struct __Meta__ Vector2
     Vector2();
     Vector2(float x, float y);
 
-    float x;
-    float y;
+    float x, y;
 
     float Length();
     float SquaredLength();
@@ -23,4 +22,6 @@ struct __Meta__ Vector2
     friend Vector2 operator-(const Vector2& vector);
     friend Vector2 operator+(const Vector2& lhs, const Vector2& rhs);
     friend Vector2 operator-(const Vector2& lhs, const Vector2& rhs);
+
+    friend Vector2 operator*(const Vector2& vector, const float& value);
 };
