@@ -8,10 +8,12 @@
 class CodeGenerator
 {
 public:
-    std::string GenerateCpp(std::vector<ClassInfo>& classes);
+    std::string GenerateHeader(std::vector<ClassInfo>& classes);
+    std::string GenerateSource(std::vector<ClassInfo>& classes);
 
 private:
     std::string GenerateIncludes(std::vector<ClassInfo>& classes);
-
-    std::string Generate(ClassInfo& classInfo);
+    std::string GenerateTemplateFunctions(std::vector<ClassInfo>& classes);
+    std::string GenerateMainFunction(std::vector<ClassInfo>& classes);
+    std::string GenerateClassDefinition(ClassInfo& classInfo);
 };

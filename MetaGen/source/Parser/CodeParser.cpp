@@ -104,6 +104,10 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
         {
             //printf("Nested CLASS\n");
         }
+        else if (statement.isUsing())
+        {
+            // nothing
+        }
         else
         {
             // field declaration

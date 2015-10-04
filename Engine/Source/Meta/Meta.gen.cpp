@@ -20,7 +20,17 @@
 #include "Renderer.h"
 #include "Window.h"
 
-void Meta::regClasses()
+template <typename T>
+void Meta::DefineList()
+{
+    ClassDefiner<List<T>>(this, "List<T>")
+        .constructor<std::initializer_list<T>>()
+        .method("at", &List<T>::at)
+        .method("toList", &List<T>::toList)
+    ;
+}
+
+void Meta::DefineClasses()
 {
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
@@ -58,6 +68,8 @@ void Meta::regClasses()
 
     ClassDefiner<Quaternion>(this, "Quaternion")
         .constructor<float, float, float, float>()
+        .constructor<List<Any>>()
+        .method("toList", &Quaternion::toList)
         .function("YawPitchRoll", &Quaternion::YawPitchRoll)
         .field("x", &Quaternion::x)
         .field("y", &Quaternion::y)
@@ -84,6 +96,8 @@ void Meta::regClasses()
     ClassDefiner<Vector2>(this, "Vector2")
         .constructor()
         .constructor<float, float>()
+        .constructor<List<Any>>()
+        .method("toList", &Vector2::toList)
         .method("Length", &Vector2::Length)
         .method("SquaredLength", &Vector2::SquaredLength)
         .field("x", &Vector2::x)
@@ -92,6 +106,8 @@ void Meta::regClasses()
 
     ClassDefiner<Vector3>(this, "Vector3")
         .constructor<float, float, float>()
+        .constructor<List<Any>>()
+        .method("toList", &Vector3::toList)
         .method("Length", &Vector3::Length)
         .method("SquaredLength", &Vector3::SquaredLength)
         .field("x", &Vector3::x)
@@ -101,6 +117,8 @@ void Meta::regClasses()
 
     ClassDefiner<Vector4>(this, "Vector4")
         .constructor<float, float, float, float>()
+        .constructor<List<Any>>()
+        .method("toList", &Vector4::toList)
         .method("Length", &Vector4::Length)
         .method("SquaredLength", &Vector4::SquaredLength)
         .field("x", &Vector4::x)
@@ -192,3 +210,4 @@ void Meta::regClasses()
         .method("Render", &WindowM::Render)
     ;
 }
+

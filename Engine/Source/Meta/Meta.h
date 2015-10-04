@@ -29,8 +29,8 @@ private:
     template <typename T1, typename T2>
     void regMap();
 
-    void regClasses();
     #include "Meta.gen.h"
+    void DefineClasses();
 
     template <typename T>
     void DefineBuildInType(std::string name)

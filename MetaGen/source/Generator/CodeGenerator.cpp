@@ -26,10 +26,40 @@ std::string format(const char* format, ArgTypes... args)
     return "";
 }
 
-std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
+std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
     stream << std::endl;
+
+    for (auto& classInfo : classes)
+    {
+        if (classInfo.isTemplate)
+        {
+            stream << tab << "template <typename T>" << std::endl;
+            stream << tab << "void Define" << classInfo.name << "();" << std::endl;
+            stream << std::endl;
+        }
+    }
+
+    return stream.str();
+}
+
+std::string CodeGenerator::GenerateSource(std::vector<ClassInfo>& classes)
+{
+    std::stringstream stream;
+    stream << std::endl;
+    stream << GenerateIncludes(classes);
+    stream << std::endl;
+    stream << GenerateTemplateFunctions(classes);
+    stream << std::endl;
+    stream << GenerateMainFunction(classes);
+    stream << std::endl;
+    return stream.str();
+}
+
+std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
+{
+    std::stringstream stream;
     stream << "#include \"Meta.h\"" << std::endl;
     stream << "#include \"TypeMeta.h\"" << std::endl;
     stream << "#include \"ClassDefiner.h\"" << std::endl;
@@ -45,44 +75,61 @@ std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
         }
     }
 
-    stream << std::endl;
-
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateCpp(std::vector<ClassInfo>& classes)
+std::string CodeGenerator::GenerateTemplateFunctions(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
-    stream << GenerateIncludes(classes);
+    auto first = true;
+    for (auto& classInfo : classes)
+    {
+        if (classInfo.isTemplate)
+        {
+            if (!first) { stream << std::endl; }
+            stream << "template <typename T>" << std::endl;
+            stream << "void Meta::Define" << classInfo.name << "()" << std::endl;
+            stream << "{" << std::endl;
+            stream << GenerateClassDefinition(classInfo);
+            stream << "}" << std::endl;
+            first = false;
+        }
+    }
+    return stream.str();
+}
 
-    stream << "void Meta::regClasses()" << std::endl << "{" << std::endl;
+std::string CodeGenerator::GenerateMainFunction(std::vector<ClassInfo>& classes)
+{
+    std::stringstream stream;
+    stream << "void Meta::DefineClasses()" << std::endl;
+    stream << "{" << std::endl;
 
     auto first = true;
     for (auto& classInfo : classes)
     {
         if (!classInfo.isTemplate)
         {
-            if (first)
-            {
-                first = false;
-            }
-            else
-            {
-                stream << std::endl;
-            }
-            stream << Generate(classInfo);
+            if (!first) { stream << std::endl; }
+            stream << GenerateClassDefinition(classInfo);
+            first = false;
         }
     }
-    stream << "}" << std::endl;
 
+    stream << "}" << std::endl;
     return stream.str();
 }
 
-std::string CodeGenerator::Generate(ClassInfo& classInfo)
+std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
 {
     std::stringstream stream;
 
-    stream << tab << "ClassDefiner<" << classInfo.name << ">" << "(this, \"" << classInfo.name << "\")" << std::endl;
+    auto className = classInfo.name;
+    if (classInfo.isTemplate)
+    {
+        className = className + "<T>";
+    }
+
+    stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << className << "\")" << std::endl;
 
     bool isAbstract = classInfo.isAbstract();
 
@@ -116,7 +163,7 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
         {
             auto type = method.isStatic ? "function" : "method";
             stream << tab2 << "." << type << "(\"" << method.name << "\", &" <<
-                classInfo.name << "::" << method.name << ")" << std::endl;
+                className << "::" << method.name << ")" << std::endl;
         }
     }
 
@@ -127,7 +174,7 @@ std::string CodeGenerator::Generate(ClassInfo& classInfo)
             if (!field.isStatic)
             {
                 stream << tab2 << ".field(\"" << field.name << "\", &" <<
-                   classInfo.name << "::" << field.name << ")" << std::endl;
+                   className << "::" << field.name << ")" << std::endl;
             }
         }
     }

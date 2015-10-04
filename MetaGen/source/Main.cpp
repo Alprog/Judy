@@ -70,7 +70,9 @@ int main(int argc, char *argv[])
     CodeGenerator generator;
 
     auto classes = parser.getClasses();
-    auto text = generator.GenerateCpp(classes);
-    auto fileName = "../Engine/source/Meta/Meta.gen.cpp";
-    writeToFile(fileName, text);
+
+    auto headerText = generator.GenerateHeader(classes);
+    auto sourceText = generator.GenerateSource(classes);
+    writeToFile("../Engine/source/Meta/Meta.gen.h", headerText);
+    writeToFile("../Engine/source/Meta/Meta.gen.cpp", sourceText);
 }
