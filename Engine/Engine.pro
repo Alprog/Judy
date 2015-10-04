@@ -80,8 +80,7 @@ SOURCES += \
     Source/Vertex.cpp \
     Source/Mesh.cpp \
     Source/Material.cpp \
-    Source/Model.cpp \
-    Source/Containers/List.cpp
+    Source/Model.cpp
 
 win {
     INCLUDEPATH += Source/Windows

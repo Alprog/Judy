@@ -2,15 +2,35 @@
 #pragma once
 
 #include <vector>
+#include "Meta/Any.h"
 
 #define __Meta__
+#define __Serialize__
 
 template <typename T>
 __Meta__ class List : public std::vector<T>
 {
     using base = std::vector<T>;
 
+public:
+    inline List(std::initializer_list<T> items)
+        : base(items)
+    {
+    }
+
     inline T& at(int index) { return base::at(index); }
+
+
+private:
+    __Serialize__ List<Any> toList()
+    {
+        List<Any> out(size());
+        for (auto i = 0; i < size(); i++)
+        {
+            out[i++] = this->at(i);
+        }
+        return out;
+    }
 };
 
 

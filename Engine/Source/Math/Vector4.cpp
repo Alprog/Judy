@@ -13,6 +13,19 @@ Vector4::Vector4(float x, float y, float z, float w)
 {
 }
 
+Vector4::Vector4(List<Any> list)
+    : x{list[0].as<float>()}
+    , y{list[1].as<float>()}
+    , z{list[2].as<float>()}
+    , w{list[3].as<float>()}
+{
+}
+
+List<Any> Vector4::toList()
+{
+    return {x, y, z, w};
+}
+
 float Vector4::Length()
 {
     return sqrt(x * x + y * y + z * z + w * w);
