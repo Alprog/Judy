@@ -153,7 +153,8 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
                 }
                 stream << ">";
             }
-            stream << "()" << std::endl;
+            stream << "()";
+            stream << GenerateAttributes(constructor) << std::endl;
         }
     }
 
@@ -162,8 +163,8 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
         if (!method.isOperator)
         {
             auto type = method.isStatic ? "function" : "method";
-            stream << tab2 << "." << type << "(\"" << method.name << "\", &" <<
-                className << "::" << method.name << ")" << std::endl;
+            stream << tab2 << "." << type << "(\"" << method.name << "\", &" << className << "::" << method.name << ")";
+            stream << GenerateAttributes(method) << std::endl;
         }
     }
 
@@ -173,8 +174,8 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
         {
             if (!field.isStatic)
             {
-                stream << tab2 << ".field(\"" << field.name << "\", &" <<
-                   className << "::" << field.name << ")" << std::endl;
+                stream << tab2 << ".field(\"" << field.name << "\", &" << className << "::" << field.name << ")";
+                stream << GenerateAttributes(field) << std::endl;
             }
         }
     }
@@ -184,4 +185,13 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     return stream.str();
 }
 
+std::string CodeGenerator::GenerateAttributes(MemberInfo& memberInfo)
+{
+    std::stringstream stream;
+    for (auto& attributeInfo : memberInfo.attributes)
+    {
+        stream << ".attr(\"" << attributeInfo.name << "\")";
+    }
+    return stream.str();
+}
 

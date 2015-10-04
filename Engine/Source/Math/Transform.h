@@ -7,6 +7,7 @@
 #include "Matrix.h"
 
 #define __Meta__
+#define __Serialize__
 
 struct __Meta__ Transform
 {
@@ -25,9 +26,9 @@ struct __Meta__ Transform
     Matrix getMatrix();
 
 private:
-    Vector3 translation;
-    Quaternion rotation;
-    Vector3 scaling;
+    __Serialize__ Vector3 translation;
+    __Serialize__ Quaternion rotation;
+    __Serialize__ Vector3 scaling;
 
     bool invalidateMatrix;
     Matrix matrix;

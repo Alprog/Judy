@@ -1,14 +1,15 @@
 
 #pragma once
 
+#include "IMemberMeta.h"
 #include "ITypeMeta.h"
 #include "Meta.h"
 #include "Any.h"
+#include <unordered_set>
 
-class IFunctionMeta
+class IFunctionMeta : public IMemberMeta
 {
 public:
-    std::string name;
     virtual ITypeMeta* GetReturnType() = 0;
     virtual size_t GetArgCount() = 0;
     virtual std::vector<ITypeMeta*> GetArgTypes() = 0;

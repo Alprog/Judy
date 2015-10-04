@@ -28,7 +28,8 @@ HEADERS += \
     Source/Mesh.h \
     Source/Material.h \
     Source/Model.h \
-    Source/Containers/List.h
+    Source/Containers/List.h \
+    Source/Meta/IMemberMeta.h
 
 SOURCES += \
     Source/App.cpp \

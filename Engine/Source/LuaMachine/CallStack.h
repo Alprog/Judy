@@ -5,9 +5,10 @@
 #include "CallInfo.h"
 
 #define __Meta__
+#define __Serialize__
 
 struct __Meta__ CallStack
 {
     CallStack();
-    std::vector<CallInfo> calls;
+    __Serialize__ std::vector<CallInfo> calls;
 };

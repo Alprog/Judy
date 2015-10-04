@@ -16,4 +16,5 @@ private:
     std::string GenerateTemplateFunctions(std::vector<ClassInfo>& classes);
     std::string GenerateMainFunction(std::vector<ClassInfo>& classes);
     std::string GenerateClassDefinition(ClassInfo& classInfo);
+    std::string GenerateAttributes(MemberInfo& memberInfo);
 };

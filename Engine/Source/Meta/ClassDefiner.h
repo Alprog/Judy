@@ -13,9 +13,11 @@ class ClassDefiner
 {
 public:
     IClassMeta* classMeta;
+    IMemberMeta* lastMember;
 
     ClassDefiner(Meta* meta, const char* name)
-        : classMeta { TypeMeta<ClassType>::Instance() }
+        : classMeta{TypeMeta<ClassType>::Instance()}
+        , lastMember{nullptr}
     {
         classMeta->name = name;
 
@@ -29,6 +31,7 @@ public:
     {
         auto constructor = new ConstructorMeta<ClassType, ArgTypes...>();
         classMeta->constructors.push_back(constructor);
+        lastMember = constructor;
         return *this;
     }
 
@@ -37,6 +40,7 @@ public:
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
         classMeta->fields[name] = field;
+        lastMember = field;
         return *this;
     }
 
@@ -47,6 +51,7 @@ public:
         method->name = name;
         method->pointer = pointer;
         classMeta->methods[name] = method;
+        lastMember = method;
         return *this;
     }
 
@@ -64,6 +69,7 @@ public:
         function->name = name;
         function->pointer = pointer;
         classMeta->functions[name] = function;
+        lastMember = function;
         return *this;
     }
 
@@ -71,6 +77,15 @@ public:
     ClassDefiner& valueType()
     {
         classMeta->valueType = TypeMetaOf<T>();
+        return *this;
+    }
+
+    ClassDefiner& attr(std::string attributeName)
+    {
+        if (lastMember != nullptr)
+        {
+            lastMember->attributes.insert(attributeName);
+        }
         return *this;
     }
 };
