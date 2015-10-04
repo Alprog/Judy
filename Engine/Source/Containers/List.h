@@ -13,13 +13,14 @@ __Meta__ class List : public std::vector<T>
     using base = std::vector<T>;
 
 public:
+    inline List() = default;
+
     inline List(std::initializer_list<T> items)
         : base(items)
     {
     }
 
     inline T& at(int index) { return base::at(index); }
-
 
 private:
     __Serialize__ List<Any> toList()

@@ -3,6 +3,7 @@
 #include "FieldMeta.h"
 #include "MethodMeta.h"
 #include <cassert>
+#include "List.h"
 
 Serializer::Serializer()
 {
@@ -60,36 +61,59 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         SerializeAsMap(object, type);
     }
-    else
+    else if (type->isClass())
     {
-        lua_newtable(L);
+        SerializeAsClass(object, type);
+    }
+}
 
-        std::string modifiers = "";
-
-        while (type->isPointer())
+IFunctionMeta* FindSerializeMethod(IClassMeta* classMeta)
+{
+    for (auto& pair : classMeta->methods)
+    {
+        auto methodMeta = pair.second;
+        if (methodMeta->hasAttribute("Serialize"))
         {
-            type = type->GetPointeeType();
-            object = type->Dereference(object);
-            modifiers += '*';
+            return methodMeta;
         }
+    }
+    return nullptr;
+}
 
-        auto name = type->name + modifiers;
-        lua_pushstring(L, name.c_str());
-        lua_setfield(L, -2, "class");
+void Serializer::SerializeAsClass(Any& object, ITypeMeta* type)
+{
+    lua_newtable(L);
 
-        if (type->isClass())
+    auto classMeta = static_cast<IClassMeta*>(type);
+
+    auto serializeMethod = FindSerializeMethod(classMeta);
+    if (serializeMethod != nullptr)
+    {
+        auto pointer = type->MakePointer(object);
+        List<Any> list = serializeMethod->Invoke(pointer);
+        for (int i = 0; i < list.size(); i++)
         {
-            auto classMeta = static_cast<IClassMeta*>(type);
-            for (auto& pair : classMeta->fields)
-            {
-                auto field = pair.second;
-                Any value = field->get_local(object);
-                auto fieldType = field->GetType();
-                Serialize(value, fieldType);
-                lua_setfield(L, -2, field->name.c_str());
-            }
+            auto value = list[i];
+            Serialize(value, value.GetType());
+            lua_seti(L, -2, i + 1);
         }
+        return;
+    }
 
+    auto name = type->name;
+    lua_pushstring(L, name.c_str());
+    lua_setfield(L, -2, "class");
+
+    for (auto& pair : classMeta->fields)
+    {
+        auto fieldMeta = pair.second;
+        if (fieldMeta->hasAttribute("Serialize"))
+        {
+            Any value = fieldMeta->get_local(object);
+            auto fieldType = fieldMeta->GetType();
+            Serialize(value, fieldType);
+            lua_setfield(L, -2, fieldMeta->name.c_str());
+        }
     }
 }
 
@@ -232,10 +256,13 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
-        lua_getfield(L, -1, fieldMeta->name.c_str());
-        Any value = Deserialize(fieldMeta->GetType());
-        fieldMeta->set_local(object, value);
-        lua_pop(L, 1);
+        if (fieldMeta->hasAttribute("Serialize"))
+        {
+            lua_getfield(L, -1, fieldMeta->name.c_str());
+            Any value = Deserialize(fieldMeta->GetType());
+            fieldMeta->set_local(object, value);
+            lua_pop(L, 1);
+        }
     }
 
     return object;

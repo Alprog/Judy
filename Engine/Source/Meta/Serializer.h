@@ -32,6 +32,7 @@ public:
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);
+    void SerializeAsClass(Any& object, ITypeMeta* type);
     void SerializeAsArray(Any& object, ITypeMeta* type);
     void SerializeAsMap(Any& object, ITypeMeta* type);
 

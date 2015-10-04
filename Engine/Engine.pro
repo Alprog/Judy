@@ -81,7 +81,8 @@ SOURCES += \
     Source/Vertex.cpp \
     Source/Mesh.cpp \
     Source/Material.cpp \
-    Source/Model.cpp
+    Source/Model.cpp \
+    Source/Meta/IMemberMeta.cpp
 
 win {
     INCLUDEPATH += Source/Windows
