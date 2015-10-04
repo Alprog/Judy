@@ -4,7 +4,6 @@
 #define __Meta__
 #define __Serialized__
 
-
 struct __Meta__ Vector4
 {
     static const Vector4 Zero;
@@ -12,10 +11,7 @@ struct __Meta__ Vector4
 
     Vector4(float x = 0, float y = 0, float z = 0, float w = 0);
 
-    float x;
-    float y;
-    float z;
-    float w;
+    __Serialized__ float x, y, z, w;
 
     float Length();
     float SquaredLength();

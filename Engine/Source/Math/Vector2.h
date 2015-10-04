@@ -5,6 +5,7 @@
 #include "Meta/TypeMeta.h"
 
 #define __Meta__
+#define __Serialize__
 
 struct __Meta__ Vector2
 {
@@ -14,7 +15,7 @@ struct __Meta__ Vector2
     Vector2();
     Vector2(float x, float y);
 
-    float x, y;
+    __Serialize__ float x, y;
 
     float Length();
     float SquaredLength();

@@ -26,26 +26,6 @@ std::string format(const char* format, ArgTypes... args)
     return "";
 }
 
-std::string CodeGenerator::GenerateCpp(std::vector<ClassInfo>& classes)
-{
-    std::stringstream stream;
-    stream << GenerateIncludes(classes);
-
-    stream << "void Meta::regClasses()" << std::endl << "{" << std::endl;
-
-    for (int i = 0; i < classes.size(); i++)
-    {
-        if (i > 0)
-        {
-            stream << std::endl;
-        }
-        stream << Generate(classes[i]);
-    }
-    stream << "}" << std::endl;
-
-    return stream.str();
-}
-
 std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
@@ -70,14 +50,32 @@ std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
     return stream.str();
 }
 
-std::string CodeGenerator::Generate(std::vector<ClassInfo>& classes)
+std::string CodeGenerator::GenerateCpp(std::vector<ClassInfo>& classes)
 {
-    std::string text;
+    std::stringstream stream;
+    stream << GenerateIncludes(classes);
+
+    stream << "void Meta::regClasses()" << std::endl << "{" << std::endl;
+
+    auto first = true;
     for (auto& classInfo : classes)
     {
-        text += Generate(classInfo);
+        if (!classInfo.isTemplate)
+        {
+            if (first)
+            {
+                first = false;
+            }
+            else
+            {
+                stream << std::endl;
+            }
+            stream << Generate(classInfo);
+        }
     }
-    return text;
+    stream << "}" << std::endl;
+
+    return stream.str();
 }
 
 std::string CodeGenerator::Generate(ClassInfo& classInfo)

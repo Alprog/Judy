@@ -2,6 +2,7 @@
 #include "Meta.h"
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
+#include "List.h"
 #include "CallInfo.h"
 #include "CallStack.h"
 #include "DebugCommand.h"
@@ -162,7 +163,7 @@ void Meta::regClasses()
         .method("Update", &Node::Update)
         .method("Render", &Node::Render)
         .field("transform", &Node::transform)
-        .field("parent", &Node::parent)
+        //.field("parent", &Node::parent)
         .field("childs", &Node::childs)
     ;
 

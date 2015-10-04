@@ -2,6 +2,7 @@
 #pragma once
 
 #define __Meta__
+#define __Serialized__
 
 struct __Meta__ Vector3
 {
@@ -10,7 +11,7 @@ struct __Meta__ Vector3
 
     Vector3(float x = 0, float y = 0, float z = 0);
 
-    float x, y, z;
+    __Serialized__ float x, y, z;
 
     float Length();
     float SquaredLength();

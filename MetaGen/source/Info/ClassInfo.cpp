@@ -65,6 +65,10 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
             classType = ClassType::Union;
             keyword = tokenName;
         }
+        else if (tokenName == "template")
+        {
+            isTemplate = true;
+        }
     }
 
     if (keyword != "")

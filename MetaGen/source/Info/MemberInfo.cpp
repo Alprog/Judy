@@ -3,6 +3,7 @@
 
 MemberInfo::MemberInfo()
     : isFriend(false)
+    , isTemplate{false}
 {
 }
 

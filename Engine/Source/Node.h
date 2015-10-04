@@ -9,6 +9,7 @@
 class Renderer;
 
 #define __Meta__
+#define __Serialize__
 
 class __Meta__ Node
 {

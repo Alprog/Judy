@@ -21,6 +21,7 @@ struct MemberInfo
     AccessModifier accessModifier;
 
     bool isFriend;
+    bool isTemplate;
     std::string name;
 
     bool containsAttribute(std::string name);
