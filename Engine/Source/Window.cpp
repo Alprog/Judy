@@ -29,8 +29,8 @@ WindowM::WindowM()
     scene = model;
     scene->transform.setScaling(Vector3::One * 0.3f);
 
-//    scene->AddChild(c1);
-//    scene->AddChild(c2);
+    scene->AddChild(c1);
+    scene->AddChild(c2);
 
     c1->transform.setTranslation(Vector3(2, 0, 0));
     c1->transform.setScaling(Vector3::One * 0.3f);

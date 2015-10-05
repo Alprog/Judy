@@ -310,28 +310,20 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
     return object;
 }
 
+#include "Node.h"
+
 Any Serializer::Deserialize(ITypeMeta* type)
 {
     bool isPointer = type->isPointer();
     if (isPointer)
     {
-        printf("POINTER\n");
-        fflush(stdout);
-
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
-        auto value = Deserialize(type->GetPointeeType());
-
-        printf("value %i\n", value.as<int>());
-        fflush(stdout);
-
-        value = type->MakePointer(value);
-
-        printf("SUCCESS\n");
-        fflush(stdout);
-
+        Any value = Deserialize(type->GetPointeeType());
+        auto pointer = type->MakePointer(value);
+        value.Detach(); // prevent destroy (keep data at heap)
         lua_pop(L, 1);
-        return value;
+        return pointer;
     }
 
     if (type == TypeMetaOf<int>())
