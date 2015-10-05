@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <vector>
+#include "Containers/List.h"
 #include "CallInfo.h"
 
 #define __Meta__
@@ -10,5 +10,5 @@
 struct __Meta__ CallStack
 {
     CallStack();
-    __Serialize__ std::vector<CallInfo> calls;
+    __Serialize__ List<CallInfo> calls;
 };

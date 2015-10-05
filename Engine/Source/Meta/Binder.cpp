@@ -7,13 +7,7 @@
 #include "MethodMeta.h"
 #include "ConstructorMeta.h"
 #include "ITypeMeta.h"
-
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
+#include "Lua.h"
 
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }

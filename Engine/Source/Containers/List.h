@@ -4,6 +4,7 @@
 #include <vector>
 #include "Meta/Any.h"
 #include "Meta/Serializer.h"
+#include "Lua.h"
 
 #define __Meta__
 #define __Serialize__

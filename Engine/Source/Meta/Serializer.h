@@ -1,16 +1,10 @@
 
 #pragma once
 
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
-
 #include "Any.h"
 #include "ITypeMeta.h"
 
+class lua_State;
 class ITypeMeta;
 
 class Serializer
