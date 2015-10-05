@@ -101,8 +101,6 @@ IConstructorMeta* FindSerializeConstructor(IClassMeta* classMeta)
 
 void Serializer::SerializeAsClass(Any& object, ITypeMeta* type)
 {
-    lua_newtable(L);
-
     auto classMeta = static_cast<IClassMeta*>(type);
 
     auto serializeMethod = FindSerializeMethod(classMeta);
@@ -114,6 +112,7 @@ void Serializer::SerializeAsClass(Any& object, ITypeMeta* type)
         return;
     }
 
+    lua_newtable(L);
     auto name = type->name;
     lua_pushstring(L, name.c_str());
     lua_setfield(L, -2, "class");

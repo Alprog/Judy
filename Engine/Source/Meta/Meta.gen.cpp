@@ -37,6 +37,7 @@ void Meta::DefineList()
 void Meta::DefineClasses()
 {
     DefineList<float>();
+    DefineList<Node*>();
 
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()

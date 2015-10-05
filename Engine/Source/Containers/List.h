@@ -30,7 +30,7 @@ private:
     {
         auto L = serializer->getL();
         auto valueType = TypeMetaOf<T>();
-
+        lua_newtable(L);
         for (auto i = 0; i < list.size(); i++)
         {
             auto value = list[i];

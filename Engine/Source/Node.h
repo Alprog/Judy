@@ -35,5 +35,5 @@ public:
 
 private:
     Node* parent;
-    __Serialize__ std::vector<Node*> childs;
+    __Serialize__ List<Node*> childs;
 };
