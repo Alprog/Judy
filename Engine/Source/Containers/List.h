@@ -17,7 +17,7 @@ __Meta__ class List : public std::vector<T>
 public:
     inline List() = default;
 
-    inline List(typename base::size_type count)
+    inline List(size_t count)
         : base(count)
     {
     }

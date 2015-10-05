@@ -41,16 +41,7 @@ bool ClassInfo::isAbstract()
 void ClassInfo::processMainTokens(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
-
-    tokens.makeGroups("<", ">");
-    if (tokens.size() >= 2)
-    {
-        if (tokens[0]->getName() == "template" && tokens[1]->getName() == "<>")
-        {
-            auto args = tokens[1]->cast<TokenGroup*>()->split(",");
-            templateArgumentCount = args.size();
-        }
-    }
+    processTemplateTokens(tokens);
 
     std::string keyword;
     for (auto& token : tokens)
@@ -81,6 +72,24 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
     {
         auto nameIndex = tokens.indexOf(keyword) + 1;
         name = tokens[nameIndex]->getName();
+    }
+}
+
+void ClassInfo::processTemplateTokens(TokenGroup& tokens)
+{
+    tokens.makeGroups("<", ">");
+
+    auto index = tokens.indexOf("template");
+    if (index >= 0 || index < tokens.size() - 1 && tokens[index + 1]->getName() == "<>")
+    {
+        auto groups = tokens[index + 1]->cast<TokenGroup*>()->getContent().split(",");
+        for (auto& group : groups)
+        {
+            auto name = group.extractLast()->getName();
+            templateParameters.push_back(name);
+        }
+
+        tokens.extract(index, index + 1);
     }
 }
 

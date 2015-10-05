@@ -30,5 +30,6 @@ struct ClassInfo : MemberInfo
 
 private:
     void processMainTokens(TokenGroup& tokens);
+    void processTemplateTokens(TokenGroup& tokens);
     void processInheritanceTokens(TokenGroup& tokens);
 };

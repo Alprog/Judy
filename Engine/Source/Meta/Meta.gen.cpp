@@ -3,6 +3,7 @@
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
 #include "List.h"
+#include "Map.h"
 #include "Set.h"
 #include "CallInfo.h"
 #include "CallStack.h"
@@ -28,9 +29,23 @@ void Meta::DefineList()
     ClassDefiner<type>(this, "type")
         .templateArgument<T>()
         .constructor()
+        .constructor<size_t>()
         .constructor<std::initializer_list<T>>()
         .method("at", &type::at)
         .method("add", &type::add)
+        .function("serialize", &type::serialize)
+        .function("deserialize", &type::deserialize)
+    ;
+}
+
+template <typename T1, typename T2>
+void Meta::DefineMap()
+{
+    using type = Map<T1, T2>;
+    ClassDefiner<type>(this, "type")
+        .templateArgument<T1>()
+        .templateArgument<T2>()
+        .constructor()
         .function("serialize", &type::serialize)
         .function("deserialize", &type::deserialize)
     ;

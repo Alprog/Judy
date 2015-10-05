@@ -35,7 +35,8 @@ std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
     {
         if (classInfo.isTemplate())
         {
-            stream << tab << "template <typename T>" << std::endl;
+            auto list = GenerateParametersList(classInfo, true);
+            stream << tab << "template <" << list << ">" << std::endl;
             stream << tab << "void Define" << classInfo.name << "();" << std::endl;
             stream << std::endl;
         }
@@ -87,7 +88,8 @@ std::string CodeGenerator::GenerateTemplateFunctions(std::vector<ClassInfo>& cla
         if (classInfo.isTemplate())
         {
             if (!first) { stream << std::endl; }
-            stream << "template <typename T>" << std::endl;
+            auto list = GenerateParametersList(classInfo, true);
+            stream << "template <" << list << ">" << std::endl;
             stream << "void Meta::Define" << classInfo.name << "()" << std::endl;
             stream << "{" << std::endl;
             stream << GenerateClassDefinition(classInfo);
@@ -126,17 +128,16 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     auto className = classInfo.name;
     if (classInfo.isTemplate())
     {
-        stream << tab << "using type = " << className << "<T>;" << std::endl;
+        auto list = GenerateParametersList(classInfo, false);
+        stream << tab << "using type = " << className << "<" << list << ">;" << std::endl;
         className = "type";
     }
 
     stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << className << "\")" << std::endl;
 
-    auto count = classInfo.templateArgumentCount;
-    for (auto i = 0; i < count; i++)
+    for (auto& parameter : classInfo.templateParameters)
     {
-        auto index = count > 1 ? std::to_string(i + 1) : "";
-        stream << tab2 << ".templateArgument<T" << index << ">()" << std::endl;
+        stream << tab2 << ".templateArgument<" << parameter << ">()" << std::endl;
     }
 
     bool isAbstract = classInfo.isAbstract();
@@ -202,3 +203,16 @@ std::string CodeGenerator::GenerateAttributes(MemberInfo& memberInfo)
     return stream.str();
 }
 
+std::string CodeGenerator::GenerateParametersList(ClassInfo& classInfo, bool typenames)
+{
+    std::stringstream stream;
+    auto first = true;
+    for (auto& parameter : classInfo.templateParameters)
+    {
+        if (!first) { stream << ", "; }
+        if (typenames) { stream << "typename "; }
+        stream << parameter;
+        first = false;
+    }
+    return stream.str();
+}

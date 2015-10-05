@@ -23,7 +23,7 @@ struct MemberInfo
     bool isTemplate() const;
     bool isFriend;
     std::string name;
-    int templateArgumentCount;
+    std::vector<std::string> templateParameters;
 
     bool containsAttribute(std::string name);
 

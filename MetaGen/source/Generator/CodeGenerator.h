@@ -17,4 +17,5 @@ private:
     std::string GenerateMainFunction(std::vector<ClassInfo>& classes);
     std::string GenerateClassDefinition(ClassInfo& classInfo);
     std::string GenerateAttributes(MemberInfo& memberInfo);
+    std::string GenerateParametersList(ClassInfo& classInfo, bool typenames);
 };
