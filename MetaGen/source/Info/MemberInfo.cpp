@@ -3,8 +3,13 @@
 
 MemberInfo::MemberInfo()
     : isFriend(false)
-    , isTemplate{false}
+    , templateArgumentCount{0}
 {
+}
+
+bool MemberInfo::isTemplate() const
+{
+    return templateArgumentCount > 0;
 }
 
 bool MemberInfo::containsAttribute(std::string name)

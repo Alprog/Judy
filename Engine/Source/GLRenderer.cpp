@@ -83,7 +83,6 @@ void GLRenderer::DrawQuad(Quad* quad)
     glVertex3f(x, -y, 0.0f);
 
     glEnd();
-
 }
 
 void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)

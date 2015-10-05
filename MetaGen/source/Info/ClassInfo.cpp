@@ -42,6 +42,16 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
 
+    tokens.makeGroups("<", ">");
+    if (tokens.size() >= 2)
+    {
+        if (tokens[0]->getName() == "template" && tokens[1]->getName() == "<>")
+        {
+            auto args = tokens[1]->cast<TokenGroup*>()->split(",");
+            templateArgumentCount = args.size();
+        }
+    }
+
     std::string keyword;
     for (auto& token : tokens)
     {
@@ -64,10 +74,6 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
         {
             classType = ClassType::Union;
             keyword = tokenName;
-        }
-        else if (tokenName == "template")
-        {
-            isTemplate = true;
         }
     }
 

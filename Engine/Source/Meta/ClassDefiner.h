@@ -80,6 +80,13 @@ public:
         return *this;
     }
 
+    template <typename T>
+    ClassDefiner& templateArgument()
+    {
+        classMeta->templateArguments.push_back(TypeMetaOf<T>());
+        return *this;
+    }
+
     ClassDefiner& attr(std::string attributeName)
     {
         if (lastMember != nullptr)

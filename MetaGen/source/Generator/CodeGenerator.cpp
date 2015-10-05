@@ -33,7 +33,7 @@ std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
 
     for (auto& classInfo : classes)
     {
-        if (classInfo.isTemplate)
+        if (classInfo.isTemplate())
         {
             stream << tab << "template <typename T>" << std::endl;
             stream << tab << "void Define" << classInfo.name << "();" << std::endl;
@@ -84,7 +84,7 @@ std::string CodeGenerator::GenerateTemplateFunctions(std::vector<ClassInfo>& cla
     auto first = true;
     for (auto& classInfo : classes)
     {
-        if (classInfo.isTemplate)
+        if (classInfo.isTemplate())
         {
             if (!first) { stream << std::endl; }
             stream << "template <typename T>" << std::endl;
@@ -107,7 +107,7 @@ std::string CodeGenerator::GenerateMainFunction(std::vector<ClassInfo>& classes)
     auto first = true;
     for (auto& classInfo : classes)
     {
-        if (!classInfo.isTemplate)
+        if (!classInfo.isTemplate())
         {
             if (!first) { stream << std::endl; }
             stream << GenerateClassDefinition(classInfo);
@@ -124,15 +124,22 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     std::stringstream stream;
 
     auto className = classInfo.name;
-    if (classInfo.isTemplate)
+    if (classInfo.isTemplate())
     {
-        className = className + "<T>";
+        stream << tab << "using type = " << className << "<T>;" << std::endl;
+        className = "type";
     }
 
     stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << className << "\")" << std::endl;
 
-    bool isAbstract = classInfo.isAbstract();
+    auto count = classInfo.templateArgumentCount;
+    for (auto i = 0; i < count; i++)
+    {
+        auto index = count > 1 ? std::to_string(i + 1) : "";
+        stream << tab2 << ".templateArgument<T" << index << ">()" << std::endl;
+    }
 
+    bool isAbstract = classInfo.isAbstract();
     if (!isAbstract)
     {
         for (auto& constructor : classInfo.constructors)

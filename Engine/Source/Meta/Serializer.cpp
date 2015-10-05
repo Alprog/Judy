@@ -195,7 +195,7 @@ Any Serializer::DeserializeUnknown()
         return lua_toboolean(L, -1);
 
     case LUA_TNUMBER:
-        return lua_tonumber(L, -1);
+        return (float)lua_tonumber(L, -1);
 
     case LUA_TSTRING:
         return std::string { lua_tostring(L, -1) };
@@ -293,7 +293,8 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
         auto valueType = TypeMetaOf<float>();
         while (lua_next(L, -2) != 0)
         {
-            auto value = Deserialize(valueType);
+            //auto value = Deserialize(valueType);
+            auto value = DeserializeUnknown();
             list.push_back(value);
             lua_pop(L, 1);
         }

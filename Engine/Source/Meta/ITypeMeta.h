@@ -36,6 +36,8 @@ protected:
 
 public:
     ITypeMeta* valueType;
+    std::vector<ITypeMeta*> templateArguments;
+
     std::vector<IConstructorMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;
     std::map<std::string, IFunctionMeta*> methods;

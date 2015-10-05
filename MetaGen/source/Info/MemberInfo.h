@@ -20,9 +20,10 @@ struct MemberInfo
     std::vector<AttributeInfo> attributes;
     AccessModifier accessModifier;
 
+    bool isTemplate() const;
     bool isFriend;
-    bool isTemplate;
     std::string name;
+    int templateArgumentCount;
 
     bool containsAttribute(std::string name);
 

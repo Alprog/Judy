@@ -23,10 +23,13 @@
 template <typename T>
 void Meta::DefineList()
 {
-    ClassDefiner<List<T>>(this, "List<T>")
+    using type = List<T>;
+    ClassDefiner<type>(this, "type")
+        .templateArgument<T>()
+        .constructor()
         .constructor<std::initializer_list<T>>()
-        .method("at", &List<T>::at)
-        .method("toList", &List<T>::toList).attr("Serialize")
+        .method("at", &type::at)
+        .method("toList", &type::toList).attr("Serialize")
     ;
 }
 
