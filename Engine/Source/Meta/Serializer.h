@@ -15,6 +15,8 @@ class ITypeMeta;
 
 class Serializer
 {
+    template <typename> friend class List;
+
 public:
     Serializer();
     ~Serializer();
@@ -29,6 +31,8 @@ public:
     }
 
     Any Deserialize(std::string text, ITypeMeta* typeMeta = nullptr);
+
+    inline lua_State* getL() const { return L; }
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);

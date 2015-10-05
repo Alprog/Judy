@@ -16,8 +16,8 @@ struct __Meta__ Vector2
     Vector2();
     Vector2(float x, float y);
 
-    Vector2(List<Any> list);
-    __Serialize__ List<Any> toList();
+    Vector2(List<float> list);
+    __Serialize__ List<float> toList();
 
     float Length();
     float SquaredLength();

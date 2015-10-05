@@ -17,6 +17,7 @@ public:
 
     virtual bool isPointer() = 0;
     virtual bool isClass() = 0;
+    virtual bool isList() = 0;
     virtual bool isArray() = 0;
     virtual bool isMap() = 0;
 

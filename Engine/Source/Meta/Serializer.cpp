@@ -5,6 +5,7 @@
 #include <cassert>
 #include "List.h"
 #include "ConstructorMeta.h"
+#include "Meta/TypeMeta.h";
 
 Serializer::Serializer()
 {
@@ -53,6 +54,11 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     else if (type == TypeMetaOf<std::string>())
     {
         lua_pushstring(L, object.as<std::string>().c_str());
+    }
+    else if (type->isList())
+    {
+        auto classMeta = static_cast<IClassMeta*>(type);
+        classMeta->functions["serialize"]->Invoke(object, this);
     }
     else if (type->isArray())
     {
@@ -103,13 +109,8 @@ void Serializer::SerializeAsClass(Any& object, ITypeMeta* type)
     if (serializeMethod != nullptr)
     {
         auto pointer = type->MakePointer(object);
-        List<Any> list = serializeMethod->Invoke(pointer);
-        for (int i = 0; i < list.size(); i++)
-        {
-            auto value = list[i];
-            Serialize(value, value.GetType());
-            lua_seti(L, -2, i + 1);
-        }
+        auto value = serializeMethod->Invoke(pointer);
+        Serialize(value, value.GetType());
         return;
     }
 
@@ -269,37 +270,27 @@ Any Serializer::DeserializeAsMap(IClassMeta* mapMeta)
     return function->Invoke(args);
 }
 
-//Any Serializer::DeserializeAsList(IClassMeta* classMeta)
-//{
-//    auto list = classMeta->CreateOnStack();
-//    auto addMethod = classMeta->methods["add"];
-
-//    lua_pushnil(L);
-//    while (lua_next(L, -2) != 0)
-//    {
-//        auto value = Deserialize(classMeta->valueType);
-//        addMethod->Invoke(pointer, value);
-//        lua_pop(L, 1);
-//    }
-//}
-
 Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 {
     auto serializeConstructor = FindSerializeConstructor(classMeta);
     if (serializeConstructor != nullptr)
     {
-        lua_pushnil(L);
-        List<Any> list;
-        auto valueType = TypeMetaOf<float>();
-        while (lua_next(L, -2) != 0)
-        {
-            //auto value = Deserialize(valueType);
-            auto value = DeserializeUnknown();
-            list.push_back(value);
-            lua_pop(L, 1);
-        }
+        auto argType = serializeConstructor->GetArgTypes()[0];
+        auto arg = Deserialize(argType);
+        return serializeConstructor->Invoke(arg);
 
-        return serializeConstructor->Invoke(list);
+//        lua_pushnil(L);
+//        List<Any> list;
+//        auto valueType = TypeMetaOf<float>();
+//        while (lua_next(L, -2) != 0)
+//        {
+//            //auto value = Deserialize(valueType);
+//            auto value = DeserializeUnknown();
+//            list.push_back(value);
+//            lua_pop(L, 1);
+//        }
+
+//        return serializeConstructor->Invoke(list);
     }
 
     auto object = classMeta->CreateOnStack();
@@ -320,8 +311,7 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
 Any Serializer::Deserialize(ITypeMeta* type)
 {
-    bool isPointer = type->isPointer();
-    if (isPointer)
+    if (type->isPointer())
     {
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
@@ -331,8 +321,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
         lua_pop(L, 1);
         return pointer;
     }
-
-    if (type == TypeMetaOf<int>())
+    else if (type == TypeMetaOf<int>())
     {
         return lua_tointeger(L, -1);
     }
@@ -343,6 +332,11 @@ Any Serializer::Deserialize(ITypeMeta* type)
     else if (type == TypeMetaOf<std::string>())
     {
         return std::string( lua_tostring(L, -1) );
+    }
+    else if (type->isList())
+    {
+        auto classMeta = static_cast<IClassMeta*>(type);
+        return classMeta->functions["deserialize"]->Invoke(this);
     }
     else if (type->isArray())
     {

@@ -13,8 +13,8 @@ struct __Meta__ Vector3
 
     Vector3(float x = 0, float y = 0, float z = 0);
 
-    __Serialize__ Vector3(List<Any> list);
-    __Serialize__ List<Any> toList();
+    __Serialize__ Vector3(List<float> list);
+    __Serialize__ List<float> toList();
 
     float Length();
     float SquaredLength();

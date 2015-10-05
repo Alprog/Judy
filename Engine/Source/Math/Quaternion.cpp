@@ -12,15 +12,15 @@ Quaternion::Quaternion(float x, float y, float z, float w)
 {
 }
 
-Quaternion::Quaternion(List<Any> list)
-    : x{list[0].as<float>()}
-    , y{list[1].as<float>()}
-    , z{list[2].as<float>()}
-    , w{list[3].as<float>()}
+Quaternion::Quaternion(List<float> list)
+    : x{list[0]}
+    , y{list[1]}
+    , z{list[2]}
+    , w{list[3]}
 {
 }
 
-List<Any> Quaternion::toList()
+List<float> Quaternion::toList()
 {
     return {x, y, z, w};
 }

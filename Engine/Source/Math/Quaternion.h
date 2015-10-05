@@ -13,8 +13,8 @@ public:
 
     Quaternion(float x = 0, float y = 0, float z = 0, float w = 1);
 
-    __Serialize__ Quaternion(List<Any> list);
-    __Serialize__ List<Any> toList();
+    __Serialize__ Quaternion(List<float> list);
+    __Serialize__ List<float> toList();
 
     static Quaternion YawPitchRoll(float yaw, float pitch, float roll);
 

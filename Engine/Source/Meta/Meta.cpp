@@ -132,6 +132,8 @@ Meta::Meta()
     DefineBuildInType<char>("char");
     DefineBuildInType<double>("double");
 
+
+
     regVector<int>();
     regSet<int>();
 

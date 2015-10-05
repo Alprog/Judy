@@ -16,13 +16,13 @@ Vector2::Vector2(float x, float y)
 {
 }
 
-Vector2::Vector2(List<Any> list)
-    : x{list[0].as<float>()}
-    , y{list[1].as<float>()}
+Vector2::Vector2(List<float> list)
+    : x{list[0]}
+    , y{list[1]}
 {
 }
 
-List<Any> Vector2::toList()
+List<float> Vector2::toList()
 {
     return {x, y};
 }

@@ -7,6 +7,9 @@
 #include <unordered_map>
 
 template <typename T>
+class List;
+
+template <typename T>
 class DeepPointer;
 
 template <typename T>
@@ -51,6 +54,18 @@ struct is_map<std::unordered_map<T1, T2>>
     static const bool value = true;
 };
 
+template <typename T>
+struct is_list
+{
+    static const bool value = false;
+};
+
+template <typename T>
+struct is_list<List<T>>
+{
+    static const bool value = true;
+};
+
 template<class T>
 struct is
 {
@@ -58,6 +73,7 @@ struct is
     enum { DeepPointer = is_deep_pointer<T>::value };
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
+    enum { List = is_list<T>::value };
     enum { Array = is_array<T>::value };
     enum { Map = is_map<T>::value };
 
