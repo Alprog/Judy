@@ -3,7 +3,6 @@
 #include <type_traits>
 #include "select_if.h"
 #include <vector>
-#include <unordered_set>
 #include <unordered_map>
 
 template <typename T>
@@ -20,24 +19,6 @@ struct is_deep_pointer
 
 template <typename T>
 struct is_deep_pointer<DeepPointer<T>>
-{
-    static const bool value = true;
-};
-
-template <typename T>
-struct is_array
-{
-    static const bool value = false;
-};
-
-template <typename T>
-struct is_array<std::vector<T>>
-{
-    static const bool value = true;
-};
-
-template <typename T>
-struct is_array<std::unordered_set<T>>
 {
     static const bool value = true;
 };
@@ -74,7 +55,6 @@ struct is
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
     enum { List = is_list<T>::value };
-    enum { Array = is_array<T>::value };
     enum { Map = is_map<T>::value };
 
     enum { Pointer = RealPointer || DeepPointer };

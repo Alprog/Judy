@@ -3,6 +3,7 @@
 #include "TypeMeta.h"
 #include "ClassDefiner.h"
 #include "List.h"
+#include "Set.h"
 #include "CallInfo.h"
 #include "CallStack.h"
 #include "DebugCommand.h"
@@ -29,8 +30,21 @@ void Meta::DefineList()
         .constructor()
         .constructor<std::initializer_list<T>>()
         .method("at", &type::at)
+        .method("add", &type::add)
         .function("serialize", &type::serialize)
         .function("deserialize", &type::deserialize)
+    ;
+}
+
+template <typename T>
+void Meta::DefineSet()
+{
+    using type = Set<T>;
+    ClassDefiner<type>(this, "type")
+        .templateArgument<T>()
+        .constructor()
+        .constructor<List<T>>().attr("Serialize")
+        .method("toList", &type::toList).attr("Serialize")
     ;
 }
 
@@ -39,6 +53,8 @@ void Meta::DefineClasses()
     DefineList<float>();
     DefineList<Node*>();
     DefineList<CallInfo>();
+    DefineList<int>();
+    DefineSet<int>();
 
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
@@ -63,7 +79,7 @@ void Meta::DefineClasses()
 
     ClassDefiner<FileBreakpoints>(this, "FileBreakpoints")
         .constructor()
-        .constructor<std::string, std::unordered_set<int>>()
+        .constructor<std::string, Set<int>>()
         .field("fileName", &FileBreakpoints::fileName).attr("Serialize")
         .field("lines", &FileBreakpoints::lines).attr("Serialize")
     ;
@@ -104,7 +120,7 @@ void Meta::DefineClasses()
     ClassDefiner<Vector2>(this, "Vector2")
         .constructor()
         .constructor<float, float>()
-        .constructor<List<float>>()
+        .constructor<List<float>>().attr("Serialize")
         .method("toList", &Vector2::toList).attr("Serialize")
         .method("Length", &Vector2::Length)
         .method("SquaredLength", &Vector2::SquaredLength)

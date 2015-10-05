@@ -1,12 +1,11 @@
 
 #pragma once
 
-#include <set>
-#include <unordered_set>
 #include "Window.h"
 
 #include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
+#include "Containers/Set.h"
 
 #define __Meta__
 
@@ -25,7 +24,7 @@ public:
 private:
     void UpdateCollection();
 
-    std::set<WindowM*> Windows;
-    std::set<WindowM*> AddedWindows;
-    std::set<WindowM*> RemovedWindows;
+    Set<WindowM*> Windows;
+    Set<WindowM*> AddedWindows;
+    Set<WindowM*> RemovedWindows;
 };

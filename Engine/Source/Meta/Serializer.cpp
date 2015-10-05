@@ -61,10 +61,6 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         auto classMeta = static_cast<IClassMeta*>(type);
         classMeta->functions["serialize"]->Invoke(object, this);
     }
-    else if (type->isArray())
-    {
-        SerializeAsArray(object, type);
-    }
     else if (type->isMap())
     {
         SerializeAsMap(object, type);
@@ -128,24 +124,6 @@ void Serializer::SerializeAsClass(Any& object, ITypeMeta* type)
             Serialize(value, fieldType);
             lua_setfield(L, -2, fieldMeta->name.c_str());
         }
-    }
-}
-
-void Serializer::SerializeAsArray(Any& object, ITypeMeta* type)
-{
-    lua_newtable(L);
-
-    auto arrayMeta = static_cast<IClassMeta*>(type);
-    auto function = arrayMeta->functions["toAnyVector"];
-
-    assert(function != nullptr);
-
-    std::vector<Any> elements = function->Invoke(object);
-    for (int i = 0; i < elements.size(); i++)
-    {
-        auto value = elements[i];
-        Serialize(value, value.GetType());
-        lua_seti(L, -2, i + 1);
     }
 }
 
@@ -234,23 +212,6 @@ Any Serializer::DeserializeUnknownTable()
     return Any::empty;
 }
 
-Any Serializer::DeserializeAsArray(IClassMeta* arrayMeta)
-{
-    lua_pushnil(L);
-    std::vector<Any> vector;
-    while (lua_next(L, -2) != 0)
-    {
-        auto value = Deserialize(arrayMeta->valueType);
-        vector.push_back(value);
-        lua_pop(L, 1);
-    }
-
-    auto function = arrayMeta->functions["fromAnyVector"];
-    std::vector<Any> args;
-    args.push_back(vector);
-    return function->Invoke(args);
-}
-
 Any Serializer::DeserializeAsMap(IClassMeta* mapMeta)
 {
     lua_pushnil(L);
@@ -337,11 +298,6 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         return classMeta->functions["deserialize"]->Invoke(this);
-    }
-    else if (type->isArray())
-    {
-        auto classMeta = static_cast<IClassMeta*>(type);
-        return DeserializeAsArray(classMeta);
     }
     else if (type->isMap())
     {

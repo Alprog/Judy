@@ -30,7 +30,9 @@ HEADERS += \
     Source/Model.h \
     Source/Containers/List.h \
     Source/Meta/IMemberMeta.h \
-    Source/Lua.h
+    Source/Lua.h \
+    Source/Containers/Map.h \
+    Source/Containers/Set.h
 
 SOURCES += \
     Source/App.cpp \

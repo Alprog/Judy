@@ -110,7 +110,7 @@ void RemoteDebbuger::OnGetMessage(Any& message)
     else if (type == TypeMetaOf<FileBreakpoints>())
     {
         auto fileBreakpoints = message.as<FileBreakpoints>();
-        luaMachine->breakpoints.Set(fileBreakpoints.fileName, fileBreakpoints.lines);
+        luaMachine->breakpoints.SetLines(fileBreakpoints.fileName, fileBreakpoints.lines);
 
         printf("breaks get\n");
         fflush(stdout);

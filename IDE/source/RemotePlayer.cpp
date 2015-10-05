@@ -150,14 +150,14 @@ void RemotePlayer::OnGetMessage(Any& message)
     }
 }
 
-std::unordered_set<int> RemotePlayer::GetBreakpoints(std::string source)
+Set<int> RemotePlayer::GetBreakpoints(std::string source)
 {
-    return breakpoints.Get(source);
+    return breakpoints.GetLines(source);
 }
 
-void RemotePlayer::SetBreakpoints(std::string source, std::unordered_set<int> lines)
+void RemotePlayer::SetBreakpoints(std::string source, Set<int> lines)
 {
-    bool changed = breakpoints.Set(source, lines);
+    bool changed = breakpoints.SetLines(source, lines);
     if (changed && IsConnected())
     {
         netNode->Send(FileBreakpoints(source, lines));
