@@ -13,8 +13,6 @@ public:
     virtual ITypeMeta* GetNewType() = 0;
 };
 
-#include "Containers/List.h"
-
 template <typename ClassType, typename... ArgTypes>
 class ConstructorMeta : public IConstructorMeta, public FunctionMeta<ClassType, ArgTypes...>
 {

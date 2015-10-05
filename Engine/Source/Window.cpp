@@ -18,10 +18,6 @@ WindowM* WindowM::Create()
 
 WindowM::WindowM()
 {
-    auto qt = (IClassMeta*)TypeMetaOf<Quaternion>();
-    List<Any> l = {1.0f, 2.0f, 3.0f, 4.0f};
-    auto q = qt->constructors[1]->Invoke(l);
-
     auto model = new Model();
 
     auto c1 = new Model();
