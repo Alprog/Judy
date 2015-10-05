@@ -18,6 +18,10 @@ WindowM* WindowM::Create()
 
 WindowM::WindowM()
 {
+    auto qt = (IClassMeta*)TypeMetaOf<Quaternion>();
+    List<Any> l = {1.0f, 2.0f, 3.0f, 4.0f};
+    auto q = qt->constructors[1]->Invoke(l);
+
     auto model = new Model();
 
     auto c1 = new Model();
@@ -29,8 +33,8 @@ WindowM::WindowM()
     scene = model;
     scene->transform.setScaling(Vector3::One * 0.3f);
 
-    scene->AddChild(c1);
-    scene->AddChild(c2);
+//    scene->AddChild(c1);
+//    scene->AddChild(c2);
 
     c1->transform.setTranslation(Vector3(2, 0, 0));
     c1->transform.setScaling(Vector3::One * 0.3f);
@@ -39,7 +43,12 @@ WindowM::WindowM()
     c2->transform.setScaling(Vector3::One * 0.4f);
 
     auto serializer = new Serializer();
-    auto text = serializer->Serialize(scene);
+    auto text = serializer->Serialize(*scene);
+    printf(text.c_str());
+    fflush(stdout);
+
+    Node obj = serializer->Deserialize(text);
+    text = serializer->Serialize(obj);
     printf(text.c_str());
     fflush(stdout);
 }

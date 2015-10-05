@@ -4,6 +4,7 @@
 #include "MethodMeta.h"
 #include <cassert>
 #include "List.h"
+#include "ConstructorMeta.h"
 
 Serializer::Serializer()
 {
@@ -75,6 +76,18 @@ IFunctionMeta* FindSerializeMethod(IClassMeta* classMeta)
         if (methodMeta->hasAttribute("Serialize"))
         {
             return methodMeta;
+        }
+    }
+    return nullptr;
+}
+
+IConstructorMeta* FindSerializeConstructor(IClassMeta* classMeta)
+{
+    for (auto constructor : classMeta->constructors)
+    {
+        if (constructor->hasAttribute("Serialize"))
+        {
+            return constructor;
         }
     }
     return nullptr;
@@ -249,10 +262,39 @@ Any Serializer::DeserializeAsMap(IClassMeta* mapMeta)
     return function->Invoke(args);
 }
 
+//Any Serializer::DeserializeAsList(IClassMeta* classMeta)
+//{
+//    auto list = classMeta->CreateOnStack();
+//    auto addMethod = classMeta->methods["add"];
+
+//    lua_pushnil(L);
+//    while (lua_next(L, -2) != 0)
+//    {
+//        auto value = Deserialize(classMeta->valueType);
+//        addMethod->Invoke(pointer, value);
+//        lua_pop(L, 1);
+//    }
+//}
+
 Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 {
-    auto object = classMeta->CreateOnStack();
+    auto serializeConstructor = FindSerializeConstructor(classMeta);
+    if (serializeConstructor != nullptr)
+    {
+        lua_pushnil(L);
+        List<Any> list;
+        auto valueType = TypeMetaOf<float>();
+        while (lua_next(L, -2) != 0)
+        {
+            auto value = Deserialize(valueType);
+            list.push_back(value);
+            lua_pop(L, 1);
+        }
 
+        return serializeConstructor->Invoke(list);
+    }
+
+    auto object = classMeta->CreateOnStack();
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
