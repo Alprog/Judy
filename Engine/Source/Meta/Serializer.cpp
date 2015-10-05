@@ -165,7 +165,7 @@ void Serializer::SerializeAsMap(Any& object, ITypeMeta* type)
 
 //------------------------------------------------------------------------------------
 
-Any Serializer::Deserialize(std::string text)
+Any Serializer::Deserialize(std::string text, ITypeMeta* typeMeta)
 {
     text = "return " + text;
     if (luaL_dostring(L, text.c_str()))
@@ -175,7 +175,14 @@ Any Serializer::Deserialize(std::string text)
         lua_pop(L, 1);
         return Any::empty;
     }
-    return DeserializeUnknown();
+    if (typeMeta == nullptr)
+    {
+        return DeserializeUnknown();
+    }
+    else
+    {
+        return Deserialize(typeMeta);
+    }
 }
 
 Any Serializer::DeserializeUnknown()
@@ -309,8 +316,6 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
     return object;
 }
-
-#include "Node.h"
 
 Any Serializer::Deserialize(ITypeMeta* type)
 {

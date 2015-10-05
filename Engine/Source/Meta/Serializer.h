@@ -22,13 +22,13 @@ public:
     std::string Serialize(Any object);
 
     template <typename Type>
-    Type Deserialize()
+    Type Deserialize(std::string text)
     {
         ITypeMeta* typeMeta = TypeMetaOf<Type>();
-        return Deserialize(typeMeta);
+        return Deserialize(text, typeMeta);
     }
 
-    Any Deserialize(std::string text);
+    Any Deserialize(std::string text, ITypeMeta* typeMeta = nullptr);
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);

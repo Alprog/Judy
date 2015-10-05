@@ -39,11 +39,11 @@ WindowM::WindowM()
     c2->transform.setScaling(Vector3::One * 0.4f);
 
     auto serializer = new Serializer();
-    auto text = serializer->Serialize(*scene);
+    auto text = serializer->Serialize(scene);
     printf(text.c_str());
     fflush(stdout);
 
-    Node obj = serializer->Deserialize(text);
+    Node* obj = serializer->Deserialize<Node*>(text);
     text = serializer->Serialize(obj);
     printf(text.c_str());
     fflush(stdout);
