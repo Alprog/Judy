@@ -2,7 +2,6 @@
 #pragma once
 
 #include <vector>
-#include "Meta/Any.h"
 #include "Meta/Serializer.h"
 #include "Lua.h"
 
@@ -45,7 +44,7 @@ private:
         }
     }
 
-    static Any deserialize(Serializer* serializer)
+    static List<T> deserialize(Serializer* serializer)
     {
         auto L = serializer->getL();
         auto valueType = TypeMetaOf<T>();
