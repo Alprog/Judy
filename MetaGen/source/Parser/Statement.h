@@ -17,6 +17,7 @@ struct Statement
     Snippet* getChildSnippet() const;
 
     bool isClass() const;
+    bool isUsing() const;
     bool isFunction() const;
     bool hasDefinition() const;
 

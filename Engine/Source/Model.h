@@ -7,7 +7,9 @@
 #include "Material.h"
 #include "Renderer.h"
 
-struct Model : public Node
+#define __Meta__
+
+struct __Meta__ Model : public Node
 {
     Model();
 

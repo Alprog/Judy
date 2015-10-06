@@ -1,14 +1,22 @@
 
 #pragma once
 
-class Quaternion
+#include "Containers/List.h"
+
+#define __Meta__
+#define __Serialize__
+
+class __Meta__ Quaternion
 {
 public:
     static const Quaternion Identity;
 
-    float x, y, z, w;
-
     Quaternion(float x = 0, float y = 0, float z = 0, float w = 1);
 
+    __Serialize__ Quaternion(List<float> list);
+    __Serialize__ List<float> toList();
+
     static Quaternion YawPitchRoll(float yaw, float pitch, float roll);
+
+    float x, y, z, w;
 };

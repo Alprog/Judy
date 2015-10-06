@@ -1,12 +1,6 @@
 
 #include "NetNode.h"
-
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
+#include "Lua.h"
 
 const int MAX = 1024;
 

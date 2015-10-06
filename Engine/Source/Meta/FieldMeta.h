@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <string>
+#include "IMemberMeta.h"
 #include "Any.h"
 #include "Serializer.h"
 #include "Meta.h"
@@ -9,7 +9,7 @@
 class Serializer;
 class ITypeMeta;
 
-class IFieldMeta
+class IFieldMeta : public IMemberMeta
 {
 public:
     virtual void set_local(Any& object, Any& value) = 0;
@@ -18,7 +18,6 @@ public:
     virtual void set(Any& object, Any& value) = 0;
     virtual void* get(void* object) = 0;
     virtual ITypeMeta* const GetType() = 0;
-    std::string name;
 };
 
 template <typename ClassType, typename FieldType>

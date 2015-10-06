@@ -8,7 +8,7 @@ struct ArgumentInfo
 {
     ArgumentInfo(TokenGroup& tokens);
 
-    TypeInfo typeInfo;
+    TypeInfo type;
     std::string name;
     std::string defaultValue;
 

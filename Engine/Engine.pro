@@ -8,6 +8,7 @@ INCLUDEPATH += \
     Source \
     Source/Math \
     Source/LuaMachine \
+    Source/Containers \
     ../3rd-party/lua/source
 
 HEADERS += \
@@ -26,7 +27,12 @@ HEADERS += \
     Source/Vertex.h \
     Source/Mesh.h \
     Source/Material.h \
-    Source/Model.h
+    Source/Model.h \
+    Source/Containers/List.h \
+    Source/Meta/IMemberMeta.h \
+    Source/Lua.h \
+    Source/Containers/Map.h \
+    Source/Containers/Set.h
 
 SOURCES += \
     Source/App.cpp \
@@ -78,7 +84,8 @@ SOURCES += \
     Source/Vertex.cpp \
     Source/Mesh.cpp \
     Source/Material.cpp \
-    Source/Model.cpp
+    Source/Model.cpp \
+    Source/Meta/IMemberMeta.cpp
 
 win {
     INCLUDEPATH += Source/Windows

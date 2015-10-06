@@ -9,6 +9,7 @@
 class Renderer;
 
 #define __Meta__
+#define __Serialize__
 
 class __Meta__ Node
 {
@@ -27,12 +28,12 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
-    Transform transform;
-
     virtual void Update(double delta);
     virtual void Render(Matrix matrix, Renderer* renderer);
 
+    __Serialize__ Transform transform;
+
 private:
     Node* parent;
-    std::vector<Node*> childs;
+    __Serialize__ List<Node*> childs;
 };

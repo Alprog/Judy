@@ -242,7 +242,7 @@ void TextEditor::pullBreakpoints()
 
 void TextEditor::pushBreakpoints()
 {
-    std::unordered_set<int> lines;
+    Set<int> lines;
 
     int mask = (1 << Breakpoint);
     int line = 0;

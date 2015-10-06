@@ -8,6 +8,7 @@
 #include "MethodInfo.h"
 #include "FieldInfo.h"
 #include "MemberInfo.h"
+#include "TypeInfo.h"
 
 class TokenGroup;
 
@@ -27,8 +28,10 @@ struct ClassInfo : MemberInfo
     bool isAbstract();
 
     std::string headerName;
+    TypeInfo instantinateSubtype(TypeInfo typeInfo, std::vector<std::string> templateArguments);
 
 private:
     void processMainTokens(TokenGroup& tokens);
+    void processTemplateTokens(TokenGroup& tokens);
     void processInheritanceTokens(TokenGroup& tokens);
 };

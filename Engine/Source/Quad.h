@@ -7,6 +7,7 @@
 #include "Meta/TypeMeta.h"
 
 #define __Meta__
+#define __Serialize__
 
 class __Meta__ Quad : public Node
 {
@@ -18,9 +19,7 @@ public:
     virtual void Update(double delta) override;
     virtual void Render(Matrix matrix, Renderer* renderer) override;
 
-    Vector2 Size;
-    Transform2D Transform;
-
-    std::string Shader;
-    std::string Texture;
+    __Serialize__ Vector2 Size;
+    __Serialize__ std::string Shader;
+    __Serialize__ std::string Texture;
 };

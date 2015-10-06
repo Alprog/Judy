@@ -16,6 +16,17 @@ Vector2::Vector2(float x, float y)
 {
 }
 
+Vector2::Vector2(List<float> list)
+    : x{list[0]}
+    , y{list[1]}
+{
+}
+
+List<float> Vector2::toList()
+{
+    return {x, y};
+}
+
 float Vector2::Length()
 {
     return sqrt(x * x + y * y);

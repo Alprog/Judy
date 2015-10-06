@@ -200,8 +200,8 @@ void DXRenderer::DrawQuad(Quad* quad)
     auto buffer = (ConstantBufferType*)resource.pData;
     buffer->WVP = Matrix::Identity;
 
-    buffer->M1 = quad->Transform.GetMatrix();
-    buffer->M2 = Matrix::Identity;
+//    buffer->M1 = quad->Transform.GetMatrix();
+//    buffer->M2 = Matrix::Identity;
 
     deviceContext->Unmap(constantBuffer, 0);
 

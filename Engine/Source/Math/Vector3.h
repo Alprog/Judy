@@ -1,7 +1,10 @@
 
 #pragma once
 
+#include "Containers/List.h"
+
 #define __Meta__
+#define __Serialize__
 
 struct __Meta__ Vector3
 {
@@ -10,7 +13,8 @@ struct __Meta__ Vector3
 
     Vector3(float x = 0, float y = 0, float z = 0);
 
-    float x, y, z;
+    __Serialize__ Vector3(List<float> list);
+    __Serialize__ List<float> toList();
 
     float Length();
     float SquaredLength();
@@ -20,4 +24,6 @@ struct __Meta__ Vector3
     friend Vector3 operator-(const Vector3& lhs, const Vector3& rhs);
 
     friend Vector3 operator*(const Vector3& vector, const float& value);
+
+    float x, y, z;
 };

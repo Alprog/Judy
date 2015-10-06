@@ -12,6 +12,19 @@ Quaternion::Quaternion(float x, float y, float z, float w)
 {
 }
 
+Quaternion::Quaternion(List<float> list)
+    : x{list[0]}
+    , y{list[1]}
+    , z{list[2]}
+    , w{list[3]}
+{
+}
+
+List<float> Quaternion::toList()
+{
+    return {x, y, z, w};
+}
+
 Quaternion Quaternion::YawPitchRoll(float yaw, float pitch, float roll)
 {
    auto c1 = cos(yaw / 2);

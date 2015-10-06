@@ -1,5 +1,6 @@
 
 #include "FieldInfo.h"
+#include "Specifier.h"
 
 FieldInfo::FieldInfo(TokenGroup& tokens)
     : isStatic {false}

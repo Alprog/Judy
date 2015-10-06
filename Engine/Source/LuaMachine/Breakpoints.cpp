@@ -46,7 +46,7 @@ bool Breakpoints::Clear(std::string fileName)
     return false;
 }
 
-std::unordered_set<int> Breakpoints::Get(std::string fileName)
+Set<int> Breakpoints::GetLines(std::string fileName)
 {
     if (!caseSensitive) ToLower(fileName);
 
@@ -57,11 +57,11 @@ std::unordered_set<int> Breakpoints::Get(std::string fileName)
     }
     else
     {
-        return std::unordered_set<int>();
+        return Set<int>();
     }
 }
 
-bool Breakpoints::Set(std::string fileName, std::unordered_set<int> lines)
+bool Breakpoints::SetLines(std::string fileName, Set<int> lines)
 {
     if (!caseSensitive) ToLower(fileName);
 

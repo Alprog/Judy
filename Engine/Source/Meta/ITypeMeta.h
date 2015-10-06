@@ -17,7 +17,7 @@ public:
 
     virtual bool isPointer() = 0;
     virtual bool isClass() = 0;
-    virtual bool isArray() = 0;
+    virtual bool isList() = 0;
     virtual bool isMap() = 0;
 
     virtual Any CreateOnStack() = 0;
@@ -36,6 +36,8 @@ protected:
 
 public:
     ITypeMeta* valueType;
+    std::vector<ITypeMeta*> templateArguments;
+
     std::vector<IConstructorMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;
     std::map<std::string, IFunctionMeta*> methods;
