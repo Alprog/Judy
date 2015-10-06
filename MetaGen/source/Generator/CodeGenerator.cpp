@@ -210,6 +210,10 @@ std::vector<TypeInfo> CodeGenerator::GetTemplateTypes(std::vector<ClassInfo>& cl
         {
             typeRefs.push_back(&fieldInfo.type);
         }
+        for (auto& inheritanceInfo : classInfo.inheritances)
+        {
+            typeRefs.push_back(&inheritanceInfo.type);
+        }
         for (auto& methodInfo : classInfo.methods)
         {
             typeRefs.push_back(&methodInfo.returnType);
@@ -259,11 +263,19 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
 
     stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << className << "\")" << std::endl;
 
+    // template arguments
     for (auto& parameter : classInfo.templateParameters)
     {
         stream << tab2 << ".templateArgument<" << parameter << ">()" << std::endl;
     }
 
+    // base classes
+    for (auto& inheritanceInfo : classInfo.inheritances)
+    {
+        stream << tab2 << ".base<" << inheritanceInfo.type.fullName << ">()" << std::endl;
+    }
+
+    // constructors
     bool isAbstract = classInfo.isAbstract();
     if (!isAbstract)
     {
@@ -290,6 +302,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
         }
     }
 
+    // methods
     for (auto& method : classInfo.methods)
     {
         if (!method.isOperator)
@@ -300,6 +313,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
         }
     }
 
+    // fields
     if (!isAbstract)
     {
         for (auto& field : classInfo.fields)

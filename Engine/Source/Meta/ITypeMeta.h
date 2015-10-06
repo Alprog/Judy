@@ -31,12 +31,9 @@ public:
 
 class IClassMeta : public ITypeMeta
 {
-protected:
-    IClassMeta();
-
 public:
-    ITypeMeta* valueType;
     std::vector<ITypeMeta*> templateArguments;
+    std::vector<ITypeMeta*> baseTypes;
 
     std::vector<IConstructorMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;

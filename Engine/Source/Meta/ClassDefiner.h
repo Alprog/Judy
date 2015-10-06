@@ -26,6 +26,20 @@ public:
         meta->types.push_back(classMeta);
     }
 
+    template <typename T>
+    ClassDefiner& templateArgument()
+    {
+        classMeta->templateArguments.push_back(TypeMetaOf<T>());
+        return *this;
+    }
+
+    template <typename T>
+    ClassDefiner& base()
+    {
+        classMeta->baseTypes.push_back(TypeMetaOf<T>());
+        return *this;
+    }
+
     template <typename... ArgTypes>
     ClassDefiner& constructor()
     {
@@ -70,20 +84,6 @@ public:
         function->pointer = pointer;
         classMeta->functions[name] = function;
         lastMember = function;
-        return *this;
-    }
-
-    template <typename T>
-    ClassDefiner& valueType()
-    {
-        classMeta->valueType = TypeMetaOf<T>();
-        return *this;
-    }
-
-    template <typename T>
-    ClassDefiner& templateArgument()
-    {
-        classMeta->templateArguments.push_back(TypeMetaOf<T>());
         return *this;
     }
 

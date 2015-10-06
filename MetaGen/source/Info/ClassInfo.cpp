@@ -6,6 +6,8 @@ ClassInfo::ClassInfo(TokenGroup& tokens)
     : classType{ClassType::Class}
     , isFinal{false}
 {
+    tokens.makeGroups("<", ">");
+
     auto arr = tokens.split(":");
     processMainTokens(arr[0]);
     if (arr.size() > 1)
@@ -77,8 +79,6 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
 
 void ClassInfo::processTemplateTokens(TokenGroup& tokens)
 {
-    tokens.makeGroups("<", ">");
-
     auto index = tokens.indexOf("template");
     if (index >= 0 || index < tokens.size() - 1 && tokens[index + 1]->getName() == "<>")
     {
