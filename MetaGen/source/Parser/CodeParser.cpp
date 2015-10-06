@@ -88,9 +88,12 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
 {
     for (Statement statement : definitionSnippet->getStatements())
     {
+        auto& statementTokens = statement.getTokens();
+        checkAcessModifiers(statementTokens);
+
         if (statement.isFunction())
         {
-            MethodInfo methodInfo(statement.getTokens());
+            MethodInfo methodInfo(statementTokens);
             if (methodInfo.name == classInfo.name)
             {
                 classInfo.constructors.push_back(methodInfo);
@@ -111,12 +114,22 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
         else
         {
             // field declaration
-            for (auto& tokens : statement.getTokens().splitDeclararion())
+            statementTokens.makeGroups("<", ">");
+            for (auto& tokens : statementTokens.splitDeclararion())
             {
                 FieldInfo fieldInfo(tokens);
                 classInfo.fields.push_back(fieldInfo);
             }
         }
+    }
+}
+
+void CodeParser::checkAcessModifiers(TokenGroup& tokens)
+{
+    auto name = tokens[0]->getName();
+    if (name == "public" || name == "protected" || name == "private")
+    {
+        tokens.extract(0, 2);
     }
 }
 

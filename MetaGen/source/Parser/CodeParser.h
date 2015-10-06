@@ -20,6 +20,7 @@ private:
     void fixAttributeSyntax(std::string& text);
     void parseClasses(Snippet* snippet, std::string headerName = "");
     void parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnippet);
+    void checkAcessModifiers(TokenGroup& tokens);
 
     std::vector<ClassInfo> classes;
 };

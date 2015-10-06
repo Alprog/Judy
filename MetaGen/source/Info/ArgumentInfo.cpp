@@ -18,5 +18,5 @@ void ArgumentInfo::proccessMainTokens(TokenGroup& tokens)
 {
     auto token = tokens.extractLast();
     name = token->getName();
-    typeInfo = TypeInfo(tokens);
+    type = TypeInfo(tokens);
 }

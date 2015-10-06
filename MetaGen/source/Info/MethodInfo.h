@@ -13,6 +13,7 @@ struct MethodInfo : public MemberInfo
     bool isStatic;
     bool isVirtual;
     bool isOperator;
+    bool isInline;
 
     TypeInfo returnType;
     std::vector<ArgumentInfo> arguments;

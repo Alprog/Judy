@@ -2,7 +2,7 @@
 #include "CodeGenerator.h"
 #include <sstream>
 #include <cstdio>
-#include <set>
+#include <unordered_set>
 
 #if WIN
     #define snprintf _snprintf
@@ -65,7 +65,7 @@ std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
     stream << "#include \"TypeMeta.h\"" << std::endl;
     stream << "#include \"ClassDefiner.h\"" << std::endl;
 
-    std::set<std::string> set;
+    std::unordered_set<std::string> set;
     for (auto& classInfo : classes)
     {
         auto name = classInfo.headerName;
@@ -100,11 +100,54 @@ std::string CodeGenerator::GenerateTemplateFunctions(std::vector<ClassInfo>& cla
     return stream.str();
 }
 
+void foobar(std::vector<ClassInfo>& classes)
+{
+    std::unordered_set<std::string> typeNames;
+
+    for (auto& classInfo : classes)
+    {
+        //if (!classInfo.isTemplate())
+        {
+            for (auto& fieldInfo : classInfo.fields)
+            {
+                typeNames.insert(fieldInfo.type.name);
+            }
+            for (auto& methodInfo : classInfo.methods)
+            {
+                typeNames.insert(methodInfo.returnType.name);
+                for (auto& argumentInfo : methodInfo.arguments)
+                {
+                    typeNames.insert(argumentInfo.type.name);
+                }
+            }
+            for (auto& methodInfo : classInfo.constructors)
+            {
+                typeNames.insert(methodInfo.returnType.name);
+                for (auto& argumentInfo : methodInfo.arguments)
+                {
+                    typeNames.insert(argumentInfo.type.name);
+                }
+            }
+        }
+    }
+
+    for (std::string typeName : typeNames)
+    {
+        if (typeName.find('<') != std::string::npos) // template
+        {
+            printf("%s \n", typeName.c_str());
+            fflush(stdout);
+        }
+    }
+}
+
 std::string CodeGenerator::GenerateMainFunction(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
     stream << "void Meta::DefineClasses()" << std::endl;
     stream << "{" << std::endl;
+
+    foobar(classes);
 
     auto first = true;
     for (auto& classInfo : classes)
@@ -156,7 +199,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
                     {
                         stream << ", ";
                     }
-                    stream << argumentInfo.typeInfo.name;
+                    stream << argumentInfo.type.name;
                     first = false;
                 }
                 stream << ">";

@@ -9,12 +9,6 @@
 
 struct MemberInfo
 {
-    struct Specifier
-    {
-        std::string keyword;
-        bool* flag;
-    };
-
     MemberInfo();
 
     std::vector<AttributeInfo> attributes;
@@ -26,7 +20,4 @@ struct MemberInfo
     std::vector<std::string> templateParameters;
 
     bool containsAttribute(std::string name);
-
-protected:
-    void processSpecifiers(TokenGroup& tokens, std::vector<Specifier> specifiers);
 };

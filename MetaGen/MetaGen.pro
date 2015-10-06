@@ -20,7 +20,8 @@ SOURCES += \
     Source/Info/NamespaceInfo.cpp \
     Source/Info/AttributeInfo.cpp \
     Source/Generator/CodeGenerator.cpp \
-    Source/Parser/CodeParser.cpp
+    Source/Parser/CodeParser.cpp \
+    Source/Info/Specifier.cpp
 
 CONFIG += qt
 
@@ -47,4 +48,5 @@ HEADERS += \
     Source/Info/AttributeInfo.h \
     Source/Info/ClassType.h \
     Source/Generator/CodeGenerator.h \
-    Source/Parser/CodeParser.h
+    Source/Parser/CodeParser.h \
+    Source/Info/Specifier.h

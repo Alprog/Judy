@@ -89,7 +89,7 @@ void ClassInfo::processTemplateTokens(TokenGroup& tokens)
             templateParameters.push_back(name);
         }
 
-        tokens.extract(index, index + 1);
+        tokens.extract(index, index + 2);
     }
 }
 
