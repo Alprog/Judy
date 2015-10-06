@@ -19,7 +19,6 @@
 #include "Model.h"
 #include "Node.h"
 #include "Quad.h"
-#include "Renderer.h"
 #include "Window.h"
 
 template <typename T>
@@ -65,11 +64,13 @@ void Meta::DefineSet()
 
 void Meta::DefineClasses()
 {
-    DefineList<float>();
-    DefineList<Node*>();
     DefineList<CallInfo>();
-    DefineList<int>();
     DefineSet<int>();
+    DefineList<float>();
+    DefineSet<WindowM*>();
+    DefineList<Node*>();
+    DefineList<int>();
+    DefineList<WindowM*>();
 
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
@@ -209,13 +210,6 @@ void Meta::DefineClasses()
         .field("Size", &Quad::Size).attr("Serialize")
         .field("Shader", &Quad::Shader).attr("Serialize")
         .field("Texture", &Quad::Texture).attr("Serialize")
-    ;
-
-    ClassDefiner<Renderer>(this, "Renderer")
-        .method("DrawQuad", &Renderer::DrawQuad)
-        .method("Draw", &Renderer::Draw)
-        .method("Render", &Renderer::Render)
-        .method("Clear", &Renderer::Clear)
     ;
 
     ClassDefiner<WindowM>(this, "WindowM")
