@@ -204,6 +204,12 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
     }
 
     auto object = classMeta->CreateOnStack();
+    DeserializeClassFields(object, classMeta);
+    return object;
+}
+
+void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
+{
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
@@ -215,8 +221,13 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
             lua_pop(L, 1);
         }
     }
-
-    return object;
+    for (auto& baseType : classMeta->baseTypes)
+    {
+        if (baseType->isClass())
+        {
+            DeserializeClassFields(object, (IClassMeta*)baseType);
+        }
+    }
 }
 
 Any Serializer::Deserialize(ITypeMeta* type)

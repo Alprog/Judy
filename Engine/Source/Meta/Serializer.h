@@ -35,6 +35,7 @@ private:
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();
     Any DeserializeAsClass(IClassMeta* classMeta);
+    void DeserializeClassFields(Any& object, IClassMeta* classMeta);
     Any Deserialize(ITypeMeta* const typeMeta);
 
     lua_State* L;
