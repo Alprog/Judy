@@ -13,9 +13,12 @@ public:
 
 private:
     std::string GenerateIncludes(std::vector<ClassInfo>& classes);
-    std::string GenerateTemplateFunctions(std::vector<ClassInfo>& classes);
-    std::string GenerateMainFunction(std::vector<ClassInfo>& classes);
+    std::string GenerateTemplateFunctions(std::vector<ClassInfo>& templateClasses);
+    std::string GenerateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
+    std::string GenerateDefineTemplatesSection(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
     std::string GenerateClassDefinition(ClassInfo& classInfo);
     std::string GenerateAttributes(MemberInfo& memberInfo);
     std::string GenerateParametersList(ClassInfo& classInfo, bool typenames);
+
+    std::vector<TypeInfo> GetTemplateTypes(std::vector<ClassInfo>& classes);
 };

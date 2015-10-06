@@ -101,3 +101,24 @@ void ClassInfo::processInheritanceTokens(TokenGroup& tokens)
         inheritances.push_back(info);
     }
 }
+
+TypeInfo ClassInfo::instantinateSubtype(TypeInfo typeInfo, std::vector<std::string> templateArguments)
+{
+    auto changed = false;
+    for (auto& argument : typeInfo.templateArguments)
+    {
+        for (auto i = 0; i < templateParameters.size(); i++)
+        {
+            if (argument == templateParameters[i])
+            {
+                argument = templateArguments[i];
+                changed = true;
+            }
+        }
+    }
+    if (changed)
+    {
+        typeInfo.refreshFullName();
+    }
+    return typeInfo;
+}
