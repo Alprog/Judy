@@ -35,7 +35,7 @@ struct pointerOf
 template <typename T>
 struct pointerOf<T*>
 {
-    using type = DeepPointer<typename std::decay<T>::type>;
+    using type = DeepPointer<T>;
 };
 
 template <typename T>
