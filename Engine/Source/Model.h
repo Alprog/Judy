@@ -8,6 +8,7 @@
 #include "Renderer.h"
 
 #define __Meta__
+#define __Serialize__
 
 struct __Meta__ Model : public Node
 {
@@ -18,4 +19,6 @@ struct __Meta__ Model : public Node
 
     Mesh* mesh;
     Material* material;
+
+    __Serialize__ std::string name;
 };

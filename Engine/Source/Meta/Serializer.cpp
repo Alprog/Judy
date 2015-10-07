@@ -40,21 +40,20 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         lua_newtable(L);
         lua_pushinteger(L, 1);
 
+        auto pointeeType = type->GetPointeeType();
         if (flags & ITypeMeta::PointerToPolymorhic)
         {
-            auto pointeeType = (IClassMeta*)type->GetRunTimePointeeType(object);
-
-
-            auto name = pointeeType->name;
-
-            //auto classMeta = (IClassMeta*)type->GetPointeeType();
-
+            pointeeType = type->GetRunTimePointeeType(object);
         }
 
-        object = type->Dereference(object);
-        Serialize(object, type->GetPointeeType());
+        object = pointeeType->Dereference(object);
+        Serialize(object, pointeeType);
 
         lua_settable(L, -3);
+    }
+    else if (type == TypeMetaOf<std::string>())
+    {
+        lua_pushstring(L, object.as<std::string>().c_str());
     }
     else if (flags & ITypeMeta::List)
     {
@@ -73,10 +72,6 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     else if (type == TypeMetaOf<float>())
     {
         lua_pushnumber(L, object.as<float>());
-    }
-    else if (type == TypeMetaOf<std::string>())
-    {
-        lua_pushstring(L, object.as<std::string>().c_str());
     }
 }
 
@@ -266,6 +261,10 @@ Any Serializer::Deserialize(ITypeMeta* type)
         lua_pop(L, 1);
         return pointer;
     }
+    else if (type == TypeMetaOf<std::string>())
+    {
+        return std::string( lua_tostring(L, -1) );
+    }
     else if (flags & ITypeMeta::List)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
@@ -283,10 +282,6 @@ Any Serializer::Deserialize(ITypeMeta* type)
     else if (type == TypeMetaOf<float>())
     {
         return (float)lua_tonumber(L, -1);
-    }
-    else if (type == TypeMetaOf<std::string>())
-    {
-        return std::string( lua_tostring(L, -1) );
     }
 
     return Any::empty;

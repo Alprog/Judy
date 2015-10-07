@@ -188,6 +188,7 @@ void Meta::DefineClasses()
         .method("Render", &Model::Render)
         .field("mesh", &Model::mesh)
         .field("material", &Model::material)
+        .field("name", &Model::name).attr("Serialize")
     ;
 
     ClassDefiner<Node>(this, "Node")

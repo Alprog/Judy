@@ -118,7 +118,7 @@ private:
     template <typename T>
     static inline Any CreateOnHeapHelper(IF(T, RealPointer)* = nullptr)
     {
-        return DeepPointer<typename std::remove_pointer<T>::type>(new T());
+        return pointerType(new T());
     }
 
     template <typename T>
@@ -138,7 +138,7 @@ private:
     template <typename T>
     static inline Any DereferenceHelper(Any& object, IF(T, AllowDereferencing)* = nullptr)
     {
-        return *(object.as<T>());
+        return *(object.as<pointerType>());
     }
 
     template <typename T>
@@ -150,21 +150,15 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    inline Any MakePointerHelper(Any& object, IF_NOT(T, AbstractClassOrRealPointer)* = nullptr)
+    inline Any MakePointerHelper(Any& object, IF_NOT(T, Abstract)* = nullptr)
     {
-        return &object.as<T>();
+        return pointerType(&object.as<T>());
     }
 
     template <typename T>
     static inline Any MakePointerHelper(Any& object, IF(T, Abstract)* = nullptr)
     {
         throw std::runtime_error("invalid referencing");
-    }
-
-    template <typename T>
-    static inline Any MakePointerHelper(Any& object, IF(T, RealPointer)* = nullptr)
-    {
-        return DeepPointer<typename std::remove_pointer<T>::type>(&object.as<T>());
     }
 
     //---------------------------------------------------------------------------------
@@ -180,7 +174,7 @@ private:
     template <typename T>
     static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF_NOT(T, PointerToPolymorhic)* = nullptr)
     {
-        throw std::runtime_error("type is not real pointer");
+        throw std::runtime_error("type is not pointer to polymorhic");
     }
 
     //---------------------------------------------------------------------------------
@@ -189,7 +183,7 @@ private:
 template <typename T>
 inline ITypeMeta* TypeMetaOf()
 {
-    return TypeMeta<typename std::decay<T>::type>::Instance();
+    return TypeMeta<typename fulldecay<T>::type>::Instance();
 }
 
 template <>
