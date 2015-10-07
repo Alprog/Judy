@@ -63,7 +63,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     }
     else
     {
-        if (type->getFlags() & ITypeMeta::Pointer)
+        if (type->isPointer())
         {
             type = type->GetPointeeType();
             auto data = (void**)lua_newuserdata(L, sizeof(void*));

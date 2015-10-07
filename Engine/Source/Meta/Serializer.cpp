@@ -39,8 +39,16 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_newtable(L);
         lua_pushinteger(L, 1);
+
+        if (flags & ITypeMeta::PointerToPolymorhic)
+        {
+            auto classMeta = (IClassMeta*)type->GetPointeeType();
+
+        }
+
         object = type->Dereference(object);
         Serialize(object, type->GetPointeeType());
+
         lua_settable(L, -3);
     }
     else if (flags & ITypeMeta::List)
@@ -126,7 +134,7 @@ void Serializer::SerializeClassFields(Any& object, IClassMeta* classMeta)
     }
     for (auto& baseType : classMeta->baseTypes)
     {
-        if (baseType->getFlags() & ITypeMeta::Class)
+        if (baseType->isClass())
         {
             SerializeClassFields(object, (IClassMeta*)baseType);
         }
@@ -191,7 +199,7 @@ Any Serializer::DeserializeUnknownTable()
         {
             if (type->name == typeName)
             {
-                if (type->getFlags() & ITypeMeta::Class)
+                if (type->isClass())
                 {
                     auto classMeta = static_cast<IClassMeta*>(type);
                     return DeserializeAsClass(classMeta);
@@ -233,7 +241,7 @@ void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
     }
     for (auto& baseType : classMeta->baseTypes)
     {
-        if (baseType->getFlags() & ITypeMeta::Class)
+        if (baseType->isClass())
         {
             DeserializeClassFields(object, (IClassMeta*)baseType);
         }

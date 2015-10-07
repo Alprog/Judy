@@ -27,20 +27,22 @@ template <typename ClassType>
 class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
 {
 public:
-    virtual ITypeMeta::Flags getFlags() override
+    virtual ITypeMeta::Flags getFlags() const override
     {
-        const int flag =
+        const int flags =
             (~is<ClassType>::Class + 1) & Flags::Class |
             (~is<ClassType>::Pointer + 1) & Flags::Pointer |
+            (~is<ClassType>::PointerToPolymorhic + 1) & Flags::PointerToPolymorhic |
             (~is<ClassType>::List + 1) & Flags::List
         ;
-        return (Flags)flag;
+        return (Flags)flags;
     }
 
     virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
     virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
     virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
+    virtual ITypeMeta* GetPointerType() override { return GetPointerTypeHelper<ClassType>(); }
     virtual ITypeMeta* GetPointeeType() override { return GetPointeeTypeHelper<ClassType>(); }
 
 private:
@@ -116,6 +118,26 @@ private:
     static inline Any MakePointerHelper(Any& object, IF(T, RealPointer)* = nullptr)
     {
         return DeepPointer<typename std::remove_pointer<T>::type>(&object.as<T>());
+    }
+
+    //---------------------------------------------------------------------------------
+
+    template <typename T>
+    static inline ITypeMeta* GetPointerTypeHelper(IF_NOT(T, Pointer)* = nullptr)
+    {
+        return TypeMetaOf<T*>();
+    }
+
+    template <typename T>
+    static inline ITypeMeta* GetPointerTypeHelper(IF(T, RealPointer)* = nullptr)
+    {
+        return TypeMetaOf<DeepPointer<typename std::remove_pointer<T>::type>>();
+    }
+
+    template <typename T>
+    static inline ITypeMeta* GetPointerTypeHelper(IF(T, DeepPointer)* = nullptr)
+    {
+        return TypeMetaOf<T>();
     }
 
     //---------------------------------------------------------------------------------

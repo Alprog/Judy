@@ -17,16 +17,21 @@ public:
     {
         Class = 1 << 0,
         Pointer = 1 << 1,
-        List = 1 << 2
+        PointerToPolymorhic = 1 << 2,
+        List = 1 << 3
     };
 
     std::string name;
+    virtual Flags getFlags() const = 0;
 
-    virtual Flags getFlags() = 0;
+    inline bool isClass() const { return getFlags() & Flags::Class; }
+    inline bool isPointer() const { return getFlags() & Flags::Pointer; }
+    inline bool isList() const { return getFlags() & Flags::List; }
 
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;
 
+    virtual ITypeMeta* GetPointerType() = 0;
     virtual ITypeMeta* GetPointeeType() = 0;
 
     virtual Any Dereference(Any& object) = 0;
