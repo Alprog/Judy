@@ -7,12 +7,12 @@
 #include "../qt/ScintillaEdit.h"
 #include "string"
 
-class TextEditor : public ScintillaEdit
+class CodeEditor : public ScintillaEdit
 {
     Q_OBJECT
 
 public:
-    TextEditor(QWidget* parent = 0);
+    CodeEditor(QWidget* parent = 0);
     void setSource(std::string source);
 
     void pullBreakpoints();

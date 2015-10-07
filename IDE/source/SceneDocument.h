@@ -5,6 +5,10 @@
 
 class SceneDocument : public IDocument
 {
+public:
+    virtual bool Changed() override;
+
 private:
-    virtual QByteArray GetTextData() override;
+    virtual void SetBinaryData(QByteArray data) override;
+    virtual QByteArray GetBinaryData() override;
 };

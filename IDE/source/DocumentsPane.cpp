@@ -48,7 +48,8 @@ void DocumentsPane::Open(Path path)
 void DocumentsPane::OpenAtLine(Path path, int line)
 {
     Open(path);
-    GetCurrentDocument()->GoToLine(line);
+    auto luaDocument = (LuaDocument*)GetCurrentDocument();
+    luaDocument->GoToLine(line);
 }
 
 IDocument* DocumentsPane::GetDocument(Path path)
@@ -146,7 +147,7 @@ void DocumentsPane::CloseTab(int index)
 {
     auto document = GetDocument(index);
 
-    if (document->HaveChanges())
+    if (document->Changed())
     {
         QMessageBox msgBox;
         msgBox.setText("The document has been modified.");

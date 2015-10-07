@@ -6,8 +6,6 @@
 #include <QDateTime>
 #include "Path.h"
 
-class TextEditor;
-
 class IDocument : public QWidget
 {
     Q_OBJECT
@@ -17,25 +15,23 @@ public:
 
     Path GetPath() { return documentPath; }
     std::string GetName() { return documentPath.GetName(); }
-
-    void GoToLine(int line);
     std::string GetTabName();
 
     bool IsModifiedOutside();
     void IgnoreOutsideModification();
 
-    void Save();
-    bool HaveChanges();
+    virtual void Save();
+    virtual bool Changed() = 0;
 
     void Reload();
 
 private:
     QDateTime GetLastModifiedTime();
-    virtual QByteArray GetTextData() = 0;
+    virtual void SetBinaryData(QByteArray data) = 0;
+    virtual QByteArray GetBinaryData() = 0;
 
 private slots:
     void OnModified();
-    void CloseTab(int index);
 
 signals:
     void Modified();
@@ -43,6 +39,4 @@ signals:
 protected:
     Path documentPath;
     QDateTime modifiedTime;
-
-    TextEditor* editor;
 };
