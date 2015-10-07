@@ -86,13 +86,11 @@ void DocumentM::Save()
     QFile file(documentPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
-        auto length = editor->length();
-        auto text = editor->getText(length + 1);
-
         QTextStream stream(&file);
-        stream << text;
-        file.close();
 
+        stream << GetTextData();
+
+        file.close();
         modifiedTime = GetLastModifiedTime();
     }
 

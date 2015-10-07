@@ -31,11 +31,7 @@ public:
 
 private:
     QDateTime GetLastModifiedTime();
-
-    Path documentPath;
-    QDateTime modifiedTime;
-
-    TextEditor* editor;
+    virtual QByteArray GetTextData() = 0;
 
 private slots:
     void OnModified();
@@ -43,4 +39,10 @@ private slots:
 
 signals:
     void Modified();
+
+protected:
+    Path documentPath;
+    QDateTime modifiedTime;
+
+    TextEditor* editor;
 };

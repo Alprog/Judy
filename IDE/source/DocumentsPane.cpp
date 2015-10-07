@@ -10,7 +10,9 @@
 #include <QTableWidget>
 #include <string>
 
-#include "Document.h"
+#include "LuaDocement.h"
+#include "SceneDocument.h"
+
 #include "IDE.h"
 
 DocumentsPane::DocumentsPane()
@@ -36,7 +38,7 @@ void DocumentsPane::Open(Path path)
     }
     else
     {
-        document = new DocumentM(path);
+        document = new LuaDocument(path);
         connect(document, SIGNAL(Modified()), this, SLOT(UpdateTabNames()));
         addTab(document, document->GetName().c_str());
         setCurrentWidget(document);

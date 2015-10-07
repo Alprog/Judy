@@ -20,7 +20,9 @@ HEADERS += \
     Source/Menu/WindowMenu.h \
     Source/StackPane.h \
     Source/Settings.h \
-    Source/IDE.h
+    Source/IDE.h \
+    Source/LuaDocement.h \
+    Source/SceneDocument.h
 
 SOURCES += \
     Source/MainWindow.cpp \
@@ -36,7 +38,9 @@ SOURCES += \
     Source/Menu/WindowMenu.cpp \
     Source/StackPane.cpp \
     Source/Settings.cpp \
-    Source/IDE.cpp
+    Source/IDE.cpp \
+    Source/LuaDocement.cpp \
+    Source/SceneDocument.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 
