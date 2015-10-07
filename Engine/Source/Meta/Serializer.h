@@ -30,11 +30,13 @@ public:
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);
-    void SerializeAsClass(Any& object, ITypeMeta* type);
+    void SerializeAsClass(Any& object, IClassMeta* type);
+    void SerializeClassFields(Any& object, IClassMeta* classMeta);
 
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();
     Any DeserializeAsClass(IClassMeta* classMeta);
+    void DeserializeClassFields(Any& object, IClassMeta* classMeta);
     Any Deserialize(ITypeMeta* const typeMeta);
 
     lua_State* L;

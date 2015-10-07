@@ -44,6 +44,8 @@ public:
         return new T(args...);
     }
 
+    ITypeMeta* Find(std::type_index index);
+
 public:
     std::unordered_map<std::type_index, ITypeMeta*> typeMap;
     std::vector<ITypeMeta*> types;

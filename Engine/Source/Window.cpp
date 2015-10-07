@@ -34,9 +34,11 @@ WindowM::WindowM()
 
     c1->transform.setTranslation(Vector3(2, 0, 0));
     c1->transform.setScaling(Vector3::One * 0.3f);
+    c1->name = "child1";
 
     c2->transform.setTranslation(Vector3(-2, 0, 0));
     c2->transform.setScaling(Vector3::One * 0.4f);
+    c2->name = "child2";
 
     auto serializer = new Serializer();
     auto text = serializer->Serialize(scene);

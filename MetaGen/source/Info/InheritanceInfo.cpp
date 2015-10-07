@@ -25,5 +25,5 @@ InheritanceInfo::InheritanceInfo(TokenGroup& tokens)
         }
     }
 
-    name = tokens.getText();
+    type = TypeInfo(tokens);
 }

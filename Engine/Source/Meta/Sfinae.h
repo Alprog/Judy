@@ -47,6 +47,26 @@ struct is_list<List<T>>
     static const bool value = true;
 };
 
+//-----------------
+
+template <typename T>
+struct fulldecay
+{
+    using type = typename std::decay<T>::type;
+};
+
+template <typename T>
+struct fulldecay<T*>
+{
+    using type = typename std::decay<typename fulldecay<T>::type*>::type;
+};
+
+template <typename T> struct fulldecay<T&> : public fulldecay<T> {};
+template <typename T> struct fulldecay<T&&> : public fulldecay<T> {};
+template <typename T> struct fulldecay<T const> : public fulldecay<T> {};
+
+//-----------------
+
 template<class T>
 struct is
 {
@@ -54,6 +74,7 @@ struct is
     enum { DeepPointer = is_deep_pointer<T>::value };
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
+    enum { Polymorphic = std::is_polymorphic<T>::value };
     enum { List = is_list<T>::value };
     enum { Map = is_map<T>::value };
 
@@ -65,8 +86,9 @@ struct is
 
     enum { Void = std::is_same<T, void>::value };
     enum { PointerToVoid = std::is_same<T, void*>::value };
-    enum { PointerToAbstract = std::is_abstract<typename std::remove_pointer<T>::type>::value };
-    enum { AllowDereferencing = (RealPointer && !PointerToAbstract && !PointerToVoid) || DeepPointer };
+    enum { PointerToPolymorhic = RealPointer && std::is_polymorphic<typename std::remove_pointer<T>::type>::value };
+    enum { PointerToAbstract = RealPointer && std::is_abstract<typename std::remove_pointer<T>::type>::value };
+    enum { AllowDereferencing = !Abstract && !Void };
 };
 
 #define IF(T, C) typename std::enable_if<is<T>::C>::type

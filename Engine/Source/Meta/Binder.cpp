@@ -126,7 +126,7 @@ void LuaBinder::Bind(Meta* meta)
 {
     for (auto& typeMeta : meta->types)
     {
-        if (typeMeta->isClass())
+        if (typeMeta->getFlags() & ITypeMeta::Class)
         {
             auto classMeta = static_cast<IClassMeta*>(typeMeta);
             BindClass(classMeta);

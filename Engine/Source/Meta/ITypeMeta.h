@@ -13,17 +13,27 @@ class IConstructorMeta;
 class ITypeMeta
 {
 public:
-    std::string name;
+    enum Flags
+    {
+        Class = 1 << 0,
+        Pointer = 1 << 1,
+        PointerToPolymorhic = 1 << 2,
+        List = 1 << 3
+    };
 
-    virtual bool isPointer() = 0;
-    virtual bool isClass() = 0;
-    virtual bool isList() = 0;
-    virtual bool isMap() = 0;
+    std::string name;
+    virtual Flags getFlags() const = 0;
+
+    inline bool isClass() const { return getFlags() & Flags::Class; }
+    inline bool isPointer() const { return getFlags() & Flags::Pointer; }
+    inline bool isList() const { return getFlags() & Flags::List; }
 
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;
 
+    virtual ITypeMeta* GetPointerType() = 0;
     virtual ITypeMeta* GetPointeeType() = 0;
+    virtual ITypeMeta* GetRunTimePointeeType(Any& object) = 0;
 
     virtual Any Dereference(Any& object) = 0;
     virtual Any MakePointer(Any& object) = 0;
@@ -31,12 +41,9 @@ public:
 
 class IClassMeta : public ITypeMeta
 {
-protected:
-    IClassMeta();
-
 public:
-    ITypeMeta* valueType;
     std::vector<ITypeMeta*> templateArguments;
+    std::vector<ITypeMeta*> baseTypes;
 
     std::vector<IConstructorMeta*> constructors;
     std::map<std::string, IFieldMeta*> fields;
