@@ -30,7 +30,8 @@ public:
 
 private:
     void Serialize(Any object, ITypeMeta* typeMeta);
-    void SerializeAsClass(Any& object, ITypeMeta* type);
+    void SerializeAsClass(Any& object, IClassMeta* type);
+    void SerializeClassFields(Any& object, IClassMeta* classMeta);
 
     Any DeserializeUnknown();
     Any DeserializeUnknownTable();

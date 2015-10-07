@@ -13,12 +13,16 @@ class IConstructorMeta;
 class ITypeMeta
 {
 public:
+    enum Flags
+    {
+        Class = 1 << 0,
+        Pointer = 1 << 1,
+        List = 1 << 2
+    };
+
     std::string name;
 
-    virtual bool isPointer() = 0;
-    virtual bool isClass() = 0;
-    virtual bool isList() = 0;
-    virtual bool isMap() = 0;
+    virtual Flags getFlags() = 0;
 
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;

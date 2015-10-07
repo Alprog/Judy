@@ -27,10 +27,15 @@ template <typename ClassType>
 class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
 {
 public:
-    virtual bool isPointer() override { return is<ClassType>::Pointer; }
-    virtual bool isClass() override { return is<ClassType>::Class; }
-    virtual bool isList() override { return is<ClassType>::List; }
-    virtual bool isMap() override { return is<ClassType>::Map; }
+    virtual ITypeMeta::Flags getFlags() override
+    {
+        const int flag =
+            (~is<ClassType>::Class + 1) & Flags::Class |
+            (~is<ClassType>::Pointer + 1) & Flags::Pointer |
+            (~is<ClassType>::List + 1) & Flags::List
+        ;
+        return (Flags)flag;
+    }
 
     virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }

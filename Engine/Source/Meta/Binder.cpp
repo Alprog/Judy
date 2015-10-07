@@ -63,7 +63,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     }
     else
     {
-        if (type->isPointer())
+        if (type->getFlags() & ITypeMeta::Pointer)
         {
             type = type->GetPointeeType();
             auto data = (void**)lua_newuserdata(L, sizeof(void*));
@@ -126,7 +126,7 @@ void LuaBinder::Bind(Meta* meta)
 {
     for (auto& typeMeta : meta->types)
     {
-        if (typeMeta->isClass())
+        if (typeMeta->getFlags() & ITypeMeta::Class)
         {
             auto classMeta = static_cast<IClassMeta*>(typeMeta);
             BindClass(classMeta);
