@@ -10,6 +10,7 @@
 #include "DeepPointer.h"
 
 #include "ConstructorMeta.h"
+#include <typeindex>
 
 template <typename T, typename Enable = void>
 struct IBase
@@ -23,10 +24,55 @@ struct IBase<T, IF(T, Class)>
     using type = IClassMeta;
 };
 
+//---
+
+template <typename T>
+struct pointerOf
+{
+    using type = T*;
+};
+
+template <typename T>
+struct pointerOf<T*>
+{
+    using type = DeepPointer<typename std::decay<T>::type>;
+};
+
+template <typename T>
+struct pointerOf<DeepPointer<T>>
+{
+    using type = DeepPointer<T>;
+};
+
+//---
+
+template <typename T>
+struct pointeeOf
+{
+    using type = std::nullptr_t;
+};
+
+template <typename T>
+struct pointeeOf<T*>
+{
+    using type = T;
+};
+
+template <typename T>
+struct pointeeOf<DeepPointer<T>>
+{
+    using type = typename DeepPointer<T>::pointeeType;
+};
+
+//---
+
 template <typename ClassType>
 class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
 {
 public:
+    using pointeeType = typename pointeeOf<ClassType>::type;
+    using pointerType = typename pointerOf<ClassType>::type;
+
     virtual ITypeMeta::Flags getFlags() const override
     {
         const int flags =
@@ -42,8 +88,9 @@ public:
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
     virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
     virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
-    virtual ITypeMeta* GetPointerType() override { return GetPointerTypeHelper<ClassType>(); }
-    virtual ITypeMeta* GetPointeeType() override { return GetPointeeTypeHelper<ClassType>(); }
+    virtual ITypeMeta* GetPointerType() override { return TypeMetaOf<pointerType>(); }
+    virtual ITypeMeta* GetPointeeType() override { return TypeMetaOf<pointeeType>(); }
+    virtual ITypeMeta* GetRunTimePointeeType(Any& object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
 
 private:
     //---------------------------------------------------------------------------------
@@ -123,41 +170,17 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline ITypeMeta* GetPointerTypeHelper(IF_NOT(T, Pointer)* = nullptr)
+    static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF(T, PointerToPolymorhic)* = nullptr)
     {
-        return TypeMetaOf<T*>();
+        auto pointer = object.as<T>();
+        auto index = std::type_index(typeid(*pointer));
+        return Meta::Instance()->Find(index);
     }
 
     template <typename T>
-    static inline ITypeMeta* GetPointerTypeHelper(IF(T, RealPointer)* = nullptr)
+    static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF_NOT(T, PointerToPolymorhic)* = nullptr)
     {
-        return TypeMetaOf<DeepPointer<typename std::remove_pointer<T>::type>>();
-    }
-
-    template <typename T>
-    static inline ITypeMeta* GetPointerTypeHelper(IF(T, DeepPointer)* = nullptr)
-    {
-        return TypeMetaOf<T>();
-    }
-
-    //---------------------------------------------------------------------------------
-
-    template <typename T>
-    static inline ITypeMeta* GetPointeeTypeHelper(IF_NOT(T, Pointer)* = nullptr)
-    {
-        throw std::runtime_error("type is not pointer");
-    }
-
-    template <typename T>
-    static inline ITypeMeta* GetPointeeTypeHelper(IF(T, RealPointer)* = nullptr)
-    {
-        return TypeMetaOf<typename std::remove_pointer<T>::type>();
-    }
-
-    template <typename T>
-    static inline ITypeMeta* GetPointeeTypeHelper(IF(T, DeepPointer)* = nullptr)
-    {
-        return TypeMetaOf<typename T::pointeeType>();
+        throw std::runtime_error("type is not real pointer");
     }
 
     //---------------------------------------------------------------------------------
@@ -173,4 +196,10 @@ template <>
 inline ITypeMeta* TypeMetaOf<void>()
 {
     return nullptr;
+}
+
+template <>
+inline ITypeMeta* TypeMetaOf<std::nullptr_t>()
+{
+    throw std::runtime_error("invalid argument for TypeMetaOf");
 }

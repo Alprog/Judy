@@ -17,3 +17,13 @@ Meta::Meta()
 
     DefineClasses();
 }
+
+ITypeMeta* Meta::Find(std::type_index index)
+{
+    auto it = typeMap.find(index);
+    if (it != std::end(typeMap))
+    {
+        return it->second;
+    }
+    return nullptr;
+}

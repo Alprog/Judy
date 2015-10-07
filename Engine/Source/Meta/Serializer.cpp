@@ -42,7 +42,12 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
 
         if (flags & ITypeMeta::PointerToPolymorhic)
         {
-            auto classMeta = (IClassMeta*)type->GetPointeeType();
+            auto pointeeType = (IClassMeta*)type->GetRunTimePointeeType(object);
+
+
+            auto name = pointeeType->name;
+
+            //auto classMeta = (IClassMeta*)type->GetPointeeType();
 
         }
 

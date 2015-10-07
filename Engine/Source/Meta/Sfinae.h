@@ -54,6 +54,7 @@ struct is
     enum { DeepPointer = is_deep_pointer<T>::value };
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
+    enum { Polymorphic = std::is_polymorphic<T>::value };
     enum { List = is_list<T>::value };
     enum { Map = is_map<T>::value };
 
@@ -65,8 +66,8 @@ struct is
 
     enum { Void = std::is_same<T, void>::value };
     enum { PointerToVoid = std::is_same<T, void*>::value };
-    enum { PointerToPolymorhic = std::is_polymorphic<typename std::remove_pointer<T>::type>::value };
-    enum { PointerToAbstract = std::is_abstract<typename std::remove_pointer<T>::type>::value };
+    enum { PointerToPolymorhic = RealPointer && std::is_polymorphic<typename std::remove_pointer<T>::type>::value };
+    enum { PointerToAbstract = RealPointer && std::is_abstract<typename std::remove_pointer<T>::type>::value };
     enum { AllowDereferencing = (RealPointer && !PointerToAbstract && !PointerToVoid) || DeepPointer };
 };
 
