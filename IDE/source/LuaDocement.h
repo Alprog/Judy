@@ -3,7 +3,7 @@
 
 #include "Document.h"
 
-class LuaDocument : public DocumentM
+class LuaDocument : public IDocument
 {
 public:
     LuaDocument::LuaDocument(Path documentPath);

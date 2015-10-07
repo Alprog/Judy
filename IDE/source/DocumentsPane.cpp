@@ -51,7 +51,7 @@ void DocumentsPane::OpenAtLine(Path path, int line)
     GetCurrentDocument()->GoToLine(line);
 }
 
-DocumentM* DocumentsPane::GetDocument(Path path)
+IDocument* DocumentsPane::GetDocument(Path path)
 {
 #if WIN
     const bool caseSensitive = false;
@@ -69,14 +69,14 @@ DocumentM* DocumentsPane::GetDocument(Path path)
     return nullptr;
 }
 
-DocumentM* DocumentsPane::GetDocument(int index)
+IDocument* DocumentsPane::GetDocument(int index)
 {
-    return (DocumentM*)widget(index);
+    return (IDocument*)widget(index);
 }
 
-DocumentM* DocumentsPane::GetCurrentDocument()
+IDocument* DocumentsPane::GetCurrentDocument()
 {
-    return (DocumentM*)widget(currentIndex());
+    return (IDocument*)widget(currentIndex());
 }
 
 void DocumentsPane::SaveCurrentDocument()
@@ -91,7 +91,7 @@ void DocumentsPane::UpdateTabNames()
 {
     for (int i = 0; i < count(); i++)
     {
-        auto document = (DocumentM*)widget(i);
+        auto document = (IDocument*)widget(i);
         auto name = document->GetTabName();
         this->setTabText(i, name.c_str());
     }
@@ -104,7 +104,7 @@ void DocumentsPane::CheckOutsideModification()
 
     for (int i = 0; i < count(); i++)
     {
-        auto document = (DocumentM*)widget(i);
+        auto document = (IDocument*)widget(i);
         if (document->IsModifiedOutside())
         {
             if (!toAll)
@@ -127,7 +127,7 @@ void DocumentsPane::CheckOutsideModification()
     }
 }
 
-int DocumentsPane::ReloadDocumentMessageBox(DocumentM* document)
+int DocumentsPane::ReloadDocumentMessageBox(IDocument* document)
 {
     QMessageBox msgBox;
     msgBox.setText(document->GetName().c_str());

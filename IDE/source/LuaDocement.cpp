@@ -3,7 +3,7 @@
 #include "TextEditor.h"
 
 LuaDocument::LuaDocument(Path documentPath)
-    : DocumentM{documentPath}
+    : IDocument{documentPath}
 {
 }
 

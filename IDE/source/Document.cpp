@@ -10,7 +10,7 @@
 #include "IDE.h"
 #include "Utils.h"
 
-DocumentM::DocumentM(Path documentPath)
+IDocument::IDocument(Path documentPath)
 {
     this->documentPath = documentPath;
 
@@ -40,7 +40,7 @@ DocumentM::DocumentM(Path documentPath)
     editor->updateActiveLine();
 }
 
-void DocumentM::Reload()
+void IDocument::Reload()
 {
     QFile file(documentPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -55,33 +55,33 @@ void DocumentM::Reload()
     }
 }
 
-void DocumentM::IgnoreOutsideModification()
+void IDocument::IgnoreOutsideModification()
 {
     modifiedTime = GetLastModifiedTime();
 }
 
-bool DocumentM::IsModifiedOutside()
+bool IDocument::IsModifiedOutside()
 {
     return modifiedTime < GetLastModifiedTime();
 }
 
-QDateTime DocumentM::GetLastModifiedTime()
+QDateTime IDocument::GetLastModifiedTime()
 {
     QFileInfo info(documentPath.c_str());
     return info.lastModified();
 }
 
-std::string DocumentM::GetTabName()
+std::string IDocument::GetTabName()
 {
     return HaveChanges() ? GetName() + "*" : GetName();
 }
 
-void DocumentM::CloseTab(int index)
+void IDocument::CloseTab(int index)
 {
 
 }
 
-void DocumentM::Save()
+void IDocument::Save()
 {
     QFile file(documentPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
@@ -98,17 +98,17 @@ void DocumentM::Save()
     this->OnModified();
 }
 
-bool DocumentM::HaveChanges()
+bool IDocument::HaveChanges()
 {
     return editor->modify();
 }
 
-void DocumentM::OnModified()
+void IDocument::OnModified()
 {
     this->Modified();
 }
 
-void DocumentM::GoToLine(int line)
+void IDocument::GoToLine(int line)
 {
     editor->gotoLine(line - 1);
     editor->setFocus(true);

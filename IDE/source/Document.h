@@ -8,12 +8,12 @@
 
 class TextEditor;
 
-class DocumentM : public QWidget
+class IDocument : public QWidget
 {
     Q_OBJECT
 
 public:
-    DocumentM(Path documentPath);
+    IDocument(Path documentPath);
 
     Path GetPath() { return documentPath; }
     std::string GetName() { return documentPath.GetName(); }
