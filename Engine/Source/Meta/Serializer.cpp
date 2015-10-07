@@ -211,6 +211,55 @@ Any Serializer::DeserializeUnknownTable()
     return Any::empty;
 }
 
+Any Serializer::Deserialize(ITypeMeta* type)
+{
+    auto flags = type->getFlags();
+    if (flags & ITypeMeta::Pointer)
+    {
+        lua_pushinteger(L, 1);
+        lua_gettable(L, -2);
+
+        Any value;
+        if (flags & ITypeMeta::PointerToPolymorhic)
+        {
+            value = DeserializeUnknownTable();
+        }
+        else
+        {
+            value = Deserialize(type->GetPointeeType());
+        }
+
+        auto pointer = type->MakePointer(value);
+        value.Detach(); // prevent destroy (keep data at heap)
+        lua_pop(L, 1);
+        return pointer;
+    }
+    else if (type == TypeMetaOf<std::string>())
+    {
+        return std::string( lua_tostring(L, -1) );
+    }
+    else if (flags & ITypeMeta::List)
+    {
+        auto classMeta = static_cast<IClassMeta*>(type);
+        return classMeta->functions["deserialize"]->Invoke(this);
+    }
+    else if (flags & ITypeMeta::Class)
+    {
+        auto classMeta = static_cast<IClassMeta*>(type);
+        return DeserializeAsClass(classMeta);
+    }
+    else if (type == TypeMetaOf<int>())
+    {
+        return lua_tointeger(L, -1);
+    }
+    else if (type == TypeMetaOf<float>())
+    {
+        return (float)lua_tonumber(L, -1);
+    }
+
+    return Any::empty;
+}
+
 Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 {
     auto serializeConstructor = FindSerializeConstructor(classMeta);
@@ -246,43 +295,4 @@ void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
             DeserializeClassFields(object, (IClassMeta*)baseType);
         }
     }
-}
-
-Any Serializer::Deserialize(ITypeMeta* type)
-{
-    auto flags = type->getFlags();
-    if (flags & ITypeMeta::Pointer)
-    {
-        lua_pushinteger(L, 1);
-        lua_gettable(L, -2);
-        Any value = Deserialize(type->GetPointeeType());
-        auto pointer = type->MakePointer(value);
-        value.Detach(); // prevent destroy (keep data at heap)
-        lua_pop(L, 1);
-        return pointer;
-    }
-    else if (type == TypeMetaOf<std::string>())
-    {
-        return std::string( lua_tostring(L, -1) );
-    }
-    else if (flags & ITypeMeta::List)
-    {
-        auto classMeta = static_cast<IClassMeta*>(type);
-        return classMeta->functions["deserialize"]->Invoke(this);
-    }
-    else if (flags & ITypeMeta::Class)
-    {
-        auto classMeta = static_cast<IClassMeta*>(type);
-        return DeserializeAsClass(classMeta);
-    }
-    else if (type == TypeMetaOf<int>())
-    {
-        return lua_tointeger(L, -1);
-    }
-    else if (type == TypeMetaOf<float>())
-    {
-        return (float)lua_tonumber(L, -1);
-    }
-
-    return Any::empty;
 }
