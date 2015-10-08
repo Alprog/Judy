@@ -8,10 +8,12 @@ class CodeEditor;
 class LuaDocument : public IDocument
 {
 public:
-    LuaDocument::LuaDocument(Path documentPath);
+    LuaDocument(Path documentPath);
+
+    virtual DocumentType GetType() const override;
 
     virtual void Save() override;
-    virtual bool Changed() override;
+    virtual bool Changed() const override;
     void GoToLine(int line);
 
 private:

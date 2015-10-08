@@ -1,16 +1,33 @@
 
 #include "SceneDocument.h"
+#include "IDE.h"
 
-void SetBinaryData(QByteArray data)
+SceneDocument::SceneDocument(Path path)
+    : IDocument{path}
 {
+    Reload();
+}
+
+DocumentType SceneDocument::GetType() const
+{
+    return DocumentType::Scene;
+}
+
+void SceneDocument::SetBinaryData(QByteArray data)
+{  
+    auto text = data.toStdString();
+    auto& serializer = IDE::Instance()->serializer;
+    scene = serializer.Deserialize<Node*>(text);
 }
 
 QByteArray SceneDocument::GetBinaryData()
 {
-    return QByteArray();
+    auto& serializer = IDE::Instance()->serializer;
+    auto text = serializer.Serialize(scene);
+    return QByteArray::fromStdString(text);
 }
 
-bool SceneDocument::Changed()
+bool SceneDocument::Changed() const
 {
     return false;
 }

@@ -173,6 +173,20 @@ std::string Path::GetName() const
     }
 }
 
+std::string Path::GetExtension() const
+{
+    auto name = GetName();
+    auto index = name.find_last_of(".");
+    if (index == std::string::npos)
+    {
+        return name;
+    }
+    else
+    {
+        return name.substr(index + 1);
+    }
+}
+
 bool Path::IsAbsolute() const
 {
     return IsAbsolute(canonicalPath);

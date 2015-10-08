@@ -25,6 +25,7 @@ public:
     void CheckOutsideModification();
 
 private:
+    static IDocument* CreateDocument(Path absolutePath);
     int ReloadDocumentMessageBox(IDocument* document);
 
 private slots:

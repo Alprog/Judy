@@ -35,6 +35,11 @@ LuaDocument::LuaDocument(Path documentPath)
     editor->updateActiveLine();
 }
 
+DocumentType LuaDocument::GetType() const
+{
+    return DocumentType::Lua;
+}
+
 void LuaDocument::SetBinaryData(QByteArray data)
 {
     editor->setText(data.constData());
@@ -47,7 +52,7 @@ QByteArray LuaDocument::GetBinaryData()
     return editor->getText(length + 1);
 }
 
-bool LuaDocument::Changed()
+bool LuaDocument::Changed() const
 {
     return editor->modify();
 }

@@ -22,7 +22,8 @@ HEADERS += \
     Source/IDE.h \
     Source/LuaDocement.h \
     Source/SceneDocument.h \
-    Source/CodeEditor.h
+    Source/CodeEditor.h \
+    Source/DocumentType.h
 
 SOURCES += \
     Source/MainWindow.cpp \

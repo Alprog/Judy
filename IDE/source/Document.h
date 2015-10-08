@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QDateTime>
 #include "Path.h"
+#include "DocumentType.h"
 
 class IDocument : public QWidget
 {
@@ -12,6 +13,7 @@ class IDocument : public QWidget
 
 public:
     IDocument(Path documentPath);
+    virtual DocumentType GetType() const = 0;
 
     Path GetPath() { return documentPath; }
     std::string GetName() { return documentPath.GetName(); }
@@ -21,7 +23,7 @@ public:
     void IgnoreOutsideModification();
 
     virtual void Save();
-    virtual bool Changed() = 0;
+    virtual bool Changed() const = 0;
 
     void Reload();
 
