@@ -8,6 +8,7 @@
 #include "MainWindow.h"
 #include "Meta/Serializer.h"
 #include "LuaMachine/CallInfo.h"
+#include "Renderer.h"
 
 class IDE : public QApplication
 {
@@ -22,6 +23,7 @@ public:
     void SaveSettings();
     MainWindow* GetMainWindow();
     void FollowToCall(CallInfo callInfo);
+    Renderer* GetRenderer() const;
 
 private:
     std::string GetSettingsFilename();
