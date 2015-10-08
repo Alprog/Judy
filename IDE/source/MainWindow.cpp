@@ -9,7 +9,7 @@
 #include <QEvent>
 #include "OutputPane.h"
 #include "StackPane.h"
-#include "InspectorPane.h"
+#include "Inspector/InspectorPane.h"
 
 #include "RemotePlayer.h"
 
