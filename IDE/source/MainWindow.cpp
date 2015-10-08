@@ -9,6 +9,7 @@
 #include <QEvent>
 #include "OutputPane.h"
 #include "StackPane.h"
+#include "InspectorPane.h"
 
 #include "RemotePlayer.h"
 
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     addDockWidget(Qt::BottomDockWidgetArea, new OutputPane());
     addDockWidget(Qt::RightDockWidgetArea, new StackPane());
+    addDockWidget(Qt::LeftDockWidgetArea, new InspectorPane());
 
     documents = new DocumentsPane;
     setCentralWidget(documents);
