@@ -7,5 +7,6 @@ local b = Node.new1(4)
 a:AddChild(b)
 local count = a:ChildCount()
 print(count)]]
+
 
 app:StartMainLoop()

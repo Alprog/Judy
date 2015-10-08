@@ -1,5 +1,5 @@
 
-#include "TextEditor.h"
+#include "CodeEditor.h"
 #include <QWidget>
 #include "LuaMachine/LuaMachine.h"
 #include <QMouseEvent>
@@ -34,7 +34,7 @@ enum Markers
     ActiveLine
 };
 
-TextEditor::TextEditor(QWidget* parent)
+CodeEditor::CodeEditor(QWidget* parent)
     : ScintillaEdit(parent)
     , mouseTime{0}
     , mousePoint{0, 0}
@@ -42,12 +42,12 @@ TextEditor::TextEditor(QWidget* parent)
     init();
 }
 
-void TextEditor::setSource(std::string source)
+void CodeEditor::setSource(std::string source)
 {
     this->source = source;
 }
 
-void TextEditor::init()
+void CodeEditor::init()
 {
     setTabWidth(4);
 
@@ -159,7 +159,7 @@ void TextEditor::init()
     connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(updateActiveLine()));
 }
 
-void TextEditor::tick()
+void CodeEditor::tick()
 {
     if (this->isVisible())
     {
@@ -189,7 +189,7 @@ void TextEditor::tick()
     }
 }
 
-void TextEditor::updateActiveLine()
+void CodeEditor::updateActiveLine()
 {
     markerDeleteAll(ActiveLine);
 
@@ -200,7 +200,7 @@ void TextEditor::updateActiveLine()
     }
 }
 
-void TextEditor::onLinesAdded(int arg)
+void CodeEditor::onLinesAdded(int arg)
 {
     for (int i = 0; i < lineCount(); i++)
     {
@@ -209,7 +209,7 @@ void TextEditor::onLinesAdded(int arg)
     pushBreakpoints();
 }
 
-void TextEditor::onDwellStart(int x, int y)
+void CodeEditor::onDwellStart(int x, int y)
 {
     return; // disable function
 
@@ -224,12 +224,12 @@ void TextEditor::onDwellStart(int x, int y)
     }
 }
 
-void TextEditor::onDwellEnd(int x, int y)
+void CodeEditor::onDwellEnd(int x, int y)
 {
     callTipCancel();
 }
 
-void TextEditor::pullBreakpoints()
+void CodeEditor::pullBreakpoints()
 {
     markerDeleteAll(Breakpoint);
 
@@ -240,7 +240,7 @@ void TextEditor::pullBreakpoints()
     }
 }
 
-void TextEditor::pushBreakpoints()
+void CodeEditor::pushBreakpoints()
 {
     Set<int> lines;
 
@@ -256,7 +256,7 @@ void TextEditor::pushBreakpoints()
     RemotePlayer::Instance()->SetBreakpoints(source, lines);
 }
 
-void TextEditor::onMarginClicked(int position, int modifiers, int margin)
+void CodeEditor::onMarginClicked(int position, int modifiers, int margin)
 {
     auto line = lineFromPosition(position);
     if (markerGet(line) & (1 << Breakpoint))

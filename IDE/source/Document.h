@@ -5,42 +5,40 @@
 #include <QWidget>
 #include <QDateTime>
 #include "Path.h"
+#include "DocumentType.h"
 
-class TextEditor;
-
-class DocumentM : public QWidget
+class IDocument : public QWidget
 {
     Q_OBJECT
 
 public:
-    DocumentM(Path documentPath);
+    IDocument(Path documentPath);
+    virtual DocumentType GetType() const = 0;
 
     Path GetPath() { return documentPath; }
     std::string GetName() { return documentPath.GetName(); }
-
-    void GoToLine(int line);
     std::string GetTabName();
 
     bool IsModifiedOutside();
     void IgnoreOutsideModification();
 
-    void Save();
-    bool HaveChanges();
+    virtual void Save();
+    virtual bool Changed() const = 0;
 
     void Reload();
 
 private:
     QDateTime GetLastModifiedTime();
-
-    Path documentPath;
-    QDateTime modifiedTime;
-
-    TextEditor* editor;
+    virtual void SetBinaryData(QByteArray data) = 0;
+    virtual QByteArray GetBinaryData() = 0;
 
 private slots:
     void OnModified();
-    void CloseTab(int index);
 
 signals:
     void Modified();
+
+protected:
+    Path documentPath;
+    QDateTime modifiedTime;
 };

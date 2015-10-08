@@ -23,8 +23,8 @@ WindowM::WindowM()
     auto c1 = new Model();
     auto c2 = new Model();
 
-//    auto quad = new Quad();
-//    quad->Size = Vector2(0.3f, 0.3f);
+//auto quad = new Quad();
+//quad->Size = Vector2(0.3f, 0.3f);
 
     scene = model;
     scene->transform.setScaling(Vector3::One * 0.3f);

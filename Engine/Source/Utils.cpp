@@ -64,21 +64,21 @@ std::string GetReplaced(std::string string, std::string oldValue, std::string ne
     return string;
 }
 
-void ToLower(std::string& string)
+std::string LowerCase(std::string string)
 {
     std::transform(std::begin(string), std::end(string), std::begin(string), tolower);
+    return string;
 }
 
-void ToUpper(std::string& string)
+std::string UpperCase(std::string string)
 {
     std::transform(std::begin(string), std::end(string), std::begin(string), toupper);
+    return string;
 }
 
-bool CaseInsensitiveCompare(std::string string1, std::string string2)
+bool CaseInsensitiveCompare(const std::string& string1, const std::string& string2)
 {
-    ToLower(string1);
-    ToLower(string2);
-    return string1 == string2;
+    return LowerCase(string1) == LowerCase(string2);
 }
 
 bool StartsWith(const std::string& string, const std::string& pattern)

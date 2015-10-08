@@ -1,0 +1,73 @@
+{{
+    class = 'Model',
+    name = 'Scene',
+    childs = {
+        {{
+            class = 'Model',
+            name = 'child1',
+            childs = {},
+            transform = {
+                class = 'Transform',
+                translation = {
+                    2.0,
+                    0.0,
+                    0.0
+                },
+                rotation = {
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                scaling = {
+                    0.30000001192093,
+                    0.30000001192093,
+                    0.30000001192093
+                }
+            }
+        }},
+        {{
+            class = 'Model',
+            name = 'child2',
+            childs = {},
+            transform = {
+                class = 'Transform',
+                translation = {
+                    -2.0,
+                    0.0,
+                    0.0
+                },
+                rotation = {
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                scaling = {
+                    0.40000000596046,
+                    0.40000000596046,
+                    0.40000000596046
+                }
+            }
+        }}
+    },
+    transform = {
+        class = 'Transform',
+        translation = {
+            0.0,
+            0.0,
+            0.0
+        },
+        rotation = {
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        },
+        scaling = {
+            0.30000001192093,
+            0.30000001192093,
+            0.30000001192093
+        }
+    }
+}}

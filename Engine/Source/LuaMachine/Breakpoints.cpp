@@ -27,14 +27,14 @@ bool Breakpoints::IsAnySet(int line)
 
 bool Breakpoints::IsSet(std::string fileName, int line)
 {
-    if (!caseSensitive) ToLower(fileName);
+    if (!caseSensitive) fileName = LowerCase(fileName);
     auto& set = map[fileName];
     return set.find(line) != std::end(set);
 }
 
 bool Breakpoints::Clear(std::string fileName)
 {
-    if (!caseSensitive) ToLower(fileName);
+    if (!caseSensitive) fileName = LowerCase(fileName);
 
     auto exist = map.find(fileName) != std::end(map);
     if (exist)
@@ -48,7 +48,7 @@ bool Breakpoints::Clear(std::string fileName)
 
 Set<int> Breakpoints::GetLines(std::string fileName)
 {
-    if (!caseSensitive) ToLower(fileName);
+    if (!caseSensitive) fileName = LowerCase(fileName);
 
     auto exist = map.find(fileName) != std::end(map);
     if (exist)
@@ -63,7 +63,7 @@ Set<int> Breakpoints::GetLines(std::string fileName)
 
 bool Breakpoints::SetLines(std::string fileName, Set<int> lines)
 {
-    if (!caseSensitive) ToLower(fileName);
+    if (!caseSensitive) fileName = LowerCase(fileName);
 
     if (lines.size() == 0)
     {

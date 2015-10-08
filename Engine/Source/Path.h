@@ -24,6 +24,7 @@ public:
     Path& operator+=(const Path& rhs);
 
     std::string GetName() const;
+    std::string GetExtension() const;
 
     bool IsEmpty() const;
     bool IsAbsolute() const;
@@ -62,7 +63,6 @@ public:
     }
 
 private:
-
     static void FixSlashes(std::string& pathString);
     static void ApplyDots(std::string& pathString);
 

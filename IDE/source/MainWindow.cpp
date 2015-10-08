@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget* parent)
     this->setDockNestingEnabled(true);
 
     addDockWidget(Qt::BottomDockWidgetArea, new OutputPane());
-    addDockWidget(Qt::LeftDockWidgetArea, new StackPane());
+    addDockWidget(Qt::RightDockWidgetArea, new StackPane());
 
     documents = new DocumentsPane;
     setCentralWidget(documents);
