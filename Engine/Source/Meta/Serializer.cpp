@@ -116,17 +116,18 @@ void Serializer::SerializeAsClass(Any& object, IClassMeta* classMeta)
     lua_pushstring(L, name.c_str());
     lua_setfield(L, -2, "class");
 
-    SerializeClassFields(object, classMeta);
+    auto pointer = classMeta->MakePointer(object);
+    SerializeClassFields(pointer, classMeta);
 }
 
-void Serializer::SerializeClassFields(Any& object, IClassMeta* classMeta)
+void Serializer::SerializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
         if (fieldMeta->hasAttribute("Serialize"))
         {
-            Any value = fieldMeta->get_local(object);
+            Any value = fieldMeta->get(pointer);
             auto fieldType = fieldMeta->GetType();
             Serialize(value, fieldType);
             lua_setfield(L, -2, fieldMeta->name.c_str());
@@ -136,7 +137,7 @@ void Serializer::SerializeClassFields(Any& object, IClassMeta* classMeta)
     {
         if (baseType->isClass())
         {
-            SerializeClassFields(object, (IClassMeta*)baseType);
+            SerializeClassFields(pointer, (IClassMeta*)baseType);
         }
     }
 }
@@ -271,11 +272,12 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
     }
 
     auto object = classMeta->CreateOnStack();
-    DeserializeClassFields(object, classMeta);
+    auto pointer = classMeta->MakePointer(object);
+    DeserializeClassFields(pointer, classMeta);
     return object;
 }
 
-void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
+void Serializer::DeserializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
     for (auto& pair : classMeta->fields)
     {
@@ -284,7 +286,7 @@ void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
         {
             lua_getfield(L, -1, fieldMeta->name.c_str());
             Any value = Deserialize(fieldMeta->GetType());
-            fieldMeta->set_local(object, value);
+            fieldMeta->set(pointer, value);
             lua_pop(L, 1);
         }
     }
@@ -292,7 +294,7 @@ void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
     {
         if (baseType->isClass())
         {
-            DeserializeClassFields(object, (IClassMeta*)baseType);
+            DeserializeClassFields(pointer, (IClassMeta*)baseType);
         }
     }
 }
