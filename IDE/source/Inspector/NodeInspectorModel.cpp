@@ -15,15 +15,15 @@ enum ColumnType
 
 NodeInspectorModel::NodeInspectorModel(Node* node)
     : node{node}
-    , properties{nullptr}
+    , fields{nullptr}
 {
     auto index = std::type_index(typeid(*node));
     auto typeMeta = Meta::Instance()->Find(index);
-    properties = GetProperties(typeMeta);
+    fields = GetFields(typeMeta);
 
 }
 
-List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
+List<IFieldMeta*>* NodeInspectorModel::GetFields(ITypeMeta* typeMeta)
 {
     static Map<ITypeMeta*, List<IFieldMeta*>> cache;
 
@@ -33,48 +33,34 @@ List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
         return &it->second;
     }
 
-    auto& properties = cache[typeMeta] = List<IFieldMeta*>(); // cache list
+    auto& list = cache[typeMeta] = List<IFieldMeta*>(); // cache list
 
     if (typeMeta->isClass())
     {
         auto classMeta = static_cast<IClassMeta*>(typeMeta);
 
-        // base properties
+        // base fields
         for (auto& baseMeta : classMeta->baseTypes)
         {
-            for (auto& property : GetProperties(baseMeta))
+            for (auto& field : GetFields(baseMeta))
             {
-                properties.push_back(property);
+                list.push_back(field);
             }
         }
 
-        // properties
-        for (auto& pair : classMeta->properties)
+        auto fields = classMeta->GetFieldsWithAttribute("Inspect", true);
+        for (auto& field : fields)
         {
-            auto fieldInfo = pair.second;
-            if (fieldInfo->HasAttribute("Inspect"))
-            {
-                properties.push_back(fieldInfo);
-            }
-        }
-
-        // fields
-        for (auto& pair : classMeta->fields)
-        {
-            auto fieldInfo = pair.second;
-            if (fieldInfo->HasAttribute("Inspect"))
-            {
-                properties.push_back(fieldInfo);
-            }
+            list.push_back(field);
         }
     }
 
-    return &properties;
+    return &list;
 }
 
 int NodeInspectorModel::rowCount(const QModelIndex &parent) const
 {
-    return properties ? properties->size() : 0;
+    return fields ? fields->size() : 0;
 }
 
 int NodeInspectorModel::columnCount(const QModelIndex &parent) const
@@ -88,11 +74,11 @@ QVariant NodeInspectorModel::data(const QModelIndex &index, int role) const
     auto col = index.column();
 
 
-    if (row < 0 || row >= properties->size()) { return QVariant(); }
+    if (row < 0 || row >= fields->size()) { return QVariant(); }
 
     if (col == ColumnType::Name)
     {
-        auto name = properties->at(row)->name;
+        auto name = fields->at(row)->name;
         return QString::fromStdString(name);
     }
     else if (col == ColumnType::Value)

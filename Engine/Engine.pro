@@ -92,7 +92,8 @@ SOURCES += \
     Source/Material.cpp \
     Source/Model.cpp \
     Source/Meta/IMemberMeta.cpp \
-    Source/Meta/PropertyMeta.cpp
+    Source/Meta/PropertyMeta.cpp \
+    Source/Meta/IClassMeta.cpp
 
 win {
     INCLUDEPATH += Source/Windows
