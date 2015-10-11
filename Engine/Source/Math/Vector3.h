@@ -23,5 +23,5 @@ struct _(Meta)__ Vector3
 
     friend Vector3 operator*(const Vector3& vector, const float& value);
 
-    float x, y, z;
+    _(Bind)__ float x, y, z;
 };

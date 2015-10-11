@@ -17,7 +17,7 @@ public:
     virtual void Update(double delta) override;
     virtual void Render(Matrix matrix, Renderer* renderer) override;
 
-    _(Serialize)__ Vector2 Size;
-    _(Serialize)__ std::string Shader;
-    _(Serialize)__ std::string Texture;
+    _(Serialize, Inspect)__ Vector2 Size;
+    _(Serialize, Inspect)__ std::string Shader;
+    _(Serialize, Inspect)__ std::string Texture;
 };

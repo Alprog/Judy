@@ -50,7 +50,11 @@ List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
         // fields
         for (auto& pair : classMeta->fields)
         {
-            properties.push_back(pair.second);
+            auto fieldInfo = pair.second;
+            if (fieldInfo->hasAttribute("Inspect"))
+            {
+                properties.push_back(fieldInfo);
+            }
         }
     }
 

@@ -13,10 +13,10 @@ struct _(Meta)__ Model : public Node
     Model();
 
     virtual void Update(double delta) override;
-    virtual void Render(Matrix matrix,Renderer* renderer) override;
+    virtual void Render(Matrix matrix, Renderer* renderer) override;
 
     Mesh* mesh;
     Material* material;
 
-    _(Serialize)__ std::string name;
+    _(Serialize, Inspect)__ std::string name;
 };

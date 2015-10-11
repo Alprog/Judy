@@ -16,5 +16,5 @@ public:
 
     static Quaternion YawPitchRoll(float yaw, float pitch, float roll);
 
-    float x, y, z, w;
+    _(Bind)__ float x, y, z, w;
 };

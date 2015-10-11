@@ -29,9 +29,9 @@ public:
     virtual void Update(double delta);
     virtual void Render(Matrix matrix, Renderer* renderer);
 
-    _(Serialize)__ Transform transform;
+    _(Serialize, Inspect)__ Transform transform;
 
 private:
     Node* parent;
-    _(Serialize)__ List<Node*> childs;
+    _(Serialize, Inspect)__ List<Node*> childs;
 };
