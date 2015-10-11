@@ -6,7 +6,7 @@
 #include <string>
 
 class Any;
-class IFieldMeta;
+class IPropertyMeta;
 class IFunctionMeta;
 class IConstructorMeta;
 
@@ -37,16 +37,4 @@ public:
 
     virtual Any Dereference(Any& object) = 0;
     virtual Any MakePointer(Any& object) = 0;
-};
-
-class IClassMeta : public ITypeMeta
-{
-public:
-    std::vector<ITypeMeta*> templateArguments;
-    std::vector<ITypeMeta*> baseTypes;
-
-    std::vector<IConstructorMeta*> constructors;
-    std::map<std::string, IFieldMeta*> fields;
-    std::map<std::string, IFunctionMeta*> methods;
-    std::map<std::string, IFunctionMeta*> functions;
 };

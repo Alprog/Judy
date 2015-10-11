@@ -34,7 +34,12 @@ HEADERS += \
     Source/Containers/Map.h \
     Source/Containers/Set.h \
     Source/Attributes.h \
-    Source/Meta/PropertyMeta.h
+    Source/Meta/PropertyMeta.h \
+    Source/Meta/IFunctionMeta.h \
+    Source/Meta/IPropertyMeta.h \
+    Source/Meta/IndexSequence.h \
+    Source/Meta/IConstructorMeta.h \
+    Source/Meta/IClassMeta.h
 
 SOURCES += \
     Source/App.cpp \
@@ -61,7 +66,6 @@ SOURCES += \
     Source/Meta/FunctionMeta.cpp \
     Source/Meta/ITypeMeta.cpp \
     Source/Meta/AnyData.cpp \
-    Source/Meta/NewMeta.cpp \
     Source/Singleton.cpp \
     Source/Pipe.cpp \
     Source/LuaMachine/Breakpoints.cpp \

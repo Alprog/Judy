@@ -80,10 +80,10 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
 
 int GetterInvoker(lua_State* L)
 {
-    auto field = *(IFieldMeta**)lua_touserdata(L, lua_upvalueindex(1));
+    auto field = *(IPropertyMeta**)lua_touserdata(L, lua_upvalueindex(1));
     void* object = *(void**)lua_touserdata(L, 1);
-    Any result = field->get(object);
-    ProcessResult(L, result, field->GetType());
+    //Any result = field->get(object);
+    //ProcessResult(L, result, field->GetType());
     return 1;
 }
 
@@ -165,7 +165,7 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 
 //        for (auto field : type->fields)
 //        {
-//            *(IFieldMeta**)lua_newuserdata(L, size) = field;
+//            *(IPropertyMeta**)lua_newuserdata(L, size) = field;
 
 //        }
 

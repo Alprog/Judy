@@ -10,5 +10,5 @@ public:
     std::string name;
     std::unordered_set<std::string> attributes;
 
-    bool hasAttribute(std::string name);
+    bool HasAttribute(std::string name);
 };

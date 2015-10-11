@@ -1,24 +1,13 @@
 
 #pragma once
 
-#include "IMemberMeta.h"
 #include "Any.h"
-#include "Serializer.h"
-#include "Meta.h"
+#include "IPropertyMeta.h"
 
-class Serializer;
 class ITypeMeta;
 
-class IFieldMeta : public IMemberMeta
-{
-public:
-    virtual void set(Any& object, Any& value) = 0;
-    virtual Any get(Any& object) = 0;
-    virtual ITypeMeta* const GetType() = 0;
-};
-
 template <typename ClassType, typename FieldType>
-class FieldMeta : public IFieldMeta
+class FieldMeta : public IPropertyMeta
 {
 public:
     virtual ITypeMeta* const GetType() override
@@ -32,12 +21,12 @@ public:
         this->pointer = pointer;
     }
 
-    virtual void set(Any& object, Any& value) override
+    virtual void Set(Any& object, Any& value) override
     {
         object.as<ClassType*>()->*pointer = value.as<FieldType>();
     }
 
-    virtual Any get(Any& object) override
+    virtual Any Get(Any& object) override
     {
         return object.as<ClassType*>()->*pointer;
     }

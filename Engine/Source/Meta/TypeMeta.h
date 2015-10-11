@@ -5,6 +5,7 @@
 #include <type_traits>
 
 #include "ITypeMeta.h"
+#include "IClassMeta.h"
 #include "Any.h"
 #include "Singleton.h"
 #include "DeepPointer.h"

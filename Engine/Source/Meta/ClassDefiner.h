@@ -92,6 +92,7 @@ public:
     ClassDefiner& property(std::string name)
     {
         auto property = new PropertyMeta(name);
+        classMeta->properties[name] = property;
         lastMember = property;
         lastProperty = property;
         return *this;

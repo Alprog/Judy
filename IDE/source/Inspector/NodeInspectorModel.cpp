@@ -22,9 +22,9 @@ NodeInspectorModel::NodeInspectorModel(Node* node)
 
 }
 
-List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
+List<IPropertyMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
 {
-    static Map<ITypeMeta*, List<IFieldMeta*>> cache;
+    static Map<ITypeMeta*, List<IPropertyMeta*>> cache;
 
     auto it = cache.find(typeMeta);
     if (it != std::end(cache))
@@ -32,7 +32,7 @@ List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
         return &it->second;
     }
 
-    auto& properties = cache[typeMeta] = List<IFieldMeta*>(); // cache list
+    auto& properties = cache[typeMeta] = List<IPropertyMeta*>(); // cache list
 
     if (typeMeta->isClass())
     {
@@ -51,7 +51,7 @@ List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
         for (auto& pair : classMeta->fields)
         {
             auto fieldInfo = pair.second;
-            if (fieldInfo->hasAttribute("Inspect"))
+            if (fieldInfo->HasAttribute("Inspect"))
             {
                 properties.push_back(fieldInfo);
             }

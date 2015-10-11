@@ -6,6 +6,7 @@
 
 class lua_State;
 class ITypeMeta;
+class IClassMeta;
 
 class Serializer
 {

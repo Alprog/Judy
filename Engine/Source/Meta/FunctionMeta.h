@@ -6,23 +6,7 @@
 #include "Meta.h"
 #include "Any.h"
 #include <unordered_set>
-
-class IFunctionMeta : public IMemberMeta
-{
-public:
-    virtual ITypeMeta* GetReturnType() = 0;
-    virtual size_t GetArgCount() = 0;
-    virtual std::vector<ITypeMeta*> GetArgTypes() = 0;
-
-    virtual Any Invoke(std::vector<Any>& args) = 0;
-
-    template <typename... ArgTypes>
-    inline Any Invoke(ArgTypes... args)
-    {
-        std::vector<Any> vector{args...};
-        return Invoke(vector);
-    }
-};
+#include "IFunctionMeta.h"
 
 template <typename ReturnType, typename... ArgTypes>
 class FunctionMeta : public virtual IFunctionMeta
@@ -61,12 +45,3 @@ class FunctionMeta<ReturnType> : public virtual IFunctionMeta
         return {};
     }
 };
-
-template <size_t... I>
-struct index_sequence {};
-
-template <size_t N, size_t... I>
-struct make_index_sequence : public make_index_sequence<N - 1, N - 1, I...> {};
-
-template <size_t... I>
-struct make_index_sequence<0, I...> : public index_sequence<I...>{};

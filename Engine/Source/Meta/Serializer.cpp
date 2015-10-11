@@ -80,7 +80,7 @@ IFunctionMeta* FindSerializeMethod(IClassMeta* classMeta)
     for (auto& pair : classMeta->methods)
     {
         auto methodMeta = pair.second;
-        if (methodMeta->hasAttribute("Serialize"))
+        if (methodMeta->HasAttribute("Serialize"))
         {
             return methodMeta;
         }
@@ -92,7 +92,7 @@ IConstructorMeta* FindSerializeConstructor(IClassMeta* classMeta)
 {
     for (auto constructor : classMeta->constructors)
     {
-        if (constructor->hasAttribute("Serialize"))
+        if (constructor->HasAttribute("Serialize"))
         {
             return constructor;
         }
@@ -125,9 +125,9 @@ void Serializer::SerializeClassFields(Any& pointer, IClassMeta* classMeta)
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
-        if (fieldMeta->hasAttribute("Serialize"))
+        if (fieldMeta->HasAttribute("Serialize"))
         {
-            Any value = fieldMeta->get(pointer);
+            Any value = fieldMeta->Get(pointer);
             auto fieldType = fieldMeta->GetType();
             Serialize(value, fieldType);
             lua_setfield(L, -2, fieldMeta->name.c_str());
@@ -282,11 +282,11 @@ void Serializer::DeserializeClassFields(Any& pointer, IClassMeta* classMeta)
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
-        if (fieldMeta->hasAttribute("Serialize"))
+        if (fieldMeta->HasAttribute("Serialize"))
         {
             lua_getfield(L, -1, fieldMeta->name.c_str());
             Any value = Deserialize(fieldMeta->GetType());
-            fieldMeta->set(pointer, value);
+            fieldMeta->Set(pointer, value);
             lua_pop(L, 1);
         }
     }

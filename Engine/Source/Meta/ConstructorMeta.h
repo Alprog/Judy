@@ -1,17 +1,10 @@
 
 #pragma once
 
-#include "vector"
-#include "Any.h"
+#include "IConstructorMeta.h"
 #include "FunctionMeta.h"
+#include "IndexSequence.h"
 #include "Meta.h"
-
-class IConstructorMeta : public virtual IFunctionMeta
-{
-public:
-    virtual Any New(std::vector<Any>& args) = 0;
-    virtual ITypeMeta* GetNewType() = 0;
-};
 
 template <typename ClassType, typename... ArgTypes>
 class ConstructorMeta : public IConstructorMeta, public FunctionMeta<ClassType, ArgTypes...>
