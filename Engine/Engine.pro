@@ -32,7 +32,9 @@ HEADERS += \
     Source/Meta/IMemberMeta.h \
     Source/Lua.h \
     Source/Containers/Map.h \
-    Source/Containers/Set.h
+    Source/Containers/Set.h \
+    Source/Attributes.h \
+    Source/Meta/PropertyMeta.h
 
 SOURCES += \
     Source/App.cpp \
@@ -85,7 +87,8 @@ SOURCES += \
     Source/Mesh.cpp \
     Source/Material.cpp \
     Source/Model.cpp \
-    Source/Meta/IMemberMeta.cpp
+    Source/Meta/IMemberMeta.cpp \
+    Source/Meta/PropertyMeta.cpp
 
 win {
     INCLUDEPATH += Source/Windows

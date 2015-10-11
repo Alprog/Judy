@@ -4,12 +4,10 @@
 #include <vector>
 #include "Meta/Serializer.h"
 #include "Lua.h"
-
-#define __Meta__
-#define __Serialize__
+#include "Attributes.h"
 
 template <typename T>
-__Meta__ class List : public std::vector<T>
+class _(Meta)__ List : public std::vector<T>
 {
     friend class Meta;
     using base = std::vector<T>;

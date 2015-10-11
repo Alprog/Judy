@@ -19,6 +19,7 @@ struct Statement
     bool isClass() const;
     bool isUsing() const;
     bool isFunction() const;
+    bool isProperty() const;
     bool hasDefinition() const;
 
 private:

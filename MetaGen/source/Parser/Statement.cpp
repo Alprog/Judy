@@ -43,6 +43,11 @@ bool Statement::isClass() const
         || tokens.contains("union");
 }
 
+bool Statement::isProperty() const
+{
+    return tokens.contains("Property");
+}
+
 bool Statement::isUsing() const
 {
     return tokens.contains("using");

@@ -62,8 +62,8 @@ void CodeParser::removeDirectives(std::string& text)
 
 void CodeParser::fixAttributeSyntax(std::string& text)
 {
-    text = std::regex_replace(text, std::regex("__ "), "]] ");
-    text = std::regex_replace(text, std::regex("__"), "[[");
+    text = std::regex_replace(text, std::regex("_[(]"), "[[");
+    text = std::regex_replace(text, std::regex("[)]__"), "]]");
 }
 
 void CodeParser::parseClasses(Snippet* snippet, std::string headerName)
@@ -86,8 +86,11 @@ void CodeParser::parseClasses(Snippet* snippet, std::string headerName)
 
 void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnippet)
 {
-    for (Statement statement : definitionSnippet->getStatements())
+    auto statements = definitionSnippet->getStatements();
+    auto index = 0;
+    while (index < statements.size())
     {
+        auto& statement = statements[index++];
         auto& statementTokens = statement.getTokens();
         checkAcessModifiers(statementTokens);
 
@@ -102,6 +105,24 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
             {
                 classInfo.methods.push_back(methodInfo);
             }
+        }
+        else if (statement.isProperty())
+        {
+            PropertyInfo propertyInfo(statementTokens);
+            for (auto i = 0; i < 2; i++)
+            {
+                if (index < statements.size())
+                {
+                    auto& statement = statements[index++];
+                    auto& tokens = statement.getTokens();
+                    checkAcessModifiers(statementTokens);
+                    if (statement.isFunction())
+                    {
+                        propertyInfo.addMethod(tokens);
+                    }
+                }
+            }
+            classInfo.properties.push_back(propertyInfo);
         }
         else if (statement.isClass())
         {

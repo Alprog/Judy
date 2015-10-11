@@ -9,6 +9,7 @@
 #include "FieldInfo.h"
 #include "MemberInfo.h"
 #include "TypeInfo.h"
+#include "PropertyInfo.h"
 
 class TokenGroup;
 
@@ -23,6 +24,7 @@ struct ClassInfo : MemberInfo
     std::vector<MethodInfo> constructors;
     std::vector<MethodInfo> methods;
     std::vector<FieldInfo> fields;
+    std::vector<PropertyInfo> properties;
 
     AccessModifier getDefaultAccessModifier();
     bool isAbstract();

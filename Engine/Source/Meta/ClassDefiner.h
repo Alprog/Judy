@@ -7,6 +7,7 @@
 #include "MethodMeta.h"
 #include "ConstructorMeta.h"
 #include "CFunctionMeta.h"
+#include "PropertyMeta.h"
 
 template <typename ClassType>
 class ClassDefiner
@@ -14,6 +15,7 @@ class ClassDefiner
 public:
     IClassMeta* classMeta;
     IMemberMeta* lastMember;
+    PropertyMeta* lastProperty;
 
     ClassDefiner(Meta* meta, const char* name)
         : classMeta{TypeMeta<ClassType>::Instance()}
@@ -87,12 +89,33 @@ public:
         return *this;
     }
 
+    ClassDefiner& property(std::string name)
+    {
+        auto property = new PropertyMeta(name);
+        lastMember = property;
+        lastProperty = property;
+        return *this;
+    }
+
+    template <typename MethodType>
+    inline ClassDefiner& getter(std::string name, MethodType pointer)
+    {
+        method(name, pointer);
+        lastProperty->getter = static_cast<IFunctionMeta*>(lastMember);
+        return *this;
+    }
+
+    template <typename MethodType>
+    inline ClassDefiner& setter(std::string name, MethodType pointer)
+    {
+        method(name, pointer);
+        lastProperty->setter = static_cast<IFunctionMeta*>(lastMember);
+        return *this;
+    }
+
     ClassDefiner& attr(std::string attributeName)
     {
-        if (lastMember != nullptr)
-        {
-            lastMember->attributes.insert(attributeName);
-        }
+        lastMember->attributes.insert(attributeName);
         return *this;
     }
 };

@@ -2,19 +2,17 @@
 #pragma once
 
 #include "Containers/List.h"
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-struct __Meta__ Vector3
+struct _(Meta)__ Vector3
 {
     static const Vector3 Zero;
     static const Vector3 One;
 
     Vector3(float x = 0, float y = 0, float z = 0);
 
-    __Serialize__ Vector3(List<float> list);
-    __Serialize__ List<float> toList();
+    _(Serialize)__ Vector3(List<float> list);
+    _(Serialize)__ List<float> toList();
 
     float Length();
     float SquaredLength();
