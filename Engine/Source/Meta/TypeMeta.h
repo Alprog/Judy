@@ -77,10 +77,10 @@ public:
     virtual ITypeMeta::Flags getFlags() const override
     {
         const int flags =
-            (~is<ClassType>::Class + 1) & Flags::Class |
-            (~is<ClassType>::Pointer + 1) & Flags::Pointer |
-            (~is<ClassType>::PointerToPolymorhic + 1) & Flags::PointerToPolymorhic |
-            (~is<ClassType>::List + 1) & Flags::List
+            (~is<ClassType>::Class + 1) & Flags::IsClass |
+            (~is<ClassType>::Pointer + 1) & Flags::IsPointer |
+            (~is<ClassType>::PointerToPolymorhic + 1) & Flags::IsPointerToPolymorhic |
+            (~is<ClassType>::List + 1) & Flags::IsList
         ;
         return (Flags)flags;
     }

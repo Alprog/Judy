@@ -24,5 +24,5 @@ public:
     std::unordered_map<std::string, IFieldMeta*> fields;
     std::unordered_map<std::string, PropertyMeta*> properties;
 
-    ::List<IFieldMeta*> GetFieldsWithAttribute(std::string attribute, bool includeProperties = false);
+    List<IFieldMeta*> GetFieldsWithAttribute(std::string attribute, bool includeProperties = false);
 };

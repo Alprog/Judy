@@ -12,18 +12,18 @@ class ITypeMeta
 public:
     enum Flags
     {
-        Class = 1 << 0,
-        Pointer = 1 << 1,
-        PointerToPolymorhic = 1 << 2,
-        List = 1 << 3
+        IsClass = 1 << 0,
+        IsPointer = 1 << 1,
+        IsPointerToPolymorhic = 1 << 2,
+        IsList = 1 << 3
     };
 
     std::string name;
     virtual Flags getFlags() const = 0;
 
-    inline bool isClass() const { return getFlags() & Flags::Class; }
-    inline bool isPointer() const { return getFlags() & Flags::Pointer; }
-    inline bool isList() const { return getFlags() & Flags::List; }
+    inline bool isClass() const { return getFlags() & Flags::IsClass; }
+    inline bool isPointer() const { return getFlags() & Flags::IsPointer; }
+    inline bool isList() const { return getFlags() & Flags::IsList; }
 
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;

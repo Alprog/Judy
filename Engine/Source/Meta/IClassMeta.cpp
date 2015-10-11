@@ -4,9 +4,9 @@
 #include "PropertyMeta.h"
 #include "Containers/List.h"
 
-::List<IFieldMeta*> IClassMeta::GetFieldsWithAttribute(std::string attribute, bool includeProperties)
+List<IFieldMeta*> IClassMeta::GetFieldsWithAttribute(std::string attribute, bool includeProperties)
 {
-    ::List<IFieldMeta*> list;
+    List<IFieldMeta*> list;
 
     for (auto& pair : fields)
     {

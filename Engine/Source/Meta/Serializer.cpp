@@ -35,13 +35,13 @@ std::string Serializer::Serialize(Any object)
 void Serializer::Serialize(Any object, ITypeMeta* type)
 {
     auto flags = type->getFlags();
-    if (flags & ITypeMeta::Pointer)
+    if (flags & ITypeMeta::IsPointer)
     {
         lua_newtable(L);
         lua_pushinteger(L, 1);
 
         auto pointeeType = type->GetPointeeType();
-        if (flags & ITypeMeta::PointerToPolymorhic)
+        if (flags & ITypeMeta::IsPointerToPolymorhic)
         {
             pointeeType = type->GetRunTimePointeeType(object);
         }
@@ -55,12 +55,12 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_pushstring(L, object.as<std::string>().c_str());
     }
-    else if (flags & ITypeMeta::List)
+    else if (flags & ITypeMeta::IsList)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         classMeta->functions["serialize"]->Invoke(object, this);
     }
-    else if (flags & ITypeMeta::Class)
+    else if (flags & ITypeMeta::IsClass)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         SerializeAsClass(object, classMeta);
@@ -215,13 +215,13 @@ Any Serializer::DeserializeUnknownTable()
 Any Serializer::Deserialize(ITypeMeta* type)
 {
     auto flags = type->getFlags();
-    if (flags & ITypeMeta::Pointer)
+    if (flags & ITypeMeta::IsPointer)
     {
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
 
         Any value;
-        if (flags & ITypeMeta::PointerToPolymorhic)
+        if (flags & ITypeMeta::IsPointerToPolymorhic)
         {
             value = DeserializeUnknownTable();
         }
@@ -239,12 +239,12 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return std::string( lua_tostring(L, -1) );
     }
-    else if (flags & ITypeMeta::List)
+    else if (flags & ITypeMeta::IsList)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         return classMeta->functions["deserialize"]->Invoke(this);
     }
-    else if (flags & ITypeMeta::Class)
+    else if (flags & ITypeMeta::IsClass)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         return DeserializeAsClass(classMeta);
