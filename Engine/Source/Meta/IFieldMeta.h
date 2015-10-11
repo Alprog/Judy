@@ -4,7 +4,7 @@
 #include "IMemberMeta.h"
 #include "ITypeMeta.h"
 
-class IPropertyMeta : public IMemberMeta
+class IFieldMeta : public IMemberMeta
 {
 public:
     virtual void Set(Any& object, Any& value) = 0;

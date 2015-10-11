@@ -6,9 +6,6 @@
 #include <string>
 
 class Any;
-class IPropertyMeta;
-class IFunctionMeta;
-class IConstructorMeta;
 
 class ITypeMeta
 {

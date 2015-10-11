@@ -5,6 +5,11 @@
 #include <vector>
 #include <unordered_map>
 
+class IFieldMeta;
+class IFunctionMeta;
+class IConstructorMeta;
+class PropertyMeta;
+
 class IClassMeta : public ITypeMeta
 {
 public:
@@ -14,6 +19,6 @@ public:
     std::vector<IConstructorMeta*> constructors;
     std::unordered_map<std::string, IFunctionMeta*> methods;
     std::unordered_map<std::string, IFunctionMeta*> functions;
-    std::unordered_map<std::string, IPropertyMeta*> fields;
-    std::unordered_map<std::string, IPropertyMeta*> properties;
+    std::unordered_map<std::string, IFieldMeta*> fields;
+    std::unordered_map<std::string, PropertyMeta*> properties;
 };

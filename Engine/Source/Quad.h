@@ -4,7 +4,7 @@
 #include "Node.h"
 #include "string"
 #include "Math/Transform2D.h"
-#include "Meta/TypeMeta.h"
+#include "Meta/ITypeMeta.h"
 #include "Attributes.h"
 
 class _(Meta)__ Quad : public Node

@@ -3,9 +3,9 @@
 
 #include "IMemberMeta.h"
 #include "FunctionMeta.h"
-#include "IPropertyMeta.h"
+#include "IFieldMeta.h"
 
-class PropertyMeta : public IPropertyMeta
+class PropertyMeta : public IFieldMeta
 {
 public:
     PropertyMeta(std::string name);

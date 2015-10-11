@@ -2,12 +2,12 @@
 #pragma once
 
 #include "Any.h"
-#include "IPropertyMeta.h"
+#include "IFieldMeta.h"
 
 class ITypeMeta;
 
 template <typename ClassType, typename FieldType>
-class FieldMeta : public IPropertyMeta
+class FieldMeta : public IFieldMeta
 {
 public:
     virtual ITypeMeta* const GetType() override

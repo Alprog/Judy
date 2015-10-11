@@ -36,10 +36,10 @@ HEADERS += \
     Source/Attributes.h \
     Source/Meta/PropertyMeta.h \
     Source/Meta/IFunctionMeta.h \
-    Source/Meta/IPropertyMeta.h \
     Source/Meta/IndexSequence.h \
     Source/Meta/IConstructorMeta.h \
-    Source/Meta/IClassMeta.h
+    Source/Meta/IClassMeta.h \
+    Source/Meta/IFieldMeta.h
 
 SOURCES += \
     Source/App.cpp \

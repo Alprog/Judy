@@ -2,8 +2,9 @@
 #include "NodeInspectorModel.h"
 #include <typeindex>
 #include "Meta/Meta.h"
-#include "Meta/TypeMeta.h"
-#include "Meta/FieldMeta.h"
+#include "Meta/ITypeMeta.h"
+#include "Meta/IFieldMeta.h"
+#include "Meta/PropertyMeta.h"
 #include "Node.h"
 
 enum ColumnType
@@ -22,9 +23,9 @@ NodeInspectorModel::NodeInspectorModel(Node* node)
 
 }
 
-List<IPropertyMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
+List<IFieldMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
 {
-    static Map<ITypeMeta*, List<IPropertyMeta*>> cache;
+    static Map<ITypeMeta*, List<IFieldMeta*>> cache;
 
     auto it = cache.find(typeMeta);
     if (it != std::end(cache))
@@ -32,7 +33,7 @@ List<IPropertyMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
         return &it->second;
     }
 
-    auto& properties = cache[typeMeta] = List<IPropertyMeta*>(); // cache list
+    auto& properties = cache[typeMeta] = List<IFieldMeta*>(); // cache list
 
     if (typeMeta->isClass())
     {
@@ -44,6 +45,16 @@ List<IPropertyMeta*>* NodeInspectorModel::GetProperties(ITypeMeta* typeMeta)
             for (auto& property : GetProperties(baseMeta))
             {
                 properties.push_back(property);
+            }
+        }
+
+        // properties
+        for (auto& pair : classMeta->properties)
+        {
+            auto fieldInfo = pair.second;
+            if (fieldInfo->HasAttribute("Inspect"))
+            {
+                properties.push_back(fieldInfo);
             }
         }
 
