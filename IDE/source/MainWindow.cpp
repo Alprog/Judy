@@ -10,6 +10,7 @@
 #include "OutputPane.h"
 #include "StackPane.h"
 #include "Inspector/InspectorPane.h"
+#include "Hierarchy/HierarchyPane.h"
 
 #include "RemotePlayer.h"
 
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     addDockWidget(Qt::BottomDockWidgetArea, new OutputPane());
     addDockWidget(Qt::RightDockWidgetArea, new StackPane());
+    addDockWidget(Qt::LeftDockWidgetArea, new HierarchyPane());
     addDockWidget(Qt::LeftDockWidgetArea, new InspectorPane());
 
     documents = new DocumentsPane;
