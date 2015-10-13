@@ -22,6 +22,7 @@ public:
     virtual QModelIndex parent(const QModelIndex& index) const override;
     virtual QVariant data(const QModelIndex& index, int role) const override;
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
 private:
     inline InspectorItem* GetBaseItem(const QModelIndex& index) const;

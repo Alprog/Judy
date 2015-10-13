@@ -118,3 +118,17 @@ QVariant InspectorItem::GetValue(int i)
 
     return QVariant();
 }
+
+bool InspectorItem::SetValue(int i, const QVariant& value)
+{
+    auto field = fields->at(i);
+
+    if (field->GetType() == TypeMetaOf<float>())
+    {
+        Any any = value.toFloat();
+        field->Set(pointer, any);
+        return true;
+    }
+
+    return false;
+}

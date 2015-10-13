@@ -112,3 +112,15 @@ Qt::ItemFlags InspectorModel::flags(const QModelIndex& index) const
     }
     return flags;
 }
+
+bool InspectorModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (index.column() != ColumnType::Value) { return false; }
+
+    auto item = GetBaseItem(index);
+    if (role == Qt::EditRole)
+    {
+        return item->SetValue(index.row(), value);
+    }
+    return false;
+}

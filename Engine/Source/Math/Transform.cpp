@@ -46,7 +46,7 @@ void Transform::setScaling(Vector3 scaling)
 
 Matrix Transform::getMatrix()
 {
-    if (invalidateMatrix)
+    //if (invalidateMatrix)
     {
         matrix = Matrix::TRS(translation, rotation, scaling);
         invalidateMatrix = false;

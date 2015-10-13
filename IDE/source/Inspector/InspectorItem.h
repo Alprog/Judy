@@ -22,6 +22,7 @@ private:
 public:
     QVariant GetName(int i);
     QVariant GetValue(int i);
+    bool SetValue(int i, const QVariant& value);
 
     inline size_t GetChildCount() const { return childs.size(); }
     inline InspectorItem* GetChild(size_t i) const { return childs[i]; }
