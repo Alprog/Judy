@@ -84,3 +84,33 @@ List<IFieldMeta*>* InspectorItem::GetFields(ITypeMeta* typeMeta)
 
     return &list;
 }
+
+QVariant InspectorItem::GetName(int i)
+{
+    auto field = fields->at(i);
+    return QString::fromStdString(field->name);
+}
+
+QVariant InspectorItem::GetValue(int i)
+{
+    auto field = fields->at(i);
+
+    if (field->GetType() == TypeMetaOf<std::string>())
+    {
+        auto text = field->Get(pointer).as<std::string>();
+        return QString::fromStdString(text);
+    }
+    else if (field->GetType() == TypeMetaOf<Vector3>())
+    {
+        auto vector = field->Get(pointer).as<Vector3>();
+        auto text = std::to_string(vector.x) + "; " + std::to_string(vector.y) + "; " + std::to_string(vector.z);
+        return QString::fromStdString(text);
+    }
+    else if (field->GetType() == TypeMetaOf<float>())
+    {
+        auto text = std::to_string(field->Get(pointer).as<float>());
+        return QString::fromStdString(text);
+    }
+
+    return QVariant();
+}

@@ -10,12 +10,13 @@ PropertyMeta::PropertyMeta(std::string name)
 
 void PropertyMeta::Set(Any& object, Any& value)
 {
-
+    std::vector<Any> args {object, value};
+    setter->Invoke(args);
 }
 
 Any PropertyMeta::Get(Any& object)
 {
-    return Any::empty;
+    return getter->Invoke(object);
 }
 
 Any PropertyMeta::GetAddr(Any& object)
