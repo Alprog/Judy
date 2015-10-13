@@ -24,5 +24,7 @@ HierarchyPane::~HierarchyPane()
 
 void HierarchyPane::OnSelectNode(Node* node)
 {
+    tree->setModel(nullptr);
     model.SetNode(node);
+    tree->setModel(&model);
 }
