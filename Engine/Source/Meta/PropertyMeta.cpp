@@ -18,6 +18,11 @@ Any PropertyMeta::Get(Any& object)
     return Any::empty;
 }
 
+Any PropertyMeta::GetAddr(Any& object)
+{
+    return Any::empty;
+}
+
 ITypeMeta* const PropertyMeta::GetType()
 {
     if (getter != nullptr)

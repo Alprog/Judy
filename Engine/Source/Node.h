@@ -33,5 +33,5 @@ public:
 
 private:
     Node* parent;
-    _(Serialize, Inspect)__ List<Node*> childs;
+    _(Serialize)__ List<Node*> childs;
 };

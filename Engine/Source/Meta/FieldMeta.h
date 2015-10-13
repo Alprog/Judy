@@ -31,5 +31,10 @@ public:
         return object.as<ClassType*>()->*pointer;
     }
 
+    virtual Any GetAddr(Any& object) override
+    {
+        return &(object.as<ClassType*>()->*pointer);
+    }
+
     FieldType ClassType::*pointer;
 };

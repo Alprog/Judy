@@ -208,7 +208,7 @@ void Meta::DefineClasses()
         .method("Render", &Node::Render)
         .field("transform", &Node::transform).attr("Serialize").attr("Inspect")
         .field("parent", &Node::parent)
-        .field("childs", &Node::childs).attr("Serialize").attr("Inspect")
+        .field("childs", &Node::childs).attr("Serialize")
     ;
 
     ClassDefiner<Quad>(this, "Quad")

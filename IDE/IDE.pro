@@ -26,7 +26,8 @@ HEADERS += \
     Source/DocumentType.h \
     Source/HierarchyPane.h \
     Source/Inspector/InspectorPane.h \
-    Source/Inspector/NodeInspectorModel.h
+    Source/Inspector/NodeInspectorModel.h \
+    Source/Inspector/InspectorItem.h
 
 SOURCES += \
     Source/MainWindow.cpp \
@@ -47,7 +48,8 @@ SOURCES += \
     Source/CodeEditor.cpp \
     Source/HierarchyPane.cpp \
     Source/Inspector/InspectorPane.cpp \
-    Source/Inspector/NodeInspectorModel.cpp
+    Source/Inspector/NodeInspectorModel.cpp \
+    Source/Inspector/InspectorItem.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 

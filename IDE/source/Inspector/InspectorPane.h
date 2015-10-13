@@ -4,7 +4,7 @@
 #include <QDockWidget>
 
 class Node;
-class QTableView;
+class QTreeView;
 class NodeInspectorModel;
 
 class InspectorPane : public QDockWidget
@@ -19,5 +19,5 @@ private slots:
     void OnSelectNode(Node* node);
 
 private:
-    QTableView* table;
+    QTreeView* tree;
 };

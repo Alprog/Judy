@@ -1,7 +1,7 @@
 
 #include "InspectorPane.h"
 #include <QHeaderView>
-#include <QTableView>
+#include <QTreeView>
 #include "../IDE.h"
 #include "NodeInspectorModel.h"
 
@@ -11,8 +11,8 @@ InspectorPane::InspectorPane()
     setObjectName("Inspector");
     setMinimumWidth(250);
 
-    table = new QTableView();
-    setWidget(table);
+    tree = new QTreeView();
+    setWidget(tree);
 
     connect(IDE::Instance(), SIGNAL(SelectNode(Node*)), this, SLOT(OnSelectNode(Node*)));
 }
@@ -24,5 +24,5 @@ InspectorPane::~InspectorPane()
 void InspectorPane::OnSelectNode(Node* node)
 {
     auto model = new NodeInspectorModel(node);
-    table->setModel(model);
+    tree->setModel(model);
 }
