@@ -1,8 +1,20 @@
 
 #include "InspectorItem.h"
+#include "Node.h"
+#include <typeindex>
+#include "Meta/Meta.h"
 #include "Meta/ITypeMeta.h"
+#include "Meta/IClassMeta.h"
 #include "Meta/IFieldMeta.h"
 #include "Containers/Map.h"
+
+InspectorItem::InspectorItem(Node* node)
+{
+    auto index = std::type_index(typeid(*node));
+    auto typeMeta = Meta::Instance()->Find(index);
+    fields = GetFields(typeMeta);
+    pointer = node;
+}
 
 List<IFieldMeta*>* InspectorItem::GetFields(ITypeMeta* typeMeta)
 {

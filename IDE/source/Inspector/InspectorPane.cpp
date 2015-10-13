@@ -3,7 +3,7 @@
 #include <QHeaderView>
 #include <QTreeView>
 #include "../IDE.h"
-#include "NodeInspectorModel.h"
+#include "InspectorModel.h"
 
 InspectorPane::InspectorPane()
     : QDockWidget("Inspector", 0, 0)
@@ -23,6 +23,6 @@ InspectorPane::~InspectorPane()
 
 void InspectorPane::OnSelectNode(Node* node)
 {
-    auto model = new NodeInspectorModel(node);
+    auto model = new InspectorModel(node);
     tree->setModel(model);
 }
