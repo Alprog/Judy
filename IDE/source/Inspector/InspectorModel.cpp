@@ -101,3 +101,14 @@ QVariant InspectorModel::data(const QModelIndex& index, int role) const
 
     return QVariant();
 }
+
+Qt::ItemFlags InspectorModel::flags(const QModelIndex& index) const
+{
+    auto flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    auto col = index.column();
+    if (col == ColumnType::Value)
+    {
+        return flags | Qt::ItemIsEditable;
+    }
+    return flags;
+}

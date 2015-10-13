@@ -6,6 +6,7 @@
 #include "Meta/ITypeMeta.h"
 #include "Meta/IClassMeta.h"
 #include "Meta/IFieldMeta.h"
+#include "Meta/PropertyMeta.h"
 #include "Containers/Map.h"
 
 InspectorItem* InspectorItem::Create(Node* node)
@@ -31,8 +32,12 @@ InspectorItem::InspectorItem(Any pointer, List<IFieldMeta*>* fields, InspectorIt
         auto subFields = GetFields(type);
         if (subFields->size() > 0)
         {
-            auto subPointer = field->GetAddr(pointer);
-            child = new InspectorItem(subPointer, subFields, this, i);
+            bool isProperty = dynamic_cast<PropertyMeta*>(field);
+            if (!isProperty)
+            {
+                auto subPointer = field->GetAddr(pointer);
+                child = new InspectorItem(subPointer, subFields, this, i);
+            }
         }
 
         childs.push_back(child);
@@ -108,8 +113,7 @@ QVariant InspectorItem::GetValue(int i)
     }
     else if (field->GetType() == TypeMetaOf<float>())
     {
-        auto text = std::to_string(field->Get(pointer).as<float>());
-        return QString::fromStdString(text);
+        return field->Get(pointer).as<float>();
     }
 
     return QVariant();

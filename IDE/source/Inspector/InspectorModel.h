@@ -21,6 +21,7 @@ public:
     virtual QModelIndex index(int row, int column, const QModelIndex& index) const override;
     virtual QModelIndex parent(const QModelIndex& index) const override;
     virtual QVariant data(const QModelIndex& index, int role) const override;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 private:
     inline InspectorItem* GetBaseItem(const QModelIndex& index) const;

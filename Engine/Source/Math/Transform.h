@@ -28,9 +28,9 @@ struct _(Meta)__ Transform
     Matrix getMatrix();
 
 private:
-    _(Serialize)__ Vector3 translation;
-    _(Serialize)__ Quaternion rotation;
-    _(Serialize)__ Vector3 scaling;
+    _(Serialize, Inspect)__ Vector3 translation;
+    _(Serialize, Inspect)__ Quaternion rotation;
+    _(Serialize, Inspect)__ Vector3 scaling;
 
     bool invalidateMatrix;
     Matrix matrix;
