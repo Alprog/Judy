@@ -88,10 +88,17 @@ QVariant InspectorModel::data(const QModelIndex& index, int role) const
 
     auto item = GetBaseItem(index);
 
+    auto pointer = item->pointer;
     auto field = item->fields->at(row);
 
     if (col == ColumnType::Name)
     {
+        if (field->GetType() == TypeMetaOf<std::string>())
+        {
+            auto text = field->Get(pointer).as<std::string>();
+            return QString::fromStdString(text);
+        }
+
         return QString::fromStdString(field->name);
     }
     else if (col == ColumnType::Value)
