@@ -4,12 +4,10 @@
 #include <unordered_map>
 #include "Meta/Serializer.h"
 #include "Lua.h"
-
-#define __Meta__
-#define __Serialize__
+#include "Attributes.h"
 
 template <typename T1, typename T2>
-class __Meta__ Map : public std::unordered_map<T1, T2>
+class _(Meta)__ Map : public std::unordered_map<T1, T2>
 {
     friend class Meta;
     using base = std::unordered_map<T1, T2>;

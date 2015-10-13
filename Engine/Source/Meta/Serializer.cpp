@@ -35,13 +35,13 @@ std::string Serializer::Serialize(Any object)
 void Serializer::Serialize(Any object, ITypeMeta* type)
 {
     auto flags = type->getFlags();
-    if (flags & ITypeMeta::Pointer)
+    if (flags & ITypeMeta::IsPointer)
     {
         lua_newtable(L);
         lua_pushinteger(L, 1);
 
         auto pointeeType = type->GetPointeeType();
-        if (flags & ITypeMeta::PointerToPolymorhic)
+        if (flags & ITypeMeta::IsPointerToPolymorhic)
         {
             pointeeType = type->GetRunTimePointeeType(object);
         }
@@ -55,12 +55,12 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_pushstring(L, object.as<std::string>().c_str());
     }
-    else if (flags & ITypeMeta::List)
+    else if (flags & ITypeMeta::IsList)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         classMeta->functions["serialize"]->Invoke(object, this);
     }
-    else if (flags & ITypeMeta::Class)
+    else if (flags & ITypeMeta::IsClass)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         SerializeAsClass(object, classMeta);
@@ -80,7 +80,7 @@ IFunctionMeta* FindSerializeMethod(IClassMeta* classMeta)
     for (auto& pair : classMeta->methods)
     {
         auto methodMeta = pair.second;
-        if (methodMeta->hasAttribute("Serialize"))
+        if (methodMeta->HasAttribute("Serialize"))
         {
             return methodMeta;
         }
@@ -92,7 +92,7 @@ IConstructorMeta* FindSerializeConstructor(IClassMeta* classMeta)
 {
     for (auto constructor : classMeta->constructors)
     {
-        if (constructor->hasAttribute("Serialize"))
+        if (constructor->HasAttribute("Serialize"))
         {
             return constructor;
         }
@@ -116,17 +116,18 @@ void Serializer::SerializeAsClass(Any& object, IClassMeta* classMeta)
     lua_pushstring(L, name.c_str());
     lua_setfield(L, -2, "class");
 
-    SerializeClassFields(object, classMeta);
+    auto pointer = classMeta->MakePointer(object);
+    SerializeClassFields(pointer, classMeta);
 }
 
-void Serializer::SerializeClassFields(Any& object, IClassMeta* classMeta)
+void Serializer::SerializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
-        if (fieldMeta->hasAttribute("Serialize"))
+        if (fieldMeta->HasAttribute("Serialize"))
         {
-            Any value = fieldMeta->get_local(object);
+            Any value = fieldMeta->Get(pointer);
             auto fieldType = fieldMeta->GetType();
             Serialize(value, fieldType);
             lua_setfield(L, -2, fieldMeta->name.c_str());
@@ -136,7 +137,7 @@ void Serializer::SerializeClassFields(Any& object, IClassMeta* classMeta)
     {
         if (baseType->isClass())
         {
-            SerializeClassFields(object, (IClassMeta*)baseType);
+            SerializeClassFields(pointer, (IClassMeta*)baseType);
         }
     }
 }
@@ -214,13 +215,13 @@ Any Serializer::DeserializeUnknownTable()
 Any Serializer::Deserialize(ITypeMeta* type)
 {
     auto flags = type->getFlags();
-    if (flags & ITypeMeta::Pointer)
+    if (flags & ITypeMeta::IsPointer)
     {
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
 
         Any value;
-        if (flags & ITypeMeta::PointerToPolymorhic)
+        if (flags & ITypeMeta::IsPointerToPolymorhic)
         {
             value = DeserializeUnknownTable();
         }
@@ -238,12 +239,12 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return std::string( lua_tostring(L, -1) );
     }
-    else if (flags & ITypeMeta::List)
+    else if (flags & ITypeMeta::IsList)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         return classMeta->functions["deserialize"]->Invoke(this);
     }
-    else if (flags & ITypeMeta::Class)
+    else if (flags & ITypeMeta::IsClass)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         return DeserializeAsClass(classMeta);
@@ -271,20 +272,21 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
     }
 
     auto object = classMeta->CreateOnStack();
-    DeserializeClassFields(object, classMeta);
+    auto pointer = classMeta->MakePointer(object);
+    DeserializeClassFields(pointer, classMeta);
     return object;
 }
 
-void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
+void Serializer::DeserializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
     for (auto& pair : classMeta->fields)
     {
         auto fieldMeta = pair.second;
-        if (fieldMeta->hasAttribute("Serialize"))
+        if (fieldMeta->HasAttribute("Serialize"))
         {
             lua_getfield(L, -1, fieldMeta->name.c_str());
             Any value = Deserialize(fieldMeta->GetType());
-            fieldMeta->set_local(object, value);
+            fieldMeta->Set(pointer, value);
             lua_pop(L, 1);
         }
     }
@@ -292,7 +294,7 @@ void Serializer::DeserializeClassFields(Any& object, IClassMeta* classMeta)
     {
         if (baseType->isClass())
         {
-            DeserializeClassFields(object, (IClassMeta*)baseType);
+            DeserializeClassFields(pointer, (IClassMeta*)baseType);
         }
     }
 }

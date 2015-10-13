@@ -6,19 +6,17 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Renderer.h"
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-struct __Meta__ Model : public Node
+struct _(Meta)__ Model : public Node
 {
     Model();
 
     virtual void Update(double delta) override;
-    virtual void Render(Matrix matrix,Renderer* renderer) override;
+    virtual void Render(Matrix matrix, Renderer* renderer) override;
 
     Mesh* mesh;
     Material* material;
 
-    __Serialize__ std::string name;
+    _(Serialize, Inspect)__ std::string name;
 };

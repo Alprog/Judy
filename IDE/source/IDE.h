@@ -9,6 +9,7 @@
 #include "Meta/Serializer.h"
 #include "LuaMachine/CallInfo.h"
 #include "Renderer.h"
+#include "Node.h"
 
 class IDE : public QApplication
 {
@@ -31,6 +32,9 @@ private:
     void Start();
     void LoadStyle();
     void LoadSettings();
+
+signals:
+    void SelectNode(Node* node);
 
 private slots:
     void OnPlayerStateChanged();

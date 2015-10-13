@@ -2,14 +2,12 @@
 #pragma once
 
 #include <string>
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-struct __Meta__ LogMessage
+struct _(Meta)__ LogMessage
 {
     LogMessage();
     LogMessage(std::string text);
 
-    __Serialize__ std::string text;
+    _(Serialize)__ std::string text;
 };

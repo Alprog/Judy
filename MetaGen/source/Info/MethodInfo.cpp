@@ -5,6 +5,10 @@
 #include <iostream>
 #include "Specifier.h"
 
+MethodInfo::MethodInfo()
+{
+}
+
 MethodInfo::MethodInfo(TokenGroup& tokens)
     : isStatic {false}
     , isVirtual {false}

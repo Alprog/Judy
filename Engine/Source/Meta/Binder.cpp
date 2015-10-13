@@ -82,8 +82,8 @@ int GetterInvoker(lua_State* L)
 {
     auto field = *(IFieldMeta**)lua_touserdata(L, lua_upvalueindex(1));
     void* object = *(void**)lua_touserdata(L, 1);
-    Any result = field->get(object);
-    ProcessResult(L, result, field->GetType());
+    //Any result = field->get(object);
+    //ProcessResult(L, result, field->GetType());
     return 1;
 }
 
@@ -126,7 +126,7 @@ void LuaBinder::Bind(Meta* meta)
 {
     for (auto& typeMeta : meta->types)
     {
-        if (typeMeta->getFlags() & ITypeMeta::Class)
+        if (typeMeta->getFlags() & ITypeMeta::IsClass)
         {
             auto classMeta = static_cast<IClassMeta*>(typeMeta);
             BindClass(classMeta);

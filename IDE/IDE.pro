@@ -23,7 +23,11 @@ HEADERS += \
     Source/LuaDocement.h \
     Source/SceneDocument.h \
     Source/CodeEditor.h \
-    Source/DocumentType.h
+    Source/DocumentType.h \
+    Source/HierarchyPane.h \
+    Source/Inspector/InspectorPane.h \
+    Source/Inspector/InspectorItem.h \
+    Source/Inspector/InspectorModel.h
 
 SOURCES += \
     Source/MainWindow.cpp \
@@ -41,7 +45,11 @@ SOURCES += \
     Source/IDE.cpp \
     Source/LuaDocement.cpp \
     Source/SceneDocument.cpp \
-    Source/CodeEditor.cpp
+    Source/CodeEditor.cpp \
+    Source/HierarchyPane.cpp \
+    Source/Inspector/InspectorPane.cpp \
+    Source/Inspector/InspectorItem.cpp \
+    Source/Inspector/InspectorModel.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 

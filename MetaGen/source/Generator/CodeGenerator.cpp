@@ -12,6 +12,7 @@
 
 const std::string tab = "    ";
 const std::string tab2 = "        ";
+const std::string tab3 = "            ";
 
 template <typename... ArgTypes>
 std::string format(const char* format, ArgTypes... args)
@@ -305,11 +306,24 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     // methods
     for (auto& method : classInfo.methods)
     {
-        if (!method.isOperator)
+        if (!method.isOperator && !method.isFriend)
         {
             auto type = method.isStatic ? "function" : "method";
-            stream << tab2 << "." << type << "(\"" << method.name << "\", &" << className << "::" << method.name << ")";
-            stream << GenerateAttributes(method) << std::endl;
+            stream << tab2 << GenerateMethod(type, method, className);
+        }
+    }
+
+    // properties
+    for (auto& property : classInfo.properties)
+    {
+        stream << tab2 << ".property(\"" << property.name << "\")" << GenerateAttributes(property) << std::endl;
+        if (property.hasGetter())
+        {
+            stream << tab3 << GenerateMethod("getter", property.getter, className);
+        }
+        if (property.hasSetter())
+        {
+            stream << tab3 << GenerateMethod("setter", property.setter, className);
         }
     }
 
@@ -328,6 +342,14 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
 
     stream << tab << ";" << std::endl;
 
+    return stream.str();
+}
+
+std::string CodeGenerator::GenerateMethod(std::string type, MethodInfo& method, std::string className)
+{
+    std::stringstream stream;
+    stream << "." << type << "(\"" << method.name << "\", &" << className << "::" << method.name << ")";
+    stream << GenerateAttributes(method) << std::endl;
     return stream.str();
 }
 

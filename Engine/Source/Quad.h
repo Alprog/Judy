@@ -4,12 +4,10 @@
 #include "Node.h"
 #include "string"
 #include "Math/Transform2D.h"
-#include "Meta/TypeMeta.h"
+#include "Meta/ITypeMeta.h"
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-class __Meta__ Quad : public Node
+class _(Meta)__ Quad : public Node
 {
     friend class Meta;
 
@@ -19,7 +17,7 @@ public:
     virtual void Update(double delta) override;
     virtual void Render(Matrix matrix, Renderer* renderer) override;
 
-    __Serialize__ Vector2 Size;
-    __Serialize__ std::string Shader;
-    __Serialize__ std::string Texture;
+    _(Serialize, Inspect)__ Vector2 Size;
+    _(Serialize, Inspect)__ std::string Shader;
+    _(Serialize, Inspect)__ std::string Texture;
 };

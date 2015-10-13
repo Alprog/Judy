@@ -91,11 +91,13 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
 
     context->MakeCurrent();
 
-    //glViewport(-400, 0, 800, 800);
+    auto size = renderTarget->GetSize();
+    glViewport(0, 0, size.x, size.y);
+
     //glScissor(0, 0, 400, 800);
     //glEnable(GL_SCISSOR_TEST);
 
-    Color color { 0.0f, 1.0f, 0.0f, 1.0f };
+    Color color { 0.3f, 0.3f, 0.3f, 1.0f };
     Clear(color);
 
     scene->Render(scene->transform.getMatrix(), this);

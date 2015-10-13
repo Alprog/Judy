@@ -216,8 +216,12 @@ std::vector<AttributeInfo> TokenGroup::extractAttributes()
             {
                 group = group->tokens[1]->cast<TokenGroup*>();
                 auto content = group->getContent();
-                AttributeInfo attribute(content);
-                result.push_back(attribute);
+                auto attributes = content.split(",");
+                for (auto& attributeTokens : attributes)
+                {
+                    AttributeInfo attribute(attributeTokens);
+                    result.push_back(attribute);
+                }
                 it = tokens.erase(it);
                 continue;
             }

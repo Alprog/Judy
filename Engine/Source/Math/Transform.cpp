@@ -28,6 +28,8 @@ void Transform::setTranslation(Vector3 translation)
 {
     this->translation = translation;
     invalidateMatrix = true;
+
+    auto a = this->scaling;
 }
 
 void Transform::setRotation(Quaternion rotation)
@@ -44,7 +46,7 @@ void Transform::setScaling(Vector3 scaling)
 
 Matrix Transform::getMatrix()
 {
-    if (invalidateMatrix)
+    //if (invalidateMatrix)
     {
         matrix = Matrix::TRS(translation, rotation, scaling);
         invalidateMatrix = false;

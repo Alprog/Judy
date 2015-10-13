@@ -4,12 +4,10 @@
 #include <vector>
 #include "Meta/Serializer.h"
 #include "Lua.h"
-
-#define __Meta__
-#define __Serialize__
+#include "Attributes.h"
 
 template <typename T>
-__Meta__ class List : public std::vector<T>
+class _(Meta)__ List : public std::vector<T>
 {
     friend class Meta;
     using base = std::vector<T>;
@@ -31,6 +29,9 @@ public:
     inline void add(T value) { base::push_back(value); }
 
 private:
+    friend iterator begin(List<T>* list) { return list->begin(); }
+    friend iterator end(List<T>* list) { return list->end(); }
+
     static void serialize(List<T> list, Serializer* serializer)
     {
         auto L = serializer->getL();

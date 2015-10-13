@@ -6,10 +6,9 @@
 #include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
 #include "Containers/Set.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-class __Meta__ App
+class _(Meta)__ App
 {
     friend class Meta;
 

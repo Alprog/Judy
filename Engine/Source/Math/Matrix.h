@@ -4,8 +4,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Quaternion.h"
-
-#define __Meta__
+#include "Attributes.h"
 
 struct Matrix
 {

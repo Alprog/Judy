@@ -3,12 +3,10 @@
 
 #include "Containers/List.h"
 #include "CallInfo.h"
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-struct __Meta__ CallStack
+struct _(Meta)__ CallStack
 {
     CallStack();
-    __Serialize__ List<CallInfo> calls;
+    _(Serialize)__ List<CallInfo> calls;
 };

@@ -3,15 +3,13 @@
 
 #include <string>
 #include "Containers/Set.h"
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-struct __Meta__ FileBreakpoints
+struct _(Meta)__ FileBreakpoints
 {
     FileBreakpoints();
     FileBreakpoints(std::string fileName, Set<int> lines);
 
-    __Serialize__ std::string fileName;
-    __Serialize__ Set<int> lines;
+    _(Serialize)__ std::string fileName;
+    _(Serialize)__ Set<int> lines;
 };

@@ -1,9 +1,10 @@
 
 #pragma once
 
-#include "Any.h"
 #include "FunctionMeta.h"
 #include <vector>
+#include "Any.h"
+#include "IndexSequence.h"
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 class MethodMeta : public FunctionMeta<ReturnType, ClassType*, ArgTypes...>

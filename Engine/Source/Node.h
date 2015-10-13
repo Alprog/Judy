@@ -4,14 +4,12 @@
 #include <vector>
 #include "Math/Vector2.h"
 #include "Math/Transform.h"
-#include "Meta/TypeMeta.h"
+#include "Meta/ITypeMeta.h"
+#include "Attributes.h"
 
 class Renderer;
 
-#define __Meta__
-#define __Serialize__
-
-class __Meta__ Node
+class _(Meta)__ Node
 {
     friend class Meta;
 
@@ -31,9 +29,9 @@ public:
     virtual void Update(double delta);
     virtual void Render(Matrix matrix, Renderer* renderer);
 
-    __Serialize__ Transform transform;
+    _(Serialize, Inspect)__ Transform transform;
 
 private:
     Node* parent;
-    __Serialize__ List<Node*> childs;
+    _(Serialize)__ List<Node*> childs;
 };

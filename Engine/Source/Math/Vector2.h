@@ -4,11 +4,9 @@
 #include <string>
 #include "Meta/TypeMeta.h"
 #include "Containers/List.h"
+#include "Attributes.h"
 
-#define __Meta__
-#define __Serialize__
-
-struct __Meta__ Vector2
+struct _(Meta)__ Vector2
 {
     static const Vector2 Zero;
     static const Vector2 One;
@@ -16,8 +14,8 @@ struct __Meta__ Vector2
     Vector2();
     Vector2(float x, float y);
 
-    __Serialize__ Vector2(List<float> list);
-    __Serialize__ List<float> toList();
+    _(Serialize)__ Vector2(List<float> list);
+    _(Serialize)__ List<float> toList();
 
     float Length();
     float SquaredLength();
@@ -28,5 +26,5 @@ struct __Meta__ Vector2
 
     friend Vector2 operator*(const Vector2& vector, const float& value);
 
-    float x, y;
+    _(Bind)__ float x, y;
 };

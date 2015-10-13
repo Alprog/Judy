@@ -17,6 +17,7 @@ private:
     std::string GenerateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
     std::string GenerateDefineTemplatesSection(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
     std::string GenerateClassDefinition(ClassInfo& classInfo);
+    std::string GenerateMethod(std::string type, MethodInfo& method, std::string className);
     std::string GenerateAttributes(MemberInfo& memberInfo);
     std::string GenerateParametersList(ClassInfo& classInfo, bool typenames);
 

@@ -32,7 +32,14 @@ HEADERS += \
     Source/Meta/IMemberMeta.h \
     Source/Lua.h \
     Source/Containers/Map.h \
-    Source/Containers/Set.h
+    Source/Containers/Set.h \
+    Source/Attributes.h \
+    Source/Meta/PropertyMeta.h \
+    Source/Meta/IFunctionMeta.h \
+    Source/Meta/IndexSequence.h \
+    Source/Meta/IConstructorMeta.h \
+    Source/Meta/IClassMeta.h \
+    Source/Meta/IFieldMeta.h
 
 SOURCES += \
     Source/App.cpp \
@@ -59,7 +66,6 @@ SOURCES += \
     Source/Meta/FunctionMeta.cpp \
     Source/Meta/ITypeMeta.cpp \
     Source/Meta/AnyData.cpp \
-    Source/Meta/NewMeta.cpp \
     Source/Singleton.cpp \
     Source/Pipe.cpp \
     Source/LuaMachine/Breakpoints.cpp \
@@ -85,7 +91,9 @@ SOURCES += \
     Source/Mesh.cpp \
     Source/Material.cpp \
     Source/Model.cpp \
-    Source/Meta/IMemberMeta.cpp
+    Source/Meta/IMemberMeta.cpp \
+    Source/Meta/PropertyMeta.cpp \
+    Source/Meta/IClassMeta.cpp
 
 win {
     INCLUDEPATH += Source/Windows
