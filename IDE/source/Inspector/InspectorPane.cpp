@@ -25,4 +25,5 @@ void InspectorPane::OnSelectNode(Node* node)
 {
     auto model = new InspectorModel(node);
     tree->setModel(model);
+    tree->expandAll();
 }

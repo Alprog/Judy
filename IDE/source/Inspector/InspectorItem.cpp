@@ -9,11 +9,63 @@
 #include "Containers/Map.h"
 
 InspectorItem::InspectorItem(Node* node)
+    : parent{nullptr}
 {
+    pointer = node;
+
     auto index = std::type_index(typeid(*node));
     auto typeMeta = Meta::Instance()->Find(index);
-    fields = GetFields(typeMeta);
-    pointer = node;
+
+    auto fields = GetFields(typeMeta);
+    for (auto row = 0; row < fields->size(); row++)
+    {
+        auto item = new InspectorItem(pointer, fields->at(row), this, row);
+        childs.push_back(item);
+    }
+}
+
+InspectorItem::InspectorItem(Any& pointer, IFieldMeta* field, InspectorItem* parent, int row)
+{
+    this->pointer = pointer;
+    this->field = field;
+    this->parent = parent;
+    this->row = row;
+
+    auto typeMeta = field->GetType();
+    auto fields = GetFields(typeMeta);
+    for (auto row = 0; row < fields->size(); row++)
+    {
+        auto item = new InspectorItem(pointer, fields->at(row), this, row);
+        childs.push_back(item);
+    }
+}
+
+InspectorItem::~InspectorItem()
+{
+    for (auto& child : childs)
+    {
+        delete child;
+    }
+}
+
+InspectorItem* InspectorItem::GetParent()
+{
+    return parent;
+}
+
+size_t InspectorItem::GetChildCount()
+{
+    return childs.size();
+}
+
+InspectorItem* InspectorItem::GetChild(size_t index)
+{
+    return childs[index];
+}
+
+std::string InspectorItem::GetName()
+{
+    return field->name;
 }
 
 List<IFieldMeta*>* InspectorItem::GetFields(ITypeMeta* typeMeta)
