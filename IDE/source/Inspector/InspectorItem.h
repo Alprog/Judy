@@ -11,14 +11,9 @@ class Node;
 class InspectorItem
 {
 public:
-    InspectorItem(Node* node);
-    InspectorItem(Any& pointer, IFieldMeta* field, InspectorItem* parent, int row);
+    static InspectorItem* Create(Node* node);
+    InspectorItem(Any pointer, List<IFieldMeta*>* fields, InspectorItem* parent, int row);
     ~InspectorItem();
-
-    InspectorItem* GetParent();
-    size_t GetChildCount();
-    InspectorItem* GetChild(size_t index);
-    std::string GetName();
 
 private:
     static List<IFieldMeta*>* GetFields(ITypeMeta* typeMeta);
@@ -26,10 +21,9 @@ private:
 public:
     Any localData;
     Any pointer;
-
     int row;
     InspectorItem* parent;
 
-    IFieldMeta* field;
+    List<IFieldMeta*>* fields;
     List<InspectorItem*> childs;
 };

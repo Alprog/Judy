@@ -8,35 +8,34 @@
 #include "Meta/IFieldMeta.h"
 #include "Containers/Map.h"
 
-InspectorItem::InspectorItem(Node* node)
-    : parent{nullptr}
+InspectorItem* InspectorItem::Create(Node* node)
 {
-    pointer = node;
-
     auto index = std::type_index(typeid(*node));
     auto typeMeta = Meta::Instance()->Find(index);
-
     auto fields = GetFields(typeMeta);
-    for (auto row = 0; row < fields->size(); row++)
-    {
-        auto item = new InspectorItem(pointer, fields->at(row), this, row);
-        childs.push_back(item);
-    }
+    return new InspectorItem(node, fields, nullptr, 0);
 }
 
-InspectorItem::InspectorItem(Any& pointer, IFieldMeta* field, InspectorItem* parent, int row)
+InspectorItem::InspectorItem(Any pointer, List<IFieldMeta*>* fields, InspectorItem* parent, int row)
+    : pointer{pointer}
+    , fields{fields}
+    , parent{parent}
+    , row{row}
 {
-    this->pointer = pointer;
-    this->field = field;
-    this->parent = parent;
-    this->row = row;
-
-    auto typeMeta = field->GetType();
-    auto fields = GetFields(typeMeta);
-    for (auto row = 0; row < fields->size(); row++)
+    for (auto i = 0; i < fields->size(); i++)
     {
-        auto item = new InspectorItem(pointer, fields->at(row), this, row);
-        childs.push_back(item);
+        InspectorItem* child = nullptr;
+
+        auto field = fields->at(i);
+        auto type = field->GetType();
+        auto subFields = GetFields(type);
+        if (subFields->size() > 0)
+        {
+            auto subPointer = field->GetAddr(pointer);
+            child = new InspectorItem(subPointer, subFields, this, i);
+        }
+
+        childs.push_back(child);
     }
 }
 
@@ -44,28 +43,11 @@ InspectorItem::~InspectorItem()
 {
     for (auto& child : childs)
     {
-        delete child;
+        if (child != nullptr)
+        {
+            delete child;
+        }
     }
-}
-
-InspectorItem* InspectorItem::GetParent()
-{
-    return parent;
-}
-
-size_t InspectorItem::GetChildCount()
-{
-    return childs.size();
-}
-
-InspectorItem* InspectorItem::GetChild(size_t index)
-{
-    return childs[index];
-}
-
-std::string InspectorItem::GetName()
-{
-    return field->name;
 }
 
 List<IFieldMeta*>* InspectorItem::GetFields(ITypeMeta* typeMeta)

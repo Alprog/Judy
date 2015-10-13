@@ -15,7 +15,7 @@ enum ColumnType
 
 InspectorModel::InspectorModel(Node* node)
 {
-    rootItem = new InspectorItem(node);
+    rootItem = InspectorItem::Create(node);
 }
 
 InspectorModel::~InspectorModel()
@@ -23,74 +23,76 @@ InspectorModel::~InspectorModel()
     delete rootItem;
 }
 
-int InspectorModel::rowCount(const QModelIndex &parent) const
+InspectorItem* InspectorModel::GetBaseItem(const QModelIndex& index) const
 {
-    return GetItem(parent)->GetChildCount();
+    return static_cast<InspectorItem*>(index.internalPointer());
 }
 
-int InspectorModel::columnCount(const QModelIndex &parent) const
+InspectorItem* InspectorModel::GetSubItem(const QModelIndex& index) const
+{
+    auto baseItem = GetBaseItem(index);
+    if (baseItem == nullptr)
+    {
+        return rootItem;
+    }
+    else
+    {
+        return baseItem->childs[index.row()];
+    }
+}
+
+int InspectorModel::rowCount(const QModelIndex& index) const
+{
+    auto subItem = GetSubItem(index);
+    return subItem ? subItem->fields->size() : 0;
+}
+
+int InspectorModel::columnCount(const QModelIndex& index) const
 {
     return 2;
 }
 
-InspectorItem* InspectorModel::GetItem(const QModelIndex& index) const
+QModelIndex InspectorModel::index(int row, int column, const QModelIndex& index) const
 {
-    if (index.isValid())
+    auto subItem = GetSubItem(index);
+    if (subItem)
     {
-        auto pointer = index.internalPointer();
-        return static_cast<InspectorItem*>(pointer);
+        return createIndex(row, column, subItem);
     }
-    else
-    {
-        return rootItem;
-    }
+    return QModelIndex(); // invalid
 }
 
-QModelIndex InspectorModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex InspectorModel::parent(const QModelIndex& index) const
 {
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
+    auto baseItem = GetBaseItem(index);
 
-    auto parentItem = GetItem(parent);
-    auto item = parentItem->GetChild(row);
-
-    if (item)
+    if (baseItem == nullptr)
     {
-        return createIndex(row, column, item);
+        throw std::runtime_error("item hasn't parent");
     }
-    else
-    {
-        return QModelIndex();
-    }
-}
 
-QModelIndex InspectorModel::parent(const QModelIndex &index) const
-{
-    if (!index.isValid()) { return QModelIndex(); }
-
-    auto item = GetItem(index);
-
-    auto parent = item->GetParent();
-    if (parent == nullptr || parent == rootItem)
+    if (baseItem == rootItem)
     {
         return QModelIndex();
     }
     else
     {
-        return createIndex(parent->row, 0, parent);
+        return createIndex(baseItem->row, 0, baseItem->parent);
     }
 }
 
-QVariant InspectorModel::data(const QModelIndex &index, int role) const
+QVariant InspectorModel::data(const QModelIndex& index, int role) const
 {
+    auto row = index.row();
     auto col = index.column();
 
-    auto item = GetItem(index);
+    auto item = GetBaseItem(index);
+
+    auto field = item->fields->at(row);
 
     if (col == ColumnType::Name)
     {
-        auto name = item->GetName();
-        return QString::fromStdString(name);
+        return QString::fromStdString(field->name);
     }
     else if (col == ColumnType::Value)
     {
