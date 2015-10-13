@@ -17,8 +17,8 @@ public:
     virtual QModelIndex parent(const QModelIndex& index) const override;
     virtual QVariant data(const QModelIndex& index, int role) const override;
 
-private:
     Node* GetNode(const QModelIndex& index) const;
 
+private:
     Node* rootNode;
 };

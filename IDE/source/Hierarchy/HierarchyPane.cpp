@@ -15,16 +15,27 @@ HierarchyPane::HierarchyPane()
 
     setWidget(tree);
 
-    connect(IDE::Instance(), SIGNAL(SelectNode(Node*)), this, SLOT(OnSelectNode(Node*)));
+    connect(IDE::Instance(), SIGNAL(SelectScene(Node*)), this, SLOT(OnSelectScene(Node*)));
+
 }
 
 HierarchyPane::~HierarchyPane()
 {
 }
 
-void HierarchyPane::OnSelectNode(Node* node)
+void HierarchyPane::OnSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+{
+    auto index = tree->selectionModel()->currentIndex();
+    auto node = model.GetNode(index);
+    IDE::Instance()->SelectNode(node);
+}
+
+void HierarchyPane::OnSelectScene(Node* scene)
 {
     tree->setModel(nullptr);
-    model.SetNode(node);
+    model.SetNode(scene);
     tree->setModel(&model);
+
+    connect(tree->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+            this, SLOT(OnSelectionChanged(QItemSelection, QItemSelection)));
 }

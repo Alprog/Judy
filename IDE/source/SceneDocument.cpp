@@ -23,6 +23,7 @@ SceneDocument::SceneDocument(Path path)
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(Render()));
 
+    IDE::Instance()->SelectScene(scene);
     IDE::Instance()->SelectNode(scene);
 
     timer.start(20);

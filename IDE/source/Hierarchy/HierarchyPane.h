@@ -3,6 +3,7 @@
 
 #include <QDockWidget>
 #include "HierarchyModel.h"
+#include <QItemSelection>
 
 class Node;
 class QTreeView;
@@ -17,7 +18,8 @@ public:
     ~HierarchyPane();
 
 private slots:
-    void OnSelectNode(Node* node);
+    void OnSelectScene(Node* scene);
+    void OnSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 private:
     QTreeView* tree;

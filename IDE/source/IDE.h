@@ -34,6 +34,7 @@ private:
     void LoadSettings();
 
 signals:
+    void SelectScene(Node* scene);
     void SelectNode(Node* node);
 
 private slots:
