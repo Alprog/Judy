@@ -40,4 +40,7 @@ public:
 private:
     Node* parent;
     _(Serialize)__ List<Node*> childs;
+
+
+    std::string luaClass;
 };

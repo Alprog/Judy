@@ -96,11 +96,10 @@ void Node::Render(Matrix matrix, Renderer* renderer)
 
 std::string Node::getLuaClass()
 {
-    throw std::runtime_error("not imlement");
+    return luaClass;
 }
 
 void Node::setLuaClass(std::string name)
 {
-    printf("lua class: %s\n", name.c_str());
-    fflush(stdout);
+    luaClass = name;
 }

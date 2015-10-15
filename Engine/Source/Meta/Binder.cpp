@@ -9,6 +9,8 @@
 #include "ITypeMeta.h"
 #include "Lua.h"
 
+const char* UserdataTable = "UDATA";
+
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }
 {
@@ -47,6 +49,36 @@ inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<
     }
 }
 
+void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushlightuserdata(L, pointer); // TL
+    lua_gettable(L, -2); // T?
+
+    if (lua_isuserdata(L, -1))
+    {
+        // TU
+        lua_remove(L, -2); // U
+    }
+    else
+    {
+        // T?
+        lua_pop(L, 1); // T
+
+        auto data = (void**)lua_newuserdata(L, sizeof(void*)); // TU
+        *data = pointer;
+
+        // set metatable (todo: rtti for actual type)
+        luaL_getmetatable(L, type->name.c_str()); // TUM
+        lua_setmetatable(L, -2); // TU
+
+        lua_pushlightuserdata(L, pointer); // TUL
+        lua_pushvalue(L, -2); // TULU
+        lua_settable(L, -4); // TU
+        lua_remove(L, -2); // U
+    }
+}
+
 inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
 {
     if (type == TypeMetaOf<int>())
@@ -65,14 +97,13 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     {
         if (type->isPointer())
         {
-            type = type->GetPointeeType();
-            auto data = (void**)lua_newuserdata(L, sizeof(void*));
-            *data = result.as<void*>();
-            luaL_getmetatable(L, type->name.c_str());
-            lua_setmetatable(L, -2);
+            auto pointer = result.as<void*>();
+            auto pointeeType = type->GetPointeeType();
+            pushUserdata(L, pointer, pointeeType);
         }
         else
         {
+            // todo: send full userdata
             throw std::runtime_error("not implemented");
         }
     }
@@ -124,6 +155,9 @@ int NewInvoker(lua_State* L)
 
 void LuaBinder::Bind(Meta* meta)
 {
+    lua_newtable(L);
+    lua_setfield(L, LUA_REGISTRYINDEX, UserdataTable);
+
     for (auto& typeMeta : meta->types)
     {
         if (typeMeta->getFlags() & ITypeMeta::IsClass)

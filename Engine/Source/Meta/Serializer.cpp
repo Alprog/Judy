@@ -277,7 +277,7 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
 void Serializer::DeserializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
-    auto fields = classMeta->GetFieldsWithAttribute("Serialize", false);
+    auto fields = classMeta->GetFieldsWithAttribute("Serialize", true);
     for (auto fieldMeta : fields)
     {
         lua_getfield(L, -1, fieldMeta->name.c_str());
