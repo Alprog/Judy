@@ -277,13 +277,13 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
 void Serializer::DeserializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
-    auto fileds = classMeta->GetFieldsWithAttribute("Serialize", false);
-    for (auto fieldMeta : fileds)
+    auto fields = classMeta->GetFieldsWithAttribute("Serialize", false);
+    for (auto fieldMeta : fields)
     {
-            lua_getfield(L, -1, fieldMeta->name.c_str());
-            Any value = Deserialize(fieldMeta->GetType());
-            fieldMeta->Set(pointer, value);
-            lua_pop(L, 1);
+        lua_getfield(L, -1, fieldMeta->name.c_str());
+        Any value = Deserialize(fieldMeta->GetType());
+        fieldMeta->Set(pointer, value);
+        lua_pop(L, 1);
     }
     for (auto& baseType : classMeta->baseTypes)
     {
