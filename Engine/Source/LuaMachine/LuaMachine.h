@@ -44,7 +44,7 @@ public:
     std::function<void()> breakCallback;
     std::function<void()> resumeCallback;
 
-private:
+public:
    lua_State* L;
    std::atomic<bool> suspended;
    bool isStarted;

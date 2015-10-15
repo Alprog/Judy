@@ -26,8 +26,14 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
-    virtual void Update(double delta);
+    void Update(double delta);
+    virtual void UpdateHelper(double delta);
+
     virtual void Render(Matrix matrix, Renderer* renderer);
+
+    Property _(Serialize)__ luaClass;
+    std::string getLuaClass();
+    void setLuaClass(std::string name);
 
     _(Serialize, Inspect)__ Transform transform;
 

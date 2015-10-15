@@ -122,16 +122,14 @@ void Serializer::SerializeAsClass(Any& object, IClassMeta* classMeta)
 
 void Serializer::SerializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
-    for (auto& pair : classMeta->fields)
+    auto fileds = classMeta->GetFieldsWithAttribute("Serialize", true);
+
+    for (auto fieldMeta : fileds)
     {
-        auto fieldMeta = pair.second;
-        if (fieldMeta->HasAttribute("Serialize"))
-        {
-            Any value = fieldMeta->Get(pointer);
-            auto fieldType = fieldMeta->GetType();
-            Serialize(value, fieldType);
-            lua_setfield(L, -2, fieldMeta->name.c_str());
-        }
+        Any value = fieldMeta->Get(pointer);
+        auto fieldType = fieldMeta->GetType();
+        Serialize(value, fieldType);
+        lua_setfield(L, -2, fieldMeta->name.c_str());
     }
     for (auto& baseType : classMeta->baseTypes)
     {
@@ -279,16 +277,13 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
 
 void Serializer::DeserializeClassFields(Any& pointer, IClassMeta* classMeta)
 {
-    for (auto& pair : classMeta->fields)
+    auto fileds = classMeta->GetFieldsWithAttribute("Serialize", false);
+    for (auto fieldMeta : fileds)
     {
-        auto fieldMeta = pair.second;
-        if (fieldMeta->HasAttribute("Serialize"))
-        {
             lua_getfield(L, -1, fieldMeta->name.c_str());
             Any value = Deserialize(fieldMeta->GetType());
             fieldMeta->Set(pointer, value);
             lua_pop(L, 1);
-        }
     }
     for (auto& baseType : classMeta->baseTypes)
     {

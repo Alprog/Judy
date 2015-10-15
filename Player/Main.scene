@@ -1,9 +1,11 @@
 {{
     class = 'Model',
+	luaClass = 'ModelDerived',
     name = 'Scene',
     childs = {
         {{
             class = 'Model',
+			luaClass = '',
             name = 'child1',
             childs = {},
             transform = {
@@ -28,6 +30,7 @@
         }},
         {{
             class = 'Model',
+			luaClass = '',
             name = 'child2',
             childs = {},
             transform = {

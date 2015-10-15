@@ -6,8 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-    bool a = std::is_same<int*, typename fulldecay< int const *& >::type>::value;
-
     auto debug = false;
     for (int i = 0; i < argc; i++)
     {

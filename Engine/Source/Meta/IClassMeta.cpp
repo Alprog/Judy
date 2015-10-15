@@ -11,7 +11,7 @@ List<IFieldMeta*> IClassMeta::GetFieldsWithAttribute(std::string attribute, bool
     for (auto& pair : fields)
     {
         auto fieldMeta = pair.second;
-        if (fieldMeta->HasAttribute("Inspect"))
+        if (fieldMeta->HasAttribute(attribute))
         {
             list.push_back(fieldMeta);
         }
@@ -22,7 +22,7 @@ List<IFieldMeta*> IClassMeta::GetFieldsWithAttribute(std::string attribute, bool
         for (auto& pair : properties)
         {
             auto propertyMeta = pair.second;
-            if (propertyMeta->HasAttribute("Inspect"))
+            if (propertyMeta->HasAttribute(attribute))
             {
                 list.push_back(propertyMeta);
             }

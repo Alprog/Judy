@@ -2,6 +2,8 @@
 #include "Node.h"
 #include <algorithm>
 
+#include "LuaMachine.h"
+
 Node::Node()
     : parent {nullptr}
 {
@@ -66,6 +68,17 @@ void Node::Reparent(Node* parent)
 
 void Node::Update(double delta)
 {
+//    if (LuaObject != nullptr)
+//    {
+//        auto L = LuaMachine::Instance()->L;
+
+//        lua_push(L, )
+
+//    }
+}
+
+void Node::UpdateHelper(double delta)
+{
     for (auto child : childs)
     {
         child->Update(delta);
@@ -79,4 +92,15 @@ void Node::Render(Matrix matrix, Renderer* renderer)
         auto& childMatrix = child->transform.getMatrix();
         child->Render(childMatrix * matrix, renderer);
     }
+}
+
+std::string Node::getLuaClass()
+{
+    throw std::runtime_error("not imlement");
+}
+
+void Node::setLuaClass(std::string name)
+{
+    printf("lua class: %s\n", name.c_str());
+    fflush(stdout);
 }
