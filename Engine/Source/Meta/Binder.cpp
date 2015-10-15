@@ -9,8 +9,6 @@
 #include "ITypeMeta.h"
 #include "Lua.h"
 
-const char* UserdataTable = "UDATA";
-
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }
 {
@@ -65,11 +63,15 @@ void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
         // T?
         lua_pop(L, 1); // T
 
-        auto data = (void**)lua_newuserdata(L, sizeof(void*)); // TU
-        *data = pointer;
+        auto udata = (void**)lua_newuserdata(L, sizeof(void*)); // TU
+        *udata = pointer;
 
         // set metatable (todo: rtti for actual type)
         luaL_getmetatable(L, type->name.c_str()); // TUM
+        if (lua_isnil(L, -1))
+        {
+            throw std::runtime_error("unknown type");
+        }
         lua_setmetatable(L, -2); // TU
 
         lua_pushlightuserdata(L, pointer); // TUL
@@ -155,9 +157,6 @@ int NewInvoker(lua_State* L)
 
 void LuaBinder::Bind(Meta* meta)
 {
-    lua_newtable(L);
-    lua_setfield(L, LUA_REGISTRYINDEX, UserdataTable);
-
     for (auto& typeMeta : meta->types)
     {
         if (typeMeta->getFlags() & ITypeMeta::IsClass)

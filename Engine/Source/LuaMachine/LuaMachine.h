@@ -32,6 +32,9 @@ public:
    void StepOut();
    void Stop();
 
+   void RegUserdata(void* pointer, std::string className);
+   void UnregUserdata(void* pointer);
+
 private:
    void Hook(lua_Debug *ar);
    void Break(lua_Debug *ar);
@@ -44,7 +47,7 @@ public:
     std::function<void()> breakCallback;
     std::function<void()> resumeCallback;
 
-public:
+private:
    lua_State* L;
    std::atomic<bool> suspended;
    bool isStarted;

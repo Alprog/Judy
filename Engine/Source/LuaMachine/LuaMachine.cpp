@@ -24,6 +24,11 @@ LuaMachine::LuaMachine()
     lua_pushstring(L, "?.lua");
     lua_setfield(L, -2, "path");
     lua_pop(L, 1);
+
+    // udata table
+    lua_newtable(L);
+    lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
+
     LuaBinder(L).Bind(Meta::Instance());
 }
 
@@ -198,4 +203,28 @@ void LuaMachine::Stop()
         suspended = false;
         lua_sethook(L, stopHook, LUA_MASKCOUNT, 1);
     }
+}
+
+void LuaMachine::RegUserdata(void* pointer, std::string className)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushlightuserdata(L, pointer); // TL
+
+    auto udata = (void**)lua_newuserdata(L, sizeof(void*)); // TLU
+    *udata = pointer;
+
+    luaL_newmetatable(L, className.c_str()); // TLUM
+    lua_setmetatable(L, -2); // TLU
+
+    lua_rawset(L, -3); // T
+    lua_pop(L, 1); // .
+}
+
+void LuaMachine::UnregUserdata(void* pointer)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushlightuserdata(L, pointer); // TL
+    lua_pushnil(L); // TLN
+    lua_rawset(L, -3); // T
+    lua_pop(L, 1); // .
 }

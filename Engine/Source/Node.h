@@ -16,6 +16,7 @@ class _(Meta)__ Node
 public:
     Node();
     Node(int a);
+    virtual ~Node();
 
     Node* Parent();
     int ChildCount();
@@ -33,14 +34,13 @@ public:
 
     Property _(Serialize)__ luaClass;
     std::string getLuaClass();
-    void setLuaClass(std::string name);
+    void setLuaClass(std::string luaClass);
 
     _(Serialize, Inspect)__ Transform transform;
 
 private:
     Node* parent;
     _(Serialize)__ List<Node*> childs;
-
 
     std::string luaClass;
 };

@@ -14,6 +14,28 @@ Node::Node(int i)
 {
 }
 
+Node::~Node()
+{
+    if (!luaClass.empty())
+    {
+        LuaMachine::Instance()->UnregUserdata(this);
+    }
+}
+
+std::string Node::getLuaClass()
+{
+    return luaClass;
+}
+
+void Node::setLuaClass(std::string luaClass)
+{
+    if (!luaClass.empty())
+    {
+        LuaMachine::Instance()->RegUserdata(this, luaClass);
+    }
+    this->luaClass = luaClass;
+}
+
 Node* Node::Parent()
 {
     return parent;
@@ -92,14 +114,4 @@ void Node::Render(Matrix matrix, Renderer* renderer)
         auto& childMatrix = child->transform.getMatrix();
         child->Render(childMatrix * matrix, renderer);
     }
-}
-
-std::string Node::getLuaClass()
-{
-    return luaClass;
-}
-
-void Node::setLuaClass(std::string name)
-{
-    luaClass = name;
 }
