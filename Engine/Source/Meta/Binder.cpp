@@ -171,7 +171,7 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 {
     auto className = classMeta->name.c_str();
 
-    luaL_newmetatable(L, className); // (1)
+    luaL_newmetatable(L, className); // M
 
     for (auto constructor : classMeta->constructors)
     {
@@ -206,8 +206,8 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 //    }
 
     //
-    lua_pushvalue(L, -1);
-    lua_setfield(L, -2, "__index");
+    lua_pushvalue(L, -1); // MM
+    lua_setfield(L, -2, "__index"); // M
 
     lua_setglobal(L, className);
 }

@@ -10,15 +10,16 @@
 class ITypeMeta;
 
 template <typename T>
-ITypeMeta* TypeMetaOf();
+inline ITypeMeta* TypeMetaOf();
 
 class Meta : public Singleton<Meta>
 {
     friend class Singleton<Meta>;
 
-private:
-    Meta();
+public:
+    void Init();
 
+private:
     #include "Meta.gen.h"
     void DefineClasses();
 

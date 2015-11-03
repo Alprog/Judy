@@ -3,6 +3,7 @@
 #include "RemoteDebbuger.h"
 
 #include "App.h"
+#include "Meta/Meta.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
             debug = true;
         }
     }
+
+    Meta::Instance()->Init();
 
     auto luaMachine = LuaMachine::Instance();
 
