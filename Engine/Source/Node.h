@@ -6,6 +6,7 @@
 #include "Math/Transform.h"
 #include "Meta/ITypeMeta.h"
 #include "Attributes.h"
+#include "SmartPointer.h"
 
 class Renderer;
 
@@ -40,7 +41,7 @@ public:
 
 private:
     Node* parent;
-    _(Serialize)__ List<Node*> childs;
+    _(Serialize)__ List<SmartPointer<Node>> childs;
 
     std::string luaClass;
 };

@@ -9,6 +9,7 @@
 #include "Any.h"
 #include "Singleton.h"
 #include "DeepPointer.h"
+#include "SmartPointer.h"
 
 #include "ConstructorMeta.h"
 #include <typeindex>
@@ -59,6 +60,12 @@ struct pointeeOf<T*>
     using type = T;
 };
 
+/*template <typename T>
+struct pointeeOf<SmartPointer<T>>
+{
+    using type = typename T;
+};*/
+
 template <typename T>
 struct pointeeOf<DeepPointer<T>>
 {
@@ -80,7 +87,7 @@ public:
             (~is<ClassType>::Class + 1) & Flags::IsClass |
             (~is<ClassType>::Pointer + 1) & Flags::IsPointer |
             (~is<ClassType>::PointerToPolymorhic + 1) & Flags::IsPointerToPolymorhic |
-            (~is<ClassType>::List + 1) & Flags::IsList
+            (~is<ClassType>::CustomSerializing + 1) & Flags::IsCustomSerializing
         ;
         return (Flags)flags;
     }

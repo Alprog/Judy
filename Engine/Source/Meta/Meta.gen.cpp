@@ -19,6 +19,7 @@
 #include "Model.h"
 #include "Node.h"
 #include "Quad.h"
+#include "SmartPointer.h"
 #include "Window.h"
 
 template <typename T>
@@ -65,13 +66,25 @@ void Meta::DefineSet()
     ;
 }
 
+template <typename T>
+void Meta::DefineSmartPointer()
+{
+    using type = SmartPointer<T>;
+    ClassDefiner<type>(this, "type")
+        .templateArgument<T>()
+        .base<std::shared_ptr<T>>()
+        .constructor<T*>()
+        .function("serialize", &type::serialize)
+        .function("deserialize", &type::deserialize)
+    ;
+}
+
 void Meta::DefineClasses()
 {
     DefineList<CallInfo>();
     DefineSet<int>();
     DefineList<float>();
     DefineSet<WindowM*>();
-    DefineList<Node*>();
     DefineList<int>();
     DefineList<WindowM*>();
 
@@ -196,6 +209,7 @@ void Meta::DefineClasses()
     ClassDefiner<Node>(this, "Node")
         .constructor()
         .constructor<int>()
+        .constructor()
         .method("Parent", &Node::Parent)
         .method("ChildCount", &Node::ChildCount)
         .method("Child", &Node::Child)
@@ -212,6 +226,7 @@ void Meta::DefineClasses()
         .field("transform", &Node::transform).attr("Serialize").attr("Inspect")
         .field("parent", &Node::parent)
         .field("childs", &Node::childs).attr("Serialize")
+        .field("luaClass", &Node::luaClass)
     ;
 
     ClassDefiner<Quad>(this, "Quad")

@@ -48,19 +48,24 @@ int Node::ChildCount()
 
 Node* Node::Child(int i)
 {
-    return childs[i];
+    return childs[i].get();
 }
 
 void Node::AddChild(Node* node)
 {
     node->Unparent();
-    childs.push_back(node);
+    SmartPointer<Node> ptr(node);
+    childs.push_back(ptr);
     node->parent = this;
 }
 
 void Node::RemoveChild(Node* node)
 {
-    auto position = find(begin(childs), end(childs), node);
+    auto position = find_if(begin(childs), end(childs), [&](SmartPointer<Node> const& ptr)
+    {
+        return ptr.get() == node;
+    });
+
     if (position != end(childs))
     {
         childs.erase(position);

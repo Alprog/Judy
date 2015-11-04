@@ -233,6 +233,14 @@ std::vector<TypeInfo> CodeGenerator::GetTemplateTypes(std::vector<ClassInfo>& cl
         }
     }
 
+    for (auto i = 0; i < typeRefs.size(); i++)
+    {
+        for (auto& type : typeRefs[i]->templateArguments)
+        {
+            typeRefs.push_back(&type);
+        }
+    }
+
     std::vector<TypeInfo> types;
     std::unordered_set<std::string> names;
     for (TypeInfo* typeRef : typeRefs)

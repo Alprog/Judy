@@ -135,7 +135,6 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
         else
         {
             // field declaration
-            statementTokens.makeGroups("<", ">");
             for (auto& tokens : statementTokens.splitDeclararion())
             {
                 FieldInfo fieldInfo(tokens);

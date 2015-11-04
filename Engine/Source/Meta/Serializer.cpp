@@ -55,7 +55,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     {
         lua_pushstring(L, object.as<std::string>().c_str());
     }
-    else if (flags & ITypeMeta::IsList)
+    else if (flags & ITypeMeta::IsCustomSerializing)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         classMeta->functions["serialize"]->Invoke(object, this);
@@ -237,7 +237,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
     {
         return std::string( lua_tostring(L, -1) );
     }
-    else if (flags & ITypeMeta::IsList)
+    else if (flags & ITypeMeta::IsCustomSerializing)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
         return classMeta->functions["deserialize"]->Invoke(this);

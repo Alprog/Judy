@@ -39,7 +39,8 @@ HEADERS += \
     Source/Meta/IndexSequence.h \
     Source/Meta/IConstructorMeta.h \
     Source/Meta/IClassMeta.h \
-    Source/Meta/IFieldMeta.h
+    Source/Meta/IFieldMeta.h \
+    Source/SmartPointer.h
 
 SOURCES += \
     Source/App.cpp \
