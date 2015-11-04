@@ -24,9 +24,9 @@ public:
 protected:
     WindowM();
 
-    RenderTarget* renderTarget;
-    Node* scene;
-    Renderer* renderer;
+    _(Bind)__ RenderTarget* renderTarget;
+    _(Bind)__ Node* scene;
+    _(Bind)__ Renderer* renderer;
 
     //RenderTarget* RenderTarget1;
     //RenderTarget* RenderTarget2;

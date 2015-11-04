@@ -114,15 +114,15 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
 int GetterInvoker(lua_State* L)
 {
     auto field = *(IFieldMeta**)lua_touserdata(L, lua_upvalueindex(1));
-    void* object = *(void**)lua_touserdata(L, 1);
-    //Any result = field->get(object);
-    //ProcessResult(L, result, field->GetType());
+    Any object = *(void**)lua_touserdata(L, 1);
+    Any result = field->Get(object);
+    ProcessResult(L, result, field->GetType());
     return 1;
 }
 
 int FunctionInvoker(lua_State* L)
 {
-    auto function = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
+    auto function = (IFunctionMeta*)lua_touserdata(L, lua_upvalueindex(1));
 
     std::vector<Any> args = {};
     ProcessArguments(L, function, args);
@@ -143,7 +143,7 @@ int FunctionInvoker(lua_State* L)
 
 int NewInvoker(lua_State* L)
 {
-    auto function = *(IFunctionMeta**)lua_touserdata(L, lua_upvalueindex(1));
+    auto function = (IFunctionMeta*)lua_touserdata(L, lua_upvalueindex(1));
 
     std::vector<Any> args = {};
     ProcessArguments(L, function, args);
@@ -193,17 +193,16 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     }
 
     // fields
-//    {
+    {
 //        lua_newtable(L); // set table (2)
 
 //        for (auto field : type->fields)
 //        {
 //            *(IFieldMeta**)lua_newuserdata(L, size) = field;
-
 //        }
 
 //        lua_setfield(L, 1, "__newindex");
-//    }
+    }
 
     //
     lua_pushvalue(L, -1); // MM
@@ -214,7 +213,8 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 
 void LuaBinder::BindHelper(IFunctionMeta* function, std::string name, luaClosure closure)
 {
-    *(void**)lua_newuserdata(L, sizeof(void*)) = function;
-    lua_pushcclosure(L, closure, 1);
-    lua_setfield(L, -2, name.c_str());
+    // M
+    lua_pushlightuserdata(L, function); // MP
+    lua_pushcclosure(L, closure, 1); // MC
+    lua_setfield(L, -2, name.c_str()); // M
 }

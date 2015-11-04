@@ -1,8 +1,6 @@
 
 local ModelDerived = {}
 
-function ModelDerived::Update(dt)
-	
-	
+function ModelDerived:Update(dt)
 	
 end

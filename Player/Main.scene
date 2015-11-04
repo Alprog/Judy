@@ -1,76 +1,76 @@
-{{
-    class = 'Model',
-	luaClass = 'ModelDerived',
-    name = 'Scene',
-    childs = {
-        {{
-            class = 'Model',
-			luaClass = '',
-            name = 'child1',
-            childs = {},
-            transform = {
-                class = 'Transform',
-                translation = {
-                    2.0,
-                    0.0,
-                    0.0
-                },
-                rotation = {
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                },
-                scaling = {
-                    0.30000001192093,
-                    0.30000001192093,
-                    0.30000001192093
-                }
-            }
-        }},
-        {{
-            class = 'Model',
-			luaClass = '',
-            name = 'child2',
-            childs = {},
-            transform = {
-                class = 'Transform',
-                translation = {
-                    -2.0,
-                    0.0,
-                    0.0
-                },
-                rotation = {
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                },
-                scaling = {
-                    0.40000000596046,
-                    0.40000000596046,
-                    0.40000000596046
-                }
-            }
-        }}
-    },
-    transform = {
-        class = 'Transform',
-        translation = {
-            0.0,
-            0.0,
-            0.0
-        },
-        rotation = {
-            0.0,
-            0.0,
-            0.0,
-            1.0
-        },
-        scaling = {
-            0.30000001192093,
-            0.30000001192093,
-            0.30000001192093
-        }
-    }
+{{
+    class = 'Model',
+    transform = {
+        class = 'Transform',
+        rotation = {
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        },
+        scaling = {
+            0.30000001192093,
+            0.30000001192093,
+            0.30000001192093
+        },
+        translation = {
+            0.0,
+            0.0,
+            0.0
+        }
+    },
+    childs = {
+        {{
+            class = 'Model',
+            transform = {
+                class = 'Transform',
+                rotation = {
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                scaling = {
+                    0.30000001192093,
+                    0.30000001192093,
+                    0.30000001192093
+                },
+                translation = {
+                    2.0,
+                    0.0,
+                    0.0
+                }
+            },
+            childs = {},
+            name = 'child1',
+            luaClass = ''
+        }},
+        {{
+            class = 'Model',
+            transform = {
+                class = 'Transform',
+                rotation = {
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                scaling = {
+                    0.60000002384186,
+                    0.40000000596046,
+                    0.40000000596046
+                },
+                translation = {
+                    -2.0,
+                    0.0,
+                    0.0
+                }
+            },
+            childs = {},
+            name = 'child2',
+            luaClass = ''
+        }}
+    },
+    name = 'Scene',
+    luaClass = 'ModelDerived'
 }}

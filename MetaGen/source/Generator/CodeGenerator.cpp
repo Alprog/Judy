@@ -336,7 +336,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     }
 
     // fields
-    if (!isAbstract)
+    //if (!isAbstract)
     {
         for (auto& field : classInfo.fields)
         {

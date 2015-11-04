@@ -3,6 +3,7 @@
 
 #include "Any.h"
 #include "ITypeMeta.h"
+#include "Attributes.h"
 
 class lua_State;
 class ITypeMeta;

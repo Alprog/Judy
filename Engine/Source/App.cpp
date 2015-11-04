@@ -1,6 +1,7 @@
 
 #include "App.h"
 #include "Platforms.h"
+#include <time.h>
 
 App* App::Instance()
 {
