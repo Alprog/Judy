@@ -85,6 +85,8 @@ void Meta::DefineClasses()
     DefineSet<int>();
     DefineList<float>();
     DefineSet<WindowM*>();
+    DefineList<SmartPointer<Node>>();
+    DefineSmartPointer<Node>();
     DefineList<int>();
     DefineList<WindowM*>();
 

@@ -8,8 +8,14 @@
 template <typename T>
 class _(Meta)__ SmartPointer : public std::shared_ptr<T>
 {
+    friend class Meta;
+
 public:
     using base = std::shared_ptr<T>;
+
+    SmartPointer()
+    {
+    }
 
     SmartPointer(T* pointer)
         : base(pointer)
@@ -17,13 +23,15 @@ public:
     }
 
 private:
-    static void serialize(std::shared_ptr<T> ptr, Serializer* serializer)
+    static void serialize(SmartPointer<T> ptr, Serializer* serializer)
     {
         serializer->Serialize(ptr.get(), TypeMetaOf<T*>());
     }
 
-    static std::shared_ptr<T> deserialize(Serializer* serializer)
+    static SmartPointer<T> deserialize(Serializer* serializer)
     {
-        return serializer->Deserialize(TypeMetaOf<T*>()).as<T*>();
+        auto any = serializer->Deserialize(TypeMetaOf<T*>());
+        auto pointer = any.as<T*>();
+        return SmartPointer<T>(pointer);
     }
 };
