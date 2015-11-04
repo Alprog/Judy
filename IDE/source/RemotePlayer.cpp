@@ -131,6 +131,7 @@ void RemotePlayer::OnGetMessage(Any& message)
     {
         auto text = message.as<LogMessage>().text;
         printf("%s", text.c_str());
+        fflush(stdout);
     }
     else if (message.GetType() == TypeMetaOf<CallStack>())
     {

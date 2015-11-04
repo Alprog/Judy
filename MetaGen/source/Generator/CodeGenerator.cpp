@@ -263,14 +263,15 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     std::stringstream stream;
 
     auto className = classInfo.name;
+    auto classFullName = className;
     if (classInfo.isTemplate())
     {
-        auto list = GenerateParametersList(classInfo, false);
-        stream << tab << "using type = " << className << "<" << list << ">;" << std::endl;
+        classFullName = className + "<" + GenerateParametersList(classInfo, false) + ">";
+        stream << tab << "using type = " << classFullName << ";" << std::endl;
         className = "type";
     }
 
-    stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << className << "\")" << std::endl;
+    stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << classFullName << "\")" << std::endl;
 
     // template arguments
     for (auto& parameter : classInfo.templateParameters)

@@ -26,7 +26,7 @@ template <typename T>
 void Meta::DefineList()
 {
     using type = List<T>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "List")
         .templateArgument<T>()
         .base<std::vector<T>>()
         .constructor()
@@ -43,7 +43,7 @@ template <typename T1, typename T2>
 void Meta::DefineMap()
 {
     using type = Map<T1, T2>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "Map")
         .templateArgument<T1>()
         .templateArgument<T2>()
         .base<std::unordered_map<T1, T2>>()
@@ -57,7 +57,7 @@ template <typename T>
 void Meta::DefineSet()
 {
     using type = Set<T>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "Set")
         .templateArgument<T>()
         .base<std::unordered_set<T>>()
         .constructor()
@@ -70,7 +70,7 @@ template <typename T>
 void Meta::DefineSmartPointer()
 {
     using type = SmartPointer<T>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "SmartPointer")
         .templateArgument<T>()
         .base<std::shared_ptr<T>>()
         .constructor()
@@ -245,7 +245,7 @@ void Meta::DefineClasses()
         .function("Create", &WindowM::Create)
         .method("show", &WindowM::show)
         .method("ProcessEvents", &WindowM::ProcessEvents)
-        .method("Update", &WindowM::Update).attr("Bind")
+        .method("Update", &WindowM::Update)
         .method("Render", &WindowM::Render)
         .field("renderTarget", &WindowM::renderTarget).attr("Bind")
         .field("scene", &WindowM::scene).attr("Bind")

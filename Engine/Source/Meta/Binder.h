@@ -10,7 +10,7 @@ class Any;
 class ITypeMeta;
 class IFunctionMeta;
 
-using luaClosure = int(*)(lua_State*);
+using luaCFunction = int(*)(lua_State*);
 
 class LuaBinder
 {
@@ -20,7 +20,7 @@ public:
 
 private:
     void BindClass(IClassMeta* classMeta);
-    void BindHelper(IFunctionMeta* function, std::string name, luaClosure closure);
+    void BindHelper(int index, std::string name, luaCFunction closure, IFunctionMeta* upvalue);
 
     lua_State* L;
 };
