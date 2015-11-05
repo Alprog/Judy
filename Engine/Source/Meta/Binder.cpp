@@ -85,7 +85,7 @@ void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
         lua_newtable(L); // TUP
         lua_pushvalue(L, -1); // TUPP
         lua_setfield(L, -2, "__index"); // TUP
-        lua_pushvalue(L, -1); // TUPP
+        lua_pushcfunction(L, NewIndexFunction); // TUPF
         lua_setfield(L, -2, "__newindex"); // TUP
 
 
@@ -177,11 +177,9 @@ int FunctionInvoker(lua_State* L)
 
 int NewInvoker(lua_State* L)
 {
-    auto function = (IFunctionMeta*)lua_touserdata(L, lua_upvalueindex(1));
+    auto constructor = (IConstructorMeta*)lua_touserdata(L, lua_upvalueindex(1));
     std::vector<Any> args = {};
-    ProcessArguments(L, function, args);
-
-    auto constructor = dynamic_cast<IConstructorMeta*>(function);
+    ProcessArguments(L, constructor, args);
     auto result = constructor->New(args);
     auto type = constructor->GetNewType();
     ProcessResult(L, result, type);
@@ -226,20 +224,20 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     }
 
     // fields
-//    {
-//        lua_newtable(L); // MG
-//        lua_newtable(L); // MGS
+    {
+        lua_newtable(L); // MG
+        lua_newtable(L); // MGS
 
-//        for (auto& pair : classMeta->fields)
-//        {
-//            auto field = pair.second;
-//            BindHelper(-2, field->name, GetterInvoker, field);
-//            BindHelper(-1, field->name, SetterInvoker, field);
-//        }
+        for (auto& pair : classMeta->fields)
+        {
+            auto field = pair.second;
+            BindHelper(-2, field->name, GetterInvoker, field);
+            BindHelper(-1, field->name, SetterInvoker, field);
+        }
 
-//        lua_setfield(L, -3, "__set"); // MG
-//        lua_setfield(L, -2, "__get"); // M
-//    }
+        lua_setfield(L, -3, "__set"); // MG
+        lua_setfield(L, -2, "__get"); // M
+    }
 
     //
     lua_pushvalue(L, -1); // MM
@@ -250,10 +248,10 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     lua_setglobal(L, className);
 }
 
-void LuaBinder::BindHelper(int index, std::string name, luaCFunction closure, IFunctionMeta* upvalue)
+void LuaBinder::BindHelper(int index, std::string name, luaCFunction closure, void* upvalue)
 {
     // T...
-    lua_pushlightuserdata(L, upvalue); // T...L
+    lua_pushlightuserdata(L, (void*)upvalue); // T...L
     lua_pushcclosure(L, closure, 1); // T...C
     lua_setfield(L, index - 1, name.c_str()); // T...
 }

@@ -20,7 +20,7 @@ public:
 
 private:
     void BindClass(IClassMeta* classMeta);
-    void BindHelper(int index, std::string name, luaCFunction closure, IFunctionMeta* upvalue);
+    void BindHelper(int index, std::string name, luaCFunction closure, void* upvalue);
 
     lua_State* L;
 };
