@@ -3,7 +3,7 @@ require 'Serializer'
 
 local app = App.Instance()
 local window = WindowM.Create()
-
+
 local a = Node.new0()
 local b = Node.new1(4)
 a:AddChild(b)
@@ -13,6 +13,10 @@ print(count)
 --[[Node.__newindex = function(table, key, value)
 	
 end]]
+
+print(window.scene)
+
+window.scene = a
 
 a.foo = 3
 print(a.foo)
@@ -55,4 +59,4 @@ window:Update()]]
 
 --print(window.scene)
 
---app:StartMainLoop()
+app:StartMainLoop()

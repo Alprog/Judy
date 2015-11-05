@@ -9,6 +9,9 @@
 #include "ITypeMeta.h"
 #include "Lua.h"
 
+const int GETTER = 1;
+const int SETTER = 2;
+
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }
 {
@@ -21,42 +24,103 @@ T* CheckType(lua_State* L, int n)
     return *(T**)luaL_checkudata(L, n, name);
 }
 
+inline Any GetArgument(lua_State* L, int index, ITypeMeta* typeMeta)
+{
+    if (typeMeta == TypeMetaOf<int>())
+    {
+        return lua_tointeger(L, index);
+    }
+    else if (typeMeta == TypeMetaOf<float>())
+    {
+        return (float)lua_tonumber(L, index);
+    }
+    else if (typeMeta == TypeMetaOf<char*>())
+    {
+        return lua_tostring(L, index);
+    }
+    else
+    {
+        void* p = *(void**)lua_touserdata(L, index);
+        return p;
+    }
+}
+
 inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<Any>& args)
 {
     auto types = function->GetArgTypes();
     int index = -types.size();
-    for (auto argType : types)
+    for (auto typeMeta : types)
     {
-        if (argType == TypeMetaOf<int>())
-        {
-            args.push_back(lua_tointeger(L, index++));
-        }
-        else if (argType == TypeMetaOf<float>())
-        {
-            args.push_back((float)lua_tonumber(L, index++));
-        }
-        else if (argType == TypeMetaOf<char*>())
-        {
-            args.push_back(lua_tostring(L, index++));
-        }
-        else
-        {
-            void* p = *(void**)lua_touserdata(L, index++);
-            args.push_back(p);
-        }
+        auto arg = GetArgument(L, index++, typeMeta);
+        args.push_back(arg);
     }
 }
 
 //void* p = *(void**)lua_touserdata(L, -3); // KV
 //lua_getmetatable(L, -3); // TKVM
 
+int IndexFunction(lua_State* L)
+{
+    // UK (userdata, key)
+    lua_getmetatable(L, -2); // UKP (..., peertable)
+
+    // inspect peer
+    lua_pushvalue(L, -2); // UKPK
+    lua_rawget(L, -2); // UKP?
+    if (!lua_isnil(L, -1))
+    {
+        lua_replace(L, -4); // ?KP
+        lua_pop(L, 2); // ?
+        return 1;
+    }
+    lua_pop(L, 1); // UKP
+
+    lua_getmetatable(L, -1); // UKPM
+
+    // inspect meta
+    lua_pushvalue(L, -3); // UKPMK
+    lua_gettable(L, -2); // UKPM?
+
+    // if property then call getter
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "GET"); // UKPMTF
+        lua_insert(L, -6); // FUKPMT
+        lua_pop(L, 4); // FU
+        lua_call(L, 1, 1); // ?
+        return 1;
+    }
+
+    lua_replace(L, -5); // ?KPM
+    lua_pop(L, 3); // ?
+    return 1;
+}
+
 int NewIndexFunction(lua_State* L)
 {
     // UKV (userdata, key, value)
 
     lua_getmetatable(L, -3); // UKVP (..., peertable)
-    lua_insert(L, -3); // UPKV
 
+    // check setter in meta
+    lua_getmetatable(L, -1); // UKVPM
+    lua_pushvalue(L, -4);    // UKVPMK
+    lua_gettable(L, -2);     // UKVPM?
+
+    // if property than call setter
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "SET"); // UKVPMTF
+        lua_insert(L, -7); // FUKVPMT
+        lua_pop(L, 3); // FUKV
+        lua_remove(L, -2); // FUV
+        lua_call(L, 2, 0); //
+        return 0;
+    }
+    lua_pop(L, 2); // UKVP
+
+    // set to peer
+    lua_insert(L, -3); // UPKV
     lua_rawset(L, -3); // UP
     lua_pop(L, 2); //
     return 0;
@@ -83,7 +147,7 @@ void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
 
         // create peer table
         lua_newtable(L); // TUP
-        lua_pushvalue(L, -1); // TUPP
+        lua_pushcfunction(L, IndexFunction); // TUPF
         lua_setfield(L, -2, "__index"); // TUP
         lua_pushcfunction(L, NewIndexFunction); // TUPF
         lua_setfield(L, -2, "__newindex"); // TUP
@@ -142,7 +206,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
 int GetterInvoker(lua_State* L)
 {
     auto field = (IFieldMeta*)lua_touserdata(L, lua_upvalueindex(1));
-    Any object = *(void**)lua_touserdata(L, 1);
+    Any object = *(void**)lua_touserdata(L, -1);
     Any result = field->Get(object);
     ProcessResult(L, result, field->GetType());
     return 1;
@@ -150,7 +214,10 @@ int GetterInvoker(lua_State* L)
 
 int SetterInvoker(lua_State* L)
 {
-
+    auto field = (IFieldMeta*)lua_touserdata(L, lua_upvalueindex(1));
+    Any object = *(void**)lua_touserdata(L, -2);
+    Any value = GetArgument(L, -1, field->GetType());
+    field->Set(object, value);
     return 0;
 }
 
@@ -225,18 +292,16 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 
     // fields
     {
-        lua_newtable(L); // MG
-        lua_newtable(L); // MGS
-
         for (auto& pair : classMeta->fields)
         {
             auto field = pair.second;
-            BindHelper(-2, field->name, GetterInvoker, field);
-            BindHelper(-1, field->name, SetterInvoker, field);
-        }
 
-        lua_setfield(L, -3, "__set"); // MG
-        lua_setfield(L, -2, "__get"); // M
+            lua_newtable(L); // MP
+            BindHelper(-1, "GET", GetterInvoker, field);
+            BindHelper(-1, "SET", SetterInvoker, field);
+
+            lua_setfield(L, -2, field->name.c_str()); // M
+        }
     }
 
     //
