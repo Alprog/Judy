@@ -2,13 +2,16 @@
 #pragma once
 
 #include <string>
+#include "Attributes.h"
 
-class Scriptable
+class _(Meta)__ Scriptable
 {
-    int scriptId;
-
+public:
     Scriptable();
     virtual ~Scriptable();
+
+public:
+    void* luaObject;
+    _(Serialize)__ std::string luaClass;
 };
 
-std::string luaClass;

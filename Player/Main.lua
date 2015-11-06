@@ -4,12 +4,12 @@ require 'Serializer'
 local app = App.Instance()
 local window = WindowM.Create()
 
---[[local mt = {}
-mt.__call = function(t, ...)
-	local count = ... and #... or 0
-	return t["new"..count]()
-end
-setmetatable(Node, mt)]]
+--[[local mt = {}
+mt.__call = function(t, ...)
+	local count = ... and #... or 0
+	return t["new"..count]()
+end
+setmetatable(Node, mt)]]
 
 local a = Node.new0()
 local b = Node.new1(4)
@@ -21,9 +21,8 @@ print(count)
 	
 end]]
 
-print(window.scene)
-
-window.scene = a
+--print(window.scene)
+--window.scene = a
 
 a.foo = 3
 print(a.foo)

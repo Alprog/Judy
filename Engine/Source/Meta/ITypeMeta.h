@@ -30,7 +30,7 @@ public:
 
     virtual ITypeMeta* GetPointerType() = 0;
     virtual ITypeMeta* GetPointeeType() = 0;
-    virtual ITypeMeta* GetRunTimePointeeType(Any& object) = 0;
+    virtual ITypeMeta* GetRunTimePointeeType(Any object) = 0;
 
     virtual Any Dereference(Any& object) = 0;
     virtual Any MakePointer(Any& object) = 0;

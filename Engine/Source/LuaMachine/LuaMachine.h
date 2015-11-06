@@ -7,6 +7,7 @@
 #include <atomic>
 #include "CallStack.h"
 #include "Breakpoints.h"
+#include "Meta/Binder.h"
 
 class lua_State;
 class lua_Debug;
@@ -21,25 +22,24 @@ private:
     ~LuaMachine();
 
 public:
-   bool IsStarted() const;
-   bool IsBreaked() const;
+    bool IsStarted() const;
+    bool IsBreaked() const;
 
-   void Do(std::string scriptName, bool debug = false);
-   void Pause();
-   void Continue();
-   void StepInto();
-   void StepOver();
-   void StepOut();
-   void Stop();
+    void Do(std::string scriptName, bool debug = false);
+    void Pause();
+    void Continue();
+    void StepInto();
+    void StepOver();
+    void StepOut();
+    void Stop();
 
-   void RegUserdata(void* pointer, std::string className);
-   void UnregUserdata(void* pointer);
+    void UnregUserdata(void* pointer);
 
 private:
-   void Hook(lua_Debug *ar);
-   void Break(lua_Debug *ar);
-   CallInfo GetCallInfo(lua_Debug *ar);
-   void SuspendExecution();
+    void Hook(lua_Debug *ar);
+    void Break(lua_Debug *ar);
+    CallInfo GetCallInfo(lua_Debug *ar);
+    void SuspendExecution();
 
 public:
     Breakpoints breakpoints;
@@ -48,9 +48,10 @@ public:
     std::function<void()> resumeCallback;
 
 private:
-   lua_State* L;
-   std::atomic<bool> suspended;
-   bool isStarted;
-   int level;
-   int breakRequiredLevel;
+    lua_State* L;
+    LuaBinder* binder;
+    std::atomic<bool> suspended;
+    bool isStarted;
+    int level;
+    int breakRequiredLevel;
 };

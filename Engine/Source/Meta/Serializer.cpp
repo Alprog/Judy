@@ -40,12 +40,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
         lua_newtable(L);
         lua_pushinteger(L, 1);
 
-        auto pointeeType = type->GetPointeeType();
-        if (flags & ITypeMeta::IsPointerToPolymorhic)
-        {
-            pointeeType = type->GetRunTimePointeeType(object);
-        }
-
+        auto pointeeType = type->GetRunTimePointeeType(object);
         object = pointeeType->Dereference(object);
         Serialize(object, pointeeType);
 

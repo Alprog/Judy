@@ -8,9 +8,16 @@
 #include "ConstructorMeta.h"
 #include "ITypeMeta.h"
 #include "Lua.h"
+#include "Scriptable.h"
 
 const int GETTER = 1;
 const int SETTER = 2;
+
+LuaBinder::LuaBinder(lua_State* L)
+    : L { L }
+{
+    Init();
+}
 
 int IndexFunction(lua_State* L)
 {
@@ -79,20 +86,6 @@ int NewIndexFunction(lua_State* L)
     return 0;
 }
 
-LuaBinder::LuaBinder(lua_State* L)
-    : L { L }
-{
-    auto name = "Userdata";
-    luaL_newmetatable(L, name); // M
-
-    lua_pushcfunction(L, IndexFunction); // MF
-    lua_setfield(L, -2, "__index");  // M
-    lua_pushcfunction(L, NewIndexFunction);  // MF
-    lua_setfield(L, -2, "__newindex");  // M
-
-    lua_setglobal(L, name); //
-}
-
 template <typename T>
 T* CheckType(lua_State* L, int n)
 {
@@ -132,7 +125,7 @@ inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<
     }
 }
 
-void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
+void pushUserdata(lua_State* L, void* pointer, std::string className)
 {
     lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
     lua_pushlightuserdata(L, pointer); // TL
@@ -156,16 +149,20 @@ void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
         lua_setmetatable(L, -2); // TU
 
         // create peer table
-        lua_newtable(L); // TUP
-        // set metatable (todo: rtti for actual type)
-        luaL_getmetatable(L, type->name.c_str()); // TUPM
-        if (lua_isnil(L, -1))
         {
-            throw std::runtime_error("unknown type");
-        }
-        lua_setmetatable(L, -2); // TUP
-        lua_setuservalue(L, -2); // TU
+            lua_newtable(L); // TUP
 
+            luaL_getmetatable(L, className.c_str()); // TUPM
+            if (lua_isnil(L, -1))
+            {
+                throw std::runtime_error("unknown type");
+            }
+            lua_setmetatable(L, -2); // TUP
+
+            lua_setuservalue(L, -2); // TU
+        }
+
+        // register
         lua_pushlightuserdata(L, pointer); // TUL
         lua_pushvalue(L, -2); // TULU
         lua_rawset(L, -4); // TU
@@ -191,9 +188,15 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     {
         if (type->isPointer())
         {
-            auto pointer = result.as<void*>();
-            auto pointeeType = type->GetPointeeType();
-            pushUserdata(L, pointer, pointeeType);
+            auto pointer = result.as<Scriptable*>();
+
+            auto className = pointer->luaClass;
+            if (className.empty())
+            {
+                className = type->GetRunTimePointeeType(pointer)->name;
+            }
+
+            pushUserdata(L, pointer, className);
         }
         else
         {
@@ -251,6 +254,24 @@ int NewInvoker(lua_State* L)
     auto type = constructor->GetNewType();
     ProcessResult(L, result, type);
     return 1;
+}
+
+void LuaBinder::Init()
+{
+    // map table (pointer -> userdata)
+    lua_newtable(L);
+    lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
+
+    // metatable for userdata
+    auto name = "Userdata";
+    luaL_newmetatable(L, name); // M
+
+    lua_pushcfunction(L, IndexFunction); // MF
+    lua_setfield(L, -2, "__index");  // M
+    lua_pushcfunction(L, NewIndexFunction);  // MF
+    lua_setfield(L, -2, "__newindex");  // M
+
+    lua_setglobal(L, name); //
 }
 
 void LuaBinder::Bind(Meta* meta)

@@ -15,8 +15,11 @@ template <typename> class List;
 class IClassMeta : public ITypeMeta
 {
 public:
+    IClassMeta();
+
     std::vector<ITypeMeta*> templateArguments;
     std::vector<ITypeMeta*> baseTypes;
+    bool hasDerives;
 
     std::vector<IConstructorMeta*> constructors;
     std::unordered_map<std::string, IFunctionMeta*> methods;

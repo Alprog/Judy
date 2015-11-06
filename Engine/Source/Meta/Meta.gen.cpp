@@ -223,13 +223,9 @@ void Meta::DefineClasses()
         .method("Update", &Node::Update)
         .method("UpdateHelper", &Node::UpdateHelper)
         .method("Render", &Node::Render)
-        .property("luaClass").attr("Serialize")
-            .getter("getLuaClass", &Node::getLuaClass)
-            .setter("setLuaClass", &Node::setLuaClass)
         .field("transform", &Node::transform).attr("Serialize").attr("Inspect")
         .field("parent", &Node::parent)
         .field("childs", &Node::childs).attr("Serialize")
-        .field("luaClass", &Node::luaClass)
     ;
 
     ClassDefiner<Quad>(this, "Quad")

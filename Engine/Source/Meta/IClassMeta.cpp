@@ -4,6 +4,11 @@
 #include "PropertyMeta.h"
 #include "Containers/List.h"
 
+IClassMeta::IClassMeta()
+    : hasDerives(false)
+{
+}
+
 List<IFieldMeta*> IClassMeta::GetFieldsWithAttribute(std::string attribute, bool includeProperties)
 {
     List<IFieldMeta*> list;

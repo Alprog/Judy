@@ -47,8 +47,8 @@ WindowM::WindowM()
 
 //    Node* obj = serializer->Deserialize<Node*>(text);
 //    text = serializer->Serialize(obj);
-    //printf(text.c_str());
-    //fflush(stdout);
+//    printf(text.c_str());
+//    fflush(stdout);
 }
 
 WindowM::~WindowM()
