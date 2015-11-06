@@ -40,7 +40,8 @@ HEADERS += \
     Source/Meta/IConstructorMeta.h \
     Source/Meta/IClassMeta.h \
     Source/Meta/IFieldMeta.h \
-    Source/SmartPointer.h
+    Source/SmartPointer.h \
+    Source/Scriptable.h
 
 SOURCES += \
     Source/App.cpp \
@@ -94,7 +95,8 @@ SOURCES += \
     Source/Model.cpp \
     Source/Meta/IMemberMeta.cpp \
     Source/Meta/PropertyMeta.cpp \
-    Source/Meta/IClassMeta.cpp
+    Source/Meta/IClassMeta.cpp \
+    Source/Scriptable.cpp
 
 win {
     INCLUDEPATH += Source/Windows

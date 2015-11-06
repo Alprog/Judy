@@ -12,9 +12,85 @@
 const int GETTER = 1;
 const int SETTER = 2;
 
+int IndexFunction(lua_State* L)
+{
+    // UK (userdata, key)
+    lua_getuservalue(L, -2); // UKP (..., peertable)
+
+    // inspect peer
+    lua_pushvalue(L, -2); // UKPK
+    lua_rawget(L, -2); // UKP?
+    if (!lua_isnil(L, -1))
+    {
+        lua_replace(L, -4); // ?KP
+        lua_pop(L, 2); // ?
+        return 1;
+    }
+    lua_pop(L, 1); // UKP
+
+    lua_getmetatable(L, -1); // UKPM
+
+    // inspect meta
+    lua_pushvalue(L, -3); // UKPMK
+    lua_gettable(L, -2); // UKPM?
+
+    // if property then call getter
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "GET"); // UKPMTF
+        lua_insert(L, -6); // FUKPMT
+        lua_pop(L, 4); // FU
+        lua_call(L, 1, 1); // ?
+        return 1;
+    }
+
+    lua_replace(L, -5); // ?KPM
+    lua_pop(L, 3); // ?
+    return 1;
+}
+
+int NewIndexFunction(lua_State* L)
+{
+    // UKV (userdata, key, value)
+
+    lua_getuservalue(L, -3); // UKVP (..., peertable)
+
+    // check setter in meta
+    lua_getmetatable(L, -1); // UKVPM
+    lua_pushvalue(L, -4);    // UKVPMK
+    lua_gettable(L, -2);     // UKVPM?
+
+    // if property than call setter
+    if (lua_istable(L, -1))
+    {
+        lua_getfield(L, -1, "SET"); // UKVPMTF
+        lua_insert(L, -7); // FUKVPMT
+        lua_pop(L, 3); // FUKV
+        lua_remove(L, -2); // FUV
+        lua_call(L, 2, 0); //
+        return 0;
+    }
+    lua_pop(L, 2); // UKVP
+
+    // set to peer
+    lua_insert(L, -3); // UPKV
+    lua_rawset(L, -3); // UP
+    lua_pop(L, 2); //
+    return 0;
+}
+
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }
 {
+    auto name = "Userdata";
+    luaL_newmetatable(L, name); // M
+
+    lua_pushcfunction(L, IndexFunction); // MF
+    lua_setfield(L, -2, "__index");  // M
+    lua_pushcfunction(L, NewIndexFunction);  // MF
+    lua_setfield(L, -2, "__newindex");  // M
+
+    lua_setglobal(L, name); //
 }
 
 template <typename T>
@@ -56,76 +132,6 @@ inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<
     }
 }
 
-//void* p = *(void**)lua_touserdata(L, -3); // KV
-//lua_getmetatable(L, -3); // TKVM
-
-int IndexFunction(lua_State* L)
-{
-    // UK (userdata, key)
-    lua_getmetatable(L, -2); // UKP (..., peertable)
-
-    // inspect peer
-    lua_pushvalue(L, -2); // UKPK
-    lua_rawget(L, -2); // UKP?
-    if (!lua_isnil(L, -1))
-    {
-        lua_replace(L, -4); // ?KP
-        lua_pop(L, 2); // ?
-        return 1;
-    }
-    lua_pop(L, 1); // UKP
-
-    lua_getmetatable(L, -1); // UKPM
-
-    // inspect meta
-    lua_pushvalue(L, -3); // UKPMK
-    lua_gettable(L, -2); // UKPM?
-
-    // if property then call getter
-    if (lua_istable(L, -1))
-    {
-        lua_getfield(L, -1, "GET"); // UKPMTF
-        lua_insert(L, -6); // FUKPMT
-        lua_pop(L, 4); // FU
-        lua_call(L, 1, 1); // ?
-        return 1;
-    }
-
-    lua_replace(L, -5); // ?KPM
-    lua_pop(L, 3); // ?
-    return 1;
-}
-
-int NewIndexFunction(lua_State* L)
-{
-    // UKV (userdata, key, value)
-
-    lua_getmetatable(L, -3); // UKVP (..., peertable)
-
-    // check setter in meta
-    lua_getmetatable(L, -1); // UKVPM
-    lua_pushvalue(L, -4);    // UKVPMK
-    lua_gettable(L, -2);     // UKVPM?
-
-    // if property than call setter
-    if (lua_istable(L, -1))
-    {
-        lua_getfield(L, -1, "SET"); // UKVPMTF
-        lua_insert(L, -7); // FUKVPMT
-        lua_pop(L, 3); // FUKV
-        lua_remove(L, -2); // FUV
-        lua_call(L, 2, 0); //
-        return 0;
-    }
-    lua_pop(L, 2); // UKVP
-
-    // set to peer
-    lua_insert(L, -3); // UPKV
-    lua_rawset(L, -3); // UP
-    lua_pop(L, 2); //
-    return 0;
-}
-
 void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
 {
     lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
@@ -145,17 +151,12 @@ void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
         auto udata = (void**)lua_newuserdata(L, sizeof(void*)); // TU
         *udata = pointer;
 
+        // set metatable
+        luaL_getmetatable(L, "Userdata"); // TUM
+        lua_setmetatable(L, -2); // TU
+
         // create peer table
         lua_newtable(L); // TUP
-        lua_pushcfunction(L, IndexFunction); // TUPF
-        lua_setfield(L, -2, "__index"); // TUP
-        lua_pushcfunction(L, NewIndexFunction); // TUPF
-        lua_setfield(L, -2, "__newindex"); // TUP
-
-
-        lua_newtable(L);         // TUV
-        lua_setuservalue(L, -1); // TU
-
         // set metatable (todo: rtti for actual type)
         luaL_getmetatable(L, type->name.c_str()); // TUPM
         if (lua_isnil(L, -1))
@@ -163,8 +164,7 @@ void pushUserdata(lua_State* L, void* pointer, ITypeMeta* type)
             throw std::runtime_error("unknown type");
         }
         lua_setmetatable(L, -2); // TUP
-
-        lua_setmetatable(L, -2); // TU
+        lua_setuservalue(L, -2); // TU
 
         lua_pushlightuserdata(L, pointer); // TUL
         lua_pushvalue(L, -2); // TULU
