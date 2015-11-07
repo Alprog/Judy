@@ -9,7 +9,7 @@ local scene = window.scene
 function add()
 	local model = ModelDerived.new()
 	print(model)
-	model.foo = 'abr'
+	--model.foo = 'abr'
 	print(model.foo)
 	scene:AddChild(model)
 end
@@ -21,7 +21,6 @@ collectgarbage()
 function remove()
 	local model = scene:Child(2)
 	print(model)
-	model.foo = 'abr'
 	print(model.foo)
 	scene:RemoveChild(model)
 end

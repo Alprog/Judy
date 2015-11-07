@@ -67,14 +67,14 @@ int Object::GC(lua_State* L)
     }
     else
     {
-        /*lua_getuservalue(L, -1); // UT
+        lua_getuservalue(L, -1); // UT
         if (lua_isemptytable(L, -1))
         {
             // delete lua object
             object->luaObject = nullptr;
             lua_pop(L, 1); // U
         }
-        */
+        else
         {
             // force keep userdata reference
             LuaMachine::Instance()->RetainUserdata(object->luaObject);
