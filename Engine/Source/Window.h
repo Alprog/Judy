@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Object.h"
+#include "Ref.h"
 #include "Node.h"
 #include "RenderTarget.h"
 #include "Renderer.h"
@@ -25,8 +26,8 @@ public:
 protected:
     WindowM();
 
+    _(Bind)__ Ref<Node> scene;
     _(Bind)__ RenderTarget* renderTarget;
-    _(Bind)__ Node* scene;
     _(Bind)__ Renderer* renderer;
 
     //RenderTarget* RenderTarget1;

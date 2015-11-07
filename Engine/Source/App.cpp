@@ -9,6 +9,11 @@ App* App::Instance()
     return &instance;
 }
 
+App::App()
+{
+    Retain();
+}
+
 void App::AddWindow(WindowM* window)
 {
     AddedWindows.insert(window);

@@ -15,7 +15,8 @@ public:
         IsClass = 1 << 0,
         IsPointer = 1 << 1,
         IsPointerToPolymorhic = 1 << 2,
-        IsCustomSerializing = 1 << 3
+        IsRef = 1 << 3,
+        IsCustomSerializing = 1 << 4
     };
 
     std::string name;
@@ -23,6 +24,7 @@ public:
 
     inline bool isClass() const { return getFlags() & Flags::IsClass; }
     inline bool isPointer() const { return getFlags() & Flags::IsPointer; }
+    inline bool isRef() const { return getFlags() & Flags::IsRef; }
     inline bool isCustomSerializing() const { return getFlags() & Flags::IsCustomSerializing; }
 
     virtual Any CreateOnStack() = 0;

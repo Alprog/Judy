@@ -9,6 +9,7 @@
 #include "ITypeMeta.h"
 #include "Lua.h"
 #include "Object.h"
+#include "Ref.h"
 
 const int GETTER = 1;
 const int SETTER = 2;
@@ -172,14 +173,16 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     }
     else
     {
-        if (type->isPointer())
+        auto flags = type->getFlags();
+        if (flags & ITypeMeta::Flags::IsPointer)
         {
-            auto pointer = result.as<Object*>();
+            bool isRef = flags & ITypeMeta::Flags::IsRef;
+            auto pointer = isRef ? result.as<Ref<Object>>().Get() : result.as<Object*>();
 
             auto className = pointer->luaClass;
             if (className.empty())
             {
-                className = type->GetRunTimePointeeType(pointer)->name;
+                className = type->GetRunTimePointeeType(result)->name;
             }
 
             pushObject(L, pointer, className);

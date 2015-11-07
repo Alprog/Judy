@@ -40,6 +40,17 @@ void Object::Release()
     }
 }
 
+bool lua_isemptytable(lua_State* L, int index)
+{
+    lua_pushnil(L);
+    if (lua_next(L, index - 1))
+    {
+        lua_pop(L, 2);
+        return false;
+    }
+    return true;
+}
+
 int Object::GC(lua_State* L)
 {
     // U
@@ -48,20 +59,22 @@ int Object::GC(lua_State* L)
 
     if (object->referenceCount == 0)
     {
+        printf("kill %s\n", typeid(*object).name());
+        fflush(stdout);
+
         // delete cpp and lua object
         delete object;
-        lua_pop(L, 1);
     }
     else
     {
-        lua_getuservalue(L, -1); // UT
+        /*lua_getuservalue(L, -1); // UT
         if (lua_isemptytable(L, -1))
         {
             // delete lua object
             object->luaObject = nullptr;
-            lua_pop(L, 2);
+            lua_pop(L, 1); // U
         }
-        else
+        */
         {
             // force keep userdata reference
             LuaMachine::Instance()->RetainUserdata(object->luaObject);
@@ -71,6 +84,8 @@ int Object::GC(lua_State* L)
             lua_setmetatable(L, -2); // U
         }
     }
+
+    lua_pop(L, 1);
 
     return 0;
 }

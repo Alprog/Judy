@@ -21,7 +21,8 @@ public:
     void AddWindow(WindowM* window);
     void RemoveWindow(WindowM* window);
 
-private:
+protected:
+    App();
     void UpdateCollection();
 
     Set<WindowM*> Windows;

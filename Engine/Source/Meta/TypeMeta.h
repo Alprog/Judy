@@ -25,48 +25,6 @@ struct IBase<T, IF(T, Class)>
     using type = IClassMeta;
 };
 
-//---
-
-template <typename T>
-struct pointerOf
-{
-    using type = T*;
-};
-
-template <typename T>
-struct pointerOf<T*>
-{
-    using type = DeepPointer<T>;
-};
-
-template <typename T>
-struct pointerOf<DeepPointer<T>>
-{
-    using type = DeepPointer<T>;
-};
-
-//---
-
-template <typename T>
-struct pointeeOf
-{
-    using type = std::nullptr_t;
-};
-
-template <typename T>
-struct pointeeOf<T*>
-{
-    using type = T;
-};
-
-template <typename T>
-struct pointeeOf<DeepPointer<T>>
-{
-    using type = typename DeepPointer<T>::pointeeType;
-};
-
-//---
-
 template <typename ClassType>
 class TypeMeta : public IBase<ClassType>::type, public TrivialSingleton<TypeMeta<ClassType>>
 {
@@ -79,6 +37,7 @@ public:
         const int flags =
             (~is<ClassType>::Class + 1) & Flags::IsClass |
             (~is<ClassType>::Pointer + 1) & Flags::IsPointer |
+            (~is<ClassType>::Ref + 1) & Flags::IsRef |
             (~is<ClassType>::PointerToPolymorhic + 1) & Flags::IsPointerToPolymorhic |
             (~is<ClassType>::CustomSerializing + 1) & Flags::IsCustomSerializing
         ;
@@ -170,7 +129,7 @@ private:
         auto baseClassMeta = (IClassMeta*)TypeMetaOf<pointeeType>();
         if (baseClassMeta->hasDerives)
         {
-            auto pointer = object.as<T>();
+            pointeeType* pointer = object.as<T>();
             auto index = std::type_index(typeid(*pointer));
             return Meta::Instance()->Find(index);
         }

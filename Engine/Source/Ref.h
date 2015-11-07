@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "Attributes.h"
 #include "Meta/Serializer.h"
+#include "DeepPointer.h"
 
 template <typename T>
 class _(Meta)__ Ref
@@ -11,6 +12,8 @@ class _(Meta)__ Ref
     friend class Meta;
 
 public:
+    using pointeeType = T;
+
 	// default constructor
     Ref(void)
 		: pointer { nullptr }
@@ -76,6 +79,12 @@ public:
 	{
 		return *pointer;
 	}
+
+    const DeepPointer<T> operator&() const
+    {
+        auto ptr = const_cast<T*>(pointer);
+        return DeepPointer<T>(&ptr, 2);
+    }
 
 	T* operator->()
 	{

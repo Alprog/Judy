@@ -53,7 +53,8 @@ WindowM::WindowM()
 
 WindowM::~WindowM()
 {
-    delete scene;
+    printf("delete windows\n");
+    fflush(stdout);
 }
 
 void WindowM::Update()

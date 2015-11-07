@@ -3,36 +3,33 @@ require 'ModelDerived'
 --require 'Serializer'
 
 local app = App.Instance()
-
 local window = WindowM.Create()
-
---[[local mt = {}
-mt.__call = function(t, ...)
-	local count = ... and #... or 0
-	return t["new"..count]()
-end
-setmetatable(Node, mt)]]
-
 local scene = window.scene
-print(scene:ChildCount())
 
-local model = ModelDerived.new()
-scene:AddChild(model)
+function add()
+	local model = ModelDerived.new()
+	print(model)
+	model.foo = 'abr'
+	print(model.foo)
+	scene:AddChild(model)
+end
 
---model.foo = 'abr'
---print(model.foo)
+add()
 
+collectgarbage()
 
---local c = scene:Child(2)
---print(c)
+function remove()
+	local model = scene:Child(2)
+	print(model)
+	model.foo = 'abr'
+	print(model.foo)
+	scene:RemoveChild(model)
+end
 
---print(scene:Child(2).foo)
+remove()
 
-print(scene:ChildCount())
+collectgarbage()
 
-scene:RemoveChild(model)
---scene:AddChild(model)
-
-print(scene:ChildCount())
+print('---')
 
 app:StartMainLoop()
