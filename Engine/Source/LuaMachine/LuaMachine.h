@@ -33,7 +33,8 @@ public:
     void StepOut();
     void Stop();
 
-    void UnregUserdata(void* pointer);
+    void ReleaseUserdata(void* userdata);
+    void RetainUserdata(void* userdata);
 
 private:
     void Hook(lua_Debug *ar);

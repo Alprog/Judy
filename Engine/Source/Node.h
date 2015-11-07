@@ -7,11 +7,11 @@
 #include "Meta/ITypeMeta.h"
 #include "Attributes.h"
 #include "SmartPointer.h"
-#include "Scriptable.h"
+#include "Object.h"
 
 class Renderer;
 
-class _(Meta)__ Node : public Scriptable
+class _(Meta)__ Node : public Object
 {
     friend class Meta;
 

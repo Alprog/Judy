@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Scriptable.h"
+#include "Object.h"
 #include "Window.h"
 
 #include "Meta/Meta.h"
@@ -9,7 +9,7 @@
 #include "Containers/Set.h"
 #include "Attributes.h"
 
-class _(Meta)__ App : public Scriptable
+class _(Meta)__ App : public Object
 {
     friend class Meta;
 

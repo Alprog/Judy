@@ -1,7 +1,9 @@
 
-require 'Serializer'
+require 'ModelDerived'
+--require 'Serializer'
 
 local app = App.Instance()
+
 local window = WindowM.Create()
 
 --[[local mt = {}
@@ -11,58 +13,26 @@ mt.__call = function(t, ...)
 end
 setmetatable(Node, mt)]]
 
-local a = Node.new0()
-local b = Node.new1(4)
-a:AddChild(b)
-local count = a:ChildCount()
-print(count)
+local scene = window.scene
+print(scene:ChildCount())
 
---[[Node.__newindex = function(table, key, value)
-	
-end]]
+local model = ModelDerived.new()
+scene:AddChild(model)
 
---print(window.scene)
---window.scene = a
+--model.foo = 'abr'
+--print(model.foo)
 
-a.foo = 3
-print(a.foo)
-print(b.foo)
 
-print(getmetatable(a).foo)
-print(getmetatable(b).foo)
+--local c = scene:Child(2)
+--print(c)
 
---print(getmetatable(getmetatable(a)).foo)
---print(getmetatable(getmetatable(b)).foo)
+--print(scene:Child(2).foo)
 
---[[local t = {}
-local m = {}
+print(scene:ChildCount())
 
-setmetatable(t, m)
-m.__index = m
-m.foo = 100
---m.__newindex = m
+scene:RemoveChild(model)
+--scene:AddChild(model)
 
-print(t.foo)
-t.foo = 200
-print(t.foo)
-t.foo = nil
-print(t.foo)]]
-
---[[local a = 3;
-
-function b()
-	return 3;
-end
-
-b()]]
-
---[[print('-------------------')
-
-print(window)
-window:Update()]]
-
---window.Update(window, 0)
-
---print(window.scene)
+print(scene:ChildCount())
 
 app:StartMainLoop()

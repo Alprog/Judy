@@ -16,6 +16,7 @@ Node::Node(int i)
 
 Node::~Node()
 {
+    printf("delete\n");
 }
 
 Node* Node::Parent()

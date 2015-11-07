@@ -4,13 +4,18 @@
 #include <string>
 #include "Attributes.h"
 
-class _(Meta)__ Scriptable
+class _(Meta)__ Object
 {
 public:
-    Scriptable();
-    virtual ~Scriptable();
+    Object();
+    virtual ~Object();
+
+    void Retain();
+    void Release();
 
 public:
+    int referenceCount;
+
     void* luaObject;
     _(Serialize)__ std::string luaClass;
 };

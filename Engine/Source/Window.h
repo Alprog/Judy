@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "Scriptable.h"
+#include "Object.h"
 #include "Node.h"
 #include "RenderTarget.h"
 #include "Renderer.h"
 #include "Attributes.h"
 
-class _(Meta)__ WindowM : public Scriptable
+class _(Meta)__ WindowM : public Object
 {
     friend class Meta;
 

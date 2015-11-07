@@ -18,7 +18,7 @@ WindowM* WindowM::Create()
 
 WindowM::WindowM()
 {
-    auto model = new Model();
+    auto node = new Node();
 
     auto c1 = new Model();
     auto c2 = new Model();
@@ -26,7 +26,7 @@ WindowM::WindowM()
 //auto quad = new Quad();
 //quad->Size = Vector2(0.3f, 0.3f);
 
-    scene = model;
+    scene = node;
     scene->transform.setScaling(Vector3::One * 0.3f);
 
     scene->AddChild(c1);

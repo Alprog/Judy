@@ -8,7 +8,7 @@
 #include "ConstructorMeta.h"
 #include "ITypeMeta.h"
 #include "Lua.h"
-#include "Scriptable.h"
+#include "Object.h"
 
 const int GETTER = 1;
 const int SETTER = 2;
@@ -125,48 +125,34 @@ inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<
     }
 }
 
-void pushUserdata(lua_State* L, void* pointer, std::string className)
+void pushObject(lua_State* L, Object* pointer, std::string className)
 {
-    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
-    lua_pushlightuserdata(L, pointer); // TL
-    lua_gettable(L, -2); // T?
-
-    if (lua_isuserdata(L, -1))
+    if (pointer->luaObject != nullptr)
     {
-        // TU
-        lua_remove(L, -2); // U
+        lua_pushuserdata(L, pointer->luaObject); // U
+        return;
     }
-    else
+
+    auto udata = (void**)lua_newuserdata(L, sizeof(void*)); // U
+    *udata = pointer;
+    pointer->luaObject = udata;
+
+    // set metatable
+    luaL_getmetatable(L, "Userdata"); // UM
+    lua_setmetatable(L, -2); // U
+
+    // create peer table
     {
-        // T?
-        lua_pop(L, 1); // T
+        lua_newtable(L); // UP
 
-        auto udata = (void**)lua_newuserdata(L, sizeof(void*)); // TU
-        *udata = pointer;
-
-        // set metatable
-        luaL_getmetatable(L, "Userdata"); // TUM
-        lua_setmetatable(L, -2); // TU
-
-        // create peer table
+        lua_getglobal(L, className.c_str()); // UPM
+        if (lua_isnil(L, -1))
         {
-            lua_newtable(L); // TUP
-
-            luaL_getmetatable(L, className.c_str()); // TUPM
-            if (lua_isnil(L, -1))
-            {
-                throw std::runtime_error("unknown type");
-            }
-            lua_setmetatable(L, -2); // TUP
-
-            lua_setuservalue(L, -2); // TU
+            throw std::runtime_error("unknown type");
         }
+        lua_setmetatable(L, -2); // UP
 
-        // register
-        lua_pushlightuserdata(L, pointer); // TUL
-        lua_pushvalue(L, -2); // TULU
-        lua_rawset(L, -4); // TU
-        lua_remove(L, -2); // U
+        lua_setuservalue(L, -2); // U
     }
 }
 
@@ -188,7 +174,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     {
         if (type->isPointer())
         {
-            auto pointer = result.as<Scriptable*>();
+            auto pointer = result.as<Object*>();
 
             auto className = pointer->luaClass;
             if (className.empty())
@@ -196,7 +182,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
                 className = type->GetRunTimePointeeType(pointer)->name;
             }
 
-            pushUserdata(L, pointer, className);
+            pushObject(L, pointer, className);
         }
         else
         {
@@ -245,12 +231,27 @@ int FunctionInvoker(lua_State* L)
     }
 }
 
-int NewInvoker(lua_State* L)
+std::string forceLuaClass = "";
+
+int SetForceLuaClass(lua_State* L)
+{
+    forceLuaClass = lua_tostring(L, -1);
+    return 0;
+}
+
+int ConstructorInvoker(lua_State* L)
 {
     auto constructor = (IConstructorMeta*)lua_touserdata(L, lua_upvalueindex(1));
     std::vector<Any> args = {};
     ProcessArguments(L, constructor, args);
     auto result = constructor->New(args);
+
+    if (!forceLuaClass.empty())
+    {
+        result.as<Object*>()->luaClass = forceLuaClass;
+        forceLuaClass.clear();
+    }
+
     auto type = constructor->GetNewType();
     ProcessResult(L, result, type);
     return 1;
@@ -258,20 +259,18 @@ int NewInvoker(lua_State* L)
 
 void LuaBinder::Init()
 {
-    // map table (pointer -> userdata)
-    lua_newtable(L);
-    lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
-
     // metatable for userdata
     auto name = "Userdata";
     luaL_newmetatable(L, name); // M
-
     lua_pushcfunction(L, IndexFunction); // MF
     lua_setfield(L, -2, "__index");  // M
     lua_pushcfunction(L, NewIndexFunction);  // MF
     lua_setfield(L, -2, "__newindex");  // M
-
     lua_setglobal(L, name); //
+
+    // setForceLuaClass function
+    lua_pushcfunction(L, SetForceLuaClass);
+    lua_setglobal(L, "SetForceLuaClass");
 }
 
 void LuaBinder::Bind(Meta* meta)
@@ -296,19 +295,19 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     {
         int argCount = constructor->GetArgCount();
         std::string name = "new" + std::to_string(argCount);
-        BindHelper(-1, name, NewInvoker, constructor);
+        BindHelper(name, ConstructorInvoker, constructor);
     }
 
     for (auto& pair : classMeta->methods)
     {
         auto method = pair.second;
-        BindHelper(-1, method->name, FunctionInvoker, method);
+        BindHelper(method->name, FunctionInvoker, method);
     }
 
     for (auto& pair : classMeta->functions)
     {
         auto function = pair.second;
-        BindHelper(-1, function->name, FunctionInvoker, function);
+        BindHelper(function->name, FunctionInvoker, function);
     }
 
     // fields
@@ -318,10 +317,25 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
             auto field = pair.second;
 
             lua_newtable(L); // MP
-            BindHelper(-1, "GET", GetterInvoker, field);
-            BindHelper(-1, "SET", SetterInvoker, field);
+            BindHelper("GET", GetterInvoker, field);
+            BindHelper("SET", SetterInvoker, field);
 
             lua_setfield(L, -2, field->name.c_str()); // M
+        }
+    }
+
+    // base type
+    if (classMeta->baseTypes.size() > 1)
+    {
+        throw new std::runtime_error("multiple inheritance not implemented");
+    }
+    for (auto baseType : classMeta->baseTypes)
+    {
+        if (!baseType->name.empty())
+        {
+            printf("%s %s\n", className, baseType->name.c_str());
+            luaL_newmetatable(L, baseType->name.c_str()); // MB
+            lua_setmetatable(L, -2); // M
         }
     }
 
@@ -334,10 +348,9 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     lua_setglobal(L, className);
 }
 
-void LuaBinder::BindHelper(int index, std::string name, luaCFunction closure, void* upvalue)
+void LuaBinder::BindHelper(std::string name, luaCFunction closure, void* upvalue)
 {
-    // T...
-    lua_pushlightuserdata(L, (void*)upvalue); // T...L
-    lua_pushcclosure(L, closure, 1); // T...C
-    lua_setfield(L, index - 1, name.c_str()); // T...
+    lua_pushlightuserdata(L, (void*)upvalue); // ML
+    lua_pushcclosure(L, closure, 1); // MC
+    lua_setfield(L, -2, name.c_str()); // M
 }

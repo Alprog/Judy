@@ -7,3 +7,6 @@ extern "C"
     #include "lualib.h"
     #include "lauxlib.h"
 }
+
+#define lua_pushuserdata lua_pushuserdata_unsafe
+

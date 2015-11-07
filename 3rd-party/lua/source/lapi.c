@@ -1163,7 +1163,13 @@ LUA_API void *lua_newuserdata (lua_State *L, size_t size) {
   return getudatamem(u);
 }
 
-
+LUA_API void lua_pushuserdata_unsafe (lua_State *L, void *p) {
+    lua_lock(L);
+    Udata* u = getudatafrommem(p);
+    setuvalue(L, L->top, u);
+    api_incr_top(L);
+    lua_unlock(L);
+}
 
 static const char *aux_upvalue (StkId fi, int n, TValue **val,
                                 CClosure **owner, UpVal **uv) {
