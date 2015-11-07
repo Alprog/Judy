@@ -31,22 +31,22 @@ int Node::ChildCount()
 
 Node* Node::Child(int i)
 {
-    return childs[i].get();
+    return childs[i].Get();
 }
 
 void Node::AddChild(Node* node)
 {
     node->Unparent();
-    SmartPointer<Node> ptr(node);
-    childs.push_back(ptr);
+    Ref<Node> ref(node);
+    childs.push_back(std::move(ref));
     node->parent = this;
 }
 
 void Node::RemoveChild(Node* node)
 {
-    auto position = find_if(begin(childs), end(childs), [&](SmartPointer<Node> const& ptr)
+    auto position = find_if(begin(childs), end(childs), [&](Ref<Node> const& ref)
     {
-        return ptr.get() == node;
+        return ref.Get() == node;
     });
 
     if (position != end(childs))
@@ -89,7 +89,7 @@ void Node::Update(double delta)
 
 void Node::UpdateHelper(double delta)
 {
-    for (auto child : childs)
+    for (auto& child : childs)
     {
         child->Update(delta);
     }
@@ -97,7 +97,7 @@ void Node::UpdateHelper(double delta)
 
 void Node::Render(Matrix matrix, Renderer* renderer)
 {
-    for (auto child : childs)
+    for (auto& child : childs)
     {
         auto& childMatrix = child->transform.getMatrix();
         child->Render(childMatrix * matrix, renderer);

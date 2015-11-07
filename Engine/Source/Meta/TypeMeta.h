@@ -9,7 +9,6 @@
 #include "Any.h"
 #include "Singleton.h"
 #include "DeepPointer.h"
-#include "SmartPointer.h"
 
 #include "ConstructorMeta.h"
 #include <typeindex>
@@ -59,12 +58,6 @@ struct pointeeOf<T*>
 {
     using type = T;
 };
-
-/*template <typename T>
-struct pointeeOf<SmartPointer<T>>
-{
-    using type = typename T;
-};*/
 
 template <typename T>
 struct pointeeOf<DeepPointer<T>>

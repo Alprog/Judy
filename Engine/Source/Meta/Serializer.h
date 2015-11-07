@@ -13,7 +13,7 @@ class Serializer
 {
     template <typename> friend class List;
     template <typename, typename> friend class Map;
-    template <typename> friend class SmartPointer;
+    template <typename> friend class Ref;
 
 public:
     Serializer();

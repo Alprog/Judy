@@ -6,7 +6,7 @@
 #include "Math/Transform.h"
 #include "Meta/ITypeMeta.h"
 #include "Attributes.h"
-#include "SmartPointer.h"
+#include "Ref.h"
 #include "Object.h"
 
 class Renderer;
@@ -38,5 +38,5 @@ public:
 
 private:
     Node* parent;
-    _(Serialize)__ List<SmartPointer<Node>> childs;
+    _(Serialize)__ List<Ref<Node>> childs;
 };

@@ -266,6 +266,8 @@ void LuaBinder::Init()
     lua_setfield(L, -2, "__index");  // M
     lua_pushcfunction(L, NewIndexFunction);  // MF
     lua_setfield(L, -2, "__newindex");  // M
+    lua_pushcfunction(L, Object::GC);  // MF
+    lua_setfield(L, -2, "__gc");  // M
     lua_setglobal(L, name); //
 
     // setForceLuaClass function

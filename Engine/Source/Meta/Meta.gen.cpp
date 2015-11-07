@@ -19,7 +19,7 @@
 #include "Model.h"
 #include "Node.h"
 #include "Quad.h"
-#include "SmartPointer.h"
+#include "Ref.h"
 #include "Window.h"
 
 template <typename T>
@@ -67,14 +67,11 @@ void Meta::DefineSet()
 }
 
 template <typename T>
-void Meta::DefineSmartPointer()
+void Meta::DefineRef()
 {
-    using type = SmartPointer<T>;
-    ClassDefiner<type>(this, "SmartPointer")
+    using type = Ref<T>;
+    ClassDefiner<type>(this, "Ref")
         .templateArgument<T>()
-        .base<std::shared_ptr<T>>()
-        .constructor()
-        .constructor<T*>()
         .function("serialize", &type::serialize)
         .function("deserialize", &type::deserialize)
     ;
@@ -86,8 +83,8 @@ void Meta::DefineClasses()
     DefineSet<int>();
     DefineList<float>();
     DefineSet<WindowM*>();
-    DefineList<SmartPointer<Node>>();
-    DefineSmartPointer<Node>();
+    DefineList<Ref<Node>>();
+    DefineRef<Node>();
     DefineList<int>();
     DefineList<WindowM*>();
 

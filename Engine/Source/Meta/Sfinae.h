@@ -12,7 +12,7 @@ template <typename T>
 class DeepPointer;
 
 template <typename T>
-class SmartPointer;
+class Ref;
 
 template <typename T>
 struct is_deep_pointer
@@ -27,13 +27,13 @@ struct is_deep_pointer<DeepPointer<T>>
 };
 
 template <typename T>
-struct is_smart_pointer
+struct is_ref
 {
     static const bool value = false;
 };
 
 template <typename T>
-struct is_smart_pointer<SmartPointer<T>>
+struct is_ref<Ref<T>>
 {
     static const bool value = true;
 };
@@ -87,7 +87,7 @@ struct is
 {
     enum { RealPointer = std::is_pointer<T>::value };
     enum { DeepPointer = is_deep_pointer<T>::value };
-    enum { SmartPointer = is_smart_pointer<T>::value };
+    enum { Ref = is_ref<T>::value };
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
     enum { Polymorphic = std::is_polymorphic<T>::value };
@@ -105,7 +105,7 @@ struct is
     enum { PointerToAbstract = RealPointer && std::is_abstract<typename std::remove_pointer<T>::type>::value };
     enum { AllowDereferencing = !Abstract && !Void };
 
-    enum { CustomSerializing = List || Map || SmartPointer };
+    enum { CustomSerializing = List || Map || Ref };
 };
 
 #define IF(T, C) typename std::enable_if<is<T>::C>::type

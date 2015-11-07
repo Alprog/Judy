@@ -9,5 +9,5 @@
     void DefineSet();
 
     template <typename T>
-    void DefineSmartPointer();
+    void DefineRef();
 
