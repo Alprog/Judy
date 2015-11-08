@@ -1,11 +1,17 @@
 
 #include "App.h"
 #include "Platforms.h"
+#include <time.h>
 
 App* App::Instance()
 {
     static PlatformApp instance;
     return &instance;
+}
+
+App::App()
+{
+    Retain();
 }
 
 void App::AddWindow(WindowM* window)

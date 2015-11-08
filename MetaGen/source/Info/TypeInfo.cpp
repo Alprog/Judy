@@ -18,7 +18,8 @@ TypeInfo::TypeInfo(TokenGroup& tokens)
       { "const", &isConst }
     });
 
-    tokens.makeGroups("<", ">");
+    tokens.makeTemplateGroups();
+
     auto index = tokens.indexOf("<>");
     if (index >= 0)
     {
@@ -26,7 +27,8 @@ TypeInfo::TypeInfo(TokenGroup& tokens)
         auto groups = args->cast<TokenGroup*>()->getContent().split(",");
         for (auto& group : groups)
         {
-            templateArguments.push_back(group.getText());
+            auto argumentType = TypeInfo(group);
+            templateArguments.push_back(argumentType);
         }
         name = tokens.getText();
     }
@@ -47,9 +49,10 @@ bool TypeInfo::isDependent(ClassInfo& classInfo)
 {
     for (auto& argument : templateArguments)
     {
+        auto argumentName = argument.fullName;
         for (auto& parameter : classInfo.templateParameters)
         {
-            if (argument == parameter)
+            if (argumentName == parameter)
             {
                 return true;
             }
@@ -68,7 +71,7 @@ void TypeInfo::refreshFullName()
         for (auto i = 0; i < size; i++)
         {
             if (i > 0) { fullName += ","; };
-            fullName += templateArguments[i];
+            fullName += templateArguments[i].fullName;
         }
         fullName += ">";
     }

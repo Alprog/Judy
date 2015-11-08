@@ -1,20 +1,35 @@
 
+require 'Class'
+require 'ModelDerived'
+--require 'Serializer'
+
 local app = App.Instance()
 local window = WindowM.Create()
+local scene = window.scene
 
---[[local a = Node.new0()
-local b = Node.new1(4)
-a:AddChild(b)
-local count = a:ChildCount()
-print(count)]]
+function add()
+	local model = ModelDerived.new()
+	print(model)
+	--model.foo = 'abr'
+	print(model.foo)
+	scene:AddChild(model)
+end
 
-
-local a = 3;
-
-function b()
-	return 3;
-end
-
-b()
+add()
+
+collectgarbage()
+
+function remove()
+	local model = scene:Child(2)
+	print(model)
+	print(model.foo)
+	scene:RemoveChild(model)
+end
+
+--remove()
+
+collectgarbage()
+
+print('---')
 
 app:StartMainLoop()

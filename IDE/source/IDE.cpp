@@ -10,6 +10,8 @@
 IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
 {
+    Meta::Instance()->Init();
+
     LoadStyle();
     LoadSettings();
     Start();

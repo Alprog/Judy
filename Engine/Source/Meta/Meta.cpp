@@ -6,7 +6,7 @@
 #include "CallInfo.h"
 #include "Node.h"
 
-Meta::Meta()
+void Meta::Init()
 {
     DefineBuildInType<bool>("bool");
     DefineBuildInType<int>("int");

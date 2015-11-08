@@ -39,7 +39,9 @@ HEADERS += \
     Source/Meta/IndexSequence.h \
     Source/Meta/IConstructorMeta.h \
     Source/Meta/IClassMeta.h \
-    Source/Meta/IFieldMeta.h
+    Source/Meta/IFieldMeta.h \
+    Source/Object.h \
+    Source/Ref.h
 
 SOURCES += \
     Source/App.cpp \
@@ -93,7 +95,9 @@ SOURCES += \
     Source/Model.cpp \
     Source/Meta/IMemberMeta.cpp \
     Source/Meta/PropertyMeta.cpp \
-    Source/Meta/IClassMeta.cpp
+    Source/Meta/IClassMeta.cpp \
+    Source/Object.cpp \
+    Source/Lua.cpp
 
 win {
     INCLUDEPATH += Source/Windows

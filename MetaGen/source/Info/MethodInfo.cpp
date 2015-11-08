@@ -54,7 +54,7 @@ void MethodInfo::processArguments(TokenGroup& tokens)
     {
         auto& parentheses = tokens[index];
         auto content = parentheses->cast<TokenGroup*>()->getContent();
-        content.makeGroups("<", ">");
+        content.makeTemplateGroups();
         if (content.size() > 0)
         {
             for (auto& argumentTokens : content.split(","))

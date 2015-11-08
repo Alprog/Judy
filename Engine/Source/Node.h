@@ -6,16 +6,19 @@
 #include "Math/Transform.h"
 #include "Meta/ITypeMeta.h"
 #include "Attributes.h"
+#include "Ref.h"
+#include "Object.h"
 
 class Renderer;
 
-class _(Meta)__ Node
+class _(Meta)__ Node : public Object
 {
     friend class Meta;
 
 public:
     Node();
     Node(int a);
+    virtual ~Node();
 
     Node* Parent();
     int ChildCount();
@@ -26,12 +29,14 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
-    virtual void Update(double delta);
+    void Update(float delta);
+    virtual void UpdateHelper(float delta);
+
     virtual void Render(Matrix matrix, Renderer* renderer);
 
     _(Serialize, Inspect)__ Transform transform;
 
 private:
     Node* parent;
-    _(Serialize)__ List<Node*> childs;
+    _(Serialize)__ List<Ref<Node>> childs;
 };

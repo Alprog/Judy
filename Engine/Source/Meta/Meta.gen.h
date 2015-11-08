@@ -8,3 +8,6 @@
     template <typename T>
     void DefineSet();
 
+    template <typename T>
+    void DefineRef();
+

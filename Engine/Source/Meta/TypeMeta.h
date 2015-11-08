@@ -25,50 +25,8 @@ struct IBase<T, IF(T, Class)>
     using type = IClassMeta;
 };
 
-//---
-
-template <typename T>
-struct pointerOf
-{
-    using type = T*;
-};
-
-template <typename T>
-struct pointerOf<T*>
-{
-    using type = DeepPointer<T>;
-};
-
-template <typename T>
-struct pointerOf<DeepPointer<T>>
-{
-    using type = DeepPointer<T>;
-};
-
-//---
-
-template <typename T>
-struct pointeeOf
-{
-    using type = std::nullptr_t;
-};
-
-template <typename T>
-struct pointeeOf<T*>
-{
-    using type = T;
-};
-
-template <typename T>
-struct pointeeOf<DeepPointer<T>>
-{
-    using type = typename DeepPointer<T>::pointeeType;
-};
-
-//---
-
 template <typename ClassType>
-class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
+class TypeMeta : public IBase<ClassType>::type, public TrivialSingleton<TypeMeta<ClassType>>
 {
 public:
     using pointeeType = typename pointeeOf<ClassType>::type;
@@ -79,8 +37,9 @@ public:
         const int flags =
             (~is<ClassType>::Class + 1) & Flags::IsClass |
             (~is<ClassType>::Pointer + 1) & Flags::IsPointer |
+            (~is<ClassType>::Ref + 1) & Flags::IsRef |
             (~is<ClassType>::PointerToPolymorhic + 1) & Flags::IsPointerToPolymorhic |
-            (~is<ClassType>::List + 1) & Flags::IsList
+            (~is<ClassType>::CustomSerializing + 1) & Flags::IsCustomSerializing
         ;
         return (Flags)flags;
     }
@@ -91,7 +50,7 @@ public:
     virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
     virtual ITypeMeta* GetPointerType() override { return TypeMetaOf<pointerType>(); }
     virtual ITypeMeta* GetPointeeType() override { return TypeMetaOf<pointeeType>(); }
-    virtual ITypeMeta* GetRunTimePointeeType(Any& object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
+    virtual ITypeMeta* GetRunTimePointeeType(Any object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
 
 private:
     //---------------------------------------------------------------------------------
@@ -167,15 +126,23 @@ private:
     template <typename T>
     static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF(T, PointerToPolymorhic)* = nullptr)
     {
-        auto pointer = object.as<T>();
-        auto index = std::type_index(typeid(*pointer));
-        return Meta::Instance()->Find(index);
+        auto baseClassMeta = (IClassMeta*)TypeMetaOf<pointeeType>();
+        if (baseClassMeta->hasDerives)
+        {
+            pointeeType* pointer = object.as<T>();
+            auto index = std::type_index(typeid(*pointer));
+            return Meta::Instance()->Find(index);
+        }
+        else
+        {
+            return baseClassMeta;
+        }
     }
 
     template <typename T>
     static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF_NOT(T, PointerToPolymorhic)* = nullptr)
     {
-        throw std::runtime_error("type is not pointer to polymorhic");
+        return TypeMetaOf<pointeeType>();
     }
 
     //---------------------------------------------------------------------------------

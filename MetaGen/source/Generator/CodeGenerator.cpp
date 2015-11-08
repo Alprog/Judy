@@ -233,6 +233,14 @@ std::vector<TypeInfo> CodeGenerator::GetTemplateTypes(std::vector<ClassInfo>& cl
         }
     }
 
+    for (auto i = 0; i < typeRefs.size(); i++)
+    {
+        for (auto& type : typeRefs[i]->templateArguments)
+        {
+            typeRefs.push_back(&type);
+        }
+    }
+
     std::vector<TypeInfo> types;
     std::unordered_set<std::string> names;
     for (TypeInfo* typeRef : typeRefs)
@@ -255,14 +263,15 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     std::stringstream stream;
 
     auto className = classInfo.name;
+    auto classFullName = className;
     if (classInfo.isTemplate())
     {
-        auto list = GenerateParametersList(classInfo, false);
-        stream << tab << "using type = " << className << "<" << list << ">;" << std::endl;
+        classFullName = className + "<" + GenerateParametersList(classInfo, false) + ">";
+        stream << tab << "using type = " << classFullName << ";" << std::endl;
         className = "type";
     }
 
-    stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << className << "\")" << std::endl;
+    stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << classFullName << "\")" << std::endl;
 
     // template arguments
     for (auto& parameter : classInfo.templateParameters)
@@ -328,7 +337,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     }
 
     // fields
-    if (!isAbstract)
+    //if (!isAbstract)
     {
         for (auto& field : classInfo.fields)
         {

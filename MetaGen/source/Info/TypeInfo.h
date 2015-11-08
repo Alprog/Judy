@@ -14,7 +14,7 @@ struct TypeInfo
 
     std::string fullName;
     std::string name;
-    std::vector<std::string> templateArguments;
+    std::vector<TypeInfo> templateArguments;
     bool isConst;
 
     bool isTemplate() const;

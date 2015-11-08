@@ -30,7 +30,7 @@ struct ClassInfo : MemberInfo
     bool isAbstract();
 
     std::string headerName;
-    TypeInfo instantinateSubtype(TypeInfo typeInfo, std::vector<std::string> templateArguments);
+    TypeInfo instantinateSubtype(TypeInfo typeInfo, std::vector<TypeInfo> templateArguments);
 
 private:
     void processMainTokens(TokenGroup& tokens);

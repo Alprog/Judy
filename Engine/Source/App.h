@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Object.h"
 #include "Window.h"
 
 #include "Meta/Meta.h"
@@ -8,7 +9,7 @@
 #include "Containers/Set.h"
 #include "Attributes.h"
 
-class _(Meta)__ App
+class _(Meta)__ App : public Object
 {
     friend class Meta;
 
@@ -20,7 +21,8 @@ public:
     void AddWindow(WindowM* window);
     void RemoveWindow(WindowM* window);
 
-private:
+protected:
+    App();
     void UpdateCollection();
 
     Set<WindowM*> Windows;

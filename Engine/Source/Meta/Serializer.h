@@ -3,6 +3,7 @@
 
 #include "Any.h"
 #include "ITypeMeta.h"
+#include "Attributes.h"
 
 class lua_State;
 class ITypeMeta;
@@ -11,6 +12,8 @@ class IClassMeta;
 class Serializer
 {
     template <typename> friend class List;
+    template <typename, typename> friend class Map;
+    template <typename> friend class Ref;
 
 public:
     Serializer();

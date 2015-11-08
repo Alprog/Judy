@@ -359,6 +359,8 @@ typedef union UUdata {
 #define getudatamem(u)  \
   check_exp(sizeof((u)->ttuv_), (cast(char*, (u)) + sizeof(UUdata)))
 
+#define getudatafrommem(p) cast(char*, (p)) - sizeof(UUdata)
+
 #define setuservalue(L,u,o) \
 	{ const TValue *io=(o); Udata *iu = (u); \
 	  iu->user_ = io->value_; iu->ttuv_ = io->tt_; \

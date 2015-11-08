@@ -5,6 +5,7 @@
 #include "AttributeInfo.h"
 #include <string>
 #include <vector>
+#include "TypeInfo.h"
 #include "../Parser/Tokens/TokenGroup.h"
 
 struct MemberInfo

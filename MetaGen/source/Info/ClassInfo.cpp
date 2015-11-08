@@ -6,7 +6,7 @@ ClassInfo::ClassInfo(TokenGroup& tokens)
     : classType{ClassType::Class}
     , isFinal{false}
 {
-    tokens.makeGroups("<", ">");
+    tokens.makeTemplateGroups();
 
     auto arr = tokens.split(":");
     processMainTokens(arr[0]);
@@ -102,14 +102,15 @@ void ClassInfo::processInheritanceTokens(TokenGroup& tokens)
     }
 }
 
-TypeInfo ClassInfo::instantinateSubtype(TypeInfo typeInfo, std::vector<std::string> templateArguments)
+TypeInfo ClassInfo::instantinateSubtype(TypeInfo typeInfo, std::vector<TypeInfo> templateArguments)
 {
     auto changed = false;
     for (auto& argument : typeInfo.templateArguments)
     {
+        auto argumentName = argument.fullName;
         for (auto i = 0; i < templateParameters.size(); i++)
         {
-            if (argument == templateParameters[i])
+            if (argumentName == templateParameters[i])
             {
                 argument = templateArguments[i];
                 changed = true;

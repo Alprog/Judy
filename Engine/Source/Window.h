@@ -1,12 +1,14 @@
 
 #pragma once
 
+#include "Object.h"
+#include "Ref.h"
 #include "Node.h"
 #include "RenderTarget.h"
 #include "Renderer.h"
 #include "Attributes.h"
 
-class _(Meta)__ WindowM
+class _(Meta)__ WindowM : public Object
 {
     friend class Meta;
 
@@ -24,9 +26,9 @@ public:
 protected:
     WindowM();
 
-    RenderTarget* renderTarget;
-    Node* scene;
-    Renderer* renderer;
+    _(Bind)__ Ref<Node> scene;
+    _(Bind)__ RenderTarget* renderTarget;
+    _(Bind)__ Renderer* renderer;
 
     //RenderTarget* RenderTarget1;
     //RenderTarget* RenderTarget2;

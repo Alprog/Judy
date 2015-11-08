@@ -9,10 +9,6 @@ Model::Model()
     material = new Material();
 }
 
-void Model::Update(double delta)
-{
-}
-
 void Model::Render(Matrix matrix, Renderer* renderer)
 {
     renderer->Draw(mesh, material, matrix);

@@ -38,7 +38,9 @@ public:
     template <typename T>
     ClassDefiner& base()
     {
-        classMeta->baseTypes.push_back(TypeMetaOf<T>());
+        auto baseType = (IClassMeta*)TypeMetaOf<T>();
+        classMeta->baseTypes.push_back(baseType);
+        baseType->hasDerives = true;
         return *this;
     }
 

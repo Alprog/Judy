@@ -1,5 +1,6 @@
 
 #include "TokenGroup.h"
+#include "AtomToken.h"
 
 TokenGroup::TokenGroup()
 {
@@ -55,6 +56,27 @@ const std::string TokenGroup::getText() const
         first = false;
     }
     return text;
+}
+
+void TokenGroup::decay(std::string name)
+{
+    auto index = indexOf(name);
+    while (index >= 0)
+    {
+        extractAt(index);
+        for (auto i = 0; i < name.size(); i++)
+        {
+            auto text = name.substr(i, 1);
+            std::shared_ptr<Token> token { new AtomToken(text) };
+            insert(index, token);
+        }
+        index = indexOf(name);
+    }
+}
+
+void TokenGroup::insert(int index, std::shared_ptr<Token> token)
+{
+    tokens.insert(std::begin(tokens) + index, token);
 }
 
 void TokenGroup::add(std::shared_ptr<Token> token)
@@ -144,6 +166,13 @@ void TokenGroup::makeBracketGroups()
     makeGroups("[", "]");
 }
 
+void TokenGroup::makeTemplateGroups()
+{
+    decay("<<");
+    decay(">>");
+    makeGroups("<", ">");
+}
+
 void TokenGroup::makeGroups(std::string openName, std::string closeName)
 {
     while (true)
@@ -169,11 +198,7 @@ void TokenGroup::makeGroups(std::string openName, std::string closeName)
 
 std::vector<TokenGroup> TokenGroup::splitDeclararion()
 {
-//    std::vector<TokenGroup> groups;
-//    groups.push_back(TokenGroup(std::begin(tokens), std::end(tokens)));
-//    return groups;
-
-    makeGroups("<", ">");
+    makeTemplateGroups();
 
     auto array = split(",");
     if (array.size() > 1)

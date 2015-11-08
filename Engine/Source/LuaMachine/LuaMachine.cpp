@@ -19,16 +19,28 @@ LuaMachine::LuaMachine()
     L = luaL_newstate();
     luaL_openlibs(L);
 
-    // search path for required scipts
+    // search path for required scripts
     lua_getglobal(L, "package");
     lua_pushstring(L, "?.lua");
     lua_setfield(L, -2, "path");
     lua_pop(L, 1);
+
+    // userdata storage (prevent gc)
+    lua_newtable(L);
+    lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
+
+    binder = new LuaBinder(L);
     LuaBinder(L).Bind(Meta::Instance());
 }
 
 LuaMachine::~LuaMachine()
 {
+    if (binder != nullptr)
+    {
+        delete binder;
+        binder = nullptr;
+    }
+
     if (L != nullptr)
     {
         lua_close(L);
@@ -198,4 +210,22 @@ void LuaMachine::Stop()
         suspended = false;
         lua_sethook(L, stopHook, LUA_MASKCOUNT, 1);
     }
+}
+
+void LuaMachine::RetainUserdata(void* userdata)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushuserdata(L, userdata); // TK
+    lua_pushboolean(L, true); // TKV
+    lua_rawset(L, -3); // T
+    lua_pop(L, 1); //
+}
+
+void LuaMachine::ReleaseUserdata(void* userdata)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushuserdata(L, userdata); // TK
+    lua_pushnil(L); // TKV
+    lua_rawset(L, -3); // T
+    lua_pop(L, 1); //
 }

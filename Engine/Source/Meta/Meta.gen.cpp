@@ -19,13 +19,14 @@
 #include "Model.h"
 #include "Node.h"
 #include "Quad.h"
+#include "Ref.h"
 #include "Window.h"
 
 template <typename T>
 void Meta::DefineList()
 {
     using type = List<T>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "List")
         .templateArgument<T>()
         .base<std::vector<T>>()
         .constructor()
@@ -42,7 +43,7 @@ template <typename T1, typename T2>
 void Meta::DefineMap()
 {
     using type = Map<T1, T2>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "Map")
         .templateArgument<T1>()
         .templateArgument<T2>()
         .base<std::unordered_map<T1, T2>>()
@@ -56,12 +57,23 @@ template <typename T>
 void Meta::DefineSet()
 {
     using type = Set<T>;
-    ClassDefiner<type>(this, "type")
+    ClassDefiner<type>(this, "Set")
         .templateArgument<T>()
         .base<std::unordered_set<T>>()
         .constructor()
         .constructor<List<T>>().attr("Serialize")
         .method("toList", &type::toList).attr("Serialize")
+    ;
+}
+
+template <typename T>
+void Meta::DefineRef()
+{
+    using type = Ref<T>;
+    ClassDefiner<type>(this, "Ref")
+        .templateArgument<T>()
+        .function("serialize", &type::serialize)
+        .function("deserialize", &type::deserialize)
     ;
 }
 
@@ -71,7 +83,8 @@ void Meta::DefineClasses()
     DefineSet<int>();
     DefineList<float>();
     DefineSet<WindowM*>();
-    DefineList<Node*>();
+    DefineList<Ref<Node>>();
+    DefineRef<Node>();
     DefineList<int>();
     DefineList<WindowM*>();
 
@@ -187,7 +200,6 @@ void Meta::DefineClasses()
     ClassDefiner<Model>(this, "Model")
         .base<Node>()
         .constructor()
-        .method("Update", &Model::Update)
         .method("Render", &Model::Render)
         .field("mesh", &Model::mesh)
         .field("material", &Model::material)
@@ -197,6 +209,7 @@ void Meta::DefineClasses()
     ClassDefiner<Node>(this, "Node")
         .constructor()
         .constructor<int>()
+        .constructor()
         .method("Parent", &Node::Parent)
         .method("ChildCount", &Node::ChildCount)
         .method("Child", &Node::Child)
@@ -204,7 +217,7 @@ void Meta::DefineClasses()
         .method("RemoveChild", &Node::RemoveChild)
         .method("Unparent", &Node::Unparent)
         .method("Reparent", &Node::Reparent)
-        .method("Update", &Node::Update)
+        .method("Update", &Node::UpdateHelper)
         .method("Render", &Node::Render)
         .field("transform", &Node::transform).attr("Serialize").attr("Inspect")
         .field("parent", &Node::parent)
@@ -214,7 +227,6 @@ void Meta::DefineClasses()
     ClassDefiner<Quad>(this, "Quad")
         .base<Node>()
         .constructor()
-        .method("Update", &Quad::Update)
         .method("Render", &Quad::Render)
         .field("Size", &Quad::Size).attr("Serialize").attr("Inspect")
         .field("Shader", &Quad::Shader).attr("Serialize").attr("Inspect")
@@ -227,6 +239,9 @@ void Meta::DefineClasses()
         .method("ProcessEvents", &WindowM::ProcessEvents)
         .method("Update", &WindowM::Update)
         .method("Render", &WindowM::Render)
+        .field("renderTarget", &WindowM::renderTarget).attr("Bind")
+        .field("scene", &WindowM::scene).attr("Bind")
+        .field("renderer", &WindowM::renderer).attr("Bind")
     ;
 }
 

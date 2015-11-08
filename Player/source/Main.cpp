@@ -3,11 +3,10 @@
 #include "RemoteDebbuger.h"
 
 #include "App.h"
+#include "Meta/Meta.h"
 
 int main(int argc, char *argv[])
 {
-    bool a = std::is_same<int*, typename fulldecay< int const *& >::type>::value;
-
     auto debug = false;
     for (int i = 0; i < argc; i++)
     {
@@ -17,6 +16,8 @@ int main(int argc, char *argv[])
             debug = true;
         }
     }
+
+    Meta::Instance()->Init();
 
     auto luaMachine = LuaMachine::Instance();
 

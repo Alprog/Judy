@@ -2,6 +2,8 @@
 #include "Node.h"
 #include <algorithm>
 
+#include "LuaMachine.h"
+
 Node::Node()
     : parent {nullptr}
 {
@@ -9,6 +11,10 @@ Node::Node()
 
 Node::Node(int i)
     : parent {nullptr}
+{
+}
+
+Node::~Node()
 {
 }
 
@@ -24,19 +30,24 @@ int Node::ChildCount()
 
 Node* Node::Child(int i)
 {
-    return childs[i];
+    return childs[i].Get();
 }
 
 void Node::AddChild(Node* node)
 {
     node->Unparent();
-    childs.push_back(node);
+    Ref<Node> ref(node);
+    childs.push_back(std::move(ref));
     node->parent = this;
 }
 
 void Node::RemoveChild(Node* node)
 {
-    auto position = find(begin(childs), end(childs), node);
+    auto position = find_if(begin(childs), end(childs), [&](Ref<Node> const& ref)
+    {
+        return ref.Get() == node;
+    });
+
     if (position != end(childs))
     {
         childs.erase(position);
@@ -64,9 +75,28 @@ void Node::Reparent(Node* parent)
     }
 }
 
-void Node::Update(double delta)
+#include "Lua.h"
+
+void Node::Update(float delta)
 {
-    for (auto child : childs)
+    if (luaObject == nullptr)
+    {
+        UpdateHelper(delta);
+    }
+    else
+    {
+        auto L = LuaMachine::Instance()->getL();
+        lua_pushuserdata(L, luaObject); // U
+        lua_getfield(L, -1, "Update"); // UF
+        lua_insert(L, -2); // FU
+        lua_pushnumber(L, delta); // FUV
+        lua_call(L, 2, 0); //
+    }
+}
+
+void Node::UpdateHelper(float delta)
+{
+    for (auto& child : childs)
     {
         child->Update(delta);
     }
@@ -74,7 +104,7 @@ void Node::Update(double delta)
 
 void Node::Render(Matrix matrix, Renderer* renderer)
 {
-    for (auto child : childs)
+    for (auto& child : childs)
     {
         auto& childMatrix = child->transform.getMatrix();
         child->Render(childMatrix * matrix, renderer);

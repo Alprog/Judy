@@ -14,7 +14,6 @@ class _(Meta)__ Quad : public Node
 public:
     Quad();
 
-    virtual void Update(double delta) override;
     virtual void Render(Matrix matrix, Renderer* renderer) override;
 
     _(Serialize, Inspect)__ Vector2 Size;
