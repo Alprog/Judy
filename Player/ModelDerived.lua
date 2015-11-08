@@ -1,5 +1,7 @@
 
 ModelDerived = {}
+ModelDerived.__index = ModelDerived
+setmetatable(ModelDerived, Model)
 
 function ModelDerived:new()
 	SetForceLuaClass('ModelDerived')

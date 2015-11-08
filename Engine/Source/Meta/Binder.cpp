@@ -146,6 +146,9 @@ void pushObject(lua_State* L, Object* pointer, std::string className)
     {
         lua_newtable(L); // UP
 
+        printf("%s\n", className.c_str());
+        fflush(stdout);
+
         lua_getglobal(L, className.c_str()); // UPM
         if (lua_isnil(L, -1))
         {

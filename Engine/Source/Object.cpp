@@ -59,33 +59,32 @@ int Object::GC(lua_State* L)
 
     if (object->referenceCount == 0)
     {
-        printf("kill %s\n", typeid(*object).name());
-        fflush(stdout);
-
         // delete cpp and lua object
         delete object;
+        lua_pop(L, 1);
     }
     else
     {
         lua_getuservalue(L, -1); // UT
-        if (lua_isemptytable(L, -1))
+//        if (lua_isemptytable(L, -1))
+//        {
+//            // delete lua object
+//            object->luaObject = nullptr;
+//            lua_pop(L, 2);
+//        }
+//        else
         {
-            // delete lua object
-            object->luaObject = nullptr;
             lua_pop(L, 1); // U
-        }
-        else
-        {
+
             // force keep userdata reference
             LuaMachine::Instance()->RetainUserdata(object->luaObject);
 
             // mark for finalization again
             lua_getmetatable(L, -1); // UM
             lua_setmetatable(L, -2); // U
+            lua_pop(L, 1);
         }
     }
-
-    lua_pop(L, 1);
 
     return 0;
 }

@@ -16,7 +16,6 @@ Node::Node(int i)
 
 Node::~Node()
 {
-    printf("delete\n");
 }
 
 Node* Node::Parent()
@@ -76,18 +75,26 @@ void Node::Reparent(Node* parent)
     }
 }
 
-void Node::Update(double delta)
+#include "Lua.h"
+
+void Node::Update(float delta)
 {
-//    if (LuaObject != nullptr)
-//    {
-//        auto L = LuaMachine::Instance()->L;
-
-//        lua_push(L, )
-
-//    }
+    if (luaObject == nullptr)
+    {
+        UpdateHelper(delta);
+    }
+    else
+    {
+        auto L = LuaMachine::Instance()->getL();
+        lua_pushuserdata(L, luaObject); // U
+        lua_getfield(L, -1, "Update"); // UF
+        lua_insert(L, -2); // FU
+        lua_pushnumber(L, delta); // FUV
+        lua_call(L, 2, 0); //
+    }
 }
 
-void Node::UpdateHelper(double delta)
+void Node::UpdateHelper(float delta)
 {
     for (auto& child : childs)
     {

@@ -12,6 +12,12 @@ function add()
 	--model.foo = 'abr'
 	print(model.foo)
 	scene:AddChild(model)
+
+	print('!11')
+
+
+	model:Update(4)
+
 end
 
 add()
@@ -25,7 +31,7 @@ function remove()
 	scene:RemoveChild(model)
 end
 
-remove()
+--remove()
 
 collectgarbage()
 

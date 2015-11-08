@@ -29,8 +29,8 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
-    void Update(double delta);
-    virtual void UpdateHelper(double delta);
+    void Update(float delta);
+    virtual void UpdateHelper(float delta);
 
     virtual void Render(Matrix matrix, Renderer* renderer);
 

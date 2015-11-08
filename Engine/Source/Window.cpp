@@ -49,12 +49,12 @@ WindowM::WindowM()
 //    text = serializer->Serialize(obj);
 //    printf(text.c_str());
 //    fflush(stdout);
+
+    Retain();
 }
 
 WindowM::~WindowM()
 {
-    printf("delete windows\n");
-    fflush(stdout);
 }
 
 void WindowM::Update()

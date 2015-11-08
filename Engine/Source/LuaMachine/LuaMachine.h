@@ -47,6 +47,7 @@ public:
     CallStack stack;
     std::function<void()> breakCallback;
     std::function<void()> resumeCallback;
+    lua_State* getL() const { return L; }
 
 private:
     lua_State* L;

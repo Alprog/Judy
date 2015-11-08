@@ -43,8 +43,6 @@ private:
             T2 value = serializer->Deserialize(valueType);
             lua_pop(L, 1);
             T1 key = serializer->Deserialize(keyType);
-            lua_pop(L, 1);
-
             map[key] = value;
         }
 
