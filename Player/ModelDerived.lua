@@ -1,7 +1,9 @@
 
+local base = Model
+
 ModelDerived = {}
 ModelDerived.__index = ModelDerived
-setmetatable(ModelDerived, Model)
+setmetatable(ModelDerived, base)
 
 function ModelDerived:new()
 	SetForceLuaClass('ModelDerived')
@@ -9,5 +11,6 @@ function ModelDerived:new()
 end
 
 function ModelDerived:Update(dt)
+	base.Update(self, dt)
 	print(dt)
 end
