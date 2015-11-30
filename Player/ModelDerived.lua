@@ -1,8 +1,8 @@
-
-local base = Model
-Class('ModelDerived', base)
-
-function ModelDerived:Update(dt)
+
+Class('ModelDerived', Model)	
+
+local base = Model
+
+function ModelDerived:Update(dt)
 	base.Update(self, dt)
-	--print(dt)
 end
