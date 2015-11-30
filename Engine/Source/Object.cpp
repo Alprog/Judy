@@ -19,12 +19,14 @@ void Object::Retain()
 {
     referenceCount++;
     printf("inc %i %p\n", referenceCount, this);
+    fflush(stdout);
 }
 
 void Object::Release()
 {
     referenceCount--;
     printf("dec %i %p\n", referenceCount, this);
+    fflush(stdout);
     if (referenceCount == 0)
     {
         if (luaObject == nullptr)

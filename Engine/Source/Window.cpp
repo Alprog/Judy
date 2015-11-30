@@ -42,8 +42,8 @@ WindowM::WindowM()
 
     auto serializer = new Serializer();
     auto text = serializer->Serialize(scene);
-    //printf(text.c_str());
-    //fflush(stdout);
+    printf(text.c_str());
+    fflush(stdout);
 
     Node* obj = serializer->Deserialize<Node*>(text);
     text = serializer->Serialize(obj);

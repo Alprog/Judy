@@ -157,7 +157,7 @@ struct is
     enum { PointerToPolymorhic = std::is_polymorphic<typename pointeeOf<T>::type>::value && !DeepPointer };
     enum { AllowDereferencing = !Abstract && !Void };
 
-    enum { CustomSerializing = List || Map || Ref };
+    enum { CustomSerializing = List || Map };
 };
 
 #define IF(T, C) typename std::enable_if<is<T>::C>::type

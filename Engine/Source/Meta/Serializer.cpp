@@ -7,6 +7,7 @@
 #include "ConstructorMeta.h"
 #include "Meta/TypeMeta.h";
 #include "Lua.h"
+#include "Object.h"
 
 Serializer::Serializer()
 {
@@ -218,6 +219,8 @@ Any Serializer::Deserialize(ITypeMeta* type)
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
 
+        auto pointeeType = type->GetPointeeType();
+
         Any value;
         if (flags & ITypeMeta::IsPointerToPolymorhic)
         {
@@ -225,11 +228,19 @@ Any Serializer::Deserialize(ITypeMeta* type)
         }
         else
         {
-            value = Deserialize(type->GetPointeeType());
+            value = Deserialize(pointeeType);
         }
 
-        auto pointer = type->MakePointer(value);
+        auto pointer = pointeeType->MakePointer(value);
         value.Detach(); // prevent destroy (keep data at heap)
+
+        //auto p = type->CreateOnStack();
+
+        if (flags & ITypeMeta::IsRef)
+        {
+            static_cast<Object*>(pointer)->Retain();
+        }
+
         lua_pop(L, 1);
         return pointer;
     }
