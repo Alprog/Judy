@@ -65,7 +65,7 @@ public:
 	}
 
 	// destructor
-    virtual ~Ref()
+    ~Ref()
 	{
         Release();
 	}
