@@ -155,16 +155,5 @@ private:
 	}
 
 private:
-    static void serialize(Ref<T> ref, Serializer* serializer)
-    {
-        serializer->Serialize(ref.pointer, TypeMetaOf<T*>());
-    }
-
-    static Ref<T> deserialize(Serializer* serializer)
-    {
-        auto any = serializer->Deserialize(TypeMetaOf<T*>());
-        return Ref<T>(any.as<T*>());
-    }
-
     T* pointer;
 };

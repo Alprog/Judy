@@ -72,8 +72,6 @@ void Meta::DefineRef()
     using type = Ref<T>;
     ClassDefiner<type>(this, "Ref")
         .templateArgument<T>()
-        .function("serialize", &type::serialize)
-        .function("deserialize", &type::deserialize)
     ;
 }
 
