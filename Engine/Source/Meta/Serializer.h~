@@ -5,7 +5,7 @@
 #include "ITypeMeta.h"
 #include "Attributes.h"
 
-struct lua_State;
+class lua_State;
 class ITypeMeta;
 class IClassMeta;
 

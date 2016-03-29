@@ -7,7 +7,7 @@
 #include "Attributes.h"
 
 template <typename T>
-class _(Meta)__ List : public std::vector<T>
+class [[Meta]] List : public std::vector<T>
 {
     friend class Meta;
     using base = std::vector<T>;

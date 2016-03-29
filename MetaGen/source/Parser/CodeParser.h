@@ -17,7 +17,6 @@ private:
     void spliceLines(std::string& text);
     void removeComments(std::string& text);
     void removeDirectives(std::string& text);
-    void fixAttributeSyntax(std::string& text);
     void parseClasses(Snippet* snippet, std::string headerName = "");
     void parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnippet);
     void checkAcessModifiers(TokenGroup& tokens);

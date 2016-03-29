@@ -7,30 +7,30 @@
 #include "Matrix.h"
 #include "Attributes.h"
 
-struct _(Meta)__ Transform
+struct [[Meta]] Transform
 {
     friend class Meta;
 
     Transform();
 
-    Property _(Bind, Inspect)__ translation;
+    Property [[Bind]] [[Inspect]] translation;
     void setTranslation(Vector3 translation);
     Vector3 getTranslation() const;
 
-    Property _(Bind, Inspect)__ rotation;
+    Property [[Bind]] [[Inspect]] rotation;
     Quaternion getRotation() const;
     void setRotation(Quaternion quaternion);
 
-    Property _(Bind, Inspect)__ scaling;
+    Property [[Bind]] [[Inspect]] scaling;
     Vector3 getScaling() const;
     void setScaling(Vector3 scaling);
 
     Matrix getMatrix();
 
 private:
-    _(Serialize, Inspect)__ Vector3 translation;
-    _(Serialize, Inspect)__ Quaternion rotation;
-    _(Serialize, Inspect)__ Vector3 scaling;
+    [[Serialize]] [[Inspect]] Vector3 translation;
+    [[Serialize]] [[Inspect]] Quaternion rotation;
+    [[Serialize]] [[Inspect]] Vector3 scaling;
 
     bool invalidateMatrix;
     Matrix matrix;

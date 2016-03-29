@@ -5,7 +5,7 @@
 #include <vector>
 #include "Tokens/TokenGroup.h"
 
-class Snippet;
+struct Snippet;
 
 struct Statement
 {

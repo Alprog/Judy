@@ -9,7 +9,7 @@
 #include "Containers/Set.h"
 #include "Attributes.h"
 
-class _(Meta)__ App : public Object
+class [[Meta]] App : public Object
 {
     friend class Meta;
 

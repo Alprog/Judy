@@ -11,7 +11,7 @@
 
 class Renderer;
 
-class _(Meta)__ Node : public Object
+class [[Meta]] Node : public Object
 {
     friend class Meta;
 
@@ -34,9 +34,9 @@ public:
 
     virtual void Render(Matrix matrix, Renderer* renderer);
 
-    _(Serialize, Inspect)__ Transform transform;
+    [[Serialize]] [[Inspect]] Transform transform;
 
 private:
     Node* parent;
-    _(Serialize)__ List<Ref<Node>> childs;
+    [[Serialize]] List<Ref<Node>> childs;
 };

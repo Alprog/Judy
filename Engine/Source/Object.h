@@ -4,9 +4,9 @@
 #include <string>
 #include "Attributes.h"
 
-class lua_State;
+struct lua_State;
 
-class _(Meta)__ Object
+class [[Meta]] Object
 {
     friend class LuaBinder;
 
@@ -24,6 +24,6 @@ public:
     int referenceCount;
 
     void* luaObject;
-    _(Serialize)__ std::string luaClass;
+    [[Serialize]] std::string luaClass;
 };
 

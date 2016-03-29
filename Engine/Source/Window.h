@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "Attributes.h"
 
-class _(Meta)__ WindowM : public Object
+class [[Meta]] WindowM : public Object
 {
     friend class Meta;
 
@@ -26,9 +26,9 @@ public:
 protected:
     WindowM();
 
-    _(Bind)__ Ref<Node> scene;
-    _(Bind)__ RenderTarget* renderTarget;
-    _(Bind)__ Renderer* renderer;
+    [[Bind]] Ref<Node> scene;
+    [[Bind]] RenderTarget* renderTarget;
+    [[Bind]] Renderer* renderer;
 
     //RenderTarget* RenderTarget1;
     //RenderTarget* RenderTarget2;

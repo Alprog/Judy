@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "Attributes.h"
 
-struct _(Meta)__ Model : public Node
+struct [[Meta]] Model : public Node
 {
     Model();
 
@@ -17,5 +17,5 @@ struct _(Meta)__ Model : public Node
     Mesh* mesh;
     Material* material;
 
-    _(Serialize, Inspect)__ std::string name;
+    [[Serialize]] [[Inspect]] std::string name;
 };

@@ -4,10 +4,10 @@
 #include <string>
 #include "Attributes.h"
 
-struct _(Meta)__ LogMessage
+struct [[Meta]] LogMessage
 {
     LogMessage();
     LogMessage(std::string text);
 
-    _(Serialize)__ std::string text;
+    [[Serialize]] std::string text;
 };

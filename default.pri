@@ -15,6 +15,8 @@ CONFIG -= qt
 CONFIG -= debug_and_release debug_and_release_target
 CONFIG += c++11
 
+QMAKE_CXXFLAGS += /wd4250 /wd4800 /wd5030
+
 linux {
     QMAKE_CXXFLAGS += -std=c++0x -fpermissive
 }

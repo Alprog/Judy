@@ -4,7 +4,7 @@
 #include "Containers/List.h"
 #include "Attributes.h"
 
-struct _(Meta)__ Vector4
+struct [[Meta]] Vector4
 {
     static const Vector4 Zero;
     static const Vector4 One;
@@ -12,7 +12,7 @@ struct _(Meta)__ Vector4
     Vector4(float x = 0, float y = 0, float z = 0, float w = 0);
 
     Vector4(List<float> list);
-    _(Serialize)__ List<float> toList();
+    [[Serialize]] List<float> toList();
 
     float Length();
     float SquaredLength();
@@ -23,5 +23,5 @@ struct _(Meta)__ Vector4
 
     friend Vector4 operator*(const Vector4& vector, const float& value);
 
-    _(Bind)__ float x, y, z, w;
+    [[Bind]] [[Inspect]] float x, y, z, w;
 };

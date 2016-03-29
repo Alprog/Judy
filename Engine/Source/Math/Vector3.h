@@ -4,15 +4,15 @@
 #include "Containers/List.h"
 #include "Attributes.h"
 
-struct _(Meta)__ Vector3
+struct [[Meta]] Vector3
 {
     static const Vector3 Zero;
     static const Vector3 One;
 
     Vector3(float x = 0, float y = 0, float z = 0);
 
-    _(Serialize)__ Vector3(List<float> list);
-    _(Serialize)__ List<float> toList();
+    [[Serialize]] Vector3(List<float> list);
+    [[Serialize]] List<float> toList();
 
     float Length();
     float SquaredLength();
@@ -23,5 +23,5 @@ struct _(Meta)__ Vector3
 
     friend Vector3 operator*(const Vector3& vector, const float& value);
 
-    _(Bind, Inspect)__ float x, y, z;
+    [[Bind]] [[Inspect]] float x, y, z;
 };

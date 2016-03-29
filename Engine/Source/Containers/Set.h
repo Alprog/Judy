@@ -6,7 +6,7 @@
 #include "Attributes.h"
 
 template <typename T>
-class _(Meta)__ Set : public std::unordered_set<T>
+class [[Meta]] Set : public std::unordered_set<T>
 {
     friend class Meta;
     using base = std::unordered_set<T>;
@@ -15,12 +15,12 @@ public:
     Set() = default;
 
 private:
-    _(Serialize)__ Set(List<T> list)
+    Set(List<T> list) [[Serialize]]
         : base(std::begin(list), std::end(list))
     {
     }
 
-    _(Serialize)__ List<T> toList()
+    [[Serialize]] List<T> toList()
     {
         List<T> list(size());
         std::copy(begin(), end(), std::begin(list));

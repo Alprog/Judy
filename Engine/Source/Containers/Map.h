@@ -7,7 +7,7 @@
 #include "Attributes.h"
 
 template <typename T1, typename T2>
-class _(Meta)__ Map : public std::unordered_map<T1, T2>
+class [[Meta]] Map : public std::unordered_map<T1, T2>
 {
     friend class Meta;
     using base = std::unordered_map<T1, T2>;

@@ -25,7 +25,7 @@ Node* Node::Parent()
 
 int Node::ChildCount()
 {
-    return childs.size();
+    return (int)childs.size();
 }
 
 Node* Node::Child(int i)

@@ -11,7 +11,6 @@ void CodeParser::parse(std::string text, std::string headerName)
     spliceLines(text);
     removeComments(text);
     removeDirectives(text);
-    fixAttributeSyntax(text);
 
     auto snippet = new Snippet(text);
     parseClasses(snippet, headerName);
@@ -58,12 +57,6 @@ void CodeParser::removeComments(std::string& text)
 void CodeParser::removeDirectives(std::string& text)
 {
     text = std::regex_replace(text, std::regex(directiveLine), "");
-}
-
-void CodeParser::fixAttributeSyntax(std::string& text)
-{
-    text = std::regex_replace(text, std::regex("_[(]"), "[[");
-    text = std::regex_replace(text, std::regex("[)]__"), "]]");
 }
 
 void CodeParser::parseClasses(Snippet* snippet, std::string headerName)

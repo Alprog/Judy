@@ -5,7 +5,7 @@
 #include <cassert>
 #include "List.h"
 #include "ConstructorMeta.h"
-#include "Meta/TypeMeta.h";
+#include "Meta/TypeMeta.h"
 #include "Lua.h"
 #include "Object.h"
 
