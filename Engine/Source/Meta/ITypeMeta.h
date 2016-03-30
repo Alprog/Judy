@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-class Any;
+#include "Meta/Any.h"
 
 class ITypeMeta
 {
@@ -27,13 +27,14 @@ public:
     inline bool isRef() const { return getFlags() & Flags::IsRef; }
     inline bool isCustomSerializing() const { return getFlags() & Flags::IsCustomSerializing; }
 
-    virtual Any CreateOnStack() = 0;
-    virtual Any CreateOnHeap() = 0;
+    virtual Any Create() = 0;
 
     virtual ITypeMeta* GetPointerType() = 0;
     virtual ITypeMeta* GetPointeeType() = 0;
     virtual ITypeMeta* GetRunTimePointeeType(Any object) = 0;
 
+    virtual Any Reference(Any& object) = 0;
     virtual Any Dereference(Any& object) = 0;
-    virtual Any MakePointer(Any& object) = 0;
+
+    Any MakePointer(Any& object) { return GetPointerType()->Reference(object); }
 };

@@ -4,7 +4,7 @@
 #include <string>
 
 class Meta;
-class lua_State;
+struct lua_State;
 class IClassMeta;
 class Any;
 class ITypeMeta;

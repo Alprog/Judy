@@ -5,7 +5,7 @@
 #include <vector>
 
 class TokenGroup;
-class ClassInfo;
+struct ClassInfo;
 
 struct TypeInfo
 {

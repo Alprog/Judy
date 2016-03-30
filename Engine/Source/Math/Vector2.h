@@ -6,7 +6,7 @@
 #include "Containers/List.h"
 #include "Attributes.h"
 
-struct _(Meta)__ Vector2
+struct [[Meta]] Vector2
 {
     static const Vector2 Zero;
     static const Vector2 One;
@@ -14,8 +14,8 @@ struct _(Meta)__ Vector2
     Vector2();
     Vector2(float x, float y);
 
-    _(Serialize)__ Vector2(List<float> list);
-    _(Serialize)__ List<float> toList();
+    [[Serialize]] Vector2(List<float> list);
+    [[Serialize]] List<float> toList();
 
     float Length();
     float SquaredLength();
@@ -26,5 +26,5 @@ struct _(Meta)__ Vector2
 
     friend Vector2 operator*(const Vector2& vector, const float& value);
 
-    _(Bind)__ float x, y;
+    [[Bind]] [[Inspect]] float x, y;
 };

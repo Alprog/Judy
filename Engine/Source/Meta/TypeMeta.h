@@ -44,25 +44,28 @@ public:
         return (Flags)flags;
     }
 
-    virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
-    virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
-    virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
-    virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
+
+    virtual Any Create() override { return CreateHelper<ClassType>(); }
+
+    virtual Any Reference(Any& pointee) override { return ReferenceHelper<ClassType>(pointee); }
+    virtual Any Dereference(Any& pointer) override { return DereferenceHelper<ClassType>(pointer); }
+
     virtual ITypeMeta* GetPointerType() override { return TypeMetaOf<pointerType>(); }
     virtual ITypeMeta* GetPointeeType() override { return TypeMetaOf<pointeeType>(); }
     virtual ITypeMeta* GetRunTimePointeeType(Any object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
 
 private:
+
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any CreateOnStackHelper(IF_NOT(T, Class)* = nullptr)
+    static inline Any CreateHelper(IF_NOT(T, Class)* = nullptr)
     {
         return T();
     }
 
     template <typename T>
-    inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
+    inline Any CreateHelper(IF(T, Class)* = nullptr)
     {
         return IClassMeta::constructors[0]->Invoke();
     }
@@ -70,25 +73,13 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any CreateOnHeapHelper(IF_NOT(T, ClassOrPointer)* = nullptr)
+    inline Any ReferenceHelper(Any& pointee, IF(T, Pointer)* = nullptr)
     {
-        return new T();
+        return T((pointeeType*)pointee.getAddress());
     }
 
     template <typename T>
-    static inline Any CreateOnHeapHelper(IF(T, RealPointer)* = nullptr)
-    {
-        return pointerType(new T());
-    }
-
-    template <typename T>
-    static inline Any CreateOnHeapHelper(IF(T, DeepPointer)* = nullptr)
-    {
-        throw std::runtime_error("not implemented");
-    }
-
-    template <typename T>
-    static inline Any CreateOnHeapHelper(IF(T, Class)* = nullptr)
+    inline Any ReferenceHelper(Any& pointee, IF_NOT(T, Pointer)* = nullptr)
     {
         throw std::runtime_error("not implemented");
     }
@@ -96,29 +87,15 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any DereferenceHelper(Any& object, IF(T, AllowDereferencing)* = nullptr)
+    static inline Any DereferenceHelper(Any& pointer, IF(T, AllowDereferencing)* = nullptr)
     {
-        return *(object.as<pointerType>());
+        return *(pointer.as<pointerType>());
     }
 
     template <typename T>
-    static inline Any DereferenceHelper(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
+    static inline Any DereferenceHelper(Any& pointer, IF_NOT(T, AllowDereferencing)* = nullptr)
     {
         throw std::runtime_error("invalid dereferencing");
-    }
-
-    //---------------------------------------------------------------------------------
-
-    template <typename T>
-    inline Any MakePointerHelper(Any& object, IF_NOT(T, Abstract)* = nullptr)
-    {
-        return pointerType(&object.as<T>());
-    }
-
-    template <typename T>
-    static inline Any MakePointerHelper(Any& object, IF(T, Abstract)* = nullptr)
-    {
-        throw std::runtime_error("invalid referencing");
     }
 
     //---------------------------------------------------------------------------------

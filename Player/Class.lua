@@ -9,5 +9,7 @@ function Class(name, base)
 		return base.new0()
 	end
 	
-	_G[name] = class
+	_G[name] = class
+
+	return class, base
 end

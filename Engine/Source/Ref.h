@@ -7,7 +7,7 @@
 #include "DeepPointer.h"
 
 template <typename T>
-class _(Meta)__ Ref
+class Ref
 {
     friend class Meta;
 
@@ -65,7 +65,7 @@ public:
 	}
 
 	// destructor
-    virtual ~Ref()
+    ~Ref()
 	{
         Release();
 	}
@@ -155,16 +155,5 @@ private:
 	}
 
 private:
-    static void serialize(Ref<T> ref, Serializer* serializer)
-    {
-        serializer->Serialize(ref.pointer, TypeMetaOf<T*>());
-    }
-
-    static Ref<T> deserialize(Serializer* serializer)
-    {
-        auto any = serializer->Deserialize(TypeMetaOf<T*>());
-        return Ref<T>(any.as<T*>());
-    }
-
     T* pointer;
 };

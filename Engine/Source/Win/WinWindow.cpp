@@ -17,6 +17,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     {
         case WM_CREATE:
             App::Instance()->AddWindow(currentEventWindow);
+            currentEventWindow->Retain();
             printf("create!");
             fflush(stdout);
             break;
@@ -33,7 +34,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
         case WM_DESTROY:
             App::Instance()->RemoveWindow(currentEventWindow);
-            delete currentEventWindow;
+            currentEventWindow->Release();
 
             break;
     }

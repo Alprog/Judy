@@ -68,6 +68,11 @@ public:
         }
     }
 
+    inline void* getAddress()
+    {
+        return &static_cast<AnyData<void*>*>(data)->data;
+    }
+
 private:
     IAnyData* data;
 };

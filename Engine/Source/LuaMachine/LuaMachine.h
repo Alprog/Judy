@@ -9,8 +9,8 @@
 #include "Breakpoints.h"
 #include "Meta/Binder.h"
 
-class lua_State;
-class lua_Debug;
+struct lua_State;
+struct lua_Debug;
 
 class LuaMachine : public Singleton<LuaMachine>
 {

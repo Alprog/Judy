@@ -118,7 +118,7 @@ inline Any GetArgument(lua_State* L, int index, ITypeMeta* typeMeta)
 inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<Any>& args)
 {
     auto types = function->GetArgTypes();
-    int index = -types.size();
+    int index = -(int)types.size();
     for (auto typeMeta : types)
     {
         auto arg = GetArgument(L, index++, typeMeta);
@@ -179,8 +179,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
         auto flags = type->getFlags();
         if (flags & ITypeMeta::Flags::IsPointer)
         {
-            bool isRef = flags & ITypeMeta::Flags::IsRef;
-            auto pointer = isRef ? result.as<Ref<Object>>().Get() : result.as<Object*>();
+            auto pointer = result.as<Object*>();
 
             auto className = pointer->luaClass;
             if (className.empty())
@@ -301,7 +300,7 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 
     for (auto constructor : classMeta->constructors)
     {
-        int argCount = constructor->GetArgCount();
+        size_t argCount = constructor->GetArgCount();
         std::string name = "new" + std::to_string(argCount);
         BindHelper(name, ConstructorInvoker, constructor);
     }

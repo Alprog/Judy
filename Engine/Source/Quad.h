@@ -7,7 +7,7 @@
 #include "Meta/ITypeMeta.h"
 #include "Attributes.h"
 
-class _(Meta)__ Quad : public Node
+class [[Meta]] Quad : public Node
 {
     friend class Meta;
 
@@ -16,7 +16,7 @@ public:
 
     virtual void Render(Matrix matrix, Renderer* renderer) override;
 
-    _(Serialize, Inspect)__ Vector2 Size;
-    _(Serialize, Inspect)__ std::string Shader;
-    _(Serialize, Inspect)__ std::string Texture;
+    [[Serialize]] [[Inspect]] Vector2 Size;
+    [[Serialize]] [[Inspect]] std::string Shader;
+    [[Serialize]] [[Inspect]] std::string Texture;
 };

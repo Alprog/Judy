@@ -5,8 +5,8 @@
 #include "CallInfo.h"
 #include "Attributes.h"
 
-struct _(Meta)__ CallStack
+struct [[Meta]] CallStack
 {
     CallStack();
-    _(Serialize)__ List<CallInfo> calls;
+    [[Serialize]] List<CallInfo> calls;
 };

@@ -40,15 +40,15 @@ WindowM::WindowM()
     c2->transform.setScaling(Vector3::One * 0.4f);
     c2->name = "child2";
 
-//    auto serializer = new Serializer();
-//    auto text = serializer->Serialize(scene);
-//    //printf(text.c_str());
-//    //fflush(stdout);
+    auto serializer = new Serializer();
+    auto text = serializer->Serialize(scene);
+    printf(text.c_str());
+    fflush(stdout);
 
-//    Node* obj = serializer->Deserialize<Node*>(text);
-//    text = serializer->Serialize(obj);
-//    printf(text.c_str());
-//    fflush(stdout);
+    Node* obj = serializer->Deserialize<Node*>(text);
+    text = serializer->Serialize(obj);
+    printf(text.c_str());
+    fflush(stdout);
 
     Retain();
 }

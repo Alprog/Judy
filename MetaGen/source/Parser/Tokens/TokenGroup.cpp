@@ -99,7 +99,7 @@ int TokenGroup::indexOf(std::string tokenName, int startIndex) const
 int TokenGroup::lastIndexOf(std::string tokenName) const
 {
     auto startIndex = tokens.size() - 1;
-    return lastIndexOf(tokenName, startIndex);
+    return lastIndexOf(tokenName, (int)startIndex);
 }
 
 int TokenGroup::lastIndexOf(std::string tokenName, int startIndex) const

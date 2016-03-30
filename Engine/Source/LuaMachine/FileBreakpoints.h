@@ -5,11 +5,11 @@
 #include "Containers/Set.h"
 #include "Attributes.h"
 
-struct _(Meta)__ FileBreakpoints
+struct [[Meta]] FileBreakpoints
 {
     FileBreakpoints();
     FileBreakpoints(std::string fileName, Set<int> lines);
 
-    _(Serialize)__ std::string fileName;
-    _(Serialize)__ Set<int> lines;
+    [[Serialize]] std::string fileName;
+    [[Serialize]] Set<int> lines;
 };
