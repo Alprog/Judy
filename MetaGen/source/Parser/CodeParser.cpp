@@ -11,7 +11,6 @@ void CodeParser::parse(std::string text, std::string headerName)
     spliceLines(text);
     removeComments(text);
     removeDirectives(text);
-    fixAttributeSyntax(text);
 
     auto snippet = new Snippet(text);
     parseClasses(snippet, headerName);
@@ -60,12 +59,6 @@ void CodeParser::removeDirectives(std::string& text)
     text = std::regex_replace(text, std::regex(directiveLine), "");
 }
 
-void CodeParser::fixAttributeSyntax(std::string& text)
-{
-    text = std::regex_replace(text, std::regex("__ "), "]] ");
-    text = std::regex_replace(text, std::regex("__"), "[[");
-}
-
 void CodeParser::parseClasses(Snippet* snippet, std::string headerName)
 {
     for (Statement statement : snippet->getStatements())
@@ -86,11 +79,17 @@ void CodeParser::parseClasses(Snippet* snippet, std::string headerName)
 
 void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnippet)
 {
-    for (Statement statement : definitionSnippet->getStatements())
+    auto statements = definitionSnippet->getStatements();
+    auto index = 0;
+    while (index < statements.size())
     {
+        auto& statement = statements[index++];
+        auto& statementTokens = statement.getTokens();
+        checkAcessModifiers(statementTokens);
+
         if (statement.isFunction())
         {
-            MethodInfo methodInfo(statement.getTokens());
+            MethodInfo methodInfo(statementTokens);
             if (methodInfo.name == classInfo.name)
             {
                 classInfo.constructors.push_back(methodInfo);
@@ -100,19 +99,50 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
                 classInfo.methods.push_back(methodInfo);
             }
         }
+        else if (statement.isProperty())
+        {
+            PropertyInfo propertyInfo(statementTokens);
+            for (auto i = 0; i < 2; i++)
+            {
+                if (index < statements.size())
+                {
+                    auto& statement = statements[index++];
+                    auto& tokens = statement.getTokens();
+                    checkAcessModifiers(statementTokens);
+                    if (statement.isFunction())
+                    {
+                        propertyInfo.addMethod(tokens);
+                    }
+                }
+            }
+            classInfo.properties.push_back(propertyInfo);
+        }
         else if (statement.isClass())
         {
             //printf("Nested CLASS\n");
         }
+        else if (statement.isUsing())
+        {
+            // nothing
+        }
         else
         {
             // field declaration
-            for (auto& tokens : statement.getTokens().splitDeclararion())
+            for (auto& tokens : statementTokens.splitDeclararion())
             {
                 FieldInfo fieldInfo(tokens);
                 classInfo.fields.push_back(fieldInfo);
             }
         }
+    }
+}
+
+void CodeParser::checkAcessModifiers(TokenGroup& tokens)
+{
+    auto name = tokens[0]->getName();
+    if (name == "public" || name == "protected" || name == "private")
+    {
+        tokens.extract(0, 2);
     }
 }
 

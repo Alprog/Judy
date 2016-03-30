@@ -1,12 +1,6 @@
 
 #include "NetNode.h"
-
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
+#include "Lua.h"
 
 const int MAX = 1024;
 
@@ -28,10 +22,14 @@ NetNode::~NetNode()
     state = State::Disconnected;
     if (workThread != nullptr)
     {
-        workThread->detach();
+        if (workThread->joinable())
+        {
+            workThread->join();
+        }
         delete workThread;
     }
 
+    delete socket;
     delete serializer;
 }
 
@@ -127,7 +125,18 @@ void NetNode::ConnectWork()
         {
             state = State::Connected;
         }
+        else if (error == Socket::Error::InvalidArgument)
+        {
+            delete socket;
+            socket = Socket::Create();
+            socket->SetBlockingMode(false);
+        }
     }
+}
+
+bool NetNode::HasOutput() const
+{
+    return output.size() > 0;
 }
 
 void NetNode::SendWork()
@@ -159,7 +168,11 @@ void NetNode::ReceiveWork()
     do
     {
         count = socket->Receive(buffer, MAX);
-        if (count < 0)
+        if (count == 0)
+        {
+            state = State::Disconnected;
+        }
+        else if (count < 0)
         {
             auto error = socket->GetLastError();
             if (error != Socket::Error::WouldBlock)

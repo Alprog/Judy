@@ -10,11 +10,17 @@
 #if MAC
     #include <OpenGL/gl.h>
 #else
+    #define GLEW_STATIC
+    #include <GL/glew.h>
     #include <GL/gl.h>
 #endif
 
 #include "Win/WinGLContext.h"
 #include "Win/WinRenderTarget.h"
+
+GLRenderer::GLRenderer()
+{
+}
 
 void GLRenderer::Clear(Color color)
 {
@@ -31,7 +37,35 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
         context = (GLContext*)new WinGLContext(hWnd);
         contexts[renderTarget] = context;
     }
+
+    context->MakeCurrent();
+    glewInit();
+
     return context;
+}
+
+GLuint vertexbuffer = 0;
+
+void GLRenderer::Draw(Mesh* mesh, Material* material, Matrix matrix)
+{
+    glLoadMatrixf((float*)&matrix);
+
+    glDisable(GL_CULL_FACE);
+
+    if (vertexbuffer == 0)
+    {
+        glGenBuffers(1, &vertexbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), &mesh->vertices[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    }
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+    glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, &mesh->indices[0]);
+
+    glDisableVertexAttribArray(0);
 }
 
 void GLRenderer::DrawQuad(Quad* quad)
@@ -49,7 +83,6 @@ void GLRenderer::DrawQuad(Quad* quad)
     glVertex3f(x, -y, 0.0f);
 
     glEnd();
-
 }
 
 void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
@@ -58,14 +91,16 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
 
     context->MakeCurrent();
 
-    glViewport(-400, 0, 800, 800);
-    glScissor(0, 0, 400, 800);
-    glEnable(GL_SCISSOR_TEST);
+    auto size = renderTarget->GetSize();
+    glViewport(0, 0, size.x, size.y);
 
-    Color color { 0.0f, 1.0f, 0.0f, 1.0f };
+    //glScissor(0, 0, 400, 800);
+    //glEnable(GL_SCISSOR_TEST);
+
+    Color color { 0.3f, 0.3f, 0.3f, 1.0f };
     Clear(color);
 
-    scene->Render(this);
+    scene->Render(scene->transform.getMatrix(), this);
 
     context->Swap();
 }

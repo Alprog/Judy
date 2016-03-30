@@ -42,6 +42,11 @@ Any::~Any()
     DestroyData();
 }
 
+void Any::Detach()
+{
+    data = nullptr;
+}
+
 inline void Any::DestroyData()
 {
     if (data != nullptr)

@@ -3,7 +3,7 @@
 
 #include "Window.h"
 
-class LinuxWindow : Window
+class LinuxWindow : public WindowM
 {
 public:
     LinuxWindow();

@@ -3,10 +3,10 @@
 
 #include <string>
 #include "Meta/TypeMeta.h"
+#include "Containers/List.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-struct __Meta__ Vector2
+struct [[Meta]] Vector2
 {
     static const Vector2 Zero;
     static const Vector2 One;
@@ -14,8 +14,8 @@ struct __Meta__ Vector2
     Vector2();
     Vector2(float x, float y);
 
-    float x;
-    float y;
+    [[Serialize]] Vector2(List<float> list);
+    [[Serialize]] List<float> toList();
 
     float Length();
     float SquaredLength();
@@ -23,4 +23,8 @@ struct __Meta__ Vector2
     friend Vector2 operator-(const Vector2& vector);
     friend Vector2 operator+(const Vector2& lhs, const Vector2& rhs);
     friend Vector2 operator-(const Vector2& lhs, const Vector2& rhs);
+
+    friend Vector2 operator*(const Vector2& vector, const float& value);
+
+    [[Bind]] [[Inspect]] float x, y;
 };

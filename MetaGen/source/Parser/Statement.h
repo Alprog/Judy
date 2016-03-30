@@ -5,7 +5,7 @@
 #include <vector>
 #include "Tokens/TokenGroup.h"
 
-class Snippet;
+struct Snippet;
 
 struct Statement
 {
@@ -17,7 +17,9 @@ struct Statement
     Snippet* getChildSnippet() const;
 
     bool isClass() const;
+    bool isUsing() const;
     bool isFunction() const;
+    bool isProperty() const;
     bool hasDefinition() const;
 
 private:

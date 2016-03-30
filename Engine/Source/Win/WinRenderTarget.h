@@ -4,10 +4,11 @@
 #include "RenderTarget.h"
 #include <windows.h>
 
-class WinRenderTarget : RenderTarget
+class WinRenderTarget : public RenderTarget
 {
 public:
     WinRenderTarget(HWND hWnd);
+    virtual Vector2 GetSize() const override;
 
     HWND hWnd;
 };

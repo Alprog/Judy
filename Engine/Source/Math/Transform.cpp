@@ -2,19 +2,54 @@
 #include "Transform.h"
 
 Transform::Transform()
-    : Pivot {Vector3::Zero}
-    , Translation {Vector3::Zero}
-    , Rotation {0}
-    , Scaling {Vector3::One}
+    : invalidateMatrix{true}
+    , translation{Vector3::Zero}
+    , rotation{Quaternion::Identity}
+    , scaling{Vector3::One}
 {
 }
 
-Matrix Transform::GetMatrix()
+Vector3 Transform::getTranslation() const
 {
-    Matrix matrix = Matrix::Translation(-Pivot);
-    matrix *= Matrix::Scaling(Scaling);
-    matrix *= Matrix::RotationZ(Rotation);
-    matrix *= Matrix::Translation(Translation);
-    matrix *= Matrix::Translation(Pivot);
+    return translation;
+}
+
+Quaternion Transform::getRotation() const
+{
+    return rotation;
+}
+
+Vector3 Transform::getScaling() const
+{
+    return scaling;
+}
+
+void Transform::setTranslation(Vector3 translation)
+{
+    this->translation = translation;
+    invalidateMatrix = true;
+
+    auto a = this->scaling;
+}
+
+void Transform::setRotation(Quaternion rotation)
+{
+    this->rotation = rotation;
+    invalidateMatrix = true;
+}
+
+void Transform::setScaling(Vector3 scaling)
+{
+    this->scaling = scaling;
+    invalidateMatrix = true;
+}
+
+Matrix Transform::getMatrix()
+{
+    //if (invalidateMatrix)
+    {
+        matrix = Matrix::TRS(translation, rotation, scaling);
+        invalidateMatrix = false;
+    }
     return matrix;
 }

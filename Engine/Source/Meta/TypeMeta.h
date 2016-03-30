@@ -5,11 +5,13 @@
 #include <type_traits>
 
 #include "ITypeMeta.h"
+#include "IClassMeta.h"
 #include "Any.h"
 #include "Singleton.h"
 #include "DeepPointer.h"
 
 #include "ConstructorMeta.h"
+#include <typeindex>
 
 template <typename T, typename Enable = void>
 struct IBase
@@ -24,31 +26,46 @@ struct IBase<T, IF(T, Class)>
 };
 
 template <typename ClassType>
-class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
+class TypeMeta : public IBase<ClassType>::type, public TrivialSingleton<TypeMeta<ClassType>>
 {
 public:
-    virtual bool isPointer() override { return is<ClassType>::Pointer; }
-    virtual bool isClass() override { return is<ClassType>::Class; }
-    virtual bool isArray() override { return is<ClassType>::Array; }
-    virtual bool isMap() override { return is<ClassType>::Map; }
+    using pointeeType = typename pointeeOf<ClassType>::type;
+    using pointerType = typename pointerOf<ClassType>::type;
 
-    virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
-    virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
-    virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
-    virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
-    virtual ITypeMeta* GetPointeeType() override { return GetPointeeTypeHelper<ClassType>(); }
+    virtual ITypeMeta::Flags getFlags() const override
+    {
+        const int flags =
+            (~is<ClassType>::Class + 1) & Flags::IsClass |
+            (~is<ClassType>::Pointer + 1) & Flags::IsPointer |
+            (~is<ClassType>::Ref + 1) & Flags::IsRef |
+            (~is<ClassType>::PointerToPolymorhic + 1) & Flags::IsPointerToPolymorhic |
+            (~is<ClassType>::CustomSerializing + 1) & Flags::IsCustomSerializing
+        ;
+        return (Flags)flags;
+    }
+
+
+    virtual Any Create() override { return CreateHelper<ClassType>(); }
+
+    virtual Any Reference(Any& pointee) override { return ReferenceHelper<ClassType>(pointee); }
+    virtual Any Dereference(Any& pointer) override { return DereferenceHelper<ClassType>(pointer); }
+
+    virtual ITypeMeta* GetPointerType() override { return TypeMetaOf<pointerType>(); }
+    virtual ITypeMeta* GetPointeeType() override { return TypeMetaOf<pointeeType>(); }
+    virtual ITypeMeta* GetRunTimePointeeType(Any object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
 
 private:
+
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any CreateOnStackHelper(IF_NOT(T, Class)* = nullptr)
+    static inline Any CreateHelper(IF_NOT(T, Class)* = nullptr)
     {
         return T();
     }
 
     template <typename T>
-    inline Any CreateOnStackHelper(IF(T, Class)* = nullptr)
+    inline Any CreateHelper(IF(T, Class)* = nullptr)
     {
         return IClassMeta::constructors[0]->Invoke();
     }
@@ -56,25 +73,13 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any CreateOnHeapHelper(IF_NOT(T, ClassOrPointer)* = nullptr)
+    inline Any ReferenceHelper(Any& pointee, IF(T, Pointer)* = nullptr)
     {
-        return new T();
+        return T((pointeeType*)pointee.getAddress());
     }
 
     template <typename T>
-    static inline Any CreateOnHeapHelper(IF(T, RealPointer)* = nullptr)
-    {
-        return DeepPointer<typename std::remove_pointer<T>::type>(new T());
-    }
-
-    template <typename T>
-    static inline Any CreateOnHeapHelper(IF(T, DeepPointer)* = nullptr)
-    {
-        throw std::runtime_error("not implemented");
-    }
-
-    template <typename T>
-    static inline Any CreateOnHeapHelper(IF(T, Class)* = nullptr)
+    inline Any ReferenceHelper(Any& pointee, IF_NOT(T, Pointer)* = nullptr)
     {
         throw std::runtime_error("not implemented");
     }
@@ -82,13 +87,13 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any DereferenceHelper(Any& object, IF(T, AllowDereferencing)* = nullptr)
+    static inline Any DereferenceHelper(Any& pointer, IF(T, AllowDereferencing)* = nullptr)
     {
-        return *(object.as<T>());
+        return *(pointer.as<pointerType>());
     }
 
     template <typename T>
-    static inline Any DereferenceHelper(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
+    static inline Any DereferenceHelper(Any& pointer, IF_NOT(T, AllowDereferencing)* = nullptr)
     {
         throw std::runtime_error("invalid dereferencing");
     }
@@ -96,41 +101,25 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    inline Any MakePointerHelper(Any& object, IF_NOT(T, AbstractClassOrRealPointer)* = nullptr)
+    static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF(T, PointerToPolymorhic)* = nullptr)
     {
-        return &object.as<T>();
+        auto baseClassMeta = (IClassMeta*)TypeMetaOf<pointeeType>();
+        if (baseClassMeta->hasDerives)
+        {
+            pointeeType* pointer = object.as<T>();
+            auto index = std::type_index(typeid(*pointer));
+            return Meta::Instance()->Find(index);
+        }
+        else
+        {
+            return baseClassMeta;
+        }
     }
 
     template <typename T>
-    static inline Any MakePointerHelper(Any& object, IF(T, Abstract)* = nullptr)
+    static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF_NOT(T, PointerToPolymorhic)* = nullptr)
     {
-        throw std::runtime_error("invalid referencing");
-    }
-
-    template <typename T>
-    static inline Any MakePointerHelper(Any& object, IF(T, RealPointer)* = nullptr)
-    {
-        return DeepPointer<typename std::remove_pointer<T>::type>(&object.as<T>());
-    }
-
-    //---------------------------------------------------------------------------------
-
-    template <typename T>
-    static inline ITypeMeta* GetPointeeTypeHelper(IF_NOT(T, Pointer)* = nullptr)
-    {
-        throw std::runtime_error("type is not pointer");
-    }
-
-    template <typename T>
-    static inline ITypeMeta* GetPointeeTypeHelper(IF(T, RealPointer)* = nullptr)
-    {
-        return TypeMetaOf<typename std::remove_pointer<T>::type>();
-    }
-
-    template <typename T>
-    static inline ITypeMeta* GetPointeeTypeHelper(IF(T, DeepPointer)* = nullptr)
-    {
-        return TypeMetaOf<typename T::pointeeType>();
+        return TypeMetaOf<pointeeType>();
     }
 
     //---------------------------------------------------------------------------------
@@ -139,11 +128,17 @@ private:
 template <typename T>
 inline ITypeMeta* TypeMetaOf()
 {
-    return TypeMeta<typename std::decay<T>::type>::Instance();
+    return TypeMeta<typename fulldecay<T>::type>::Instance();
 }
 
 template <>
 inline ITypeMeta* TypeMetaOf<void>()
 {
     return nullptr;
+}
+
+template <>
+inline ITypeMeta* TypeMetaOf<std::nullptr_t>()
+{
+    throw std::runtime_error("invalid argument for TypeMetaOf");
 }

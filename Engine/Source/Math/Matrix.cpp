@@ -53,6 +53,29 @@ Matrix Matrix::Translation(Vector3 t)
     };
 }
 
+Matrix Matrix::Rotation(Quaternion rotation)
+{
+    auto xx2 = rotation.x * rotation.x * 2;
+    auto xy2 = rotation.x * rotation.y * 2;
+    auto xz2 = rotation.x * rotation.z * 2;
+    auto xw2 = rotation.x * rotation.w * 2;
+
+    auto yy2 = rotation.y * rotation.y * 2;
+    auto yz2 = rotation.y * rotation.z * 2;
+    auto yw2 = rotation.y * rotation.w * 2;
+
+    auto zz2 = rotation.z * rotation.z * 2;
+    auto zw2 = rotation.z * rotation.w * 2;
+
+    return
+    {
+      1 - (yy2 + zz2), xy2 - zw2, xz2 + yw2, 0,
+      xy2 + zw2, 1 - (xx2 + zz2), yz2 - xw2, 0,
+      xz2 - yw2, yz2 + xw2, 1 - (xx2 + yy2), 0,
+      0, 0, 0, 1
+    };
+}
+
 Matrix Matrix::RotationX(float r)
 {
     float c = cos(r);
@@ -104,5 +127,10 @@ Matrix Matrix::Scaling(Vector3 s)
         0,   0,  s.z,  0,
         0,   0,   0,   1
     };
+}
+
+Matrix Matrix::TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling)
+{
+    return Scaling(scaling) * Rotation(rotation) * Translation(translation);
 }
 

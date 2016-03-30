@@ -4,13 +4,7 @@
 
 #include "Meta/Meta.h"
 #include "Meta/Binder.h"
-
-extern "C"
-{
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-}
+#include "Lua.h"
 
 int const maxStackSize = 256;
 
@@ -25,16 +19,28 @@ LuaMachine::LuaMachine()
     L = luaL_newstate();
     luaL_openlibs(L);
 
-    // search path for required scipts
+    // search path for required scripts
     lua_getglobal(L, "package");
     lua_pushstring(L, "?.lua");
     lua_setfield(L, -2, "path");
     lua_pop(L, 1);
+
+    // userdata storage (prevent gc)
+    lua_newtable(L);
+    lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
+
+    binder = new LuaBinder(L);
     LuaBinder(L).Bind(Meta::Instance());
 }
 
 LuaMachine::~LuaMachine()
 {
+    if (binder != nullptr)
+    {
+        delete binder;
+        binder = nullptr;
+    }
+
     if (L != nullptr)
     {
         lua_close(L);
@@ -75,10 +81,13 @@ void LuaMachine::Hook(lua_Debug *ar)
         }
         else
         {
-            lua_getinfo(L, "S", ar);
-            if (breakpoints.IsSet(ar->source, ar->currentline))
+            if (breakpoints.IsAnySet(ar->currentline))
             {
-                Break(ar);
+                lua_getinfo(L, "S", ar);
+                if (breakpoints.IsSet(ar->source, ar->currentline))
+                {
+                    Break(ar);
+                }
             }
         }
     }
@@ -124,7 +133,7 @@ void LuaMachine::SuspendExecution()
     }
 }
 
-void LuaMachine::Start(std::string scriptName, bool debug)
+void LuaMachine::Do(std::string scriptName, bool debug)
 {
     isStarted = true;
 
@@ -138,8 +147,8 @@ void LuaMachine::Start(std::string scriptName, bool debug)
     if (luaL_dofile(L, scriptName.c_str()))
     {
         isStarted = false;
-        std::cerr << "Something went wrong loading the chunk (syntax error?)" << std::endl;
-        std::cerr << lua_tostring(L, -1) << std::endl;
+        printf("Something went wrong loading the chunk (syntax error?)\n");
+        printf("%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);
     }
 
@@ -201,4 +210,22 @@ void LuaMachine::Stop()
         suspended = false;
         lua_sethook(L, stopHook, LUA_MASKCOUNT, 1);
     }
+}
+
+void LuaMachine::RetainUserdata(void* userdata)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushuserdata(L, userdata); // TK
+    lua_pushboolean(L, true); // TKV
+    lua_rawset(L, -3); // T
+    lua_pop(L, 1); //
+}
+
+void LuaMachine::ReleaseUserdata(void* userdata)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
+    lua_pushuserdata(L, userdata); // TK
+    lua_pushnil(L); // TKV
+    lua_rawset(L, -3); // T
+    lua_pop(L, 1); //
 }

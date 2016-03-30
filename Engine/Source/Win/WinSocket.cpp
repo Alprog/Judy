@@ -45,8 +45,11 @@ void WinSocket::Listen(int port)
     adress.sin_addr.s_addr = INADDR_ANY;
     adress.sin_port = htons(port);
 
-    bind(handle, (sockaddr*)&adress, sizeof(adress));
-    listen(handle, 2);
+    auto result = bind(handle, (sockaddr*)&adress, sizeof(adress));
+    if (result == 0)
+    {
+        listen(handle, 2);
+    }
 }
 
 Socket* WinSocket::Accept()

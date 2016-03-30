@@ -6,6 +6,8 @@ ClassInfo::ClassInfo(TokenGroup& tokens)
     : classType{ClassType::Class}
     , isFinal{false}
 {
+    tokens.makeTemplateGroups();
+
     auto arr = tokens.split(":");
     processMainTokens(arr[0]);
     if (arr.size() > 1)
@@ -41,6 +43,7 @@ bool ClassInfo::isAbstract()
 void ClassInfo::processMainTokens(TokenGroup& tokens)
 {
     attributes = tokens.extractAttributes();
+    processTemplateTokens(tokens);
 
     std::string keyword;
     for (auto& token : tokens)
@@ -74,6 +77,22 @@ void ClassInfo::processMainTokens(TokenGroup& tokens)
     }
 }
 
+void ClassInfo::processTemplateTokens(TokenGroup& tokens)
+{
+    auto index = tokens.indexOf("template");
+    if (index >= 0 || index < tokens.size() - 1 && tokens[index + 1]->getName() == "<>")
+    {
+        auto groups = tokens[index + 1]->cast<TokenGroup*>()->getContent().split(",");
+        for (auto& group : groups)
+        {
+            auto name = group.extractLast()->getName();
+            templateParameters.push_back(name);
+        }
+
+        tokens.extract(index, index + 2);
+    }
+}
+
 void ClassInfo::processInheritanceTokens(TokenGroup& tokens)
 {
     for (auto& group : tokens.split(","))
@@ -81,4 +100,26 @@ void ClassInfo::processInheritanceTokens(TokenGroup& tokens)
         auto info = InheritanceInfo(group);
         inheritances.push_back(info);
     }
+}
+
+TypeInfo ClassInfo::instantinateSubtype(TypeInfo typeInfo, std::vector<TypeInfo> templateArguments)
+{
+    auto changed = false;
+    for (auto& argument : typeInfo.templateArguments)
+    {
+        auto argumentName = argument.fullName;
+        for (auto i = 0; i < templateParameters.size(); i++)
+        {
+            if (argumentName == templateParameters[i])
+            {
+                argument = templateArguments[i];
+                changed = true;
+            }
+        }
+    }
+    if (changed)
+    {
+        typeInfo.refreshFullName();
+    }
+    return typeInfo;
 }

@@ -5,14 +5,16 @@
 #include "MainWindow.h"
 #include "Meta/Meta.h"
 #include "RemotePlayer.h"
+#include "Platform.h"
 
-IDE::IDE(int argc, char *argv[])
+IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
 {
+    Meta::Instance()->Init();
+
     LoadStyle();
     LoadSettings();
-
-    connect(RemotePlayer::Instance(), SIGNAL(StateChanged()), this, SLOT(OnPlayerStateChanged()));
+    Start();
 }
 
 IDE* IDE::Instance()
@@ -32,11 +34,17 @@ void IDE::LoadStyle()
     file.close();
 }
 
+std::string IDE::GetSettingsFilename()
+{
+    return "settings." + GetPlatformName() + ".lua";
+}
+
 void IDE::LoadSettings()
 {
     Settings::InitMeta();
 
-    QFile file("settings.lua");
+    auto fileName = GetSettingsFilename();
+    QFile file(QString::fromStdString(fileName));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
@@ -48,7 +56,8 @@ void IDE::LoadSettings()
 
 void IDE::SaveSettings()
 {
-    QFile file(tr("settings.lua"));
+    auto fileName = GetSettingsFilename();
+    QFile file(QString::fromStdString(fileName));
     file.open(QIODevice::WriteOnly);
     QTextStream stream(&file);
     auto text = serializer.Serialize(settings);
@@ -56,12 +65,11 @@ void IDE::SaveSettings()
     file.close();
 }
 
-int IDE::Start()
+void IDE::Start()
 {
     auto mainWindow = new MainWindow();
     mainWindow->showMaximized();
     windows.push_back(mainWindow);
-    return exec();
 }
 
 MainWindow* IDE::GetMainWindow()
@@ -72,8 +80,8 @@ MainWindow* IDE::GetMainWindow()
 void IDE::FollowToCall(CallInfo callInfo)
 {
     auto mainWindow = windows[0];
-    auto fullPath = settings.projectPath + "/" + callInfo.source.substr(1);
-    mainWindow->documents->OpenAtLine(fullPath, callInfo.line);
+    auto path = Path::Combine(settings.projectPath, callInfo.source.substr(1));
+    mainWindow->documents->OpenAtLine(path, callInfo.line);
 }
 
 void IDE::OnPlayerStateChanged()
@@ -83,4 +91,12 @@ void IDE::OnPlayerStateChanged()
     {
         FollowToCall(calls[0]);
     }
+}
+
+#include "GLRenderer.h"
+
+Renderer* IDE::GetRenderer() const
+{
+    static GLRenderer renderer;
+    return &renderer;
 }

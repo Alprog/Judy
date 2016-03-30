@@ -1,13 +1,12 @@
 
 #pragma once
 
-#include <vector>
+#include "Containers/List.h"
 #include "CallInfo.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-struct __Meta__ CallStack
+struct [[Meta]] CallStack
 {
     CallStack();
-    std::vector<CallInfo> calls;
+    [[Serialize]] List<CallInfo> calls;
 };

@@ -17,6 +17,7 @@ RemotePlayer::RemotePlayer()
     , process{nullptr}
     , isPaused{false}
 {
+    connect(this, SIGNAL(StateChanged()), IDE::Instance(), SLOT(OnPlayerStateChanged()));
 }
 
 RemotePlayer::~RemotePlayer()
@@ -33,12 +34,15 @@ void RemotePlayer::Run()
     auto directory = settings.projectPath;
     auto commandLine = "player -debug";
 
+    printf("%s %s %s\n", path.c_str(), directory.c_str(), commandLine);
+    fflush(stdout);
+
     process = Process::Create();
     process->Run(path, commandLine, directory);
-
     if (!process->IsRunning())
     {
         delete process;
+        process = nullptr;
         return;
     }
 
@@ -56,9 +60,9 @@ void RemotePlayer::Run()
 
 bool RemotePlayer::IsRunning()
 {
-    if (process != nullptr)
+    if (netNode != nullptr)
     {
-        if (process->IsRunning())
+        if (netNode->GetState() != NetNode::State::Disconnected)
         {
             return true;
         }
@@ -121,12 +125,13 @@ void RemotePlayer::CustomNetWork()
 {
 }
 
-void RemotePlayer::OnGetMessage(Any message)
+void RemotePlayer::OnGetMessage(Any& message)
 {
     if (message.GetType() == TypeMetaOf<LogMessage>())
     {
         auto text = message.as<LogMessage>().text;
         printf("%s", text.c_str());
+        fflush(stdout);
     }
     else if (message.GetType() == TypeMetaOf<CallStack>())
     {
@@ -146,14 +151,14 @@ void RemotePlayer::OnGetMessage(Any message)
     }
 }
 
-std::unordered_set<int> RemotePlayer::GetBreakpoints(std::string source)
+Set<int> RemotePlayer::GetBreakpoints(std::string source)
 {
-    return breakpoints.Get(source);
+    return breakpoints.GetLines(source);
 }
 
-void RemotePlayer::SetBreakpoints(std::string source, std::unordered_set<int> lines)
+void RemotePlayer::SetBreakpoints(std::string source, Set<int> lines)
 {
-    bool changed = breakpoints.Set(source, lines);
+    bool changed = breakpoints.SetLines(source, lines);
     if (changed && IsConnected())
     {
         netNode->Send(FileBreakpoints(source, lines));

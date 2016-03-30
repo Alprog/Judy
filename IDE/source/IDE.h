@@ -3,10 +3,13 @@
 
 #include <QApplication>
 #include <vector>
+#include <string>
 #include "Settings.h"
 #include "MainWindow.h"
 #include "Meta/Serializer.h"
 #include "LuaMachine/CallInfo.h"
+#include "Renderer.h"
+#include "Node.h"
 
 class IDE : public QApplication
 {
@@ -14,18 +17,25 @@ class IDE : public QApplication
 
     friend int main(int argc, char *argv[]);
 
-    IDE(int argc, char *argv[]);
+    IDE(int argc, char** argv);
 
 public:
     static IDE* Instance();
-    int Start();
     void SaveSettings();
     MainWindow* GetMainWindow();
     void FollowToCall(CallInfo callInfo);
+    Renderer* GetRenderer() const;
 
 private:
+    std::string GetSettingsFilename();
+
+    void Start();
     void LoadStyle();
     void LoadSettings();
+
+signals:
+    void SelectScene(Node* scene);
+    void SelectNode(Node* node);
 
 private slots:
     void OnPlayerStateChanged();

@@ -1,27 +1,35 @@
 
 #pragma once
 
+#include "Object.h"
+#include "Ref.h"
 #include "Node.h"
 #include "RenderTarget.h"
+#include "Renderer.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-class __Meta__ Window
+class [[Meta]] WindowM : public Object
 {
     friend class Meta;
 
 public:
-    static Window* Create();
+    static WindowM* Create();
+    virtual ~WindowM();
 
     void show();
 
     virtual void ProcessEvents() = 0;
 
+    void Update();
     void Render();
-    Node* scene;
 
 protected:
-    Window();    
-    RenderTarget* RenderTarget1;
-    RenderTarget* RenderTarget2;
+    WindowM();
+
+    [[Bind]] Ref<Node> scene;
+    [[Bind]] RenderTarget* renderTarget;
+    [[Bind]] Renderer* renderer;
+
+    //RenderTarget* RenderTarget1;
+    //RenderTarget* RenderTarget2;
 };

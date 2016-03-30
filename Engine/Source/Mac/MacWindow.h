@@ -2,7 +2,7 @@
 #pragma once
 #include "Window.h"
 
-class MacWindow : public Window
+class MacWindow : public WindowM
 {
 public:
     MacWindow();

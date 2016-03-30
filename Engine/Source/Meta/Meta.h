@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <unordered_set>
 #include <unordered_map>
 #include <typeindex>
 #include "Singleton.h"
@@ -11,26 +10,18 @@
 class ITypeMeta;
 
 template <typename T>
-ITypeMeta* TypeMetaOf();
+inline ITypeMeta* TypeMetaOf();
 
 class Meta : public Singleton<Meta>
 {
     friend class Singleton<Meta>;
 
+public:
+    void Init();
+
 private:
-    Meta();
-
-    template <typename T>
-    void regVector();
-
-    template <typename T>
-    void regSet();
-
-    template <typename T1, typename T2>
-    void regMap();
-
-    void regClasses();
     #include "Meta.gen.h"
+    void DefineClasses();
 
     template <typename T>
     void DefineBuildInType(std::string name)
@@ -53,6 +44,8 @@ public:
     {
         return new T(args...);
     }
+
+    ITypeMeta* Find(std::type_index index);
 
 public:
     std::unordered_map<std::type_index, ITypeMeta*> typeMap;

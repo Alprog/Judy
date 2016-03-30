@@ -7,15 +7,19 @@
 #include "MethodMeta.h"
 #include "ConstructorMeta.h"
 #include "CFunctionMeta.h"
+#include "PropertyMeta.h"
 
 template <typename ClassType>
 class ClassDefiner
 {
 public:
     IClassMeta* classMeta;
+    IMemberMeta* lastMember;
+    PropertyMeta* lastProperty;
 
     ClassDefiner(Meta* meta, const char* name)
-        : classMeta { TypeMeta<ClassType>::Instance() }
+        : classMeta{TypeMeta<ClassType>::Instance()}
+        , lastMember{nullptr}
     {
         classMeta->name = name;
 
@@ -24,11 +28,28 @@ public:
         meta->types.push_back(classMeta);
     }
 
+    template <typename T>
+    ClassDefiner& templateArgument()
+    {
+        classMeta->templateArguments.push_back(TypeMetaOf<T>());
+        return *this;
+    }
+
+    template <typename T>
+    ClassDefiner& base()
+    {
+        auto baseType = (IClassMeta*)TypeMetaOf<T>();
+        classMeta->baseTypes.push_back(baseType);
+        baseType->hasDerives = true;
+        return *this;
+    }
+
     template <typename... ArgTypes>
     ClassDefiner& constructor()
     {
         auto constructor = new ConstructorMeta<ClassType, ArgTypes...>();
         classMeta->constructors.push_back(constructor);
+        lastMember = constructor;
         return *this;
     }
 
@@ -37,6 +58,7 @@ public:
     {
         auto field = new FieldMeta<ClassType, FieldType>(name, pointer);
         classMeta->fields[name] = field;
+        lastMember = field;
         return *this;
     }
 
@@ -47,6 +69,7 @@ public:
         method->name = name;
         method->pointer = pointer;
         classMeta->methods[name] = method;
+        lastMember = method;
         return *this;
     }
 
@@ -64,13 +87,38 @@ public:
         function->name = name;
         function->pointer = pointer;
         classMeta->functions[name] = function;
+        lastMember = function;
         return *this;
     }
 
-    template <typename T>
-    ClassDefiner& valueType()
+    ClassDefiner& property(std::string name)
     {
-        classMeta->valueType = TypeMetaOf<T>();
+        auto property = new PropertyMeta(name);
+        classMeta->properties[name] = property;
+        lastMember = property;
+        lastProperty = property;
+        return *this;
+    }
+
+    template <typename MethodType>
+    inline ClassDefiner& getter(std::string name, MethodType pointer)
+    {
+        method(name, pointer);
+        lastProperty->getter = static_cast<IFunctionMeta*>(lastMember);
+        return *this;
+    }
+
+    template <typename MethodType>
+    inline ClassDefiner& setter(std::string name, MethodType pointer)
+    {
+        method(name, pointer);
+        lastProperty->setter = static_cast<IFunctionMeta*>(lastMember);
+        return *this;
+    }
+
+    ClassDefiner& attr(std::string attributeName)
+    {
+        lastMember->attributes.insert(attributeName);
         return *this;
     }
 };

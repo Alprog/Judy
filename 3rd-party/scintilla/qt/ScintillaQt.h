@@ -75,7 +75,7 @@ public:
 	ScintillaQt(QAbstractScrollArea *parent);
 	virtual ~ScintillaQt();
 
-    CallTip* ScintillaQt::GetCallTip();
+    CallTip* GetCallTip();
     void TipClick();
 
 signals:

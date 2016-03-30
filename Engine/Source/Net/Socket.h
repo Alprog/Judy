@@ -7,12 +7,14 @@ class Socket
 {
 public:
     static Socket* Create();
+    virtual ~Socket();
 
     enum class Error
     {
         Ok,
         WouldBlock,
         AlreadyConnected,
+        InvalidArgument,
         Unknown
     };
 

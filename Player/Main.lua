@@ -1,47 +1,35 @@
 
---[[local app = App.Instance()
-local window = Window.Create()
+require 'Class'
+require 'ModelDerived'
+--require 'Serializer'
 
-local a = Node.new0()
-local b = Node.new1(4)
-a:AddChild(b)
-local count = a:ChildCount()
-print(count)]]
+local app = App.Instance()
+local window = WindowM.Create()
+local scene = window.scene
 
-require "Data/Math"
-
-function d()
-	local a = 3;
-	return a;
+function add()
+	local model = ModelDerived.new()
+	print(model)
+	--model.foo = 'abr'
+	print(model.foo)
+	scene:AddChild(model)
 end
 
-function r()
-	local a = 3;
-	local e = d()
-	print("3")
-	return 4
-end
-
-r()
+add()
 
-local a = sum(3, 3)
-print("sum: "..a)
+collectgarbage()
 
---[[function a()
-	while (true) do
-		local a = 0;
-		for i = 1, 60000 do
-			for j = 1, 5 do
-				a = a + 1
-				a = a - 1
-			end
-		end
-		print("one")
-	end
+function remove()
+	local model = scene:Child(2)
+	print(model)
+	print(model.foo)
+	scene:RemoveChild(model)
 end
 
-function b()
-	a()
-end]]
+--remove()
 
---app:StartMainLoop()
+collectgarbage()
+
+print('---')
+
+app:StartMainLoop()

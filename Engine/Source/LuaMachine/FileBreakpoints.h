@@ -2,15 +2,14 @@
 #pragma once
 
 #include <string>
-#include <unordered_set>
+#include "Containers/Set.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-struct __Meta__ FileBreakpoints
+struct [[Meta]] FileBreakpoints
 {
     FileBreakpoints();
-    FileBreakpoints(std::string fileName, std::unordered_set<int> lines);
+    FileBreakpoints(std::string fileName, Set<int> lines);
 
-    std::string fileName;
-    std::unordered_set<int> lines;
+    [[Serialize]] std::string fileName;
+    [[Serialize]] Set<int> lines;
 };

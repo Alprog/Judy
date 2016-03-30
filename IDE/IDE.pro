@@ -10,7 +10,6 @@ QT += widgets
 HEADERS += \
     Source/MainWindow.h \
     Source/Document.h \
-    Source/TextEditor.h \
     Source/DocumentsPane.h \
     Source/OutputPane.h \
     Source/RemotePlayer.h \
@@ -20,13 +19,21 @@ HEADERS += \
     Source/Menu/WindowMenu.h \
     Source/StackPane.h \
     Source/Settings.h \
-    Source/IDE.h
+    Source/IDE.h \
+    Source/LuaDocement.h \
+    Source/SceneDocument.h \
+    Source/CodeEditor.h \
+    Source/DocumentType.h \
+    Source/Hierarchy/HierarchyPane.h \
+    Source/Inspector/InspectorPane.h \
+    Source/Inspector/InspectorItem.h \
+    Source/Inspector/InspectorModel.h \
+    Source/Hierarchy/HierarchyModel.h
 
 SOURCES += \
     Source/MainWindow.cpp \
     Source/Main.cpp \
     Source/Document.cpp \
-    Source/TextEditor.cpp \
     Source/DocumentsPane.cpp \
     Source/OutputPane.cpp \
     Source/RemotePlayer.cpp \
@@ -36,7 +43,15 @@ SOURCES += \
     Source/Menu/WindowMenu.cpp \
     Source/StackPane.cpp \
     Source/Settings.cpp \
-    Source/IDE.cpp
+    Source/IDE.cpp \
+    Source/LuaDocement.cpp \
+    Source/SceneDocument.cpp \
+    Source/CodeEditor.cpp \
+    Source/Hierarchy/HierarchyPane.cpp \
+    Source/Inspector/InspectorPane.cpp \
+    Source/Inspector/InspectorItem.cpp \
+    Source/Inspector/InspectorModel.cpp \
+    Source/Hierarchy/HierarchyModel.cpp
 
 INCLUDEPATH += "../3rd-party/scintilla/include"
 
@@ -53,3 +68,5 @@ mac {
 }
 
 RESOURCES = ide.qrc
+
+LIBS += -lglew32s

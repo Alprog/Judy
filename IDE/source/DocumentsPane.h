@@ -15,16 +15,18 @@ class DocumentsPane : public QTabWidget
 public:
     DocumentsPane();
 
-    void Open(std::string path);
-    void OpenAtLine(std::string path, int line);
-    DocumentM* GetCurrentDocument();
-    DocumentM* GetDocument(int index);
+    void Open(Path path);
+    void OpenAtLine(Path path, int line);
+    IDocument* GetCurrentDocument();
+    IDocument* GetDocument(Path path);
+    IDocument* GetDocument(int index);
 
     void SaveCurrentDocument();
     void CheckOutsideModification();
 
 private:
-    int ReloadDocumentMessageBox(DocumentM* document);
+    static IDocument* CreateDocument(Path absolutePath);
+    int ReloadDocumentMessageBox(IDocument* document);
 
 private slots:
     void CloseTab(int index);

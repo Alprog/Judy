@@ -43,6 +43,16 @@ bool Statement::isClass() const
         || tokens.contains("union");
 }
 
+bool Statement::isProperty() const
+{
+    return tokens.contains("Property");
+}
+
+bool Statement::isUsing() const
+{
+    return tokens.contains("using");
+}
+
 bool Statement::isFunction() const
 {
      return tokens.contains("()");
@@ -78,6 +88,15 @@ void Statement::robustTokenize()
 
 void Statement::addToken(std::string text)
 {
+    if (text == "*>" || text == "&>")
+    {
+        for (auto c : text)
+        {
+            addToken(std::string(1, c));
+        }
+        return;
+    }
+
     if (text[0] == '\'' || text[0] == '"')
     {
         auto indexString = std::string(std::begin(text) + 1, std::end(text) - 1);
@@ -86,7 +105,7 @@ void Statement::addToken(std::string text)
         {
             text = (*escapedLiterals)[index];
         }
-    }
+    }    
     std::shared_ptr<Token> token { new AtomToken(text) };
     tokens.add(token);
 }

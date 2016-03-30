@@ -18,3 +18,5 @@ HEADERS += \
 win {
     QMAKE_LFLAGS += /ENTRY:"mainCRTStartup"
 }
+
+LIBS += -lglew32s

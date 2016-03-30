@@ -4,15 +4,18 @@
 #include "MemberInfo.h"
 #include <vector>
 #include "ArgumentInfo.h"
+
 class TokenGroup;
 
 struct MethodInfo : public MemberInfo
 {
+    MethodInfo();
     MethodInfo(TokenGroup& tokens);
 
     bool isStatic;
     bool isVirtual;
     bool isOperator;
+    bool isInline;
 
     TypeInfo returnType;
     std::vector<ArgumentInfo> arguments;

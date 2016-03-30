@@ -3,24 +3,20 @@
 
 #include "Node.h"
 #include "string"
-#include "Transform.h"
-#include "Meta/TypeMeta.h"
+#include "Math/Transform2D.h"
+#include "Meta/ITypeMeta.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-class __Meta__ Quad : public Node
+class [[Meta]] Quad : public Node
 {
     friend class Meta;
 
 public:
     Quad();
 
-    virtual void Update(double delta) override;
-    virtual void Render(Renderer* renderer) override;
+    virtual void Render(Matrix matrix, Renderer* renderer) override;
 
-    Vector2 Size;
-    Transform Transform;
-
-    std::string Shader;
-    std::string Texture;
+    [[Serialize]] [[Inspect]] Vector2 Size;
+    [[Serialize]] [[Inspect]] std::string Shader;
+    [[Serialize]] [[Inspect]] std::string Texture;
 };

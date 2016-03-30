@@ -25,6 +25,7 @@ public:
     ~NetNode();
 
     bool IsConnected() const;
+    bool HasOutput() const;
 
     void Start(int port);
     void Connect(std::string host, int port);
@@ -43,7 +44,7 @@ private:
     void ProcessMessages();
 
 public:
-    std::function<void(Any)> messageCallback;
+    std::function<void(Any&)> messageCallback;
     std::function<void()> customWorkCallback;
 
 private:

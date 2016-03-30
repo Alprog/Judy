@@ -7,17 +7,14 @@
 #include "LuaMachine/DebugCommand.h"
 #include "Pipe.h"
 #include <regex>
+#include <functional>
 
 using namespace std::placeholders;
 
-RemoteDebbuger::RemoteDebbuger()
+RemoteDebbuger::RemoteDebbuger(LuaMachine* luaMachine, int port)
     : luaMachine{nullptr}
     , logPipe{nullptr}
     , netNode{nullptr}
-{
-}
-
-void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
 {
     this->luaMachine = luaMachine;
     luaMachine->breakCallback = std::bind(&RemoteDebbuger::OnBreak, this);
@@ -29,6 +26,32 @@ void RemoteDebbuger::Start(LuaMachine* luaMachine, int port)
     netNode->customWorkCallback = std::bind(&RemoteDebbuger::CustomNetWork, this);
     netNode->messageCallback = std::bind(&RemoteDebbuger::OnGetMessage, this, _1);
     netNode->Start(port);
+}
+
+RemoteDebbuger::~RemoteDebbuger()
+{
+    WaitForFinish();
+
+    if (netNode != nullptr)
+    {
+        delete netNode;
+        netNode = nullptr;
+    }
+    if (logPipe != nullptr)
+    {
+        delete logPipe;
+        logPipe = nullptr;
+    }
+}
+
+void RemoteDebbuger::WaitForFinish()
+{
+    fflush(stdout);
+    CustomNetWork();
+    while (netNode->IsConnected() && netNode->HasOutput())
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
 }
 
 void RemoteDebbuger::OnBreak()
@@ -52,7 +75,7 @@ void RemoteDebbuger::CustomNetWork()
     }
 }
 
-void RemoteDebbuger::OnGetMessage(Any message)
+void RemoteDebbuger::OnGetMessage(Any& message)
 {
     auto type = message.GetType();
     if (type == TypeMetaOf<DebugCommand>())
@@ -79,11 +102,15 @@ void RemoteDebbuger::OnGetMessage(Any message)
         {
             luaMachine->StepOut();
         }
+        else if (name == "win")
+        {
+            luaMachine->breakpoints.SetCaseSensitive(false);
+        }
     }
     else if (type == TypeMetaOf<FileBreakpoints>())
     {
         auto fileBreakpoints = message.as<FileBreakpoints>();
-        luaMachine->breakpoints.Set(fileBreakpoints.fileName, fileBreakpoints.lines);
+        luaMachine->breakpoints.SetLines(fileBreakpoints.fileName, fileBreakpoints.lines);
 
         printf("breaks get\n");
         fflush(stdout);

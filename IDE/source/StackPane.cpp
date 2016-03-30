@@ -1,7 +1,7 @@
 
 #include "StackPane.h"
 #include "RemotePlayer.h"
-#include "QHeaderView.h"
+#include <QHeaderView>
 #include "IDE.h"
 
 StackPane::StackPane()
@@ -41,6 +41,10 @@ StackPane::StackPane()
     timer.start(100);
 }
 
+StackPane::~StackPane()
+{
+}
+
 void StackPane::OnDoubleClicked(const QModelIndex& index)
 {
     auto row = index.row();
@@ -75,9 +79,5 @@ void StackPane::Set(int row, int col, std::string text)
     item->setTextAlignment(Qt::AlignCenter);
     item->setText(tr(text.c_str()));
     table->setItem(row, col, item);
-}
-
-StackPane::~StackPane()
-{
 }
 

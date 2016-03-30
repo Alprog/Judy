@@ -5,7 +5,7 @@
 #include "WinRenderTarget.h"
 #include <windows.h>
 
-class WinWindow : public Window
+class WinWindow : public WindowM
 {
 public:
     WinWindow();

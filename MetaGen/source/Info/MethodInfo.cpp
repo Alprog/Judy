@@ -3,6 +3,11 @@
 #include "../Parser/Tokens/TokenGroup.h"
 
 #include <iostream>
+#include "Specifier.h"
+
+MethodInfo::MethodInfo()
+{
+}
 
 MethodInfo::MethodInfo(TokenGroup& tokens)
     : isStatic {false}
@@ -11,6 +16,7 @@ MethodInfo::MethodInfo(TokenGroup& tokens)
     , isConst {false}
     , isOverride {false}
     , isPure {false}
+    , isInline {false}
 {
     attributes = tokens.extractAttributes();
 
@@ -48,6 +54,7 @@ void MethodInfo::processArguments(TokenGroup& tokens)
     {
         auto& parentheses = tokens[index];
         auto content = parentheses->cast<TokenGroup*>()->getContent();
+        content.makeTemplateGroups();
         if (content.size() > 0)
         {
             for (auto& argumentTokens : content.split(","))
@@ -62,16 +69,17 @@ void MethodInfo::processSpecifiers(TokenGroup& tokens)
 {
     auto arr = tokens.split("()");
 
-    MemberInfo::processSpecifiers(arr[0],
+    ::processSpecifiers(arr[0],
     {
       { "friend", &isFriend },
       { "static", &isStatic },
-      { "virtual", &isVirtual }
+      { "virtual", &isVirtual },
+      { "inline", &isInline }
     });
 
     if (arr.size() > 1)
     {
-        MemberInfo::processSpecifiers(arr[1],
+        ::processSpecifiers(arr[1],
         {
             { "override", &isOverride },
             { "const", &isConst },

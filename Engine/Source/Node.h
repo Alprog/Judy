@@ -3,19 +3,22 @@
 
 #include <vector>
 #include "Math/Vector2.h"
-#include "Meta/TypeMeta.h"
+#include "Math/Transform.h"
+#include "Meta/ITypeMeta.h"
+#include "Attributes.h"
+#include "Ref.h"
+#include "Object.h"
 
 class Renderer;
 
-#define __Meta__
-
-class __Meta__ Node
+class [[Meta]] Node : public Object
 {
     friend class Meta;
 
 public:
     Node();
     Node(int a);
+    virtual ~Node();
 
     Node* Parent();
     int ChildCount();
@@ -26,10 +29,14 @@ public:
     void Unparent();
     void Reparent(Node* parent);
 
-    virtual void Update(double delta);
-    virtual void Render(Renderer* renderer);
+    void Update(float delta);
+    virtual void UpdateHelper(float delta);
+
+    virtual void Render(Matrix matrix, Renderer* renderer);
+
+    [[Serialize]] [[Inspect]] Transform transform;
 
 private:
     Node* parent;
-    std::vector<Node*> childs;
+    [[Serialize]] List<Ref<Node>> childs;
 };

@@ -3,6 +3,7 @@
 #include "RemoteDebbuger.h"
 
 #include "App.h"
+#include "Meta/Meta.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,15 +15,20 @@ int main(int argc, char *argv[])
         {
             debug = true;
         }
-
     }
+
+    Meta::Instance()->Init();
 
     auto luaMachine = LuaMachine::Instance();
 
     if (debug)
     {
-        RemoteDebbuger::Instance()->Start(luaMachine, 2730);
+        auto debugger = new RemoteDebbuger(luaMachine, 2730);
+        luaMachine->Do("Main.lua", true);
+        delete debugger;
     }
-
-    luaMachine->Start("Main.lua", debug);
+    else
+    {
+        luaMachine->Do("Main.lua");
+    }
 }

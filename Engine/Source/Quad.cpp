@@ -6,18 +6,12 @@ using base = Node;
 
 Quad::Quad()
     : base()
-    , Size({1, 1})
+    , Size(1, 1)
 {
 }
 
-void Quad::Update(double delta)
-{
-    base::Update(delta);
-}
-
-void Quad::Render(Renderer* renderer)
+void Quad::Render(Matrix matrix, Renderer* renderer)
 {
     renderer->DrawQuad(this);
-
-    base::Render(renderer);
+    base::Render(matrix, renderer);
 }

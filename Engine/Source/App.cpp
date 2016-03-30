@@ -1,6 +1,7 @@
 
 #include "App.h"
 #include "Platforms.h"
+#include <time.h>
 
 App* App::Instance()
 {
@@ -8,12 +9,17 @@ App* App::Instance()
     return &instance;
 }
 
-void App::AddWindow(Window* window)
+App::App()
+{
+    Retain();
+}
+
+void App::AddWindow(WindowM* window)
 {
     AddedWindows.insert(window);
 }
 
-void App::RemoveWindow(Window* window)
+void App::RemoveWindow(WindowM* window)
 {
     RemovedWindows.insert(window);
 }
@@ -45,6 +51,7 @@ void App::StartMainLoop()
 
         for (auto window : Windows)
         {
+            window->Update();
             window->Render();
         }
     }

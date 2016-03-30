@@ -6,6 +6,11 @@ MemberInfo::MemberInfo()
 {
 }
 
+bool MemberInfo::isTemplate() const
+{
+    return templateParameters.size() > 0;
+}
+
 bool MemberInfo::containsAttribute(std::string name)
 {
     for (auto& attribute : attributes)
@@ -16,21 +21,4 @@ bool MemberInfo::containsAttribute(std::string name)
         }
     }
     return false;
-}
-
-void MemberInfo::processSpecifiers(TokenGroup& tokens, std::vector<Specifier> specifiers)
-{
-    for (auto i = 0; i < tokens.size(); i++)
-    {
-        auto name = tokens[i]->getName();
-        for (auto& s : specifiers)
-        {
-            if (name == s.keyword)
-            {
-                *s.flag = true;
-                tokens.extractAt(i--);
-                break;
-            }
-        }
-    }
 }

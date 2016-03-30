@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "Singleton.h"
-#include <unordered_set>
+#include "Containers/Set.h"
 #include "LuaMachine/Breakpoints.h"
 #include "LuaMachine/CallStack.h"
 #include "Meta/Any.h"
@@ -31,8 +31,8 @@ public:
 
     void SendCommand(std::string name);
     CallInfo* GetActiveCall();
-    std::unordered_set<int> GetBreakpoints(std::string source);
-    void SetBreakpoints(std::string source, std::unordered_set<int> lines);
+    Set<int> GetBreakpoints(std::string source);
+    void SetBreakpoints(std::string source, Set<int> lines);
 
 signals:
     void Break();
@@ -40,7 +40,7 @@ signals:
 
 private:
     void CustomNetWork();
-    void OnGetMessage(Any message);
+    void OnGetMessage(Any& message);
 
 public:
     CallStack stack;

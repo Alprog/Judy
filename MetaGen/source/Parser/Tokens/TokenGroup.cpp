@@ -1,5 +1,6 @@
 
 #include "TokenGroup.h"
+#include "AtomToken.h"
 
 TokenGroup::TokenGroup()
 {
@@ -57,6 +58,27 @@ const std::string TokenGroup::getText() const
     return text;
 }
 
+void TokenGroup::decay(std::string name)
+{
+    auto index = indexOf(name);
+    while (index >= 0)
+    {
+        extractAt(index);
+        for (auto i = 0; i < name.size(); i++)
+        {
+            auto text = name.substr(i, 1);
+            std::shared_ptr<Token> token { new AtomToken(text) };
+            insert(index, token);
+        }
+        index = indexOf(name);
+    }
+}
+
+void TokenGroup::insert(int index, std::shared_ptr<Token> token)
+{
+    tokens.insert(std::begin(tokens) + index, token);
+}
+
 void TokenGroup::add(std::shared_ptr<Token> token)
 {
     tokens.push_back(token);
@@ -77,7 +99,7 @@ int TokenGroup::indexOf(std::string tokenName, int startIndex) const
 int TokenGroup::lastIndexOf(std::string tokenName) const
 {
     auto startIndex = tokens.size() - 1;
-    return lastIndexOf(tokenName, startIndex);
+    return lastIndexOf(tokenName, (int)startIndex);
 }
 
 int TokenGroup::lastIndexOf(std::string tokenName, int startIndex) const
@@ -144,6 +166,13 @@ void TokenGroup::makeBracketGroups()
     makeGroups("[", "]");
 }
 
+void TokenGroup::makeTemplateGroups()
+{
+    decay("<<");
+    decay(">>");
+    makeGroups("<", ">");
+}
+
 void TokenGroup::makeGroups(std::string openName, std::string closeName)
 {
     while (true)
@@ -169,33 +198,32 @@ void TokenGroup::makeGroups(std::string openName, std::string closeName)
 
 std::vector<TokenGroup> TokenGroup::splitDeclararion()
 {
-    std::vector<TokenGroup> groups;
-    groups.push_back(TokenGroup(std::begin(tokens), std::end(tokens)));
-    return groups;
-//    auto array = split(",");
-//    if (array.size() > 1)
-//    {
-//        auto begin = std::begin(array[0]);
-//        auto end = std::end(array[0]);
+    makeTemplateGroups();
 
-//        iterator it;
-//        for (it = begin; it < end - 1; it++)
-//        {
-//            auto name = (*it)->getName();
-//            if (name == "*" || name == "&")
-//            {
-//                break;
-//            }
-//        }
+    auto array = split(",");
+    if (array.size() > 1)
+    {
+        auto begin = std::begin(array[0]);
+        auto end = std::end(array[0]);
 
-//        for (int i = 1; i < array.size(); i++)
-//        {
-//            auto& group = array[i];
-//            group.tokens.insert(std::begin(group), begin, it);
-//        }
+        iterator it;
+        for (it = begin; it < end - 1; it++)
+        {
+            auto name = (*it)->getName();
+            if (name == "*" || name == "&")
+            {
+                break;
+            }
+        }
 
-//    }
-//    return array;
+        for (int i = 1; i < array.size(); i++)
+        {
+            auto& group = array[i];
+            group.tokens.insert(std::begin(group), begin, it);
+        }
+
+    }
+    return array;
 }
 
 std::vector<AttributeInfo> TokenGroup::extractAttributes()
@@ -213,8 +241,12 @@ std::vector<AttributeInfo> TokenGroup::extractAttributes()
             {
                 group = group->tokens[1]->cast<TokenGroup*>();
                 auto content = group->getContent();
-                AttributeInfo attribute(content);
-                result.push_back(attribute);
+                auto attributes = content.split(",");
+                for (auto& attributeTokens : attributes)
+                {
+                    AttributeInfo attribute(attributeTokens);
+                    result.push_back(attribute);
+                }
                 it = tokens.erase(it);
                 continue;
             }

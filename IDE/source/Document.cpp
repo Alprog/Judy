@@ -1,128 +1,65 @@
 
 #include "Document.h"
-#include "TextEditor.h"
 #include <QFile>
 #include <QTextStream>
-#include <QLayout>
 #include <QFileInfo>
 #include <QDir>
-#include "LuaMachine/LuaMachine.h"
-#include "IDE.h"
 
-DocumentM::DocumentM(std::string filePath)
+IDocument::IDocument(Path documentPath)
 {
-    fullPath = QDir(QString::fromStdString(filePath)).absolutePath().toStdString();
-
-    auto index = filePath.find_last_of("\\/");
-    if (index == std::string::npos)
-    {
-        name = fullPath;
-    }
-    else
-    {
-        index += 1;
-        auto size = fullPath.size() - index;
-        name = fullPath.substr(index, size);
-    }
-
-    editor = new TextEditor(nullptr);
-
-    auto layout = new QGridLayout();
-    layout->setSpacing(0);
-    layout->setMargin(0);
-    layout->addWidget(editor);
-    this->setLayout(layout);
-
-    Reload();
-
-    editor->emptyUndoBuffer();
-
-    connect(editor, SIGNAL(notifyChange()), this, SLOT(OnModified()));
-
-
-    auto projectPath = IDE::Instance()->settings.projectPath;
-
-    auto absProjectPath = QDir(tr(projectPath.c_str())).absolutePath().toStdString();
-    auto absFilePath = QDir(tr(filePath.c_str())).absolutePath().toStdString();
-
-    auto source = "@" + absFilePath.substr(absProjectPath.length() + 1);
-    editor->setSource(source);
-    editor->pullBreakpoints();
-    editor->updateActiveLine();
+    this->documentPath = documentPath;
 }
 
-void DocumentM::Reload()
+void IDocument::Reload()
 {
-    QFile file(fullPath.c_str());
+    QFile file(documentPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
-        QString text = stream.readAll();
-        editor->setText(text.toUtf8().constData());
-        editor->setSavePoint();
+        QByteArray data = stream.readAll().toUtf8();
+        SetBinaryData(data);
         file.close();
 
         modifiedTime = GetLastModifiedTime();
     }
 }
 
-void DocumentM::IgnoreOutsideModification()
+void IDocument::IgnoreOutsideModification()
 {
     modifiedTime = GetLastModifiedTime();
 }
 
-bool DocumentM::IsModifiedOutside()
+bool IDocument::IsModifiedOutside()
 {
     return modifiedTime < GetLastModifiedTime();
 }
 
-QDateTime DocumentM::GetLastModifiedTime()
+QDateTime IDocument::GetLastModifiedTime()
 {
-    QFileInfo info(fullPath.c_str());
+    QFileInfo info(documentPath.c_str());
     return info.lastModified();
 }
 
-std::string DocumentM::GetTabName()
+std::string IDocument::GetTabName()
 {
-    return HaveChanges() ? name + "*" : name;
+    return Changed() ? GetName() + "*" : GetName();
 }
 
-void DocumentM::CloseTab(int index)
+void IDocument::Save()
 {
-
-}
-
-void DocumentM::Save()
-{
-    QFile file(fullPath.c_str());
+    QFile file(documentPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
-        auto length = editor->length();
-        auto text = editor->getText(length + 1);
-
         QTextStream stream(&file);
-        stream << text;
+        stream << GetBinaryData();
         file.close();
-
         modifiedTime = GetLastModifiedTime();
     }
 
-    editor->setSavePoint();
     this->OnModified();
 }
 
-bool DocumentM::HaveChanges()
-{
-    return editor->modify();
-}
-
-void DocumentM::OnModified()
+void IDocument::OnModified()
 {
     this->Modified();
-}
-
-void DocumentM::GoToLine(int line)
-{
-    editor->gotoLine(line - 1);
-    editor->setFocus(true);
 }

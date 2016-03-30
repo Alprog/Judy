@@ -2,13 +2,12 @@
 #pragma once
 
 #include <string>
+#include "Attributes.h"
 
-#define __Meta__
-
-struct __Meta__ DebugCommand
+struct [[Meta]] DebugCommand
 {
     DebugCommand();
     DebugCommand(std::string name);
 
-    std::string name;
+    [[Serialize]] std::string name;
 };

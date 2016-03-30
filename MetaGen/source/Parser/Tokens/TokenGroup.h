@@ -29,6 +29,9 @@ public:
     int lastIndexOf(std::string tokenName, int startIndex) const;
     bool contains(std::string tokenName) const;
 
+    void decay(std::string name);
+    void insert(int index, std::shared_ptr<Token> token);
+
     std::vector<TokenGroup> split(std::string delimeter);
     void add(std::shared_ptr<Token> token);
     TokenGroup extract(int first, int last);
@@ -36,6 +39,7 @@ public:
     std::shared_ptr<Token> extractLast();
 
     void makeBracketGroups();
+    void makeTemplateGroups();
     void makeGroups(std::string openName, std::string closeName);
     std::vector<TokenGroup> splitDeclararion();
 

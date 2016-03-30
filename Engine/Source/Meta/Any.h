@@ -27,6 +27,8 @@ public:
     Any& operator=(Any&& other);       // move assigment operator
     ~Any();                            // destructor
 
+    void Detach(); // detach data (it will not be deleted)
+
 private:
     inline void DestroyData();
     inline void CopyData(const Any& other);
@@ -64,6 +66,11 @@ public:
         {
             return nullptr;
         }
+    }
+
+    inline void* getAddress()
+    {
+        return &static_cast<AnyData<void*>*>(data)->data;
     }
 
 private:

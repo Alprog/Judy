@@ -5,39 +5,36 @@
 #include <vector>
 #include <string>
 
-class Any;
-class IFieldMeta;
-class IFunctionMeta;
-class IConstructorMeta;
+#include "Meta/Any.h"
 
 class ITypeMeta
 {
 public:
+    enum Flags
+    {
+        IsClass = 1 << 0,
+        IsPointer = 1 << 1,
+        IsPointerToPolymorhic = 1 << 2,
+        IsRef = 1 << 3,
+        IsCustomSerializing = 1 << 4
+    };
+
     std::string name;
+    virtual Flags getFlags() const = 0;
 
-    virtual bool isPointer() = 0;
-    virtual bool isClass() = 0;
-    virtual bool isArray() = 0;
-    virtual bool isMap() = 0;
+    inline bool isClass() const { return getFlags() & Flags::IsClass; }
+    inline bool isPointer() const { return getFlags() & Flags::IsPointer; }
+    inline bool isRef() const { return getFlags() & Flags::IsRef; }
+    inline bool isCustomSerializing() const { return getFlags() & Flags::IsCustomSerializing; }
 
-    virtual Any CreateOnStack() = 0;
-    virtual Any CreateOnHeap() = 0;
+    virtual Any Create() = 0;
 
+    virtual ITypeMeta* GetPointerType() = 0;
     virtual ITypeMeta* GetPointeeType() = 0;
+    virtual ITypeMeta* GetRunTimePointeeType(Any object) = 0;
 
+    virtual Any Reference(Any& object) = 0;
     virtual Any Dereference(Any& object) = 0;
-    virtual Any MakePointer(Any& object) = 0;
-};
 
-class IClassMeta : public ITypeMeta
-{
-protected:
-    IClassMeta();
-
-public:
-    ITypeMeta* valueType;
-    std::vector<IConstructorMeta*> constructors;
-    std::map<std::string, IFieldMeta*> fields;
-    std::map<std::string, IFunctionMeta*> methods;
-    std::map<std::string, IFunctionMeta*> functions;
+    Any MakePointer(Any& object) { return GetPointerType()->Reference(object); }
 };

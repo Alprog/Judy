@@ -5,7 +5,7 @@ FileBreakpoints::FileBreakpoints()
 {
 }
 
-FileBreakpoints::FileBreakpoints(std::string fileName, std::unordered_set<int> lines)
+FileBreakpoints::FileBreakpoints(std::string fileName, Set<int> lines)
     : fileName(fileName)
     , lines(lines)
 {

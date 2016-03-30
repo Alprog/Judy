@@ -1,19 +1,37 @@
 
 #pragma once
 
-#include "Vector2.h"
+#include "Vector3.h"
+#include "Quaternion.h"
+
 #include "Matrix.h"
+#include "Attributes.h"
 
-#define __Meta__
-
-struct __Meta__ Transform
+struct [[Meta]] Transform
 {
-    Vector3 Pivot;
-    Vector3 Translation;
-    float Rotation;
-    Vector3 Scaling;
+    friend class Meta;
 
     Transform();
 
-    Matrix GetMatrix();
+    Property [[Bind]] [[Inspect]] translation;
+    void setTranslation(Vector3 translation);
+    Vector3 getTranslation() const;
+
+    Property [[Bind]] [[Inspect]] rotation;
+    Quaternion getRotation() const;
+    void setRotation(Quaternion quaternion);
+
+    Property [[Bind]] [[Inspect]] scaling;
+    Vector3 getScaling() const;
+    void setScaling(Vector3 scaling);
+
+    Matrix getMatrix();
+
+private:
+    [[Serialize]] [[Inspect]] Vector3 translation;
+    [[Serialize]] [[Inspect]] Quaternion rotation;
+    [[Serialize]] [[Inspect]] Vector3 scaling;
+
+    bool invalidateMatrix;
+    Matrix matrix;
 };
