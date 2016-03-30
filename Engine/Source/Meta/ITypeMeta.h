@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-class Any;
+#include "Meta/Any.h"
 
 class ITypeMeta
 {
@@ -36,5 +36,6 @@ public:
     virtual ITypeMeta* GetRunTimePointeeType(Any object) = 0;
 
     virtual Any Dereference(Any& object) = 0;
-    virtual Any MakePointer(Any& object) = 0;
+
+    Any MakePointer(Any& object) { return GetPointerType()->Create(object); }
 };

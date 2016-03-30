@@ -271,6 +271,8 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
     }
 
     auto object = classMeta->CreateOnStack();
+
+
     auto pointer = classMeta->MakePointer(object);
     DeserializeClassFields(pointer, classMeta);
     return object;

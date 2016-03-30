@@ -179,8 +179,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
         auto flags = type->getFlags();
         if (flags & ITypeMeta::Flags::IsPointer)
         {
-            bool isRef = flags & ITypeMeta::Flags::IsRef;
-            auto pointer = isRef ? result.as<Ref<Object>>().Get() : result.as<Object*>();
+            auto pointer = result.as<Object*>();
 
             auto className = pointer->luaClass;
             if (className.empty())

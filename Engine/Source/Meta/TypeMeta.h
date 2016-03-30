@@ -48,7 +48,6 @@ public:
     virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
     virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
-    virtual Any MakePointer(Any& object) override { return MakePointerHelper<ClassType>(object); }
     virtual ITypeMeta* GetPointerType() override { return TypeMetaOf<pointerType>(); }
     virtual ITypeMeta* GetPointeeType() override { return TypeMetaOf<pointeeType>(); }
     virtual ITypeMeta* GetRunTimePointeeType(Any object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
@@ -145,20 +144,6 @@ private:
     static inline Any DereferenceHelper(Any& object, IF_NOT(T, AllowDereferencing)* = nullptr)
     {
         throw std::runtime_error("invalid dereferencing");
-    }
-
-    //---------------------------------------------------------------------------------
-
-    template <typename T>
-    inline Any MakePointerHelper(Any& object, IF_NOT(T, Abstract)* = nullptr)
-    {
-        return pointerType(&object.as<T>());
-    }
-
-    template <typename T>
-    static inline Any MakePointerHelper(Any& object, IF(T, Abstract)* = nullptr)
-    {
-        throw std::runtime_error("invalid referencing");
     }
 
     //---------------------------------------------------------------------------------
