@@ -158,6 +158,8 @@ struct is
     enum { AllowDereferencing = !Abstract && !Void };
 
     enum { CustomSerializing = List || Map };
+
+    enum { R = (RealPointer || Ref) && is<typename pointeeOf<T>::type>::AllowDereferencing };
 };
 
 #define IF(T, C) typename std::enable_if<is<T>::C>::type

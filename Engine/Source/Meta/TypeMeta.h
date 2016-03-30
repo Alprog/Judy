@@ -58,13 +58,13 @@ private:
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    inline Any CreateHelper(Any& pointee, IF(T, Abstract)* = nullptr)
+    inline Any CreateHelper(Any& pointee, IF(T, R)* = nullptr)
     {
-        throw std::runtime_error("not implemented");
+        return T(&pointee.as<pointeeType>());
     }
 
     template <typename T>
-    inline Any CreateHelper(Any& pointee, IF_NOT(T, Abstract)* = nullptr)
+    inline Any CreateHelper(Any& pointee, IF_NOT(T, R)* = nullptr)
     {
         throw std::runtime_error("not implemented");
     }

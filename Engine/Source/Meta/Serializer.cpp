@@ -231,15 +231,10 @@ Any Serializer::Deserialize(ITypeMeta* type)
             value = Deserialize(pointeeType);
         }
 
-        auto pointer = pointeeType->MakePointer(value);
+        auto pointer = type->Create(value);
         value.Detach(); // prevent destroy (keep data at heap)
 
         //auto p = type->CreateOnStack();
-
-        if (flags & ITypeMeta::IsRef)
-        {
-            static_cast<Object*>(pointer)->Retain();
-        }
 
         lua_pop(L, 1);
         return pointer;
