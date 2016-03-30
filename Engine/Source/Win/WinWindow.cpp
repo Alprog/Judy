@@ -9,7 +9,7 @@
 #include "GLRenderer.h"
 #include "DXRenderer.h"
 
-WindowM* currentEventWindow = NULL;
+Window* currentEventWindow = NULL;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

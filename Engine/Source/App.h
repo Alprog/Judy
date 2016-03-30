@@ -18,14 +18,14 @@ public:
 
     void StartMainLoop();
 
-    void AddWindow(WindowM* window);
-    void RemoveWindow(WindowM* window);
+    void AddWindow(Window* window);
+    void RemoveWindow(Window* window);
 
 protected:
     App();
     void UpdateCollection();
 
-    Set<WindowM*> Windows;
-    Set<WindowM*> AddedWindows;
-    Set<WindowM*> RemovedWindows;
+    Set<Window*> Windows;
+    Set<Window*> AddedWindows;
+    Set<Window*> RemovedWindows;
 };

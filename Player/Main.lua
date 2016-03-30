@@ -4,7 +4,7 @@ require 'ModelDerived'
 --require 'Serializer'
 
 local app = App.Instance()
-local window = WindowM.Create()
+local window = Window.Create()
 local scene = window.scene
 
 function add()

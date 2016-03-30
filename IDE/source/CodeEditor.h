@@ -4,8 +4,11 @@
 #include "Document.h"
 #include "SciLexer.h"
 #include <QTimer>
-#include "../qt/ScintillaEdit.h"
 #include "string"
+
+#define Window SciWindow
+#include "../qt/ScintillaEdit.h"
+#undef Window
 
 class CodeEditor : public ScintillaEdit
 {

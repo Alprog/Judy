@@ -11,12 +11,12 @@
 #include "Model.h"
 #include "Meta/Serializer.h"
 
-WindowM* WindowM::Create()
+Window* Window::Create()
 {
     return new PlatformWindow();
 }
 
-WindowM::WindowM()
+Window::Window()
 {
     auto node = new Node();
 
@@ -53,11 +53,11 @@ WindowM::WindowM()
     Retain();
 }
 
-WindowM::~WindowM()
+Window::~Window()
 {
 }
 
-void WindowM::Update()
+void Window::Update()
 {
     scene->Update(0.0);
 
@@ -68,12 +68,12 @@ void WindowM::Update()
 
 }
 
-void WindowM::Render()
+void Window::Render()
 {
     renderer->Render(scene, renderTarget);
 }
 
-void WindowM::show()
+void Window::show()
 {
 }
 

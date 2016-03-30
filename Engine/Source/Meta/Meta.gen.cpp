@@ -71,10 +71,10 @@ void Meta::DefineClasses()
     DefineList<CallInfo>();
     DefineSet<int>();
     DefineList<float>();
-    DefineSet<WindowM*>();
+    DefineSet<Window*>();
     DefineList<Ref<Node>>();
     DefineList<int>();
-    DefineList<WindowM*>();
+    DefineList<Window*>();
 
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
@@ -235,16 +235,16 @@ void Meta::DefineClasses()
         .field("Texture", &Quad::Texture).attr("Serialize").attr("Inspect")
     ;
 
-    ClassDefiner<WindowM>(this, "WindowM")
+    ClassDefiner<Window>(this, "Window")
         .base<Object>()
-        .function("Create", &WindowM::Create)
-        .method("show", &WindowM::show)
-        .method("ProcessEvents", &WindowM::ProcessEvents)
-        .method("Update", &WindowM::Update)
-        .method("Render", &WindowM::Render)
-        .field("scene", &WindowM::scene).attr("Bind")
-        .field("renderTarget", &WindowM::renderTarget).attr("Bind")
-        .field("renderer", &WindowM::renderer).attr("Bind")
+        .function("Create", &Window::Create)
+        .method("show", &Window::show)
+        .method("ProcessEvents", &Window::ProcessEvents)
+        .method("Update", &Window::Update)
+        .method("Render", &Window::Render)
+        .field("scene", &Window::scene).attr("Bind")
+        .field("renderTarget", &Window::renderTarget).attr("Bind")
+        .field("renderer", &Window::renderer).attr("Bind")
     ;
 }
 
