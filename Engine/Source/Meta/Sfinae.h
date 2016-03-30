@@ -148,8 +148,8 @@ struct is
     enum { List = is_list<T>::value };
     enum { Map = is_map<T>::value };
 
-    enum { Pointer = RealPointer || DeepPointer || Ref };
-    enum { Class = RealClass && !DeepPointer };
+    enum { Pointer = RealPointer || Ref || DeepPointer };
+    enum { Class = RealClass && !Pointer };
 
     enum { ClassOrPointer = Class || Pointer };
 

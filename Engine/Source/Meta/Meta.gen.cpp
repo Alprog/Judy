@@ -20,7 +20,6 @@
 #include "Node.h"
 #include "Object.h"
 #include "Quad.h"
-#include "Ref.h"
 #include "Window.h"
 
 template <typename T>
@@ -67,26 +66,6 @@ void Meta::DefineSet()
     ;
 }
 
-template <typename T>
-void Meta::DefineRef()
-{
-    using type = Ref<T>;
-    ClassDefiner<type>(this, "Ref<T>")
-        .templateArgument<T>()
-        /*.constructor<>()
-        .constructor<T*>()
-        .constructor<Ref<T>&>()
-        .constructor<Ref<T>&&>()
-        .constructor()
-        .method("Get", &type::Get)
-        .method("Retain", &type::Retain)
-        .method("Release", &type::Release)
-        .method("Copy", &type::Copy)
-        .method("Move", &type::Move)
-        .field("pointer", &type::pointer)*/
-    ;
-}
-
 void Meta::DefineClasses()
 {
     DefineList<CallInfo>();
@@ -94,7 +73,6 @@ void Meta::DefineClasses()
     DefineList<float>();
     DefineSet<WindowM*>();
     DefineList<Ref<Node>>();
-    DefineRef<Node>();
     DefineList<int>();
     DefineList<WindowM*>();
 

@@ -7,7 +7,7 @@
 #include "DeepPointer.h"
 
 template <typename T>
-class [[Meta]] Ref
+class Ref
 {
     friend class Meta;
 

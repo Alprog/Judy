@@ -27,6 +27,7 @@ public:
     inline bool isRef() const { return getFlags() & Flags::IsRef; }
     inline bool isCustomSerializing() const { return getFlags() & Flags::IsCustomSerializing; }
 
+    virtual Any Create(Any& pointee) = 0;
     virtual Any CreateOnStack() = 0;
     virtual Any CreateOnHeap() = 0;
 

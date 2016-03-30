@@ -44,6 +44,7 @@ public:
         return (Flags)flags;
     }
 
+    virtual Any Create(Any& pointee) override { return CreateHelper<ClassType>(pointee); }
     virtual Any CreateOnStack() override { return CreateOnStackHelper<ClassType>(); }
     virtual Any CreateOnHeap() override { return CreateOnHeapHelper<ClassType>(); }
     virtual Any Dereference(Any& object) override { return DereferenceHelper<ClassType>(object); }
@@ -53,12 +54,45 @@ public:
     virtual ITypeMeta* GetRunTimePointeeType(Any object) override { return GetRunTimePointeeTypeHelper<ClassType>(object); }
 
 private:
+
     //---------------------------------------------------------------------------------
 
     template <typename T>
-    static inline Any CreateOnStackHelper(IF_NOT(T, Class)* = nullptr)
+    inline Any CreateHelper(Any& pointee, IF(T, Abstract)* = nullptr)
+    {
+        throw std::runtime_error("not implemented");
+    }
+
+    template <typename T>
+    inline Any CreateHelper(Any& pointee, IF_NOT(T, Abstract)* = nullptr)
+    {
+        throw std::runtime_error("not implemented");
+    }
+
+    //---------------------------------------------------------------------------------
+
+    template <typename T>
+    static inline Any CreateOnStackHelper(IF_NOT(T, ClassOrPointer)* = nullptr)
     {
         return T();
+    }
+
+    template <typename T>
+    static inline Any CreateOnStackHelper(IF(T, RealPointer)* = nullptr)
+    {
+        return T();
+    }
+
+    template <typename T>
+    static inline Any CreateOnStackHelper(IF(T, DeepPointer)* = nullptr)
+    {
+        return T();
+    }
+
+    template <typename T>
+    static inline Any CreateOnStackHelper(IF(T, Ref)* = nullptr)
+    {
+        throw std::runtime_error("not implemented");
     }
 
     template <typename T>
@@ -83,6 +117,12 @@ private:
 
     template <typename T>
     static inline Any CreateOnHeapHelper(IF(T, DeepPointer)* = nullptr)
+    {
+        throw std::runtime_error("not implemented");
+    }
+
+    template <typename T>
+    static inline Any CreateOnHeapHelper(IF(T, Ref)* = nullptr)
     {
         throw std::runtime_error("not implemented");
     }

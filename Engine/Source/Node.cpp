@@ -36,8 +36,7 @@ Node* Node::Child(int i)
 void Node::AddChild(Node* node)
 {
     node->Unparent();
-    Ref<Node> ref(node);
-    childs.push_back(std::move(ref));
+    childs.push_back(Ref<Node>(node));
     node->parent = this;
 }
 
