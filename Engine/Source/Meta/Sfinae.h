@@ -144,6 +144,7 @@ struct is
     enum { Ref = is_ref<T>::value };
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
+    enum { Void = std::is_same<T, void>::value };
     enum { Polymorphic = std::is_polymorphic<T>::value };
     enum { List = is_list<T>::value };
     enum { Map = is_map<T>::value };
@@ -153,13 +154,11 @@ struct is
 
     enum { ClassOrPointer = Class || Pointer };
 
-    enum { Void = std::is_same<T, void>::value };
     enum { PointerToPolymorhic = std::is_polymorphic<typename pointeeOf<T>::type>::value && !DeepPointer };
-    enum { AllowDereferencing = !Abstract && !Void };
 
     enum { CustomSerializing = List || Map };
 
-    enum { R = (RealPointer || Ref) && is<typename pointeeOf<T>::type>::AllowDereferencing };
+    enum { AllowDereferencing = !Abstract && !Void };
 };
 
 #define IF(T, C) typename std::enable_if<is<T>::C>::type

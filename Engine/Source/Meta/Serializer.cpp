@@ -219,8 +219,6 @@ Any Serializer::Deserialize(ITypeMeta* type)
         lua_pushinteger(L, 1);
         lua_gettable(L, -2);
 
-        auto pointeeType = type->GetPointeeType();
-
         Any value;
         if (flags & ITypeMeta::IsPointerToPolymorhic)
         {
@@ -228,13 +226,11 @@ Any Serializer::Deserialize(ITypeMeta* type)
         }
         else
         {
-            value = Deserialize(pointeeType);
+            value = Deserialize(type->GetPointeeType());
         }
 
-        auto pointer = type->Create(value);
+        auto pointer = type->Reference(value);
         value.Detach(); // prevent destroy (keep data at heap)
-
-        //auto p = type->CreateOnStack();
 
         lua_pop(L, 1);
         return pointer;
@@ -270,9 +266,7 @@ Any Serializer::DeserializeAsClass(IClassMeta* classMeta)
         return serializeConstructor->Invoke(arg);
     }
 
-    auto object = classMeta->CreateOnStack();
-
-
+    auto object = classMeta->Create();
     auto pointer = classMeta->MakePointer(object);
     DeserializeClassFields(pointer, classMeta);
     return object;

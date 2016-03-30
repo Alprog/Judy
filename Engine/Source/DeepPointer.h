@@ -21,7 +21,7 @@ public:
     {
     }
 
-    DeepPointer(void* pointer, int count)
+    DeepPointer(void* pointer, int count = 2)
         : pointer{pointer}
         , count{count}
     {
