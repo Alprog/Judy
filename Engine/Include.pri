@@ -11,8 +11,8 @@ win {
     PRE_TARGETDEPS += "..\3rd-Party\libpng.lib"
     PRE_TARGETDEPS += "..\3rd-Party\lua.lib"
 
-    LIBS += -lUser32 -lGdi32 -ld3d11 -ldxgi -lOpengl32 -lWs2_32
-    LIBS += -ld3dCompiler
+    LIBS += -lUser32 -lGdi32 -lOpengl32 -lWs2_32
+    LIBS += -ld3d12 -ldxgi -ld3dCompiler
 }
 
 linux {

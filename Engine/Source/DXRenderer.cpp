@@ -3,6 +3,8 @@
 
 #include <wrl.h>
 
+using namespace Microsoft::WRL;
+
 DXRenderer::DXRenderer()
 {
     ComPtr<ID3D12Debug> debugController;
