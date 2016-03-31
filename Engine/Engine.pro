@@ -43,7 +43,11 @@ HEADERS += \
     Source/Object.h \
     Source/Ref.h \
     Source/RenderCommand.h \
-    Source/RenderState.h
+    Source/RenderState.h \
+    Source/DXVertexBuffer.h \
+    Source/VertexBuffer.h \
+    Source/DXShader.h \
+    Source/Shader.h
 
 SOURCES += \
     Source/App.cpp \
@@ -101,7 +105,11 @@ SOURCES += \
     Source/Object.cpp \
     Source/Lua.cpp \
     Source/RenderCommand.cpp \
-    Source/RenderState.cpp
+    Source/RenderState.cpp \
+    Source/DXVertexBuffer.cpp \
+    Source/VertexBuffer.cpp \
+    Source/DXShader.cpp \
+    Source/Shader.cpp
 
 win {
     INCLUDEPATH += Source/Windows
