@@ -9,6 +9,10 @@ void DXShader::Compile()
     auto wsource = converter.from_bytes(source.c_str());
 
     UINT compileFlags = 0;
-    auto result = D3DCompileFromFile(wsource.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &blob, nullptr);
+
+    auto entryPoint = type == Type::Vertex ? "VSMain" : "PSMain";
+    auto target = type == Type::Vertex ? "vs_5_0" : "ps_5_0";
+
+    auto result = D3DCompileFromFile(wsource.c_str(), nullptr, nullptr, entryPoint, target, compileFlags, 0, &blob, nullptr);
     if (FAILED(result)) throw;
 }

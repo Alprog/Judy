@@ -7,12 +7,18 @@ class Shader
 {
 public:
 
-    Shader(std::string source);
+    enum class Type
+    {
+        Vertex,
+        Pixel
+    };
+
+    Shader(std::string source, Type type);
 
     virtual void Compile();
 
 
 protected:
     std::string source;
-
+    Type type;
 };

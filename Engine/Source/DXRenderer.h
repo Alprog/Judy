@@ -37,6 +37,8 @@ public:
 
     void Clear(Color color) override;
 
+    inline ID3D12Device* GetDevice() { return device.Get(); }
+
 private:
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> commandQueue;
