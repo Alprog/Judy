@@ -116,6 +116,7 @@ win {
         Source/GLContext.cpp \
         Source/RenderTarget.cpp \
         Source/DXRenderer.cpp \
+        Source/DXSwapChain.cpp \
         Source/Win/WinGLContext.cpp
 }
 
