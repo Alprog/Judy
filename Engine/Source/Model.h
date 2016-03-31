@@ -4,7 +4,7 @@
 #include "Node.h"
 
 #include "Mesh.h"
-#include "Material.h"
+#include "RenderState.h"
 #include "Renderer.h"
 #include "Attributes.h"
 
@@ -15,7 +15,7 @@ struct [[Meta]] Model : public Node
     virtual void Render(Matrix matrix, Renderer* renderer) override;
 
     Mesh* mesh;
-    Material* material;
+    RenderState* renderState;
 
     [[Serialize]] [[Inspect]] std::string name;
 };

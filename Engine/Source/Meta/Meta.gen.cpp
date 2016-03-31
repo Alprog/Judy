@@ -192,7 +192,7 @@ void Meta::DefineClasses()
         .constructor()
         .method("Render", &Model::Render)
         .field("mesh", &Model::mesh)
-        .field("material", &Model::material)
+        .field("renderState", &Model::renderState)
         .field("name", &Model::name).attr("Serialize").attr("Inspect")
     ;
 

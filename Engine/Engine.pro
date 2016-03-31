@@ -41,7 +41,9 @@ HEADERS += \
     Source/Meta/IClassMeta.h \
     Source/Meta/IFieldMeta.h \
     Source/Object.h \
-    Source/Ref.h
+    Source/Ref.h \
+    Source/RenderCommand.h \
+    Source/RenderState.h
 
 SOURCES += \
     Source/App.cpp \
@@ -97,7 +99,9 @@ SOURCES += \
     Source/Meta/PropertyMeta.cpp \
     Source/Meta/IClassMeta.cpp \
     Source/Object.cpp \
-    Source/Lua.cpp
+    Source/Lua.cpp \
+    Source/RenderCommand.cpp \
+    Source/RenderState.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -105,7 +109,6 @@ win {
     SOURCES += \
         Source/Win/WinWindow.cpp \
         Source/Win/WinApp.cpp \
-        Source/DXSwapChain.cpp \
         Source/Win/WinRenderTarget.cpp \
         Source/Win/WinProcess.cpp \
         Source/Win/WinSocket.cpp \
@@ -113,8 +116,7 @@ win {
         Source/GLContext.cpp \
         Source/RenderTarget.cpp \
         Source/DXRenderer.cpp \
-        Source/Win/WinGLContext.cpp \
-        Source/DXShaderResource.cpp
+        Source/Win/WinGLContext.cpp
 }
 
 linux {

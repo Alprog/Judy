@@ -6,7 +6,7 @@
 #include "Quad.h"
 
 #include "Mesh.h"
-#include "Material.h"
+#include "RenderState.h"
 #include "Math/Matrix.h"
 
 class Node;
@@ -20,7 +20,7 @@ public:
 
     virtual void DrawQuad(Quad* quad) = 0;
 
-    virtual void Draw(Mesh* mesh, Material* material, Matrix matrix) = 0;
+    virtual void Draw(Mesh* mesh, Matrix matrix, RenderState* renderState) = 0;
 
     virtual void Render(Node* scene, RenderTarget* target) = 0;
     virtual void Clear(Color color) = 0;

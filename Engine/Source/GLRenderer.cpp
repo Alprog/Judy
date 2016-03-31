@@ -46,7 +46,7 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
 
 GLuint vertexbuffer = 0;
 
-void GLRenderer::Draw(Mesh* mesh, Material* material, Matrix matrix)
+void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
     glLoadMatrixf((float*)&matrix);
 

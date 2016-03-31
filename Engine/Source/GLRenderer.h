@@ -13,7 +13,7 @@ public:
 
     GLContext* GetContext(RenderTarget* renderTarget);
 
-    virtual void Draw(Mesh* mesh, Material* material, Matrix matrix) override;
+    virtual void Draw(Mesh* mesh, Matrix matrix, RenderState* renderState) override;
 
     virtual void DrawQuad(Quad* quad) override;
     virtual void Render(Node* scene, RenderTarget* renderTarget) override;
