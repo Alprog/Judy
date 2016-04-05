@@ -3,6 +3,11 @@
 #include "d3dcompiler.h"
 #include <codecvt>
 
+DXShader::DXShader(std::string source, Type type)
+    : Shader(source, type)
+{
+}
+
 void DXShader::Compile()
 {
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;

@@ -45,7 +45,6 @@ private:
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ComPtr<ID3D12Resource> renderTargets[2];
-    ComPtr<ID3D12PipelineState> pipelineState;
     UINT rtvDescriptorSize;
 
     ComPtr<ID3D12GraphicsCommandList> commandList;

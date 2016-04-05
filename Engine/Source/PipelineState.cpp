@@ -9,8 +9,6 @@ PipelineState::PipelineState(Shader* vertexShader, Shader* pixelShader, DXRender
 {
     auto device = renderer->GetDevice();
 
-    ComPtr<ID3D12RootSignature> rootSignature;
-
     {
         CD3DX12_DESCRIPTOR_RANGE ranges[1];
         ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
@@ -48,10 +46,9 @@ PipelineState::PipelineState(Shader* vertexShader, Shader* pixelShader, DXRender
     D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
     };
 
-    // Describe and create the graphics pipeline state object (PSO).
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
     psoDesc.pRootSignature = rootSignature.Get();

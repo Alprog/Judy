@@ -4,10 +4,17 @@
 
 #include <d3dx12.h>
 
+#include "PipelineState.h"
+#include "DXShader.h"
+#include "VertexBuffer.h"
+
 DXRenderer::DXRenderer()
 {
     Init();
 }
+
+PipelineState* state;
+VertexBuffer* vb;
 
 void DXRenderer::Init()
 {
@@ -16,7 +23,18 @@ void DXRenderer::Init()
     CreateCommandQueue();
     CreateDescriptorHeap();
     CreateCommandAllocator();
+
+
+    Shader* vertexShader = new DXShader("shaders.hlsl", Shader::Type::Vertex);
+    Shader* pixelShader = new DXShader("shaders.hlsl", Shader::Type::Pixel);
+    vertexShader->Compile();
+    pixelShader->Compile();
+
+    state = new PipelineState(vertexShader, pixelShader, this);
+    vb = new VertexBuffer(this);
+
     CreateCommandListAndFence();
+
 }
 
 void DXRenderer::EnableDebugLayer()
@@ -174,21 +192,41 @@ void DXRenderer::DrawQuad(Quad* quad)
 
 }
 
+D3D12_VIEWPORT viewport;
+D3D12_RECT scissorRect;
+
 void DXRenderer::PopulateCommandList()
 {
     auto result = commandAllocator->Reset();
     if (FAILED(result)) throw;
 
-    result = commandList->Reset(commandAllocator.Get(), pipelineState.Get());
+    result = commandList->Reset(commandAllocator.Get(), state->pipelineState.Get());
     if (FAILED(result)) throw;
+
+    commandList->SetGraphicsRootSignature(state->rootSignature.Get());
+
+    viewport.Width = static_cast<float>(800);
+    viewport.Height = static_cast<float>(800);
+    viewport.MaxDepth = 1.0f;
+    commandList->RSSetViewports(1, &viewport);
+
+    scissorRect.right = static_cast<LONG>(800);
+    scissorRect.bottom = static_cast<LONG>(800);
+    commandList->RSSetScissorRects(1, &scissorRect);
 
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
                                  D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
+    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
     const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
     commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetVertexBuffers(0, 1, &vb->vertexBufferView);
+    commandList->IASetIndexBuffer(&vb->indexBufferView);
+    commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
 
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
                                 D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));

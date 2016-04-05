@@ -15,7 +15,7 @@ public:
 
     Shader(std::string source, Type type);
 
-    virtual void Compile();
+    virtual void Compile() = 0;
 
 
 protected:
