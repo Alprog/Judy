@@ -3,9 +3,8 @@
 #include "DXRenderer.h"
 
 #include "d3dx12.h"
+#include "Images.h"
 
-static const UINT TextureWidth = 256;
-static const UINT TextureHeight = 256;
 static const UINT TexturePixelSize = 4;
 
 DXTexture::DXTexture(Renderer* renderer)
@@ -16,11 +15,13 @@ DXTexture::DXTexture(Renderer* renderer)
     auto commandAllocator = static_cast<DXRenderer*>(renderer)->GetCommandAllocator();
     auto commandQueue = static_cast<DXRenderer*>(renderer)->GetCommandQueue();
 
+    auto image = Images::LoadPng("test.png");
+
     D3D12_RESOURCE_DESC textureDesc = {};
     textureDesc.MipLevels = 1;
     textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    textureDesc.Width = TextureWidth;
-    textureDesc.Height = TextureHeight;
+    textureDesc.Width = image->width;
+    textureDesc.Height = image->height;
     textureDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
     textureDesc.DepthOrArraySize = 1;
     textureDesc.SampleDesc.Count = 1;
@@ -49,10 +50,12 @@ DXTexture::DXTexture(Renderer* renderer)
 
     std::vector<UINT8> data = GenerateChessboard();
 
+
+
     D3D12_SUBRESOURCE_DATA textureData = {};
-    textureData.pData = &data[0];
-    textureData.RowPitch = TextureWidth * TexturePixelSize;
-    textureData.SlicePitch = textureData.RowPitch * TextureHeight;
+    textureData.pData = image->data;
+    textureData.RowPitch = image->width * TexturePixelSize;
+    textureData.SlicePitch = textureData.RowPitch * image->height;
 
     commandList->Reset(commandAllocator, nullptr);
     UpdateSubresources(commandList, texture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
@@ -74,10 +77,10 @@ DXTexture::DXTexture(Renderer* renderer)
 
 std::vector<UINT8> DXTexture::GenerateChessboard()
 {
-    const UINT rowPitch = TextureWidth * TexturePixelSize;
+    const UINT rowPitch = 256 * TexturePixelSize;
     const UINT cellPitch = rowPitch >> 3;		// The width of a cell in the checkboard texture.
-    const UINT cellHeight = TextureWidth >> 3;	// The height of a cell in the checkerboard texture.
-    const UINT textureSize = rowPitch * TextureHeight;
+    const UINT cellHeight = 256 >> 3;	// The height of a cell in the checkerboard texture.
+    const UINT textureSize = rowPitch * 256;
 
     std::vector<UINT8> data(textureSize);
     UINT8* pData = &data[0];
