@@ -12,6 +12,7 @@
 
 #include "DXSwapChain.h"
 
+class Image;
 
 class DXRenderer : public Renderer
 {
@@ -44,6 +45,8 @@ public:
 
     inline ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
     inline ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
+
+    virtual void* CreateTexture(Image* image) override;
 
 private:
     ComPtr<ID3D12Device> device;

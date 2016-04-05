@@ -50,7 +50,11 @@ HEADERS += \
     Source/Shader.h \
     Source/PipelineState.h \
     Source/DXTexture.h \
-    Source/dx.h
+    Source/dx.h \
+    Source/RendererFrontend.h \
+    Source/TextureManager.h \
+    Source/Texture.h \
+    Source/RenderManager.h
 
 SOURCES += \
     Source/App.cpp \
@@ -114,7 +118,11 @@ SOURCES += \
     Source/DXShader.cpp \
     Source/Shader.cpp \
     Source/PipelineState.cpp \
-    Source/DXTexture.cpp
+    Source/DXTexture.cpp \
+    Source/RendererFrontend.cpp \
+    Source/TextureManager.cpp \
+    Source/Texture.cpp \
+    Source/RenderManager.cpp
 
 win {
     INCLUDEPATH += Source/Windows

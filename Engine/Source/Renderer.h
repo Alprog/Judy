@@ -13,6 +13,8 @@ class Node;
 
 #include <unordered_map>
 
+class Image;
+
 class Renderer
 {
 public:
@@ -26,4 +28,6 @@ public:
 
     virtual void Render(Node* scene, RenderTarget* target) = 0;
     virtual void Clear(Color color) = 0;
+
+    virtual void* CreateTexture(Image* image) = 0;
 };

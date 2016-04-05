@@ -7,15 +7,13 @@
 
 static const UINT TexturePixelSize = 4;
 
-DXTexture::DXTexture(Renderer* renderer)
+DXTexture::DXTexture(DXRenderer* renderer, Image* image)
 {
-    auto device = static_cast<DXRenderer*>(renderer)->GetDevice();
-    auto commandList = static_cast<DXRenderer*>(renderer)->GetCommandList();
-    auto srvHeap = static_cast<DXRenderer*>(renderer)->GetSRVHeap();
-    auto commandAllocator = static_cast<DXRenderer*>(renderer)->GetCommandAllocator();
-    auto commandQueue = static_cast<DXRenderer*>(renderer)->GetCommandQueue();
-
-    auto image = Images::LoadPng("test.png");
+    auto device = renderer->GetDevice();
+    auto commandList = renderer->GetCommandList();
+    auto srvHeap = renderer->GetSRVHeap();
+    auto commandAllocator = renderer->GetCommandAllocator();
+    auto commandQueue = renderer->GetCommandQueue();
 
     D3D12_RESOURCE_DESC textureDesc = {};
     textureDesc.MipLevels = 1;
@@ -49,8 +47,6 @@ DXTexture::DXTexture(Renderer* renderer)
         IID_PPV_ARGS(&textureUploadHeap)) MUST;
 
     std::vector<UINT8> data = GenerateChessboard();
-
-
 
     D3D12_SUBRESOURCE_DATA textureData = {};
     textureData.pData = image->data;

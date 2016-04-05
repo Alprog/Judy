@@ -5,7 +5,7 @@
 #include "DXRenderer.h"
 #include <d3dx12.h>
 
-PipelineState::PipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer)
+DXPipelineState::DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer)
 {
     auto device = renderer->GetDevice();
 

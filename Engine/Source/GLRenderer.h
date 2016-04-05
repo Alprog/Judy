@@ -19,5 +19,7 @@ public:
     virtual void Render(Node* scene, RenderTarget* renderTarget) override;
 
     virtual void Clear(Color color) override;
+
+    virtual void* CreateTexture(Image* image) override;
 };
 

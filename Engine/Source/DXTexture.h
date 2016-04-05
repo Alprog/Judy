@@ -4,12 +4,13 @@
 #include "dx.h"
 #include <vector>
 
-class Renderer;
+class DXRenderer;
+class Image;
 
 class DXTexture
 {
 public:
-    DXTexture(Renderer* renderer);
+    DXTexture(DXRenderer* renderer, Image* image);
 
 protected:
     std::vector<UINT8> GenerateChessboard();

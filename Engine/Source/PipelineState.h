@@ -6,10 +6,10 @@
 class Shader;
 class DXRenderer;
 
-class PipelineState
+class DXPipelineState
 {
 public:
-    PipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer);
+    DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer);
 
     ComPtr<ID3D12PipelineState> pipelineState;
     ComPtr<ID3D12RootSignature> rootSignature;

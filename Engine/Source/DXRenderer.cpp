@@ -8,6 +8,7 @@
 #include "DXShader.h"
 #include "VertexBuffer.h"
 #include "DXTexture.h"
+#include "Images.h"
 
 DXRenderer::DXRenderer()
 {
@@ -18,7 +19,7 @@ DXRenderer::~DXRenderer()
 {
 }
 
-PipelineState* state;
+DXPipelineState* state;
 VertexBuffer* vb;
 DXTexture* texture;
 
@@ -36,9 +37,12 @@ void DXRenderer::Init()
     vertexShader->Compile();
     pixelShader->Compile();
 
-    state = new PipelineState(vertexShader, pixelShader, this);
+    state = new DXPipelineState(vertexShader, pixelShader, this);
     vb = new VertexBuffer(this);
-    texture = new DXTexture(this);
+
+    auto image = Images::LoadPng("test.png");
+    texture = new DXTexture(this, image);
+    delete image;
 }
 
 void DXRenderer::EnableDebugLayer()
@@ -282,4 +286,9 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
 
     WaitForPreviousFrame();
     frameIndex = swapChain->GetCurrentBackBufferIndex();
+}
+
+void* DXRenderer::CreateTexture(Image* image)
+{
+    return new DXTexture(this, image);
 }

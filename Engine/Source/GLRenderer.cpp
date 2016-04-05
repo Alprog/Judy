@@ -104,3 +104,8 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
 
     context->Swap();
 }
+
+void* GLRenderer::CreateTexture(Image* image)
+{
+    return nullptr;
+}
