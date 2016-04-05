@@ -93,6 +93,7 @@ WinWindow::WinWindow()
 
 WinWindow::~WinWindow()
 {
+    delete renderer;
 }
 
 void WinWindow::ProcessEvents()

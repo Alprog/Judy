@@ -35,6 +35,7 @@ void App::UpdateCollection()
     for (auto window : RemovedWindows)
     {
         Windows.erase(window);
+        delete window;
     }
     RemovedWindows.clear();
 }

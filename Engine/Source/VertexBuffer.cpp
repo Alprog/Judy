@@ -10,6 +10,7 @@ struct VertexA
 {
     Vector3 position;
     Vector4 color;
+    Vector2 texcoord;
 };
 
 VertexBuffer::VertexBuffer(Renderer* renderer)
@@ -18,9 +19,9 @@ VertexBuffer::VertexBuffer(Renderer* renderer)
 
     VertexA triangleVertices[] =
     {
-        { { 0.0f, 0.25f * 1, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-        { { 0.25f, -0.25f * 1, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-        { { -0.25f, -0.25f * 1, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+        { { 0.0f, 0.25f * 1, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
+        { { 0.25f, -0.25f * 1, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+        { { -0.25f, -0.25f * 1, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
     };
 
     unsigned int indices[] = { 0, 1, 2 };
@@ -53,6 +54,7 @@ VertexBuffer::VertexBuffer(Renderer* renderer)
     if (FAILED(result)) throw;
     memcpy(data, indices, sizeof(indices));
     indexBuffer->Unmap(0, nullptr);
+
 
     indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
     indexBufferView.Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;

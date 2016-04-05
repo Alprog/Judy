@@ -4,19 +4,20 @@
 #include "Renderer.h"
 
 #include <windows.h>
-#include <d3d12.h>
-#include <wrl.h>
+
+#include "dx.h"
+
 #include <dxgi1_4.h>
 #include <unordered_map>
 
 #include "DXSwapChain.h"
 
-using namespace Microsoft::WRL;
 
 class DXRenderer : public Renderer
 {
 public:
     DXRenderer();
+    virtual ~DXRenderer();
 
     virtual void Draw(Mesh* mesh, Matrix matrix, RenderState* renderState) override;
     virtual void DrawQuad(Quad* quad) override;
@@ -38,11 +39,17 @@ public:
     void Clear(Color color) override;
 
     inline ID3D12Device* GetDevice() { return device.Get(); }
+    inline ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
+    inline ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap.Get(); }
+
+    inline ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
+    inline ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
 
 private:
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
+    ComPtr<ID3D12DescriptorHeap> srvHeap;
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ComPtr<ID3D12Resource> renderTargets[2];
     UINT rtvDescriptorSize;

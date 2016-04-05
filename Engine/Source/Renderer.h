@@ -16,6 +16,8 @@ class Node;
 class Renderer
 {
 public:
+    virtual ~Renderer() {}
+
     std::unordered_map<std::string, void*> textures;
 
     virtual void DrawQuad(Quad* quad) = 0;

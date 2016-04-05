@@ -7,14 +7,20 @@
 #include "PipelineState.h"
 #include "DXShader.h"
 #include "VertexBuffer.h"
+#include "DXTexture.h"
 
 DXRenderer::DXRenderer()
 {
     Init();
 }
 
+DXRenderer::~DXRenderer()
+{
+}
+
 PipelineState* state;
 VertexBuffer* vb;
+DXTexture* texture;
 
 void DXRenderer::Init()
 {
@@ -23,18 +29,16 @@ void DXRenderer::Init()
     CreateCommandQueue();
     CreateDescriptorHeap();
     CreateCommandAllocator();
+    CreateCommandListAndFence();
 
-
-    Shader* vertexShader = new DXShader("shaders.hlsl", Shader::Type::Vertex);
-    Shader* pixelShader = new DXShader("shaders.hlsl", Shader::Type::Pixel);
+    Shader* vertexShader = new DXShader("shadersTextured.hlsl", Shader::Type::Vertex);
+    Shader* pixelShader = new DXShader("shadersTextured.hlsl", Shader::Type::Pixel);
     vertexShader->Compile();
     pixelShader->Compile();
 
     state = new PipelineState(vertexShader, pixelShader, this);
     vb = new VertexBuffer(this);
-
-    CreateCommandListAndFence();
-
+    texture = new DXTexture(this);
 }
 
 void DXRenderer::EnableDebugLayer()
@@ -97,6 +101,16 @@ void DXRenderer::CreateDescriptorHeap()
     if (FAILED(result)) throw;
 
     rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    //-----------
+
+    D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+    srvHeapDesc.NumDescriptors = 1;
+    srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+    result = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
+    if (FAILED(result)) throw;
 }
 
 void DXRenderer::CreateCommandListAndFence()
@@ -204,6 +218,10 @@ void DXRenderer::PopulateCommandList()
     if (FAILED(result)) throw;
 
     commandList->SetGraphicsRootSignature(state->rootSignature.Get());
+
+    ID3D12DescriptorHeap* ppHeaps[] = { srvHeap.Get() };
+    commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    commandList->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart());
 
     viewport.Width = static_cast<float>(800);
     viewport.Height = static_cast<float>(800);

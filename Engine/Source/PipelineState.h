@@ -1,10 +1,7 @@
 
 #pragma once
 
-#include <d3d12.h>
-#include <wrl.h>
-
-using namespace Microsoft::WRL;
+#include "dx.h"
 
 class Shader;
 class DXRenderer;

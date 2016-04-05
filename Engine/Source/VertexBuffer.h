@@ -1,11 +1,8 @@
 
 #pragma once
 
-#include "d3d12.h"
-#include "wrl.h"
 #include "Renderer.h"
-
-using namespace Microsoft::WRL;
+#include "dx.h"
 
 class VertexBuffer
 {

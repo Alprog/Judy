@@ -48,7 +48,9 @@ HEADERS += \
     Source/VertexBuffer.h \
     Source/DXShader.h \
     Source/Shader.h \
-    Source/PipelineState.h
+    Source/PipelineState.h \
+    Source/DXTexture.h \
+    Source/dx.h
 
 SOURCES += \
     Source/App.cpp \
@@ -111,7 +113,8 @@ SOURCES += \
     Source/VertexBuffer.cpp \
     Source/DXShader.cpp \
     Source/Shader.cpp \
-    Source/PipelineState.cpp
+    Source/PipelineState.cpp \
+    Source/DXTexture.cpp
 
 win {
     INCLUDEPATH += Source/Windows
