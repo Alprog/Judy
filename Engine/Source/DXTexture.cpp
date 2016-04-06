@@ -4,11 +4,14 @@
 
 #include "d3dx12.h"
 #include "Images.h"
+#include "Texture.h"
 
 static const UINT TexturePixelSize = 4;
 
-DXTexture::DXTexture(DXRenderer* renderer, Image* image)
+DXTexture::DXTexture(DXRenderer* renderer, Texture* resource)
 {
+    auto image = Images::LoadPng(resource->name);
+
     auto device = renderer->GetDevice();
     auto commandList = renderer->GetCommandList();
     auto srvHeap = renderer->GetSRVHeap();
@@ -69,6 +72,8 @@ DXTexture::DXTexture(DXRenderer* renderer, Image* image)
     device->CreateShaderResourceView(texture.Get(), &srvDesc, srvHeap->GetCPUDescriptorHandleForHeapStart());
 
     static_cast<DXRenderer*>(renderer)->WaitForPreviousFrame();
+
+    delete image;
 }
 
 std::vector<UINT8> DXTexture::GenerateChessboard()

@@ -21,7 +21,6 @@ DXRenderer::~DXRenderer()
 
 DXPipelineState* state;
 VertexBuffer* vb;
-DXTexture* texture;
 
 void DXRenderer::Init()
 {
@@ -37,10 +36,6 @@ void DXRenderer::Init()
 
     state = new DXPipelineState(vertexShader, pixelShader, this);
     vb = new VertexBuffer(this);
-
-    auto image = Images::LoadPng("test.png");
-    texture = new DXTexture(this, image);
-    delete image;
 }
 
 void DXRenderer::EnableDebugLayer()
@@ -286,9 +281,9 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
     frameIndex = swapChain->GetCurrentBackBufferIndex();
 }
 
-void* DXRenderer::CreateTexture(Image* image)
+void* DXRenderer::CreateTexture(Texture* resource)
 {
-    return new DXTexture(this, image);
+    return new DXTexture(this, resource);
 }
 
 void* DXRenderer::CreateShader(Shader* shader)

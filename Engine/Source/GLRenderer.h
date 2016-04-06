@@ -5,6 +5,7 @@
 #include "GLContext.h"
 
 class Shader;
+class Texture;
 
 class GLRenderer : public Renderer
 {
@@ -22,7 +23,7 @@ public:
 
     virtual void Clear(Color color) override;
 
-    virtual void* CreateTexture(Image* image) override;
+    virtual void* CreateTexture(Texture* texture) override;
     virtual void* CreateShader(Shader* shader) override;
 };
 

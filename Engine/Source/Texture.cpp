@@ -6,22 +6,19 @@
 
 Texture::Texture(std::string name)
     : name { name }
+    , impl {}
 {
     Load();
 }
 
 void Texture::Load()
 {
-    Image* image = Images::LoadPng(name);
-
     auto& renderers = RenderManager::Instance()->renderers;
     for (size_t i = 0; i < renderers.size(); i++)
     {
         if (impl[i] == nullptr)
         {
-            impl[i] = renderers[i]->CreateTexture(image);
+            impl[i] = renderers[i]->CreateTexture(this);
         }
     }
-
-    delete image;
 }

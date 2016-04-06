@@ -5,12 +5,12 @@
 #include <vector>
 
 class DXRenderer;
-class Image;
+class Texture;
 
 class DXTexture
 {
 public:
-    DXTexture(DXRenderer* renderer, Image* image);
+    DXTexture(DXRenderer* renderer, Texture* resource);
 
 protected:
     std::vector<UINT8> GenerateChessboard();

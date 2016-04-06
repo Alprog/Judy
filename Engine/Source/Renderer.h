@@ -11,7 +11,7 @@
 #include <unordered_map>
 
 class Node;
-class Image;
+class Texture;
 class Shader;
 
 class Renderer
@@ -28,6 +28,6 @@ public:
     virtual void Render(Node* scene, RenderTarget* target) = 0;
     virtual void Clear(Color color) = 0;
 
-    virtual void* CreateTexture(Image* image) = 0;
+    virtual void* CreateTexture(Texture* texture) = 0;
     virtual void* CreateShader(Shader* shader) = 0;
 };

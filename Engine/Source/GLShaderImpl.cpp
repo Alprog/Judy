@@ -4,15 +4,15 @@
 #include "GLRenderer.h"
 #include "Shader.h"
 
-#include "gl.h"
-
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
 GLShaderImpl::GLShaderImpl(GLRenderer* renderer, Shader* shader)
 {
-    auto path = shader->source + ".vs";
+    auto isVerts = shader->type == Shader::Type::Vertex;
+
+    auto path = shader->source + (isVerts ? ".vs" : ".ps");
 
     std::ifstream fstream { path };
     if (fstream.is_open() )
@@ -23,24 +23,24 @@ GLShaderImpl::GLShaderImpl(GLRenderer* renderer, Shader* shader)
 
         const char* source = string.c_str();
 
-        GLuint shader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(shader, 1, &source, nullptr);
-        glCompileShader(shader);
+        id = glCreateShader(isVerts ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+        glShaderSource(id, 1, &source, nullptr);
+        glCompileShader(id);
 
         GLint isCompiled;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+        glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
         if(isCompiled == GL_FALSE)
         {
             GLint maxLength = 0;
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
 
             std::vector<GLchar> errorLog(maxLength);
-            glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+            glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
 
             // --
 
-            glDeleteShader(shader);
-            return;
+            glDeleteShader(id);
+            id = 0;
         }
     }
 

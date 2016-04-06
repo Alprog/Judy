@@ -13,6 +13,8 @@
 #include "Win/WinRenderTarget.h"
 
 #include "GLShaderImpl.h"
+#include "GLTextureImpl.h"
+#include "Texture.h"
 
 GLRenderer::GLRenderer()
 {
@@ -48,8 +50,6 @@ GLuint vertexbuffer = 0;
 
 void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
-    glLoadMatrixf((float*)&matrix);
-
     glDisable(GL_CULL_FACE);
 
     if (vertexbuffer == 0)
@@ -60,8 +60,24 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     }
 
+    GLuint location = glGetUniformLocation(renderState->programId, "MVP");
+    glUniformMatrix4fv(location, 1, GL_FALSE, &matrix.m11);
+
+    location = glGetUniformLocation(renderState->programId, "mainTexture");
+    glUniform1i(location, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    GLuint id = static_cast<GLTextureImpl*>(renderState->texture->impl[1])->id;
+    glBindTexture(GL_TEXTURE_2D, id);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+
+    glUseProgram(renderState->programId);
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)12);
 
     glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, &mesh->indices[0]);
 
@@ -105,9 +121,9 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
     context->Swap();
 }
 
-void* GLRenderer::CreateTexture(Image* image)
+void* GLRenderer::CreateTexture(Texture* texture)
 {
-    return nullptr;
+    return new GLTextureImpl(this, texture);
 }
 
 void* GLRenderer::CreateShader(Shader* shader)

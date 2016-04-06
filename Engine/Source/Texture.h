@@ -9,7 +9,7 @@ public:
     Texture(std::string name);
     void Load();
 
-protected:
+public:
     std::string name;
     void* impl[2];
 };
