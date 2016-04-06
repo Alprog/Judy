@@ -74,6 +74,9 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 
     glUseProgram(renderState->programId);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(1);
