@@ -3,13 +3,13 @@
 
 #include "dx.h"
 
-class Shader;
+class DXShader;
 class DXRenderer;
 
 class DXPipelineState
 {
 public:
-    DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer);
+    DXPipelineState(DXShader* vertexShader, DXShader* pixelShader, DXRenderer* renderer);
 
     ComPtr<ID3D12PipelineState> pipelineState;
     ComPtr<ID3D12RootSignature> rootSignature;

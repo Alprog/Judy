@@ -8,12 +8,11 @@
 #include "Mesh.h"
 #include "RenderState.h"
 #include "Math/Matrix.h"
-
-class Node;
-
 #include <unordered_map>
 
+class Node;
 class Image;
+class Shader;
 
 class Renderer
 {
@@ -30,4 +29,5 @@ public:
     virtual void Clear(Color color) = 0;
 
     virtual void* CreateTexture(Image* image) = 0;
+    virtual void* CreateShader(Shader* shader) = 0;
 };

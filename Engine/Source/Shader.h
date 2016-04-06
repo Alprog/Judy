@@ -14,11 +14,11 @@ public:
     };
 
     Shader(std::string source, Type type);
+    void Load();
 
-    virtual void Compile() = 0;
-
-
-protected:
+public:
     std::string source;
     Type type;
+
+    void* impl[2];
 };

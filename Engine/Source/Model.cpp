@@ -1,12 +1,19 @@
 
 #include "Model.h"
 
+#include "TextureManager.h"
+#include "ShaderManager.h"
+
 using base = Node;
 
 Model::Model()
 {
     mesh = CreateCubeMesh();
     renderState = new RenderState();
+
+    renderState->vertexShader = ShaderManager::Instance()->GetShader("shadersTextured", Shader::Type::Vertex);
+    renderState->pixelShader = ShaderManager::Instance()->GetShader("shadersTextured", Shader::Type::Pixel);
+    renderState->texture = TextureManager::Instance()->GetTexture("test.png");
 }
 
 void Model::Render(Matrix matrix, Renderer* renderer)

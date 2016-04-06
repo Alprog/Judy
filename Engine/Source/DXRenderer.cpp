@@ -32,10 +32,8 @@ void DXRenderer::Init()
     CreateCommandAllocator();
     CreateCommandListAndFence();
 
-    Shader* vertexShader = new DXShader("shadersTextured.hlsl", Shader::Type::Vertex);
-    Shader* pixelShader = new DXShader("shadersTextured.hlsl", Shader::Type::Pixel);
-    vertexShader->Compile();
-    pixelShader->Compile();
+    DXShader* vertexShader = new DXShader("shadersTextured.hlsl", Shader::Type::Vertex);
+    DXShader* pixelShader = new DXShader("shadersTextured.hlsl", Shader::Type::Pixel);
 
     state = new DXPipelineState(vertexShader, pixelShader, this);
     vb = new VertexBuffer(this);
@@ -291,4 +289,9 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
 void* DXRenderer::CreateTexture(Image* image)
 {
     return new DXTexture(this, image);
+}
+
+void* DXRenderer::CreateShader(Shader* shader)
+{
+    return nullptr;
 }

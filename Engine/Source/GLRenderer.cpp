@@ -7,19 +7,19 @@
     #include <windows.h>
 #endif
 
-#if MAC
-    #include <OpenGL/gl.h>
-#else
-    #define GLEW_STATIC
-    #include <GL/glew.h>
-    #include <GL/gl.h>
-#endif
+#include "gl.h"
 
 #include "Win/WinGLContext.h"
 #include "Win/WinRenderTarget.h"
 
+#include "GLShaderImpl.h"
+
 GLRenderer::GLRenderer()
 {
+    auto dummy = (GLContext*)new WinGLContext(0);
+    dummy->MakeCurrent();
+    glewInit();
+    //delete dummy;
 }
 
 void GLRenderer::Clear(Color color)
@@ -108,4 +108,9 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
 void* GLRenderer::CreateTexture(Image* image)
 {
     return nullptr;
+}
+
+void* GLRenderer::CreateShader(Shader* shader)
+{
+    return new GLShaderImpl(this, shader);
 }

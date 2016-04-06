@@ -11,7 +11,7 @@ Texture* TextureManager::GetTexture(std::string name)
         return it->second;
     }
 
-    Image* image = Images::LoadPng(name);
-
-    return nullptr;
+    auto texture = new Texture(name);
+    textures[name] = texture;
+    return texture;
 }

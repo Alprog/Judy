@@ -5,7 +5,7 @@
 #include "DXRenderer.h"
 #include <d3dx12.h>
 
-DXPipelineState::DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer)
+DXPipelineState::DXPipelineState(DXShader* vertexShader, DXShader* pixelShader, DXRenderer* renderer)
 {
     auto device = renderer->GetDevice();
 
@@ -53,8 +53,8 @@ DXPipelineState::DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRe
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
     psoDesc.pRootSignature = rootSignature.Get();
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE(static_cast<DXShader*>(vertexShader)->blob.Get());
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE(static_cast<DXShader*>(pixelShader)->blob.Get());
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader->blob.Get());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->blob.Get());
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
     psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState.DepthEnable = FALSE;

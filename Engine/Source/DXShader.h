@@ -4,12 +4,9 @@
 #include "Shader.h"
 #include "dx.h"
 
-class DXShader : public Shader
+class DXShader
 {
 public:
-    DXShader(std::string source, Type type);
-
-    virtual void Compile() override;
-
+    DXShader(std::string source, Shader::Type type);
     ComPtr<ID3DBlob> blob;
 };

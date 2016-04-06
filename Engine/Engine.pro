@@ -54,7 +54,10 @@ HEADERS += \
     Source/RendererFrontend.h \
     Source/TextureManager.h \
     Source/Texture.h \
-    Source/RenderManager.h
+    Source/RenderManager.h \
+    Source/ShaderManager.h \
+    Source/GLShaderImpl.h \
+    Source/gl.h
 
 SOURCES += \
     Source/App.cpp \
@@ -122,7 +125,9 @@ SOURCES += \
     Source/RendererFrontend.cpp \
     Source/TextureManager.cpp \
     Source/Texture.cpp \
-    Source/RenderManager.cpp
+    Source/RenderManager.cpp \
+    Source/ShaderManager.cpp \
+    Source/GLShaderImpl.cpp
 
 win {
     INCLUDEPATH += Source/Windows
