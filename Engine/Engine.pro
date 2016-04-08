@@ -44,7 +44,6 @@ HEADERS += \
     Source/Ref.h \
     Source/RenderCommand.h \
     Source/RenderState.h \
-    Source/DXVertexBuffer.h \
     Source/VertexBuffer.h \
     Source/DXShader.h \
     Source/Shader.h \
@@ -58,7 +57,12 @@ HEADERS += \
     Source/ShaderManager.h \
     Source/GLShaderImpl.h \
     Source/gl.h \
-    Source/GLTextureImpl.h
+    Source/GLTextureImpl.h \
+    Source/DXIndexBufferImpl.h \
+    Source/DXVertexBufferImpl.h \
+    Source/GLIndexBufferImpl.h \
+    Source/GLVertexBufferImpl.h \
+    Source/IndexBuffer.h
 
 SOURCES += \
     Source/App.cpp \
@@ -117,7 +121,6 @@ SOURCES += \
     Source/Lua.cpp \
     Source/RenderCommand.cpp \
     Source/RenderState.cpp \
-    Source/DXVertexBuffer.cpp \
     Source/VertexBuffer.cpp \
     Source/DXShader.cpp \
     Source/Shader.cpp \
@@ -129,7 +132,12 @@ SOURCES += \
     Source/RenderManager.cpp \
     Source/ShaderManager.cpp \
     Source/GLShaderImpl.cpp \
-    Source/GLTextureImpl.cpp
+    Source/GLTextureImpl.cpp \
+    Source/DXIndexBufferImpl.cpp \
+    Source/DXVertexBufferImpl.cpp \
+    Source/GLIndexBufferImpl.cpp \
+    Source/GLVertexBufferImpl.cpp \
+    Source/IndexBuffer.cpp
 
 win {
     INCLUDEPATH += Source/Windows

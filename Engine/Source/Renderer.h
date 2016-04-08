@@ -13,6 +13,8 @@
 class Node;
 class Texture;
 class Shader;
+class VertexBuffer;
+class IndexBuffer;
 
 class Renderer
 {
@@ -30,4 +32,6 @@ public:
 
     virtual void* CreateTexture(Texture* texture) = 0;
     virtual void* CreateShader(Shader* shader) = 0;
+    virtual void* CreateVertexBuffer(VertexBuffer* vertexBuffer) = 0;
+    virtual void* CreateIndexBuffer(IndexBuffer* indexBuffer) = 0;
 };

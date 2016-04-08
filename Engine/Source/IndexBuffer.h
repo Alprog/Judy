@@ -2,14 +2,13 @@
 #pragma once
 
 #include <vector>
-#include "Vertex.h"
 
-class VertexBuffer
+class IndexBuffer
 {
 public:
     void Load();
 
-    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
 
     void* impl[2];
 };

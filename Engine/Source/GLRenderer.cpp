@@ -14,6 +14,8 @@
 
 #include "GLShaderImpl.h"
 #include "GLTextureImpl.h"
+#include "GLIndexBufferImpl.h"
+#include "GLVertexBufferImpl.h"
 #include "Texture.h"
 
 GLRenderer::GLRenderer()
@@ -47,6 +49,7 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
 }
 
 GLuint vertexbuffer = 0;
+GLuint indexbuffer = 0;
 
 void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
@@ -59,18 +62,23 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
         glGenBuffers(1, &vertexbuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), &mesh->vertices[0], GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    }
+    if (indexbuffer == 0)
+    {
+        glGenBuffers(1, &indexbuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(uint32_t), &mesh->indices[0], GL_STATIC_DRAW);
     }
 
     auto mvp = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
 
-    for (auto i = 0; i < mesh->vertices.size(); i++)
+    /*for (auto i = 0; i < mesh->vertices.size(); i++)
     {
         auto v3 = mesh->vertices[i].Position;
         auto v4 = v3 * mvp;
 
         printf("%i\n", v4.x);
-    }
+    }*/
 
     GLuint location = glGetUniformLocation(renderState->programId, "MVP");
     glUniformMatrix4fv(location, 1, GL_FALSE, &mvp.m11);
@@ -83,6 +91,9 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     glBindTexture(GL_TEXTURE_2D, id);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 
     glUseProgram(renderState->programId);
 
@@ -98,7 +109,7 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)12);
 
-    glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, &mesh->indices[0]);
+    glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
 
     glDisableVertexAttribArray(0);
 }
@@ -148,4 +159,14 @@ void* GLRenderer::CreateTexture(Texture* texture)
 void* GLRenderer::CreateShader(Shader* shader)
 {
     return new GLShaderImpl(this, shader);
+}
+
+void* GLRenderer::CreateVertexBuffer(VertexBuffer* vertexBuffer)
+{
+    return new GLVertexBufferImpl(this, vertexBuffer);
+}
+
+void* GLRenderer::CreateIndexBuffer(IndexBuffer* indexBuffer)
+{
+    return new GLIndexBufferImpl(this, indexBuffer);
 }

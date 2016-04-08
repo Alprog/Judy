@@ -6,8 +6,10 @@
 
 #include "PipelineState.h"
 #include "DXShader.h"
-#include "VertexBuffer.h"
+#include "DXVertexBufferImpl.h"
 #include "DXTexture.h"
+#include "DXVertexBufferImpl.h"
+#include "DXIndexBufferImpl.h"
 #include "Images.h"
 
 DXRenderer::DXRenderer()
@@ -20,7 +22,7 @@ DXRenderer::~DXRenderer()
 }
 
 DXPipelineState* state;
-VertexBuffer* vb;
+DXVertexBufferImpl* vb;
 
 void DXRenderer::Init()
 {
@@ -35,7 +37,7 @@ void DXRenderer::Init()
     DXShader* pixelShader = new DXShader("shadersTextured.hlsl", Shader::Type::Pixel);
 
     state = new DXPipelineState(vertexShader, pixelShader, this);
-    vb = new VertexBuffer(this);
+    vb = new DXVertexBufferImpl(this, nullptr);
 }
 
 void DXRenderer::EnableDebugLayer()
@@ -289,4 +291,14 @@ void* DXRenderer::CreateTexture(Texture* resource)
 void* DXRenderer::CreateShader(Shader* shader)
 {
     return nullptr;
+}
+
+void* DXRenderer::CreateVertexBuffer(VertexBuffer* vertexBuffer)
+{
+    return new DXVertexBufferImpl(this, vertexBuffer);
+}
+
+void* DXRenderer::CreateIndexBuffer(IndexBuffer* indexBuffer)
+{
+    return new DXIndexBufferImpl(this, indexBuffer);
 }

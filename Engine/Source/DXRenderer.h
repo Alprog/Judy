@@ -49,6 +49,8 @@ public:
 
     virtual void* CreateTexture(Texture* texture) override;
     virtual void* CreateShader(Shader* shader) override;
+    virtual void* CreateVertexBuffer(VertexBuffer* vertexBuffer) override;
+    virtual void* CreateIndexBuffer(IndexBuffer* indexBuffer) override;
 
 private:
     ComPtr<ID3D12Device> device;

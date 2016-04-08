@@ -1,17 +1,17 @@
 
-#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 #include "RenderManager.h"
 #include "Renderer.h"
 
-void VertexBuffer::Load()
+void IndexBuffer::Load()
 {
     auto& renderers = RenderManager::Instance()->renderers;
     for (size_t i = 0; i < renderers.size(); i++)
     {
         if (impl[i] == nullptr)
         {
-            impl[i] = renderers[i]->CreateVertexBuffer(this);
+            impl[i] = renderers[i]->CreateIndexBuffer(this);
         }
     }
 }
