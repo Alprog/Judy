@@ -62,7 +62,7 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     }
 
-    auto mvp = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -0.1, 2);
+    auto mvp = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
 
     for (auto i = 0; i < mesh->vertices.size(); i++)
     {

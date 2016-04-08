@@ -64,7 +64,7 @@ void Window::Update()
     static float a = 0;
     a += 0.003f;
     auto rotation = Quaternion::YawPitchRoll(a / 2, a, a / 2);
-    //scene->transform.setRotation(rotation);
+    scene->transform.setRotation(rotation);
 
 }
 
