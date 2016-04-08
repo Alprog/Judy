@@ -6,6 +6,8 @@
 #include "Vector4.h"
 #include "DXRenderer.h"
 
+#include "DirectXMath.h"
+
 struct VertexA
 {
     Vector3 position;
@@ -19,7 +21,7 @@ VertexBuffer::VertexBuffer(Renderer* renderer)
 
     VertexA triangleVertices[] =
     {
-        { { 0.0f, 0.25f * 1, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
+        { { 0.0f, 0.5f * 1, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
         { { 0.25f, -0.25f * 1, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
         { { -0.25f, -0.25f * 1, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
     };

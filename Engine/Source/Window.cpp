@@ -32,11 +32,11 @@ Window::Window()
     scene->AddChild(c1);
     scene->AddChild(c2);
 
-    c1->transform.setTranslation(Vector3(2, 0, 0));
+    c1->transform.setTranslation(Vector3(0.9, 0, -1));
     c1->transform.setScaling(Vector3::One * 0.3f);
     c1->name = "child1";
 
-    c2->transform.setTranslation(Vector3(-2, 0, 0));
+    c2->transform.setTranslation(Vector3(-0.2, 0, -1));
     c2->transform.setScaling(Vector3::One * 0.4f);
     c2->name = "child2";
 
@@ -64,7 +64,7 @@ void Window::Update()
     static float a = 0;
     a += 0.003f;
     auto rotation = Quaternion::YawPitchRoll(a / 2, a, a / 2);
-    scene->transform.setRotation(rotation);
+    //scene->transform.setRotation(rotation);
 
 }
 

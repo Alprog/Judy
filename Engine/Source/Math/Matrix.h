@@ -32,7 +32,12 @@ struct Matrix
 
     static Matrix TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling);
 
+    static Matrix OrthographicLH(float width, float height, float znear, float zfar);
+    static Matrix OrthographicLH(float left, float right, float bottom, float top, float znear, float zfar);
+
     friend Matrix operator*(const Matrix& lhs, const Matrix& rhs);
+
+    friend Vector4 operator*(const Vector3& lhs, const Matrix& rhs);
 
     Matrix& operator*=(const Matrix& rhs);
 };

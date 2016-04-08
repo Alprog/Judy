@@ -50,6 +50,8 @@ GLuint vertexbuffer = 0;
 
 void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
+    glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+
     glDisable(GL_CULL_FACE);
 
     if (vertexbuffer == 0)
@@ -60,8 +62,18 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     }
 
+    auto mvp = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -0.1, 2);
+
+    for (auto i = 0; i < mesh->vertices.size(); i++)
+    {
+        auto v3 = mesh->vertices[i].Position;
+        auto v4 = v3 * mvp;
+
+        printf("%i\n", v4.x);
+    }
+
     GLuint location = glGetUniformLocation(renderState->programId, "MVP");
-    glUniformMatrix4fv(location, 1, GL_FALSE, &matrix.m11);
+    glUniformMatrix4fv(location, 1, GL_FALSE, &mvp.m11);
 
     location = glGetUniformLocation(renderState->programId, "mainTexture");
     glUniform1i(location, 0);
@@ -76,6 +88,10 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
