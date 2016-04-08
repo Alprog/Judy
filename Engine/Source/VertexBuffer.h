@@ -7,6 +7,8 @@
 class VertexBuffer
 {
 public:
+    VertexBuffer();
+
     void Load();
 
     std::vector<Vertex> vertices;

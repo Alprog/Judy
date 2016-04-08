@@ -6,6 +6,7 @@
 class IndexBuffer
 {
 public:
+    IndexBuffer();
     void Load();
 
     std::vector<uint32_t> indices;

@@ -4,6 +4,11 @@
 #include "RenderManager.h"
 #include "Renderer.h"
 
+IndexBuffer::IndexBuffer()
+    : impl {}
+{
+}
+
 void IndexBuffer::Load()
 {
     auto& renderers = RenderManager::Instance()->renderers;

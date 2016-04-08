@@ -4,6 +4,11 @@
 #include "RenderManager.h"
 #include "Renderer.h"
 
+VertexBuffer::VertexBuffer()
+    : impl {}
+{
+}
+
 void VertexBuffer::Load()
 {
     auto& renderers = RenderManager::Instance()->renderers;
