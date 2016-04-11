@@ -5,6 +5,14 @@
 #include "GL/GLShaderImpl.h"
 #include <vector>
 
+RenderState::RenderState()
+    : vertexShader {nullptr}
+    , pixelShader {nullptr}
+    , texture {nullptr}
+    , constantBuffer {nullptr}
+{
+}
+
 void RenderState::link()
 {
     programId = glCreateProgram();

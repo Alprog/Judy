@@ -2,6 +2,8 @@
 #pragma once
 
 #include "../Renderer.h"
+#include "../RendererBase.h"
+
 #include "GLContext.h"
 
 #include "../RendererType.h"
@@ -14,9 +16,11 @@
 class Shader;
 class Texture;
 
-class GLRenderer : public Renderer
+class GLRenderer : public RendererBase<GLRenderer>
 {
 public:
+    static const RendererType rendererType = RendererType::GL;
+
     GLRenderer();
 
     std::unordered_map<RenderTarget*, GLContext*> contexts;
@@ -29,11 +33,5 @@ public:
     virtual void Render(Node* scene, RenderTarget* renderTarget) override;
 
     virtual void Clear(Color color) override;
-
-    virtual void* CreateImpl(Texture* resource) override { return new Impl<Texture, RendererType::GL>(this, resource); }
-    virtual void* CreateImpl(Shader* resource) override { return new Impl<Shader, RendererType::GL>(this, resource); }
-    virtual void* CreateImpl(VertexBuffer* resource) override { return new Impl<VertexBuffer, RendererType::GL>(this, resource); }
-    virtual void* CreateImpl(IndexBuffer* resource) override { return new Impl<IndexBuffer, RendererType::GL>(this, resource); }
-    virtual void* CreateImpl(ConstantBuffer* resource) override { return new Impl<ConstantBuffer, RendererType::GL>(this, resource); }
 };
 

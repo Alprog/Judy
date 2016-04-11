@@ -73,7 +73,8 @@ HEADERS += \
     Source/Render/GL/GLConstantBufferImpl.h \
     Source/Render/ConstantBuffer.h \
     Source/Render/DX/DXTextureImpl.h \
-    Source/Render/DX/DXShaderImpl.h
+    Source/Render/DX/DXShaderImpl.h \
+    Source/Render/RendererBase.h
 
 SOURCES += \
     Source/App.cpp \
@@ -153,7 +154,8 @@ SOURCES += \
     Source/Render/GL/GLConstantBufferImpl.cpp \
     Source/Render/ConstantBuffer.cpp \
     Source/Render/DX/DXTextureImpl.cpp \
-    Source/Render/DX/DXShaderImpl.cpp
+    Source/Render/DX/DXShaderImpl.cpp \
+    Source/Render/Impl.cpp
 
 win {
     INCLUDEPATH += Source/Windows

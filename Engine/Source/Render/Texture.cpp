@@ -3,6 +3,7 @@
 #include "Images.h"
 #include "RenderManager.h"
 #include "Renderer.h"
+#include "Impl.h"
 
 Texture::Texture(std::string name)
     : name { name }

@@ -2,6 +2,8 @@
 #pragma once
 
 #include "../Impl.h"
+#include "dx.h"
+#include "Matrix.h"
 
 class ConstantBuffer;
 class DXRenderer;
@@ -11,4 +13,15 @@ class Impl<ConstantBuffer, RendererType::DX>
 {
 public:
     Impl(DXRenderer* renderer, ConstantBuffer* constantBuffer);
+
+    ComPtr<ID3D12Resource> constantBuffer;
+    D3D12_VERTEX_BUFFER_VIEW constantBufferView;
+
+    struct
+    {
+        Matrix MVP;
+    }
+    data;
+
+    UINT8* gpuDataBegin;
 };

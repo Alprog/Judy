@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../Renderer.h"
+#include "../RendererBase.h"
 
 #include <windows.h>
 
@@ -20,9 +21,11 @@ class Texture;
 class Shader;
 class ConstantBuffer;
 
-class DXRenderer : public Renderer
+class DXRenderer : public RendererBase<DXRenderer>
 {
 public:
+    static const RendererType rendererType = RendererType::DX;
+
     DXRenderer();
     virtual ~DXRenderer();
 
@@ -48,21 +51,17 @@ public:
     inline ID3D12Device* GetDevice() { return device.Get(); }
     inline ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
     inline ID3D12DescriptorHeap* GetSRVHeap() { return srvHeap.Get(); }
+    inline ID3D12DescriptorHeap* GetCBVHeap() { return cbvHeap.Get(); }
 
     inline ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
     inline ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
-
-    virtual void* CreateImpl(Texture* resource) override { return new Impl<Texture, RendererType::DX>(this, resource); }
-    virtual void* CreateImpl(Shader* resource) override { return new Impl<Shader, RendererType::DX>(this, resource); }
-    virtual void* CreateImpl(VertexBuffer* resource) override { return new Impl<VertexBuffer, RendererType::DX>(this, resource); }
-    virtual void* CreateImpl(IndexBuffer* resource) override { return new Impl<IndexBuffer, RendererType::DX>(this, resource); }
-    virtual void* CreateImpl(ConstantBuffer* resource) override { return new Impl<ConstantBuffer, RendererType::DX>(this, resource); }
 
 private:
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
     ComPtr<ID3D12DescriptorHeap> srvHeap;
+    ComPtr<ID3D12DescriptorHeap> cbvHeap;
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ComPtr<ID3D12Resource> renderTargets[2];
     UINT rtvDescriptorSize;
@@ -77,4 +76,3 @@ private:
 
     void InitQuad();
 };
-

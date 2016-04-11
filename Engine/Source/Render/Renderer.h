@@ -7,6 +7,7 @@
 
 #include "Mesh.h"
 #include "RenderState.h"
+#include "RendererType.h"
 #include "Math/Matrix.h"
 #include <unordered_map>
 
@@ -30,6 +31,7 @@ public:
 
     virtual void Render(Node* scene, RenderTarget* target) = 0;
     virtual void Clear(Color color) = 0;
+
 
     virtual void* CreateImpl(Texture* resource) = 0;
     virtual void* CreateImpl(VertexBuffer* resource) = 0;
