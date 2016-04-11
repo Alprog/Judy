@@ -6,6 +6,7 @@
 
 ConstantBuffer::ConstantBuffer()
 {
+    Load();
 }
 
 void ConstantBuffer::Load()

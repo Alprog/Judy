@@ -9,6 +9,11 @@
 //
 //*********************************************************
 
+cbuffer ConstantBuffer : register(b0)
+{
+	float4x4 MVP;
+};
+
 struct PSInput
 {
 	float4 position : SV_POSITION;
@@ -23,7 +28,7 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR, float4 uv : TEX
 {
 	PSInput result;
 
-	result.position = position;
+	result.position = mul(position, MVP);
 	result.color = color;
 	result.uv = uv;
 

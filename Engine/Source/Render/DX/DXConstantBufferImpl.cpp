@@ -20,13 +20,24 @@ Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffe
     D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
     cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
     cbvDesc.SizeInBytes = (sizeof(data) + 255) & ~255;
-    device->CreateConstantBufferView(&cbvDesc, renderer->GetCBVHeap()->GetCPUDescriptorHandleForHeapStart());
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE handle(renderer->GetSrvCbvHeap()->GetCPUDescriptorHandleForHeapStart());
+    handle.Offset(1, renderer->GetSrvCbvDescriptorSize());
+    device->CreateConstantBufferView(&cbvDesc, handle);
 
     ZeroMemory(&data, sizeof(data));
+
+    data.MVP = Matrix::Identity;
 
     CD3DX12_RANGE readRange(0, 0);
     result = constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&gpuDataBegin));
     if (FAILED(result)) throw;
 
+    Update();
+}
+
+void Impl<ConstantBuffer, RendererType::DX>::Update()
+{
     memcpy(gpuDataBegin, &data, sizeof(data));
 }
+

@@ -9,6 +9,11 @@
 //
 //*********************************************************
 
+cbuffer ConstantBuffer : register(b0)
+{
+	float4x4 MVP;
+};
+
 struct PSInput
 {
 	float4 position : SV_POSITION;

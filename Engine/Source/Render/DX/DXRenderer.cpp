@@ -97,23 +97,15 @@ void DXRenderer::CreateDescriptorHeap()
 
     //-----------
 
-    D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-    srvHeapDesc.NumDescriptors = 1;
-    srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    D3D12_DESCRIPTOR_HEAP_DESC srvCbvHeapDesc = {};
+    srvCbvHeapDesc.NumDescriptors = 2;
+    srvCbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    srvCbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-    result = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap));
+    result = device->CreateDescriptorHeap(&srvCbvHeapDesc, IID_PPV_ARGS(&srvCbvHeap));
     if (FAILED(result)) throw;
 
-    //------------
-
-    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
-    cbvHeapDesc.NumDescriptors = 1;
-    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-
-    result = device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&cbvHeap));
-    if (FAILED(result)) throw;
+    srvCbvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 void DXRenderer::CreateCommandListAndFence()
@@ -234,9 +226,14 @@ void DXRenderer::PopulateCommandList(Node* scene)
 
     commandList->SetGraphicsRootSignature(state->rootSignature.Get());
 
-    ID3D12DescriptorHeap* ppHeaps[] = { srvHeap.Get() };
+    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap.Get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-    commandList->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart());
+
+    CD3DX12_GPU_DESCRIPTOR_HANDLE handle(srvCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    commandList->SetGraphicsRootDescriptorTable(0, handle);
+    handle.Offset(1, srvCbvDescriptorSize);
+    commandList->SetGraphicsRootDescriptorTable(1, handle);
+
 
     viewport.Width = static_cast<float>(800);
     viewport.Height = static_cast<float>(800);
