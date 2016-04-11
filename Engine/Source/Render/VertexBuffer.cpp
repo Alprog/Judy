@@ -5,7 +5,6 @@
 #include "Renderer.h"
 
 VertexBuffer::VertexBuffer()
-    : impl {}
 {
 }
 

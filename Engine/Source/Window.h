@@ -4,8 +4,8 @@
 #include "Object.h"
 #include "Ref.h"
 #include "Node.h"
-#include "RenderTarget.h"
-#include "Renderer.h"
+#include "Render/RenderTarget.h"
+#include "Render/Renderer.h"
 #include "Attributes.h"
 
 class [[Meta]] Window : public Object

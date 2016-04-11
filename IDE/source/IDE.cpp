@@ -93,7 +93,7 @@ void IDE::OnPlayerStateChanged()
     }
 }
 
-#include "GLRenderer.h"
+#include "Render/GL/GLRenderer.h"
 
 Renderer* IDE::GetRenderer() const
 {

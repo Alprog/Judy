@@ -6,7 +6,7 @@
 
 #include <windows.h>
 
-#include "RenderManager.h"
+#include "Render/RenderManager.h"
 
 Window* currentEventWindow = NULL;
 

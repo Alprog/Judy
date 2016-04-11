@@ -4,7 +4,7 @@
 
 #include <d3dx12.h>
 
-#include "PipelineState.h"
+#include "DXPipelineState.h"
 #include "DXShader.h"
 #include "DXVertexBufferImpl.h"
 #include "DXTexture.h"

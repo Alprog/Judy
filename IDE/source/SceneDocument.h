@@ -4,7 +4,7 @@
 #include "Document.h"
 #include <QTimer>
 #include "Node.h"
-#include "RenderTarget.h"
+#include "Render/RenderTarget.h"
 
 class SceneDocument : public IDocument
 {

@@ -4,7 +4,7 @@
 class Shader;
 class Texture;
 
-#include "gl.h"
+#include "GL/gl.h"
 
 class RenderState
 {

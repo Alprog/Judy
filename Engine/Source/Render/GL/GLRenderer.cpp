@@ -16,7 +16,10 @@
 #include "GLTextureImpl.h"
 #include "GLIndexBufferImpl.h"
 #include "GLVertexBufferImpl.h"
-#include "Texture.h"
+#include "../Texture.h"
+
+#include "../IndexBuffer.h"
+#include "../VertexBuffer.h"
 
 GLRenderer::GLRenderer()
 {
@@ -48,27 +51,11 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
     return context;
 }
 
-GLuint vertexbuffer = 0;
-GLuint indexbuffer = 0;
-
 void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
     glDisable(GL_CULL_FACE);
-
-    if (vertexbuffer == 0)
-    {
-        glGenBuffers(1, &vertexbuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), &mesh->vertices[0], GL_STATIC_DRAW);
-    }
-    if (indexbuffer == 0)
-    {
-        glGenBuffers(1, &indexbuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(uint32_t), &mesh->indices[0], GL_STATIC_DRAW);
-    }
 
     auto mvp = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
 
@@ -92,8 +79,12 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+    auto vb = static_cast<GLVertexBufferImpl*>(mesh->vertexBuffer->impl[1]);
+
+
+    mesh->indexBuffer->glImpl->Bind();
+
+    vb->Bind();
 
     glUseProgram(renderState->programId);
 
@@ -168,5 +159,5 @@ void* GLRenderer::CreateVertexBuffer(VertexBuffer* vertexBuffer)
 
 void* GLRenderer::CreateIndexBuffer(IndexBuffer* indexBuffer)
 {
-    return new GLIndexBufferImpl(this, indexBuffer);
+    return new Impl<IndexBuffer, RendererType::GL>(this, indexBuffer);
 }

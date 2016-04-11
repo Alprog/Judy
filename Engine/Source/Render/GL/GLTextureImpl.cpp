@@ -2,7 +2,7 @@
 #include "GLTextureImpl.h"
 
 #include "Images.h"
-#include "Texture.h"
+#include "../Texture.h"
 
 
 GLTextureImpl::GLTextureImpl(GLRenderer* renderer, Texture* texture)

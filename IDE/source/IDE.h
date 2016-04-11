@@ -8,7 +8,7 @@
 #include "MainWindow.h"
 #include "Meta/Serializer.h"
 #include "LuaMachine/CallInfo.h"
-#include "Renderer.h"
+#include "Render/Renderer.h"
 #include "Node.h"
 
 class IDE : public QApplication

@@ -4,7 +4,9 @@
 #include <vector>
 #include "Vertex.h"
 
-class VertexBuffer
+#include "RendererResource.h"
+
+class VertexBuffer : public RendererResource<VertexBuffer>
 {
 public:
     VertexBuffer();
@@ -12,6 +14,4 @@ public:
     void Load();
 
     std::vector<Vertex> vertices;
-
-    void* impl[2];
 };

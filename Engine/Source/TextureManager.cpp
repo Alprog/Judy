@@ -1,6 +1,6 @@
 
 #include "TextureManager.h"
-#include "Texture.h"
+#include "Render/Texture.h"
 #include "Images.h"
 
 Texture* TextureManager::GetTexture(std::string name)

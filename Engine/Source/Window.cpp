@@ -3,8 +3,8 @@
 #include "Platforms.h"
 
 #ifdef WIN
-#include "GLRenderer.h"
-#include "DXRenderer.h"
+#include "Render/GL/GLRenderer.h"
+#include "Render/DX/DXRenderer.h"
 #endif
 
 #include "Quad.h"

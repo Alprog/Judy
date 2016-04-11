@@ -1,5 +1,5 @@
 
-#include "Shader.h"
+#include "DXShader.h"
 #include "DXShader.h"
 #include "d3dcompiler.h"
 #include <codecvt>

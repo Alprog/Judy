@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Renderer.h"
+#include "../Renderer.h"
 #include "GLContext.h"
 
 class Shader;

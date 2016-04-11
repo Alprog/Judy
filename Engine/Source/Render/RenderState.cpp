@@ -2,7 +2,7 @@
 #include "RenderState.h"
 
 #include "Shader.h"
-#include "GLShaderImpl.h"
+#include "GL/GLShaderImpl.h"
 #include <vector>
 
 void RenderState::link()

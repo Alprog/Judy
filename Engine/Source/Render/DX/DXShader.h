@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Shader.h"
+#include "../Shader.h"
 #include "dx.h"
 
 class DXShader

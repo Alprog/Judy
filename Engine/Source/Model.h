@@ -4,8 +4,8 @@
 #include "Node.h"
 
 #include "Mesh.h"
-#include "RenderState.h"
-#include "Renderer.h"
+#include "Render/RenderState.h"
+#include "Render/Renderer.h"
 #include "Attributes.h"
 
 struct [[Meta]] Model : public Node

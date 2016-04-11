@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Renderer.h"
+#include "../Renderer.h"
 
 #include <windows.h>
 
@@ -9,8 +9,6 @@
 
 #include <dxgi1_4.h>
 #include <unordered_map>
-
-#include "DXSwapChain.h"
 
 class Texture;
 class Shader;

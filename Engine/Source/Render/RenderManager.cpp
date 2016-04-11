@@ -1,8 +1,8 @@
 
 #include "RenderManager.h"
 
-#include "DXRenderer.h"
-#include "GLRenderer.h"
+#include "Render/DX/DXRenderer.h"
+#include "Render/GL/GLRenderer.h"
 
 RenderManager::RenderManager()
 {

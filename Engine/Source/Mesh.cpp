@@ -1,8 +1,8 @@
 
 #include "Mesh.h"
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "Render/VertexBuffer.h"
+#include "Render/IndexBuffer.h"
 
 Mesh* CreateCubeMesh()
 {
