@@ -2,18 +2,17 @@
 #pragma once
 
 #include "dx.h"
+#include "../Impl.h"
 
 class DXRenderer;
 class VertexBuffer;
 
-class DXVertexBufferImpl
+template <>
+class Impl<VertexBuffer, RendererType::DX>
 {
 public:
-    DXVertexBufferImpl(DXRenderer* renderer, VertexBuffer* vertexBuffer);
+    Impl(DXRenderer* renderer, VertexBuffer* vertexBuffer);
 
     ComPtr<ID3D12Resource> vertexBuffer;
-    ComPtr<ID3D12Resource> indexBuffer;
-
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
-    D3D12_INDEX_BUFFER_VIEW indexBufferView;
 };

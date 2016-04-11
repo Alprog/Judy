@@ -15,6 +15,7 @@ class Texture;
 class Shader;
 class VertexBuffer;
 class IndexBuffer;
+class ConstantBuffer;
 
 class Renderer
 {
@@ -30,8 +31,9 @@ public:
     virtual void Render(Node* scene, RenderTarget* target) = 0;
     virtual void Clear(Color color) = 0;
 
-    virtual void* CreateTexture(Texture* texture) = 0;
-    virtual void* CreateShader(Shader* shader) = 0;
-    virtual void* CreateVertexBuffer(VertexBuffer* vertexBuffer) = 0;
-    virtual void* CreateIndexBuffer(IndexBuffer* indexBuffer) = 0;
+    virtual void* CreateImpl(Texture* resource) = 0;
+    virtual void* CreateImpl(VertexBuffer* resource) = 0;
+    virtual void* CreateImpl(IndexBuffer* resource) = 0;
+    virtual void* CreateImpl(Shader* resource) = 0;
+    virtual void* CreateImpl(ConstantBuffer* resource) = 0;
 };

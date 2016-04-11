@@ -5,12 +5,13 @@
 #include <d3dx12.h>
 
 #include "DXPipelineState.h"
-#include "DXShader.h"
-#include "DXVertexBufferImpl.h"
-#include "DXTexture.h"
-#include "DXVertexBufferImpl.h"
-#include "DXIndexBufferImpl.h"
+#include "DXShaderImpl.h"
+#include "DXTextureImpl.h"
 #include "Images.h"
+
+#include "../VertexBuffer.h"
+#include "../IndexBuffer.h"
+#include "../Shader.h"
 
 DXRenderer::DXRenderer()
 {
@@ -21,8 +22,7 @@ DXRenderer::~DXRenderer()
 {
 }
 
-DXPipelineState* state;
-DXVertexBufferImpl* vb;
+DXPipelineState* state = nullptr;
 
 void DXRenderer::Init()
 {
@@ -32,12 +32,6 @@ void DXRenderer::Init()
     CreateDescriptorHeap();
     CreateCommandAllocator();
     CreateCommandListAndFence();
-
-    DXShader* vertexShader = new DXShader("shadersTextured.hlsl", Shader::Type::Vertex);
-    DXShader* pixelShader = new DXShader("shadersTextured.hlsl", Shader::Type::Pixel);
-
-    state = new DXPipelineState(vertexShader, pixelShader, this);
-    vb = new DXVertexBufferImpl(this, nullptr);
 }
 
 void DXRenderer::EnableDebugLayer()
@@ -197,7 +191,12 @@ void DXRenderer::Clear(Color color)
 
 void DXRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+    commandList->IASetVertexBuffers(0, 1, &mesh->vertexBuffer->dxImpl->vertexBufferView);
+    commandList->IASetIndexBuffer(&mesh->indexBuffer->dxImpl->indexBufferView);
+
+    commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
 }
 
 void DXRenderer::DrawQuad(Quad* quad)
@@ -208,10 +207,17 @@ void DXRenderer::DrawQuad(Quad* quad)
 D3D12_VIEWPORT viewport;
 D3D12_RECT scissorRect;
 
-void DXRenderer::PopulateCommandList()
+void DXRenderer::PopulateCommandList(Node* scene)
 {
     auto result = commandAllocator->Reset();
     if (FAILED(result)) throw;
+
+    if (state == nullptr)
+    {
+        auto vertexShader = new Shader("shadersTextured", Shader::Type::Vertex);
+        auto pixelShader = new Shader("shadersTextured", Shader::Type::Pixel);
+        state = new DXPipelineState(vertexShader, pixelShader, this);
+    }
 
     result = commandList->Reset(commandAllocator.Get(), state->pipelineState.Get());
     if (FAILED(result)) throw;
@@ -240,10 +246,7 @@ void DXRenderer::PopulateCommandList()
     const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
     commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->IASetVertexBuffers(0, 1, &vb->vertexBufferView);
-    commandList->IASetIndexBuffer(&vb->indexBufferView);
-    commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
+    scene->Render(scene->transform.getMatrix(), this);
 
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
                                 D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -271,7 +274,7 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
 {
     auto swapChain = GetSwapChain(renderTarget);
 
-    PopulateCommandList();
+    PopulateCommandList(scene);
 
     ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
     commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
@@ -281,24 +284,4 @@ void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
 
     WaitForPreviousFrame();
     frameIndex = swapChain->GetCurrentBackBufferIndex();
-}
-
-void* DXRenderer::CreateTexture(Texture* resource)
-{
-    return new DXTexture(this, resource);
-}
-
-void* DXRenderer::CreateShader(Shader* shader)
-{
-    return nullptr;
-}
-
-void* DXRenderer::CreateVertexBuffer(VertexBuffer* vertexBuffer)
-{
-    return new DXVertexBufferImpl(this, vertexBuffer);
-}
-
-void* DXRenderer::CreateIndexBuffer(IndexBuffer* indexBuffer)
-{
-    return new DXIndexBufferImpl(this, indexBuffer);
 }

@@ -3,7 +3,7 @@
 
 #include "../VertexBuffer.h"
 
-GLVertexBufferImpl::GLVertexBufferImpl(GLRenderer* renderer, VertexBuffer* vertexBuffer)
+Impl<VertexBuffer, RendererType::GL>::Impl(GLRenderer* renderer, VertexBuffer* vertexBuffer)
 {
     glGenBuffers(1, &id);
     glBindBuffer(GL_ARRAY_BUFFER, id);

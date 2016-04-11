@@ -2,8 +2,9 @@
 #pragma once
 
 #include <string>
+#include "RendererResource.h"
 
-class Shader
+class Shader : public RendererResource<Shader>
 {
 public:
 
@@ -19,6 +20,4 @@ public:
 public:
     std::string source;
     Type type;
-
-    void* impl[2];
 };

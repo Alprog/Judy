@@ -1,11 +1,18 @@
 
 #pragma once
 
+#include "dx.h"
+#include "../Impl.h"
+
 class DXRenderer;
 class IndexBuffer;
 
-class DXIndexBufferImpl
+template <>
+class Impl<IndexBuffer, RendererType::DX>
 {
 public:
-    DXIndexBufferImpl(DXRenderer* renderer, IndexBuffer* indexBuffer);
+    Impl(DXRenderer* renderer, IndexBuffer* indexBuffer);
+
+    ComPtr<ID3D12Resource> indexBuffer;
+    D3D12_INDEX_BUFFER_VIEW indexBufferView;
 };

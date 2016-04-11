@@ -10,8 +10,15 @@
 #include <dxgi1_4.h>
 #include <unordered_map>
 
+#include "DXVertexBufferImpl.h"
+#include "DXShaderImpl.h"
+#include "DXIndexBufferImpl.h"
+#include "DXTextureImpl.h"
+#include "DXConstantBufferImpl.h"
+
 class Texture;
 class Shader;
+class ConstantBuffer;
 
 class DXRenderer : public Renderer
 {
@@ -30,7 +37,7 @@ public:
     void CreateDescriptorHeap();
     void CreateCommandAllocator();
     void CreateCommandListAndFence();
-    void PopulateCommandList();
+    void PopulateCommandList(Node* scene);
     void WaitForPreviousFrame();
 
     ComPtr<IDXGISwapChain3> GetSwapChain(RenderTarget* renderTarget);
@@ -45,10 +52,11 @@ public:
     inline ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
     inline ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
 
-    virtual void* CreateTexture(Texture* texture) override;
-    virtual void* CreateShader(Shader* shader) override;
-    virtual void* CreateVertexBuffer(VertexBuffer* vertexBuffer) override;
-    virtual void* CreateIndexBuffer(IndexBuffer* indexBuffer) override;
+    virtual void* CreateImpl(Texture* resource) override { return new Impl<Texture, RendererType::DX>(this, resource); }
+    virtual void* CreateImpl(Shader* resource) override { return new Impl<Shader, RendererType::DX>(this, resource); }
+    virtual void* CreateImpl(VertexBuffer* resource) override { return new Impl<VertexBuffer, RendererType::DX>(this, resource); }
+    virtual void* CreateImpl(IndexBuffer* resource) override { return new Impl<IndexBuffer, RendererType::DX>(this, resource); }
+    virtual void* CreateImpl(ConstantBuffer* resource) override { return new Impl<ConstantBuffer, RendererType::DX>(this, resource); }
 
 private:
     ComPtr<ID3D12Device> device;
@@ -68,6 +76,5 @@ private:
     std::unordered_map<RenderTarget*, ComPtr<IDXGISwapChain3>> swapChains;
 
     void InitQuad();
-
 };
 

@@ -5,7 +5,7 @@
 #include "../Texture.h"
 
 
-GLTextureImpl::GLTextureImpl(GLRenderer* renderer, Texture* texture)
+Impl<Texture, RendererType::GL>::Impl(GLRenderer* renderer, Texture* texture)
     : id {0}
 {
     auto image = Images::LoadPng(texture->name);

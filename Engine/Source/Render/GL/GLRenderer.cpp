@@ -12,10 +12,6 @@
 #include "Win/WinGLContext.h"
 #include "Win/WinRenderTarget.h"
 
-#include "GLShaderImpl.h"
-#include "GLTextureImpl.h"
-#include "GLIndexBufferImpl.h"
-#include "GLVertexBufferImpl.h"
 #include "../Texture.h"
 
 #include "../IndexBuffer.h"
@@ -74,17 +70,13 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     glUniform1i(location, 0);
 
     glActiveTexture(GL_TEXTURE0);
-    GLuint id = static_cast<GLTextureImpl*>(renderState->texture->impl[1])->id;
+    GLuint id = renderState->texture->glImpl->id;
     glBindTexture(GL_TEXTURE_2D, id);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    auto vb = static_cast<GLVertexBufferImpl*>(mesh->vertexBuffer->impl[1]);
-
-
+    mesh->vertexBuffer->glImpl->Bind();
     mesh->indexBuffer->glImpl->Bind();
-
-    vb->Bind();
 
     glUseProgram(renderState->programId);
 
@@ -140,24 +132,4 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
     scene->Render(scene->transform.getMatrix(), this);
 
     context->Swap();
-}
-
-void* GLRenderer::CreateTexture(Texture* texture)
-{
-    return new GLTextureImpl(this, texture);
-}
-
-void* GLRenderer::CreateShader(Shader* shader)
-{
-    return new GLShaderImpl(this, shader);
-}
-
-void* GLRenderer::CreateVertexBuffer(VertexBuffer* vertexBuffer)
-{
-    return new GLVertexBufferImpl(this, vertexBuffer);
-}
-
-void* GLRenderer::CreateIndexBuffer(IndexBuffer* indexBuffer)
-{
-    return new Impl<IndexBuffer, RendererType::GL>(this, indexBuffer);
 }

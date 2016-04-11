@@ -4,12 +4,14 @@
 class GLRenderer;
 class Shader;
 
+#include "../Impl.h"
 #include "gl.h"
 
-class GLShaderImpl
+template <>
+class Impl<Shader, RendererType::GL>
 {
 public:
-    GLShaderImpl(GLRenderer* renderer, Shader* shader);
+    Impl(GLRenderer* renderer, Shader* shader);
 
     GLuint id;
 };

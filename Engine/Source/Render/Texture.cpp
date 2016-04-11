@@ -6,7 +6,6 @@
 
 Texture::Texture(std::string name)
     : name { name }
-    , impl {}
 {
     Load();
 }
@@ -18,7 +17,7 @@ void Texture::Load()
     {
         if (impl[i] == nullptr)
         {
-            impl[i] = renderers[i]->CreateTexture(this);
+            impl[i] = renderers[i]->CreateImpl(this);
         }
     }
 }

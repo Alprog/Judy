@@ -8,10 +8,11 @@
 class GLRenderer;
 class VertexBuffer;
 
-class GLVertexBufferImpl
+template <>
+class Impl<VertexBuffer, RendererType::GL>
 {
 public:
-    GLVertexBufferImpl(GLRenderer* renderer, VertexBuffer* vertexBuffer);
+    Impl(GLRenderer* renderer, VertexBuffer* vertexBuffer);
 
     inline void Bind() { glBindBuffer(GL_ARRAY_BUFFER, id); }
 

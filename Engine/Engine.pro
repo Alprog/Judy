@@ -59,9 +59,7 @@ HEADERS += \
     Source/Render/DX/DXIndexBufferImpl.h \
     Source/Render/DX/DXPipelineState.h \
     Source/Render/DX/DXRenderer.h \
-    Source/Render/DX/DXShader.h \
     Source/Render/DX/DXSwapChain.h \
-    Source/Render/DX/DXTexture.h \
     Source/Render/DX/DXVertexBufferImpl.h \
     Source/Render/GL/GLContext.h \
     Source/Render/GL/GLIndexBufferImpl.h \
@@ -70,7 +68,12 @@ HEADERS += \
     Source/Render/GL/GLTextureImpl.h \
     Source/Render/GL/GLVertexBufferImpl.h \
     Source/Render/GL/gl.h \
-    Source/Render/DX/dx.h
+    Source/Render/DX/dx.h \
+    Source/Render/DX/DXConstantBufferImpl.h \
+    Source/Render/GL/GLConstantBufferImpl.h \
+    Source/Render/ConstantBuffer.h \
+    Source/Render/DX/DXTextureImpl.h \
+    Source/Render/DX/DXShaderImpl.h
 
 SOURCES += \
     Source/App.cpp \
@@ -131,8 +134,6 @@ SOURCES += \
     Source/Render/Texture.cpp \
     Source/Render/DX/DXIndexBufferImpl.cpp \
     Source/Render/DX/DXPipelineState.cpp \
-    Source/Render/DX/DXShader.cpp \
-    Source/Render/DX/DXTexture.cpp \
     Source/Render/DX/DXVertexBufferImpl.cpp \
     Source/Render/GL/GLContext.cpp \
     Source/Render/GL/GLIndexBufferImpl.cpp \
@@ -147,7 +148,12 @@ SOURCES += \
     Source/Render/RenderManager.cpp \
     Source/Render/RenderState.cpp \
     Source/Render/VertexBuffer.cpp \
-    Source/Render/Shader.cpp
+    Source/Render/Shader.cpp \
+    Source/Render/DX/DXConstantBufferImpl.cpp \
+    Source/Render/GL/GLConstantBufferImpl.cpp \
+    Source/Render/ConstantBuffer.cpp \
+    Source/Render/DX/DXTextureImpl.cpp \
+    Source/Render/DX/DXShaderImpl.cpp
 
 win {
     INCLUDEPATH += Source/Windows

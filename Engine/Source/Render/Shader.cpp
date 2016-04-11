@@ -6,7 +6,6 @@
 Shader::Shader(std::string source, Type type)
     : source {source}
     , type {type}
-    , impl {}
 {
     Load();
 }
@@ -18,7 +17,7 @@ void Shader::Load()
     {
         if (impl[i] == nullptr)
         {
-            impl[i] = renderers[i]->CreateShader(this);
+            impl[i] = renderers[i]->CreateImpl(this);
         }
     }
 }

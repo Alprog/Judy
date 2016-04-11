@@ -1,9 +1,10 @@
 
 #pragma once
 
+#include "RendererResource.h"
 #include <string>
 
-class Texture
+class Texture : public RendererResource<Texture>
 {
 public:
     Texture(std::string name);
@@ -11,5 +12,4 @@ public:
 
 public:
     std::string name;
-    void* impl[2];
 };

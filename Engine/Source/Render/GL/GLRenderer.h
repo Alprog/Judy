@@ -4,6 +4,13 @@
 #include "../Renderer.h"
 #include "GLContext.h"
 
+#include "../RendererType.h"
+#include "GLShaderImpl.h"
+#include "GLTextureImpl.h"
+#include "GLIndexBufferImpl.h"
+#include "GLVertexBufferImpl.h"
+#include "GLConstantBufferImpl.h"
+
 class Shader;
 class Texture;
 
@@ -23,9 +30,10 @@ public:
 
     virtual void Clear(Color color) override;
 
-    virtual void* CreateTexture(Texture* texture) override;
-    virtual void* CreateShader(Shader* shader) override;
-    virtual void* CreateVertexBuffer(VertexBuffer* vertexBuffer) override;
-    virtual void* CreateIndexBuffer(IndexBuffer* indexBuffer) override;
+    virtual void* CreateImpl(Texture* resource) override { return new Impl<Texture, RendererType::GL>(this, resource); }
+    virtual void* CreateImpl(Shader* resource) override { return new Impl<Shader, RendererType::GL>(this, resource); }
+    virtual void* CreateImpl(VertexBuffer* resource) override { return new Impl<VertexBuffer, RendererType::GL>(this, resource); }
+    virtual void* CreateImpl(IndexBuffer* resource) override { return new Impl<IndexBuffer, RendererType::GL>(this, resource); }
+    virtual void* CreateImpl(ConstantBuffer* resource) override { return new Impl<ConstantBuffer, RendererType::GL>(this, resource); }
 };
 

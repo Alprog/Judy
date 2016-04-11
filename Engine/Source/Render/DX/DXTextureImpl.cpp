@@ -1,5 +1,5 @@
 
-#include "DXTexture.h"
+#include "DXTextureImpl.h"
 #include "DXRenderer.h"
 
 #include "d3dx12.h"
@@ -8,7 +8,7 @@
 
 static const UINT TexturePixelSize = 4;
 
-DXTexture::DXTexture(DXRenderer* renderer, Texture* resource)
+Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
 {
     auto image = Images::LoadPng(resource->name);
 
@@ -76,7 +76,7 @@ DXTexture::DXTexture(DXRenderer* renderer, Texture* resource)
     delete image;
 }
 
-std::vector<UINT8> DXTexture::GenerateChessboard()
+std::vector<UINT8> Impl<Texture, RendererType::DX>::GenerateChessboard()
 {
     const UINT rowPitch = 256 * TexturePixelSize;
     const UINT cellPitch = rowPitch >> 3;		// The width of a cell in the checkboard texture.

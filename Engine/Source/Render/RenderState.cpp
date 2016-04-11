@@ -8,8 +8,9 @@
 void RenderState::link()
 {
     programId = glCreateProgram();
-    glAttachShader(programId, static_cast<GLShaderImpl*>(vertexShader->impl[1])->id);
-    glAttachShader(programId, static_cast<GLShaderImpl*>(pixelShader->impl[1])->id);
+
+    glAttachShader(programId, vertexShader->glImpl->id);
+    glAttachShader(programId, pixelShader->glImpl->id);
     glLinkProgram(programId);
 
 

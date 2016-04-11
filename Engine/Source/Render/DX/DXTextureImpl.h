@@ -3,14 +3,16 @@
 
 #include "dx.h"
 #include <vector>
+#include "../Impl.h"
 
 class DXRenderer;
 class Texture;
 
-class DXTexture
+template <>
+class Impl<Texture, RendererType::DX>
 {
 public:
-    DXTexture(DXRenderer* renderer, Texture* resource);
+    Impl(DXRenderer* renderer, Texture* resource);
 
 protected:
     std::vector<UINT8> GenerateChessboard();

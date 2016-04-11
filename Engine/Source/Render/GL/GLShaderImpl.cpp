@@ -8,7 +8,7 @@
 #include <sstream>
 #include <iostream>
 
-GLShaderImpl::GLShaderImpl(GLRenderer* renderer, Shader* shader)
+Impl<Shader, RendererType::GL>::Impl(GLRenderer* renderer, Shader* shader)
 {
     auto isVerts = shader->type == Shader::Type::Vertex;
 

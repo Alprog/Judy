@@ -7,6 +7,7 @@
 #include <windows.h>
 
 #include "Render/RenderManager.h"
+#include "Render/RendererType.h"
 
 Window* currentEventWindow = NULL;
 
@@ -81,7 +82,7 @@ WinWindow::WinWindow()
 
     renderTarget = new WinRenderTarget(hWnd);
 
-    renderer = RenderManager::Instance()->renderers[1];
+    renderer = RenderManager::Instance()->renderers[(int)RendererType::DX];
 
     //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
     //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);

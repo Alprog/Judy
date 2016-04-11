@@ -1,15 +1,17 @@
 
 #pragma once
 
+#include "../Impl.h"
 #include "gl.h"
 
 class GLRenderer;
 class Texture;
 
-class GLTextureImpl
+template <>
+class Impl<Texture, RendererType::GL>
 {
 public:
-    GLTextureImpl(GLRenderer* renderer, Texture* texture);
+    Impl(GLRenderer* renderer, Texture* texture);
 
     GLuint id;
 };
