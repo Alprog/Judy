@@ -21,8 +21,14 @@ Model::Model()
     renderState->link();
 }
 
+#include "Render/DX/DXConstantBufferImpl.h"
+
 void Model::Render(Matrix matrix, Renderer* renderer)
 {
+    auto impl = renderState->constantBuffer->dxImpl;
+    impl->data.MVP = matrix ;//* Matrix::OrthographicLH(2, 2, -2, 2);
+    impl->Update();
+
     renderer->Draw(mesh, matrix, renderState);
     base::Render(matrix, renderer);
 }

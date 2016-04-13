@@ -23,6 +23,8 @@ DXRenderer::~DXRenderer()
 }
 
 DXPipelineState* state = nullptr;
+D3D12_VIEWPORT viewport;
+D3D12_RECT scissorRect;
 
 void DXRenderer::Init()
 {
@@ -94,6 +96,15 @@ void DXRenderer::CreateDescriptorHeap()
     if (FAILED(result)) throw;
 
     rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    //-----------
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    result = device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+    if (FAILED(result)) throw;
 
     //-----------
 
@@ -177,6 +188,32 @@ ComPtr<IDXGISwapChain3> DXRenderer::CreateSwapChain(HWND hwnd, int width, int he
         rtvHandle.Offset(1, rtvDescriptorSize);
     }
 
+    CD3DX12_RESOURCE_DESC resourceDesc(
+        D3D12_RESOURCE_DIMENSION_TEXTURE2D, 0,
+        static_cast<UINT>(width),
+        static_cast<UINT>(height),
+        1, 1, DXGI_FORMAT_D32_FLOAT, 1, 0,
+        D3D12_TEXTURE_LAYOUT_UNKNOWN,
+        D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE);
+
+    D3D12_CLEAR_VALUE clearValue;
+    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+    clearValue.DepthStencil.Depth = 1.0f;
+    clearValue.DepthStencil.Stencil = 0;
+
+    result = device->CreateCommittedResource(
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &clearValue,
+        IID_PPV_ARGS(&depthStencil));
+    if (FAILED(result)) throw;
+
+    depthStencil->SetName(L"DepthStencil");
+
+    device->CreateDepthStencilView(depthStencil.Get(), nullptr, dsvHeap->GetCPUDescriptorHandleForHeapStart());
+
     return swapChain3;
 }
 
@@ -198,16 +235,13 @@ void DXRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     commandList->IASetVertexBuffers(0, 1, &mesh->vertexBuffer->dxImpl->vertexBufferView);
     commandList->IASetIndexBuffer(&mesh->indexBuffer->dxImpl->indexBufferView);
 
-    commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
+    commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
 void DXRenderer::DrawQuad(Quad* quad)
 {
 
 }
-
-D3D12_VIEWPORT viewport;
-D3D12_RECT scissorRect;
 
 void DXRenderer::PopulateCommandList(Node* scene)
 {
@@ -248,10 +282,12 @@ void DXRenderer::PopulateCommandList(Node* scene)
                                  D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
-    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvHeap->GetCPUDescriptorHandleForHeapStart());
+    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
     const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
     commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    commandList->ClearDepthStencilView(dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     scene->Render(scene->transform.getMatrix(), this);
 

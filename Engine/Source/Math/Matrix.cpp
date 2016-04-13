@@ -2,6 +2,10 @@
 #include "Matrix.h"
 #include "math.h"
 
+#define _XM_NO_INTRINSICS_
+
+#include "DirectXMath.h"
+
 const Matrix Matrix::Identity =
 {
     1, 0, 0, 0,
@@ -80,9 +84,9 @@ Matrix Matrix::Rotation(Quaternion rotation)
 
     return
     {
-      1 - (yy2 + zz2), xy2 - zw2, xz2 + yw2, 0,
-      xy2 + zw2, 1 - (xx2 + zz2), yz2 - xw2, 0,
-      xz2 - yw2, yz2 + xw2, 1 - (xx2 + yy2), 0,
+      1 - (yy2 + zz2), xy2 + zw2, xz2 - yw2, 0,
+      xy2 - zw2, 1 - (xx2 + zz2), yz2 + xw2, 0,
+      xz2 + yw2, yz2 - xw2, 1 - (xx2 + yy2), 0,
       0, 0, 0, 1
     };
 }
@@ -142,6 +146,21 @@ Matrix Matrix::Scaling(Vector3 s)
 
 Matrix Matrix::TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling)
 {
+
+    DirectX::FXMMATRIX a = DirectX::XMMatrixRotationZ(0.9);
+
+    printf("%f %f %f %f\n", a._11, a._12, a._13, a._14);
+    printf("%f %f %f %f\n", a._21, a._22, a._23, a._24);
+    printf("%f %f %f %f\n", a._31, a._32, a._33, a._34);
+    printf("%f %f %f %f\n", a._41, a._42, a._43, a._44);
+    printf("-------\n");
+    /*printf("%f %f %f %f\n", b.m11, b.m12, b.m13, b.m14);
+    printf("%f %f %f %f\n", b.m21, b.m22, b.m23, b.m24);
+    printf("%f %f %f %f\n", b.m31, b.m32, b.m33, b.m34);
+    printf("%f %f %f %f\n", b.m41, b.m42, b.m43, b.m44);*/
+
+    fflush(stdout);
+
     return Scaling(scaling) * Rotation(rotation) * Translation(translation);
 }
 

@@ -59,9 +59,11 @@ private:
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
+    ComPtr<ID3D12DescriptorHeap> dsvHeap;
     ComPtr<ID3D12DescriptorHeap> srvCbvHeap;
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ComPtr<ID3D12Resource> renderTargets[2];
+    ComPtr<ID3D12Resource> depthStencil;
     UINT rtvDescriptorSize;
     UINT srvCbvDescriptorSize;
 
