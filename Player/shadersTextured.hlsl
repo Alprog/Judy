@@ -11,7 +11,7 @@
 
 cbuffer ConstantBuffer : register(b0)
 {
-	float4x4 MVP;
+	row_major float4x4 MVP;
 };
 
 struct PSInput

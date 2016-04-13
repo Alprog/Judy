@@ -26,7 +26,7 @@ Model::Model()
 void Model::Render(Matrix matrix, Renderer* renderer)
 {
     auto impl = renderState->constantBuffer->dxImpl;
-    impl->data.MVP = matrix ;//* Matrix::OrthographicLH(2, 2, -2, 2);
+    impl->data.MVP = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
     impl->Update();
 
     renderer->Draw(mesh, matrix, renderState);

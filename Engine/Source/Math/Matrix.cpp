@@ -149,11 +149,11 @@ Matrix Matrix::TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling)
 
     DirectX::FXMMATRIX a = DirectX::XMMatrixRotationZ(0.9);
 
-    printf("%f %f %f %f\n", a._11, a._12, a._13, a._14);
+    /*printf("%f %f %f %f\n", a._11, a._12, a._13, a._14);
     printf("%f %f %f %f\n", a._21, a._22, a._23, a._24);
     printf("%f %f %f %f\n", a._31, a._32, a._33, a._34);
     printf("%f %f %f %f\n", a._41, a._42, a._43, a._44);
-    printf("-------\n");
+    printf("-------\n");*/
     /*printf("%f %f %f %f\n", b.m11, b.m12, b.m13, b.m14);
     printf("%f %f %f %f\n", b.m21, b.m22, b.m23, b.m24);
     printf("%f %f %f %f\n", b.m31, b.m32, b.m33, b.m34);

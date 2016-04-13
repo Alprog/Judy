@@ -64,8 +64,15 @@ void Window::Update()
     static float a = 0;
     a += 0.003f;
 
-    auto rotation = Quaternion::YawPitchRoll(a, a / 3, 0);
+    auto rotation = Quaternion::YawPitchRoll(a, 0, 0);
     scene->transform.setRotation(rotation);
+
+    /*auto c = Vector3(1, 1, 1);
+    auto b = c * Matrix::RotationZ(a);
+    printf("%f %f %f\n", b.x, b.y, b.z);
+    fflush(stdout);*/
+
+    //scene->transform.setTranslation(Vector3(0, a, 0));
 }
 
 void Window::Render()
