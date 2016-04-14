@@ -74,7 +74,9 @@ HEADERS += \
     Source/Render/ConstantBuffer.h \
     Source/Render/DX/DXTextureImpl.h \
     Source/Render/DX/DXShaderImpl.h \
-    Source/Render/RendererBase.h
+    Source/Render/RendererBase.h \
+    Source/Render/DX/DXDescriptorHeap.h \
+    Source/Render/DX/DXDescriptorHandle.h
 
 SOURCES += \
     Source/App.cpp \
@@ -155,7 +157,9 @@ SOURCES += \
     Source/Render/ConstantBuffer.cpp \
     Source/Render/DX/DXTextureImpl.cpp \
     Source/Render/DX/DXShaderImpl.cpp \
-    Source/Render/Impl.cpp
+    Source/Render/Impl.cpp \
+    Source/Render/DX/DXDescriptorHeap.cpp \
+    Source/Render/DX/DXDescriptorHandle.cpp
 
 win {
     INCLUDEPATH += Source/Windows
