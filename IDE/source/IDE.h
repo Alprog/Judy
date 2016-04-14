@@ -24,7 +24,6 @@ public:
     void SaveSettings();
     MainWindow* GetMainWindow();
     void FollowToCall(CallInfo callInfo);
-    Renderer* GetRenderer() const;
 
 private:
     std::string GetSettingsFilename();

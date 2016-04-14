@@ -92,11 +92,3 @@ void IDE::OnPlayerStateChanged()
         FollowToCall(calls[0]);
     }
 }
-
-#include "Render/GL/GLRenderer.h"
-
-Renderer* IDE::GetRenderer() const
-{
-    static GLRenderer renderer;
-    return &renderer;
-}
