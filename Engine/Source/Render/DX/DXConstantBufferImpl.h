@@ -17,7 +17,6 @@ public:
     void Update();
 
     ComPtr<ID3D12Resource> constantBuffer;
-    D3D12_VERTEX_BUFFER_VIEW constantBufferView;
 
     struct
     {

@@ -29,7 +29,7 @@ Window::Window()
     scene = node;
     scene->transform.setScaling(Vector3::One * 0.3f);
 
-    /*scene->AddChild(c1);
+    scene->AddChild(c1);
     scene->AddChild(c2);
 
     c1->transform.setTranslation(Vector3(0.9, 0, -1));
@@ -48,7 +48,7 @@ Window::Window()
     Node* obj = serializer->Deserialize<Node*>(text);
     text = serializer->Serialize(obj);
     printf(text.c_str());
-    fflush(stdout);*/
+    fflush(stdout);
 
     Retain();
 }
