@@ -22,6 +22,5 @@ DXDescriptorHeap::DXDescriptorHeap(ID3D12Device* device, UINT maxCount)
 
 DXDescriptorHandle DXDescriptorHeap::GetNextHandle()
 {
-    return DXDescriptorHandle(this, descriptorCount);
-    descriptorCount++;
+    return DXDescriptorHandle(this, descriptorCount++);
 }

@@ -8,6 +8,7 @@ class DXDescriptorHeap;
 
 struct DXDescriptorHandle
 {
+    DXDescriptorHandle();
     DXDescriptorHandle(DXDescriptorHeap* heap, int index);
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPU();

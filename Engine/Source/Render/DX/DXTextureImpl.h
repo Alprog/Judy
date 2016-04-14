@@ -5,6 +5,8 @@
 #include <vector>
 #include "../Impl.h"
 
+#include "DXDescriptorHandle.h"
+
 class DXRenderer;
 class Texture;
 
@@ -19,4 +21,5 @@ protected:
 
 public:
     ComPtr<ID3D12Resource> texture;
+    DXDescriptorHandle descriptorHandle;
 };

@@ -23,9 +23,8 @@ Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffe
     cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
     cbvDesc.SizeInBytes = (sizeof(data) + 255) & ~255;
 
-    auto heap = renderer->GetSrvCbvHeap();
-
-    device->CreateConstantBufferView(&cbvDesc, heap->GetCpuHandle(1));
+    descriptorHandle = renderer->GetSrvCbvHeap()->GetNextHandle();
+    device->CreateConstantBufferView(&cbvDesc, descriptorHandle.GetCPU());
 
     ZeroMemory(&data, sizeof(data));
 

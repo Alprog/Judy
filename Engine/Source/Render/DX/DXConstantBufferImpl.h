@@ -4,6 +4,7 @@
 #include "../Impl.h"
 #include "dx.h"
 #include "Matrix.h"
+#include "DXDescriptorHandle.h"
 
 class ConstantBuffer;
 class DXRenderer;
@@ -25,4 +26,6 @@ public:
     data;
 
     UINT8* gpuDataBegin;
+
+    DXDescriptorHandle descriptorHandle;
 };

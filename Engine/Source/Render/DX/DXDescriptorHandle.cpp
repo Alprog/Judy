@@ -2,6 +2,12 @@
 #include "DXDescriptorHandle.h"
 #include "DXDescriptorHeap.h"
 
+DXDescriptorHandle::DXDescriptorHandle()
+    : heap {nullptr}
+    , index {0}
+{
+}
+
 DXDescriptorHandle::DXDescriptorHandle(DXDescriptorHeap* heap, int index)
     : heap {heap}
     , index {index}

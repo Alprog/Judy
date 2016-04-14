@@ -69,9 +69,8 @@ Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = 1;
 
-    auto heap = renderer->GetSrvCbvHeap();
-
-    device->CreateShaderResourceView(texture.Get(), &srvDesc, heap->GetCpuHandle(0));
+    descriptorHandle = renderer->GetSrvCbvHeap()->GetNextHandle();
+    device->CreateShaderResourceView(texture.Get(), &srvDesc, descriptorHandle.GetCPU());
 
     static_cast<DXRenderer*>(renderer)->WaitForPreviousFrame();
 

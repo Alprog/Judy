@@ -12,6 +12,9 @@
 #include "../VertexBuffer.h"
 #include "../IndexBuffer.h"
 #include "../Shader.h"
+#include "../Texture.h"
+#include "../ConstantBuffer.h"
+#include "DXConstantBufferImpl.h"
 #include "DXDescriptorHeap.h"
 
 DXRenderer::DXRenderer()
@@ -223,6 +226,9 @@ void DXRenderer::Clear(Color color)
 
 void DXRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
+    commandList->SetGraphicsRootDescriptorTable(0, renderState->texture->dxImpl->descriptorHandle.GetGPU());
+    commandList->SetGraphicsRootDescriptorTable(1, renderState->constantBuffer->dxImpl->descriptorHandle.GetGPU());
+
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     commandList->IASetVertexBuffers(0, 1, &mesh->vertexBuffer->dxImpl->vertexBufferView);
@@ -255,10 +261,6 @@ void DXRenderer::PopulateCommandList(Node* scene)
 
     ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->Get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-
-    commandList->SetGraphicsRootDescriptorTable(0, srvCbvHeap->GetGpuHandle(0));
-    commandList->SetGraphicsRootDescriptorTable(1, srvCbvHeap->GetGpuHandle(1));
 
 
     viewport.Width = static_cast<float>(800);
