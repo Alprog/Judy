@@ -11,6 +11,7 @@ class DXDescriptorHeap
 public:
     DXDescriptorHeap(ID3D12Device* device, UINT maxCount);
 
+    ID3D12DescriptorHeap* Get() { return heap.Get(); }
     DXDescriptorHandle GetNextHandle();
 
     inline CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(int index)

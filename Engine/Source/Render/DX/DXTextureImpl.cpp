@@ -5,6 +5,7 @@
 #include "d3dx12.h"
 #include "Images.h"
 #include "../Texture.h"
+#include "DXDescriptorHeap.h"
 
 static const UINT TexturePixelSize = 4;
 
@@ -14,7 +15,6 @@ Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
 
     auto device = renderer->GetDevice();
     auto commandList = renderer->GetCommandList();
-    auto srvCbvHeap = renderer->GetSrvCbvHeap();
     auto commandAllocator = renderer->GetCommandAllocator();
     auto commandQueue = renderer->GetCommandQueue();
 
@@ -69,7 +69,9 @@ Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = 1;
 
-    device->CreateShaderResourceView(texture.Get(), &srvDesc, srvCbvHeap->GetCPUDescriptorHandleForHeapStart());
+    auto heap = renderer->GetSrvCbvHeap();
+
+    device->CreateShaderResourceView(texture.Get(), &srvDesc, heap->GetCpuHandle(0));
 
     static_cast<DXRenderer*>(renderer)->WaitForPreviousFrame();
 

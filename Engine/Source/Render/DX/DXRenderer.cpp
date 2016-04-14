@@ -12,6 +12,7 @@
 #include "../VertexBuffer.h"
 #include "../IndexBuffer.h"
 #include "../Shader.h"
+#include "DXDescriptorHeap.h"
 
 DXRenderer::DXRenderer()
 {
@@ -108,15 +109,7 @@ void DXRenderer::CreateDescriptorHeap()
 
     //-----------
 
-    D3D12_DESCRIPTOR_HEAP_DESC srvCbvHeapDesc = {};
-    srvCbvHeapDesc.NumDescriptors = 2;
-    srvCbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    srvCbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-    result = device->CreateDescriptorHeap(&srvCbvHeapDesc, IID_PPV_ARGS(&srvCbvHeap));
-    if (FAILED(result)) throw;
-
-    srvCbvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    srvCbvHeap = new DXDescriptorHeap(device.Get(), 10);
 }
 
 void DXRenderer::CreateCommandListAndFence()
@@ -260,13 +253,12 @@ void DXRenderer::PopulateCommandList(Node* scene)
 
     commandList->SetGraphicsRootSignature(state->rootSignature.Get());
 
-    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap.Get() };
+    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->Get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-    CD3DX12_GPU_DESCRIPTOR_HANDLE handle(srvCbvHeap->GetGPUDescriptorHandleForHeapStart());
-    commandList->SetGraphicsRootDescriptorTable(0, handle);
-    handle.Offset(1, srvCbvDescriptorSize);
-    commandList->SetGraphicsRootDescriptorTable(1, handle);
+
+    commandList->SetGraphicsRootDescriptorTable(0, srvCbvHeap->GetGpuHandle(0));
+    commandList->SetGraphicsRootDescriptorTable(1, srvCbvHeap->GetGpuHandle(1));
 
 
     viewport.Width = static_cast<float>(800);

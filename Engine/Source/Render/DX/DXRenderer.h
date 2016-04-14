@@ -20,6 +20,7 @@
 class Texture;
 class Shader;
 class ConstantBuffer;
+class DXDescriptorHeap;
 
 class DXRenderer : public RendererBase<DXRenderer>
 {
@@ -50,22 +51,21 @@ public:
 
     inline ID3D12Device* GetDevice() { return device.Get(); }
     inline ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
-    inline ID3D12DescriptorHeap* GetSrvCbvHeap() { return srvCbvHeap.Get(); }
+    inline DXDescriptorHeap* GetSrvCbvHeap() { return srvCbvHeap; }
 
     inline ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
     inline ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
-    inline UINT GetSrvCbvDescriptorSize() { return srvCbvDescriptorSize; }
+
 private:
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> commandQueue;
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
     ComPtr<ID3D12DescriptorHeap> dsvHeap;
-    ComPtr<ID3D12DescriptorHeap> srvCbvHeap;
+    DXDescriptorHeap* srvCbvHeap;
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ComPtr<ID3D12Resource> renderTargets[2];
     ComPtr<ID3D12Resource> depthStencil;
     UINT rtvDescriptorSize;
-    UINT srvCbvDescriptorSize;
 
     ComPtr<ID3D12GraphicsCommandList> commandList;
     UINT frameIndex;

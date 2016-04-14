@@ -3,6 +3,8 @@
 #include "DXRenderer.h"
 #include "d3dx12.h"
 
+#include "DXDescriptorHeap.h"
+
 Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffer* cb)
 {
     auto device = renderer->GetDevice();
@@ -21,9 +23,9 @@ Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffe
     cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
     cbvDesc.SizeInBytes = (sizeof(data) + 255) & ~255;
 
-    CD3DX12_CPU_DESCRIPTOR_HANDLE handle(renderer->GetSrvCbvHeap()->GetCPUDescriptorHandleForHeapStart());
-    handle.Offset(1, renderer->GetSrvCbvDescriptorSize());
-    device->CreateConstantBufferView(&cbvDesc, handle);
+    auto heap = renderer->GetSrvCbvHeap();
+
+    device->CreateConstantBufferView(&cbvDesc, heap->GetCpuHandle(1));
 
     ZeroMemory(&data, sizeof(data));
 
