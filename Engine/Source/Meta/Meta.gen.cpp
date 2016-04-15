@@ -21,6 +21,7 @@
 #include "Object.h"
 #include "Quad.h"
 #include "Window.h"
+#include "Render/RendererFrontend.h"
 
 template <typename T>
 void Meta::DefineList()
@@ -190,7 +191,6 @@ void Meta::DefineClasses()
     ClassDefiner<Model>(this, "Model")
         .base<Node>()
         .constructor()
-        .method("Render", &Model::Render)
         .field("mesh", &Model::mesh)
         .field("renderState", &Model::renderState)
         .field("name", &Model::name).attr("Serialize").attr("Inspect")

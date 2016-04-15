@@ -1,7 +1,7 @@
 
 #pragma once
 
-enum class RendererType
+enum class RendererType : int
 {
     DX,
     GL,

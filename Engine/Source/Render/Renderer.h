@@ -10,6 +10,7 @@
 #include "RendererType.h"
 #include "Math/Matrix.h"
 #include <unordered_map>
+#include "RenderCommand.h"
 
 class Node;
 class Texture;
@@ -17,21 +18,18 @@ class Shader;
 class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
+class RenderCommand;
 
 class Renderer
 {
 public:
     virtual ~Renderer() {}
 
-    std::unordered_map<std::string, void*> textures;
+    void Render(Node* scene, RenderTarget* target);
+    virtual void Render(std::vector<RenderCommand> commands, RenderTarget* target) = 0;
+    virtual void Draw(RenderCommand renderCommand) = 0;
 
-    virtual void DrawQuad(Quad* quad) = 0;
-
-    virtual void Draw(Mesh* mesh, Matrix matrix, RenderState* renderState) = 0;
-
-    virtual void Render(Node* scene, RenderTarget* target) = 0;
     virtual void Clear(Color color) = 0;
-
 
     virtual void* CreateImpl(Texture* resource) = 0;
     virtual void* CreateImpl(VertexBuffer* resource) = 0;

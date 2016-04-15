@@ -4,6 +4,8 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 #include "Render/ConstantBuffer.h"
+#include "Render/PipelineState.h"
+#include "Render/RendererFrontend.h"
 
 using base = Node;
 
@@ -23,11 +25,10 @@ Model::Model()
 
 #include "Render/DX/DXConstantBufferImpl.h"
 
-void Model::Render(Matrix matrix, Renderer* renderer)
+void Model::Render(Matrix matrix, RendererFrontend* renderer)
 {
-    auto impl = renderState->constantBuffer->dxImpl;
-    impl->data.MVP = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
-    impl->Update();
+    renderState->constantBuffer->data.MVP = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
+    renderState->constantBuffer->dxImpl->Update();
 
     renderer->Draw(mesh, matrix, renderState);
     base::Render(matrix, renderer);

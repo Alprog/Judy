@@ -14,7 +14,7 @@ class [[Meta]] Quad : public Node
 public:
     Quad();
 
-    virtual void Render(Matrix matrix, Renderer* renderer) override;
+    virtual void Render(Matrix matrix, RendererFrontend* renderer) override;
 
     [[Serialize]] [[Inspect]] Vector2 Size;
     [[Serialize]] [[Inspect]] std::string Shader;

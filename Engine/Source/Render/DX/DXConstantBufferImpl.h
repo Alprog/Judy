@@ -13,19 +13,13 @@ template <>
 class Impl<ConstantBuffer, RendererType::DX>
 {
 public:
-    Impl(DXRenderer* renderer, ConstantBuffer* constantBuffer);
-
+    Impl(DXRenderer* renderer, ConstantBuffer* resource);
     void Update();
 
     ComPtr<ID3D12Resource> constantBuffer;
+    DXDescriptorHandle descriptorHandle;
 
-    struct
-    {
-        Matrix MVP;
-    }
-    data;
-
+    ConstantBuffer* resource;
     UINT8* gpuDataBegin;
 
-    DXDescriptorHandle descriptorHandle;
 };

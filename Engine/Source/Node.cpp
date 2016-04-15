@@ -101,7 +101,7 @@ void Node::UpdateHelper(float delta)
     }
 }
 
-void Node::Render(Matrix matrix, Renderer* renderer)
+void Node::Render(Matrix matrix, RendererFrontend* renderer)
 {
     for (auto& child : childs)
     {

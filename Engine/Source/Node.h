@@ -9,7 +9,7 @@
 #include "Ref.h"
 #include "Object.h"
 
-class Renderer;
+class RendererFrontend;
 
 class [[Meta]] Node : public Object
 {
@@ -32,7 +32,7 @@ public:
     void Update(float delta);
     virtual void UpdateHelper(float delta);
 
-    virtual void Render(Matrix matrix, Renderer* renderer);
+    virtual void Render(Matrix matrix, RendererFrontend* renderer);
 
     [[Serialize]] [[Inspect]] Transform transform;
 

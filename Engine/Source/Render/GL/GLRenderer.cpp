@@ -16,6 +16,7 @@
 
 #include "../IndexBuffer.h"
 #include "../VertexBuffer.h"
+#include "../ConstantBuffer.h"
 
 GLRenderer::GLRenderer()
 {
@@ -47,13 +48,15 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
     return context;
 }
 
-void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
+void GLRenderer::Draw(RenderCommand command)
 {
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
     glDisable(GL_CULL_FACE);
 
-    auto mvp = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
+    auto renderState = command.state;
+
+    auto mvp = renderState->constantBuffer->data.MVP;
 
     /*for (auto i = 0; i < mesh->vertices.size(); i++)
     {
@@ -75,8 +78,8 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    mesh->vertexBuffer->glImpl->Bind();
-    mesh->indexBuffer->glImpl->Bind();
+    command.mesh->vertexBuffer->glImpl->Bind();
+    command.mesh->indexBuffer->glImpl->Bind();
 
     glUseProgram(renderState->programId);
 
@@ -92,29 +95,12 @@ void GLRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)12);
 
-    glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, command.mesh->indices.size(), GL_UNSIGNED_INT, 0);
 
     glDisableVertexAttribArray(0);
 }
 
-void GLRenderer::DrawQuad(Quad* quad)
-{
-    glBegin(GL_TRIANGLES);
-
-    auto x = quad->Size.x;
-    auto y = quad->Size.y;
-
-    glVertex3f(-x, y, 0.0f);
-    glVertex3f(x, y, 0.0f);
-    glVertex3f(-x, -y, 0.0f);
-    glVertex3f(-x, -y, 0.0f);
-    glVertex3f(x, y, 0.0f);
-    glVertex3f(x, -y, 0.0f);
-
-    glEnd();
-}
-
-void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
+void GLRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
 {
     auto context = GetContext(renderTarget);
 
@@ -129,7 +115,10 @@ void GLRenderer::Render(Node* scene, RenderTarget* renderTarget)
     Color color { 0.3f, 0.3f, 0.3f, 1.0f };
     Clear(color);
 
-    scene->Render(scene->transform.getMatrix(), this);
+    for (auto& command : commands)
+    {
+        Draw(command);
+    }
 
     context->Swap();
 }

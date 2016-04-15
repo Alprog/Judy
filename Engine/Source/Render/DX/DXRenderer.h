@@ -30,9 +30,8 @@ public:
     DXRenderer();
     virtual ~DXRenderer();
 
-    virtual void Draw(Mesh* mesh, Matrix matrix, RenderState* renderState) override;
-    virtual void DrawQuad(Quad* quad) override;
-    virtual void Render(Node* scene, RenderTarget* renderTarget) override;
+    virtual void Render(std::vector<RenderCommand> commands, RenderTarget* target) override;
+    virtual void Draw(RenderCommand renderCommand) override;
 
     void Init();
     void EnableDebugLayer();
@@ -41,7 +40,7 @@ public:
     void CreateDescriptorHeap();
     void CreateCommandAllocator();
     void CreateCommandListAndFence();
-    void PopulateCommandList(Node* scene);
+    void PopulateCommandList(std::vector<RenderCommand> commands);
     void WaitForPreviousFrame();
 
     ComPtr<IDXGISwapChain3> GetSwapChain(RenderTarget* renderTarget);

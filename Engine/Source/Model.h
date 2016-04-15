@@ -12,7 +12,7 @@ struct [[Meta]] Model : public Node
 {
     Model();
 
-    virtual void Render(Matrix matrix, Renderer* renderer) override;
+    virtual void Render(Matrix matrix, RendererFrontend* renderer) override;
 
     Mesh* mesh;
     RenderState* renderState;

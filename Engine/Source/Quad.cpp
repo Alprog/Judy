@@ -10,8 +10,7 @@ Quad::Quad()
 {
 }
 
-void Quad::Render(Matrix matrix, Renderer* renderer)
+void Quad::Render(Matrix matrix, RendererFrontend* renderer)
 {
-    renderer->DrawQuad(this);
     base::Render(matrix, renderer);
 }

@@ -76,7 +76,8 @@ HEADERS += \
     Source/Render/DX/DXShaderImpl.h \
     Source/Render/RendererBase.h \
     Source/Render/DX/DXDescriptorHeap.h \
-    Source/Render/DX/DXDescriptorHandle.h
+    Source/Render/DX/DXDescriptorHandle.h \
+    Source/Render/PipelineState.h
 
 SOURCES += \
     Source/App.cpp \
@@ -159,7 +160,8 @@ SOURCES += \
     Source/Render/DX/DXShaderImpl.cpp \
     Source/Render/Impl.cpp \
     Source/Render/DX/DXDescriptorHeap.cpp \
-    Source/Render/DX/DXDescriptorHandle.cpp
+    Source/Render/DX/DXDescriptorHandle.cpp \
+    Source/Render/PipelineState.cpp
 
 win {
     INCLUDEPATH += Source/Windows

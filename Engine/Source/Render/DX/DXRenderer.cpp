@@ -224,10 +224,14 @@ void DXRenderer::Clear(Color color)
 
 }
 
-void DXRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
+void DXRenderer::Draw(RenderCommand renderCommand)
 {
-    commandList->SetGraphicsRootDescriptorTable(0, renderState->texture->dxImpl->descriptorHandle.GetGPU());
-    commandList->SetGraphicsRootDescriptorTable(1, renderState->constantBuffer->dxImpl->descriptorHandle.GetGPU());
+    auto mesh = renderCommand.mesh;
+    auto texture = renderCommand.state->texture;
+    auto constantBuffer = renderCommand.state->constantBuffer;
+
+    commandList->SetGraphicsRootDescriptorTable(0, texture->dxImpl->descriptorHandle.GetGPU());
+    commandList->SetGraphicsRootDescriptorTable(1, constantBuffer->dxImpl->descriptorHandle.GetGPU());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -237,12 +241,7 @@ void DXRenderer::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
-void DXRenderer::DrawQuad(Quad* quad)
-{
-
-}
-
-void DXRenderer::PopulateCommandList(Node* scene)
+void DXRenderer::PopulateCommandList(std::vector<RenderCommand> commands)
 {
     auto result = commandAllocator->Reset();
     if (FAILED(result)) throw;
@@ -283,7 +282,10 @@ void DXRenderer::PopulateCommandList(Node* scene)
     commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
     commandList->ClearDepthStencilView(dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-    scene->Render(scene->transform.getMatrix(), this);
+    for (auto& command : commands)
+    {
+        Draw(command);
+    }
 
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
                                 D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -307,11 +309,11 @@ void DXRenderer::WaitForPreviousFrame()
     fenceValue++;
 }
 
-void DXRenderer::Render(Node* scene, RenderTarget* renderTarget)
+void DXRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
 {
     auto swapChain = GetSwapChain(renderTarget);
 
-    PopulateCommandList(scene);
+    PopulateCommandList(commands);
 
     ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
     commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
