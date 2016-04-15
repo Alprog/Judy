@@ -23,13 +23,8 @@ Model::Model()
     renderState->link();
 }
 
-#include "Render/DX/DXConstantBufferImpl.h"
-
 void Model::Render(Matrix matrix, RendererFrontend* renderer)
 {
-    renderState->constantBuffer->data.MVP = matrix * Matrix::RotationX(3.1416) * Matrix::OrthographicLH(2, 2, -2, 2);
-    renderState->constantBuffer->dxImpl->Update();
-
     renderer->Draw(mesh, matrix, renderState);
     base::Render(matrix, renderer);
 }

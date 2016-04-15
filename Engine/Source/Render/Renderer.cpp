@@ -6,6 +6,7 @@
 void Renderer::Render(Node* scene, RenderTarget* target)
 {
     RendererFrontend frontEnd;
-    scene->Render(scene->transform.getMatrix(), &frontEnd);
+    frontEnd.Render(scene);
+
     this->Render(frontEnd.commands, target);
 }
