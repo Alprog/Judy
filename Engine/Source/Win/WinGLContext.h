@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "GLContext.h"
+#include "Render/GL/GLContext.h"
 #include <windows.h>
 
 class WinGLContext : GLContext

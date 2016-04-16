@@ -6,10 +6,10 @@
 
 #include <windows.h>
 
-#include "GLRenderer.h"
-#include "DXRenderer.h"
+#include "Render/RenderManager.h"
+#include "Render/RendererType.h"
 
-WindowM* currentEventWindow = NULL;
+Window* currentEventWindow = NULL;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -82,7 +82,7 @@ WinWindow::WinWindow()
 
     renderTarget = new WinRenderTarget(hWnd);
 
-    renderer = new GLRenderer();
+    renderer = RenderManager::Instance()->renderers[(int)RendererType::DX];
 
     //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
     //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
@@ -93,6 +93,7 @@ WinWindow::WinWindow()
 
 WinWindow::~WinWindow()
 {
+    delete renderer;
 }
 
 void WinWindow::ProcessEvents()

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "RenderTarget.h"
+#include "Render/RenderTarget.h"
 #include <windows.h>
 
 class WinRenderTarget : public RenderTarget

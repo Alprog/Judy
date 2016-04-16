@@ -14,12 +14,12 @@ App::App()
     Retain();
 }
 
-void App::AddWindow(WindowM* window)
+void App::AddWindow(Window* window)
 {
     AddedWindows.insert(window);
 }
 
-void App::RemoveWindow(WindowM* window)
+void App::RemoveWindow(Window* window)
 {
     RemovedWindows.insert(window);
 }
@@ -35,6 +35,7 @@ void App::UpdateCollection()
     for (auto window : RemovedWindows)
     {
         Windows.erase(window);
+        delete window;
     }
     RemovedWindows.clear();
 }

@@ -4,17 +4,17 @@
 #include "Object.h"
 #include "Ref.h"
 #include "Node.h"
-#include "RenderTarget.h"
-#include "Renderer.h"
+#include "Render/RenderTarget.h"
+#include "Render/Renderer.h"
 #include "Attributes.h"
 
-class [[Meta]] WindowM : public Object
+class [[Meta]] Window : public Object
 {
     friend class Meta;
 
 public:
-    static WindowM* Create();
-    virtual ~WindowM();
+    static Window* Create();
+    virtual ~Window();
 
     void show();
 
@@ -24,7 +24,7 @@ public:
     void Render();
 
 protected:
-    WindowM();
+    Window();
 
     [[Bind]] Ref<Node> scene;
     [[Bind]] RenderTarget* renderTarget;

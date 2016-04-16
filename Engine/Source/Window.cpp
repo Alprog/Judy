@@ -3,20 +3,20 @@
 #include "Platforms.h"
 
 #ifdef WIN
-#include "GLRenderer.h"
-#include "DXRenderer.h"
+#include "Render/GL/GLRenderer.h"
+#include "Render/DX/DXRenderer.h"
 #endif
 
 #include "Quad.h"
 #include "Model.h"
 #include "Meta/Serializer.h"
 
-WindowM* WindowM::Create()
+Window* Window::Create()
 {
     return new PlatformWindow();
 }
 
-WindowM::WindowM()
+Window::Window()
 {
     auto node = new Node();
 
@@ -32,11 +32,11 @@ WindowM::WindowM()
     scene->AddChild(c1);
     scene->AddChild(c2);
 
-    c1->transform.setTranslation(Vector3(2, 0, 0));
+    c1->transform.setTranslation(Vector3(0.9, 0, -1));
     c1->transform.setScaling(Vector3::One * 0.3f);
     c1->name = "child1";
 
-    c2->transform.setTranslation(Vector3(-2, 0, 0));
+    c2->transform.setTranslation(Vector3(-0.2, 0, -1));
     c2->transform.setScaling(Vector3::One * 0.4f);
     c2->name = "child2";
 
@@ -53,27 +53,34 @@ WindowM::WindowM()
     Retain();
 }
 
-WindowM::~WindowM()
+Window::~Window()
 {
 }
 
-void WindowM::Update()
+void Window::Update()
 {
     scene->Update(0.0);
 
     static float a = 0;
     a += 0.003f;
-    auto rotation = Quaternion::YawPitchRoll(a / 2, a, a / 2);
+
+    auto rotation = Quaternion::YawPitchRoll(a, 0, 0);
     scene->transform.setRotation(rotation);
 
+    /*auto c = Vector3(1, 1, 1);
+    auto b = c * Matrix::RotationZ(a);
+    printf("%f %f %f\n", b.x, b.y, b.z);
+    fflush(stdout);*/
+
+    //scene->transform.setTranslation(Vector3(0, a, 0));
 }
 
-void WindowM::Render()
+void Window::Render()
 {
     renderer->Render(scene, renderTarget);
 }
 
-void WindowM::show()
+void Window::show()
 {
 }
 

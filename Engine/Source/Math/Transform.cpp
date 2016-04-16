@@ -28,8 +28,6 @@ void Transform::setTranslation(Vector3 translation)
 {
     this->translation = translation;
     invalidateMatrix = true;
-
-    auto a = this->scaling;
 }
 
 void Transform::setRotation(Quaternion rotation)

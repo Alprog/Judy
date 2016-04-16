@@ -41,11 +41,46 @@ HEADERS += \
     Source/Meta/IClassMeta.h \
     Source/Meta/IFieldMeta.h \
     Source/Object.h \
-    Source/Ref.h
+    Source/Ref.h \
+    Source/TextureManager.h \
+    Source/ShaderManager.h \
+    Source/Render/Renderer.h \
+    Source/Render/RendererResource.h \
+    Source/Render/Impl.h \
+    Source/Render/Texture.h \
+    Source/Render/Shader.h \
+    Source/Render/IndexBuffer.h \
+    Source/Render/RenderCommand.h \
+    Source/Render/RendererFrontend.h \
+    Source/Render/RenderManager.h \
+    Source/Render/RenderState.h \
+    Source/Render/VertexBuffer.h \
+    Source/Render/RendererType.h \
+    Source/Render/DX/DXIndexBufferImpl.h \
+    Source/Render/DX/DXPipelineState.h \
+    Source/Render/DX/DXRenderer.h \
+    Source/Render/DX/DXSwapChain.h \
+    Source/Render/DX/DXVertexBufferImpl.h \
+    Source/Render/GL/GLContext.h \
+    Source/Render/GL/GLIndexBufferImpl.h \
+    Source/Render/GL/GLRenderer.h \
+    Source/Render/GL/GLShaderImpl.h \
+    Source/Render/GL/GLTextureImpl.h \
+    Source/Render/GL/GLVertexBufferImpl.h \
+    Source/Render/GL/gl.h \
+    Source/Render/DX/dx.h \
+    Source/Render/DX/DXConstantBufferImpl.h \
+    Source/Render/GL/GLConstantBufferImpl.h \
+    Source/Render/ConstantBuffer.h \
+    Source/Render/DX/DXTextureImpl.h \
+    Source/Render/DX/DXShaderImpl.h \
+    Source/Render/RendererBase.h \
+    Source/Render/DX/DXDescriptorHeap.h \
+    Source/Render/DX/DXDescriptorHandle.h \
+    Source/Render/PipelineState.h
 
 SOURCES += \
     Source/App.cpp \
-    Source/Renderer.cpp \
     Source/Window.cpp \
     Source/Scene.cpp \
     Source/Color.cpp \
@@ -97,7 +132,36 @@ SOURCES += \
     Source/Meta/PropertyMeta.cpp \
     Source/Meta/IClassMeta.cpp \
     Source/Object.cpp \
-    Source/Lua.cpp
+    Source/Lua.cpp \
+    Source/TextureManager.cpp \
+    Source/ShaderManager.cpp \
+    Source/Render/Texture.cpp \
+    Source/Render/DX/DXIndexBufferImpl.cpp \
+    Source/Render/DX/DXPipelineState.cpp \
+    Source/Render/DX/DXVertexBufferImpl.cpp \
+    Source/Render/GL/GLContext.cpp \
+    Source/Render/GL/GLIndexBufferImpl.cpp \
+    Source/Render/GL/GLRenderer.cpp \
+    Source/Render/GL/GLShaderImpl.cpp \
+    Source/Render/GL/GLTextureImpl.cpp \
+    Source/Render/GL/GLVertexBufferImpl.cpp \
+    Source/Render/IndexBuffer.cpp \
+    Source/Render/RenderCommand.cpp \
+    Source/Render/Renderer.cpp \
+    Source/Render/RendererFrontend.cpp \
+    Source/Render/RenderManager.cpp \
+    Source/Render/RenderState.cpp \
+    Source/Render/VertexBuffer.cpp \
+    Source/Render/Shader.cpp \
+    Source/Render/DX/DXConstantBufferImpl.cpp \
+    Source/Render/GL/GLConstantBufferImpl.cpp \
+    Source/Render/ConstantBuffer.cpp \
+    Source/Render/DX/DXTextureImpl.cpp \
+    Source/Render/DX/DXShaderImpl.cpp \
+    Source/Render/Impl.cpp \
+    Source/Render/DX/DXDescriptorHeap.cpp \
+    Source/Render/DX/DXDescriptorHandle.cpp \
+    Source/Render/PipelineState.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -105,16 +169,15 @@ win {
     SOURCES += \
         Source/Win/WinWindow.cpp \
         Source/Win/WinApp.cpp \
-        Source/DXSwapChain.cpp \
         Source/Win/WinRenderTarget.cpp \
         Source/Win/WinProcess.cpp \
         Source/Win/WinSocket.cpp \
-        Source/GLRenderer.cpp \
-        Source/GLContext.cpp \
-        Source/RenderTarget.cpp \
-        Source/DXRenderer.cpp \
-        Source/Win/WinGLContext.cpp \
-        Source/DXShaderResource.cpp
+        Source/Render/GL/GLRenderer.cpp \
+        Source/Render/GL/GLContext.cpp \
+        Source/Render/RenderTarget.cpp \
+        Source/Render/DX/DXRenderer.cpp \
+        Source/Render/DX/DXSwapChain.cpp \
+        Source/Win/WinGLContext.cpp
 }
 
 linux {

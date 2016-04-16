@@ -3,7 +3,7 @@
 #include <QLayout.h>
 #include "IDE.h"
 #include "WinRenderTarget.h"
-#include "Renderer.h"
+#include "Render/Renderer.h"
 
 SceneDocument::SceneDocument(Path path)
     : IDocument{path}
@@ -53,9 +53,12 @@ bool SceneDocument::Changed() const
     return false;
 }
 
+#include "Render/RenderManager.h"
+#include "Render/RendererType.h"
+
 void SceneDocument::Render()
 {
-    auto renderer = IDE::Instance()->GetRenderer();
+    auto renderer = RenderManager::Instance()->renderers[(int)RendererType::GL];
     renderer->Render(scene, renderTarget);
 }
 

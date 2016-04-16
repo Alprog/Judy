@@ -4,18 +4,18 @@
 #include "Node.h"
 
 #include "Mesh.h"
-#include "Material.h"
-#include "Renderer.h"
+#include "Render/RenderState.h"
+#include "Render/Renderer.h"
 #include "Attributes.h"
 
 struct [[Meta]] Model : public Node
 {
     Model();
 
-    virtual void Render(Matrix matrix, Renderer* renderer) override;
+    virtual void Render(Matrix matrix, RendererFrontend* renderer) override;
 
     Mesh* mesh;
-    Material* material;
+    RenderState* renderState;
 
     [[Serialize]] [[Inspect]] std::string name;
 };

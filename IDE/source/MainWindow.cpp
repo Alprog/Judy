@@ -15,9 +15,7 @@
 #include "RemotePlayer.h"
 
 #include "DocumentsPane.h"
-#include "../qt/ScintillaEditBase.h"
 #include <iostream>
-
 #include "Menu/FileMenu.h"
 #include "Menu/DebugMenu.h"
 #include "Menu/WindowMenu.h"

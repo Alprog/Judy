@@ -21,6 +21,7 @@
 #include "Object.h"
 #include "Quad.h"
 #include "Window.h"
+#include "Render/RendererFrontend.h"
 
 template <typename T>
 void Meta::DefineList()
@@ -71,10 +72,10 @@ void Meta::DefineClasses()
     DefineList<CallInfo>();
     DefineSet<int>();
     DefineList<float>();
-    DefineSet<WindowM*>();
+    DefineSet<Window*>();
     DefineList<Ref<Node>>();
     DefineList<int>();
-    DefineList<WindowM*>();
+    DefineList<Window*>();
 
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
@@ -133,9 +134,9 @@ void Meta::DefineClasses()
         .property("scaling").attr("Bind").attr("Inspect")
             .getter("getScaling", &Transform::getScaling)
             .setter("setScaling", &Transform::setScaling)
-        .field("translation", &Transform::translation).attr("Serialize").attr("Inspect")
-        .field("rotation", &Transform::rotation).attr("Serialize").attr("Inspect")
-        .field("scaling", &Transform::scaling).attr("Serialize").attr("Inspect")
+        .field("translation", &Transform::translation).attr("Serialize")
+        .field("rotation", &Transform::rotation).attr("Serialize")
+        .field("scaling", &Transform::scaling).attr("Serialize")
         .field("invalidateMatrix", &Transform::invalidateMatrix)
         .field("matrix", &Transform::matrix)
     ;
@@ -190,9 +191,8 @@ void Meta::DefineClasses()
     ClassDefiner<Model>(this, "Model")
         .base<Node>()
         .constructor()
-        .method("Render", &Model::Render)
         .field("mesh", &Model::mesh)
-        .field("material", &Model::material)
+        .field("renderState", &Model::renderState)
         .field("name", &Model::name).attr("Serialize").attr("Inspect")
     ;
 
@@ -235,16 +235,16 @@ void Meta::DefineClasses()
         .field("Texture", &Quad::Texture).attr("Serialize").attr("Inspect")
     ;
 
-    ClassDefiner<WindowM>(this, "WindowM")
+    ClassDefiner<Window>(this, "Window")
         .base<Object>()
-        .function("Create", &WindowM::Create)
-        .method("show", &WindowM::show)
-        .method("ProcessEvents", &WindowM::ProcessEvents)
-        .method("Update", &WindowM::Update)
-        .method("Render", &WindowM::Render)
-        .field("scene", &WindowM::scene).attr("Bind")
-        .field("renderTarget", &WindowM::renderTarget).attr("Bind")
-        .field("renderer", &WindowM::renderer).attr("Bind")
+        .function("Create", &Window::Create)
+        .method("show", &Window::show)
+        .method("ProcessEvents", &Window::ProcessEvents)
+        .method("Update", &Window::Update)
+        .method("Render", &Window::Render)
+        .field("scene", &Window::scene).attr("Bind")
+        .field("renderTarget", &Window::renderTarget).attr("Bind")
+        .field("renderer", &Window::renderer).attr("Bind")
     ;
 }
 
