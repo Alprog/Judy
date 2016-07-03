@@ -5,5 +5,6 @@ enum class RendererType : int
 {
     DX,
     GL,
+    Vulkan,
     Count
 };

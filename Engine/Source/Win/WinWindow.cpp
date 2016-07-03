@@ -75,7 +75,7 @@ WinWindow::WinWindow()
     int y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 
     auto title = L"Judy Window";
-    hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, NULL, NULL, hInstance, NULL);
+    hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, nullptr, nullptr, hInstance, nullptr);
     currentEventWindow = NULL;
 
     dwStyle = WS_CHILD | WS_VISIBLE;

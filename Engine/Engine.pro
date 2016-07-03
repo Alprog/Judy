@@ -77,7 +77,15 @@ HEADERS += \
     Source/Render/RendererBase.h \
     Source/Render/DX/DXDescriptorHeap.h \
     Source/Render/DX/DXDescriptorHandle.h \
-    Source/Render/PipelineState.h
+    Source/Render/PipelineState.h \
+    Source/Render/RenderTarget.h \
+    Source/Render/Vulkan/VulkanRenderer.h \
+    Source/Render/Vulkan/vulkan.h \
+    Source/Render/Vulkan/VulkanConstantBufferImpl.h \
+    Source/Render/Vulkan/VulkanIndexBufferImpl.h \
+    Source/Render/Vulkan/VulkanShaderImpl.h \
+    Source/Render/Vulkan/VulkanTextureImpl.h \
+    Source/Render/Vulkan/VulkanVertexBufferImpl.h
 
 SOURCES += \
     Source/App.cpp \
@@ -161,7 +169,13 @@ SOURCES += \
     Source/Render/Impl.cpp \
     Source/Render/DX/DXDescriptorHeap.cpp \
     Source/Render/DX/DXDescriptorHandle.cpp \
-    Source/Render/PipelineState.cpp
+    Source/Render/PipelineState.cpp \
+    Source/Render/Vulkan/VulkanConstantBufferImpl.cpp \
+    Source/Render/Vulkan/VulkanIndexBufferImpl.cpp \
+    Source/Render/Vulkan/VulkanShaderImpl.cpp \
+    Source/Render/Vulkan/VulkanTextureImpl.cpp \
+    Source/Render/Vulkan/VulkanVertexBufferImpl.cpp \
+    Source/Render/Vulkan/VulkanRenderer.cpp
 
 win {
     INCLUDEPATH += Source/Windows
