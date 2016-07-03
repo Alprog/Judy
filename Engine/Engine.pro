@@ -179,6 +179,7 @@ SOURCES += \
 
 win {
     INCLUDEPATH += Source/Windows
+    INCLUDEPATH += "$$(Vulkan_SDK)\Include"
 
     SOURCES += \
         Source/Win/WinWindow.cpp \

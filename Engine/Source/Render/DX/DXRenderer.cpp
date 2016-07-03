@@ -261,7 +261,6 @@ void DXRenderer::PopulateCommandList(std::vector<RenderCommand> commands)
     ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->Get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-
     viewport.Width = static_cast<float>(800);
     viewport.Height = static_cast<float>(800);
     viewport.MaxDepth = 1.0f;
