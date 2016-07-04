@@ -26,5 +26,8 @@ public:
 protected:
     void Init();
 
+    void CheckLayers(std::vector<const char*>& names);
+    void CheckExtensions(std::vector<const char*>& names);
+
     VkInstance vulkanInstance;
 };
