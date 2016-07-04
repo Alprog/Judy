@@ -25,9 +25,18 @@ public:
 
 protected:
     void Init();
+    void Destroy();
+
+    void InitInstance();
+    void InitDevice();
 
     void CheckLayers(std::vector<const char*>& names);
     void CheckExtensions(std::vector<const char*>& names);
 
     VkInstance vulkanInstance;
+    VkDevice device;
+
+    PFN_vkCreateDebugReportCallbackEXT regDebugExt;
+    PFN_vkDestroyDebugReportCallbackEXT unregDebugExt;
+    VkDebugReportCallbackEXT debugExtension;
 };
