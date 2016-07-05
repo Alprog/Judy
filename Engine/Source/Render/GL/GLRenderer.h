@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../Renderer.h"
-#include "../RendererBase.h"
 
 #include "GLContext.h"
 
@@ -12,11 +11,12 @@
 #include "GLIndexBufferImpl.h"
 #include "GLVertexBufferImpl.h"
 #include "GLConstantBufferImpl.h"
+#include "../RendererBase.h"
 
 class Shader;
 class Texture;
 
-class GLRenderer : public RendererBase<GLRenderer>
+class GLRenderer : public RendererBase<GLRenderer, RendererType::GL>
 {
 public:
     static const RendererType rendererType = RendererType::GL;

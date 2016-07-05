@@ -230,13 +230,13 @@ void DXRenderer::Draw(RenderCommand renderCommand)
     auto texture = renderCommand.state->texture;
     auto constantBuffer = renderCommand.state->constantBuffer;
 
-    commandList->SetGraphicsRootDescriptorTable(0, texture->dxImpl->descriptorHandle.GetGPU());
-    commandList->SetGraphicsRootDescriptorTable(1, constantBuffer->dxImpl->descriptorHandle.GetGPU());
+    commandList->SetGraphicsRootDescriptorTable(0, GetImpl(texture)->descriptorHandle.GetGPU());
+    commandList->SetGraphicsRootDescriptorTable(1, GetImpl(constantBuffer)->descriptorHandle.GetGPU());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    commandList->IASetVertexBuffers(0, 1, &mesh->vertexBuffer->dxImpl->vertexBufferView);
-    commandList->IASetIndexBuffer(&mesh->indexBuffer->dxImpl->indexBufferView);
+    commandList->IASetVertexBuffers(0, 1, &GetImpl(mesh->vertexBuffer)->vertexBufferView);
+    commandList->IASetIndexBuffer(&GetImpl(mesh->indexBuffer)->indexBufferView);
 
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }

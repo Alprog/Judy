@@ -175,7 +175,8 @@ SOURCES += \
     Source/Render/Vulkan/VulkanShaderImpl.cpp \
     Source/Render/Vulkan/VulkanTextureImpl.cpp \
     Source/Render/Vulkan/VulkanVertexBufferImpl.cpp \
-    Source/Render/Vulkan/VulkanRenderer.cpp
+    Source/Render/Vulkan/VulkanRenderer.cpp \
+    Source/Render/RendererResource.cpp
 
 win {
     INCLUDEPATH += Source/Windows

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../Renderer.h"
-#include "../RendererBase.h"
 
 #include <windows.h>
 
@@ -16,13 +15,14 @@
 #include "DXIndexBufferImpl.h"
 #include "DXTextureImpl.h"
 #include "DXConstantBufferImpl.h"
+#include "../RendererBase.h"
 
 class Texture;
 class Shader;
 class ConstantBuffer;
 class DXDescriptorHeap;
 
-class DXRenderer : public RendererBase<DXRenderer>
+class DXRenderer : public RendererBase<DXRenderer, RendererType::DX>
 {
 public:
     static const RendererType rendererType = RendererType::DX;

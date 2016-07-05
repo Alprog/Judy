@@ -15,7 +15,7 @@ RenderState::RenderState()
 
 void RenderState::link()
 {
-    programId = glCreateProgram();
+    /*programId = glCreateProgram();
 
     glAttachShader(programId, vertexShader->glImpl->id);
     glAttachShader(programId, pixelShader->glImpl->id);
@@ -34,5 +34,5 @@ void RenderState::link()
 
         glDeleteProgram(programId);
         programId = 0;
-    }
+    }*/
 }

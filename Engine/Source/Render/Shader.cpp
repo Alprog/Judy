@@ -17,7 +17,7 @@ void Shader::Load()
     {
         if (impl[i] == nullptr)
         {
-            impl[i] = renderers[i]->CreateImpl(this);
+            renderers[i]->CreateImpl(this);
         }
     }
 }

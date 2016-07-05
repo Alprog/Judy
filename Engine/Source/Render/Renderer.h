@@ -31,9 +31,9 @@ public:
 
     virtual void Clear(Color color) = 0;
 
-    virtual void* CreateImpl(Texture* resource) = 0;
-    virtual void* CreateImpl(VertexBuffer* resource) = 0;
-    virtual void* CreateImpl(IndexBuffer* resource) = 0;
-    virtual void* CreateImpl(Shader* resource) = 0;
-    virtual void* CreateImpl(ConstantBuffer* resource) = 0;
+    virtual void CreateImpl(Texture* resource) = 0;
+    virtual void CreateImpl(VertexBuffer* resource) = 0;
+    virtual void CreateImpl(IndexBuffer* resource) = 0;
+    virtual void CreateImpl(Shader* resource) = 0;
+    virtual void CreateImpl(ConstantBuffer* resource) = 0;
 };

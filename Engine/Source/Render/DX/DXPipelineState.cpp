@@ -54,8 +54,9 @@ DXPipelineState::DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRe
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
     psoDesc.pRootSignature = rootSignature.Get();
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader->dxImpl->blob.Get());
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->dxImpl->blob.Get());
+
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader->GetImpl(renderer)->blob.Get());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->GetImpl(renderer)->blob.Get());
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
     psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 
