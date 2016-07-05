@@ -16,29 +16,13 @@ public:
     unsigned int id;
 };
 
-template <typename T>
+template <typename ResourceType>
 class RendererResource : public RenderResource
 {
 public:
-    RendererResource()
-        : impl {}
-    {
-    }
-
     template <typename R, RendererType RT>
-    inline Impl<T, RT>* GetImpl(RendererBase<R, RT>* renderer)
+    inline Impl<ResourceType, RT>* GetImpl(RendererBase<R, RT>* renderer)
     {
-        return static_cast<Impl<T, RT>*>(renderer->resourceImpls[id]);
+        return static_cast<Impl<ResourceType, RT>*>(renderer->resourceImpls[id]);
     }
-
-    union
-    {
-        void* impl[RendererType::Count];
-
-        struct
-        {
-            Impl<T, RendererType::DX>* dxImpl;
-            Impl<T, RendererType::GL>* glImpl;
-        };
-    };
 };

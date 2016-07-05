@@ -8,8 +8,8 @@
 RenderManager::RenderManager()
 {
     renderers.push_back(new DXRenderer());
-    //renderers.push_back(new GLRenderer());
-    //renderers.push_back(new VulkanRenderer());
+    renderers.push_back(new GLRenderer());
+    renderers.push_back(new VulkanRenderer());
 }
 
 unsigned int RenderManager::RegisterResource(RenderResource* resource)

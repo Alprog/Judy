@@ -73,13 +73,13 @@ void GLRenderer::Draw(RenderCommand command)
     glUniform1i(location, 0);
 
     glActiveTexture(GL_TEXTURE0);
-    GLuint id = renderState->texture->glImpl->id;
+    GLuint id = GetImpl(renderState->texture)->id;
     glBindTexture(GL_TEXTURE_2D, id);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    command.mesh->vertexBuffer->glImpl->Bind();
-    command.mesh->indexBuffer->glImpl->Bind();
+    GetImpl(command.mesh->vertexBuffer)->Bind();
+    GetImpl(command.mesh->indexBuffer)->Bind();
 
     glUseProgram(renderState->programId);
 

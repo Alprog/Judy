@@ -14,7 +14,6 @@ public:
 
     std::vector<Renderer*> renderers;
 
-
     unsigned int RegisterResource(RenderResource* resource);
     void UnregisterResource(RenderResource* resource);
 

@@ -4,6 +4,8 @@
 #include "Shader.h"
 #include "GL/GLShaderImpl.h"
 #include <vector>
+#include "RenderManager.h"
+#include "GL/GLRenderer.h"
 
 RenderState::RenderState()
     : vertexShader {nullptr}
@@ -15,10 +17,12 @@ RenderState::RenderState()
 
 void RenderState::link()
 {
-    /*programId = glCreateProgram();
+    programId = glCreateProgram();
 
-    glAttachShader(programId, vertexShader->glImpl->id);
-    glAttachShader(programId, pixelShader->glImpl->id);
+    GLRenderer* renderer = (GLRenderer*)RenderManager::Instance()->renderers[1];
+
+    glAttachShader(programId, renderer->GetImpl(vertexShader)->id);
+    glAttachShader(programId, renderer->GetImpl(pixelShader)->id);
     glLinkProgram(programId);
 
 
@@ -34,5 +38,5 @@ void RenderState::link()
 
         glDeleteProgram(programId);
         programId = 0;
-    }*/
+    }
 }
