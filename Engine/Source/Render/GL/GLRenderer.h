@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../Renderer.h"
+#include "../IRenderer.h"
 
 #include "GLContext.h"
 
@@ -11,16 +11,14 @@
 #include "GLIndexBufferImpl.h"
 #include "GLVertexBufferImpl.h"
 #include "GLConstantBufferImpl.h"
-#include "../RendererBase.h"
+#include "../Renderer.h"
 
 class Shader;
 class Texture;
 
-class GLRenderer : public RendererBase<GLRenderer, RendererType::GL>
+class GLRenderer : public Renderer<RendererType::GL>
 {
 public:
-    static const RendererType rendererType = RendererType::GL;
-
     GLRenderer();
 
     virtual void Render(std::vector<RenderCommand> commands, RenderTarget* target) override;

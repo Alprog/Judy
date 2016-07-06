@@ -3,9 +3,9 @@
 
 #include "dx.h"
 #include "../Impl.h"
+#include "../VertexBuffer.h"
 
 class DXRenderer;
-class VertexBuffer;
 
 template <>
 class Impl<VertexBuffer, RendererType::DX>

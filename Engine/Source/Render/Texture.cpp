@@ -2,7 +2,7 @@
 #include "Texture.h"
 #include "Images.h"
 #include "RenderManager.h"
-#include "Renderer.h"
+#include "IRenderer.h"
 #include "Impl.h"
 
 Texture::Texture(std::string name)

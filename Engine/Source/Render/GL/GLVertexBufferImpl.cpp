@@ -1,8 +1,6 @@
 
 #include "GLVertexBufferImpl.h"
 
-#include "../VertexBuffer.h"
-
 Impl<VertexBuffer, RendererType::GL>::Impl(GLRenderer* renderer, VertexBuffer* vertexBuffer)
 {
     glGenBuffers(1, &id);

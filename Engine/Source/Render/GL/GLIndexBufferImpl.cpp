@@ -1,8 +1,6 @@
 
 #include "GLIndexBufferImpl.h"
 
-#include "../IndexBuffer.h"
-
 Impl<IndexBuffer, RendererType::GL>::Impl(GLRenderer* renderer, IndexBuffer* indexBuffer)
 {
     glGenBuffers(1, &id);

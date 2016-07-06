@@ -6,9 +6,9 @@
 #include "../Impl.h"
 
 #include "DXDescriptorHandle.h"
+#include "../Texture.h"
 
 class DXRenderer;
-class Texture;
 
 template <>
 class Impl<Texture, RendererType::DX>

@@ -1,39 +1,44 @@
 
 #pragma once
 
-#include "RenderTarget.h"
-#include "Color.h"
-#include "Quad.h"
+#include "IRenderer.h"
+#include "RendererResource.h"
 
-#include "Mesh.h"
-#include "RenderState.h"
-#include "RendererType.h"
-#include "Math/Matrix.h"
-#include <unordered_map>
-#include "RenderCommand.h"
-
-class Node;
-class Texture;
-class Shader;
-class VertexBuffer;
-class IndexBuffer;
-class ConstantBuffer;
-class RenderCommand;
-
-class Renderer
+template <RendererType RendererT>
+class Renderer : public IRenderer
 {
 public:
-    virtual ~Renderer() {}
+    virtual void CreateImpl(Texture* resource) override { Helper(resource); }
+    virtual void CreateImpl(Shader* resource) override { Helper(resource); }
+    virtual void CreateImpl(VertexBuffer* resource) override { Helper(resource); }
+    virtual void CreateImpl(ConstantBuffer* resource) override { Helper(resource); }
+    virtual void CreateImpl(IndexBuffer* resource) override { Helper(resource); }
 
-    void Render(Node* scene, RenderTarget* target);
-    virtual void Render(std::vector<RenderCommand> commands, RenderTarget* target) = 0;
-    virtual void Draw(RenderCommand renderCommand) = 0;
+    template <typename ResourceT>
+    inline Impl<ResourceT, RendererT>* GetImpl(ResourceT* const resource)
+    {
+        return static_cast<Impl<ResourceT, RendererT>*>(resourceImpls[resource->id]);
+    }
 
-    virtual void Clear(Color color) = 0;
+    template <typename ResourceT>
+    inline Impl<ResourceT, RendererT>* GetImpl(unsigned int id)
+    {
+        return static_cast<Impl<ResourceT, RendererT>*>(resourceImpls[id]);
+    }
 
-    virtual void CreateImpl(Texture* resource) = 0;
-    virtual void CreateImpl(VertexBuffer* resource) = 0;
-    virtual void CreateImpl(IndexBuffer* resource) = 0;
-    virtual void CreateImpl(Shader* resource) = 0;
-    virtual void CreateImpl(ConstantBuffer* resource) = 0;
+protected:
+    std::vector<void*> resourceImpls;
+
+    template <typename ResourceT>
+    inline void Helper(ResourceT* resource)
+    {
+        auto id = resource->id;
+
+        if (id >= resourceImpls.size())
+        {
+            resourceImpls.resize(id + 1);
+        }
+
+        resourceImpls[id] = (void*)new Impl<ResourceT, RendererT>(Any(this), resource);
+    }
 };

@@ -2,7 +2,6 @@
 #include "DXIndexBufferImpl.h"
 #include "DXRenderer.h"
 #include "d3dx12.h"
-#include "../IndexBuffer.h"
 
 Impl<IndexBuffer, RendererType::DX>::Impl(DXRenderer* renderer, IndexBuffer* ib)
 {

@@ -6,7 +6,6 @@
 #include "Vector4.h"
 #include "DXRenderer.h"
 #include "DirectXMath.h"
-#include "../VertexBuffer.h"
 
 struct VertexA
 {

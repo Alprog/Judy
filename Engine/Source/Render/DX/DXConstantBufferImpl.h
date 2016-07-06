@@ -5,8 +5,8 @@
 #include "dx.h"
 #include "Matrix.h"
 #include "DXDescriptorHandle.h"
+#include "../ConstantBuffer.h"
 
-class ConstantBuffer;
 class DXRenderer;
 
 template <>

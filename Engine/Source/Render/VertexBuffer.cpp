@@ -2,7 +2,7 @@
 #include "VertexBuffer.h"
 
 #include "RenderManager.h"
-#include "Renderer.h"
+#include "IRenderer.h"
 
 VertexBuffer::VertexBuffer()
 {

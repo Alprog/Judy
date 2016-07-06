@@ -2,7 +2,6 @@
 #include "GLShaderImpl.h"
 
 #include "GLRenderer.h"
-#include "../Shader.h"
 
 #include <fstream>
 #include <sstream>

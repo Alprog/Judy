@@ -2,8 +2,6 @@
 #include "GLTextureImpl.h"
 
 #include "Images.h"
-#include "../Texture.h"
-
 
 Impl<Texture, RendererType::GL>::Impl(GLRenderer* renderer, Texture* texture)
     : id {0}

@@ -5,14 +5,14 @@
 #include "RendererResource.h"
 #include <queue>
 
-class Renderer;
+class IRenderer;
 
 class RenderManager : public Singleton<RenderManager>
 {
 public:
     RenderManager();
 
-    std::vector<Renderer*> renderers;
+    std::vector<IRenderer*> renderers;
 
     unsigned int RegisterResource(RenderResource* resource);
     void UnregisterResource(RenderResource* resource);

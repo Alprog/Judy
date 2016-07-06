@@ -3,9 +3,9 @@
 
 #include "vulkan.h"
 #include "../Impl.h"
+#include "../ConstantBuffer.h"
 
 class VulkanRenderer;
-class ConstantBuffer;
 
 template <>
 class Impl<ConstantBuffer, RendererType::Vulkan>

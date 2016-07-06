@@ -2,7 +2,7 @@
 #include "IndexBuffer.h"
 
 #include "RenderManager.h"
-#include "Renderer.h"
+#include "IRenderer.h"
 
 IndexBuffer::IndexBuffer()
 {

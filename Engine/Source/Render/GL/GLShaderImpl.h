@@ -2,10 +2,10 @@
 #pragma once
 
 class GLRenderer;
-class Shader;
 
 #include "../Impl.h"
 #include "gl.h"
+#include "../Shader.h"
 
 template <>
 class Impl<Shader, RendererType::GL>

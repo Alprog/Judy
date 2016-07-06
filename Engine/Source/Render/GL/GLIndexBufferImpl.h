@@ -4,8 +4,8 @@
 #include "gl.h"
 
 #include "../Impl.h"
+#include "../IndexBuffer.h"
 
-class IndexBuffer;
 class GLRenderer;
 
 template <>

@@ -5,7 +5,7 @@
 
 #include "Mesh.h"
 #include "Render/RenderState.h"
-#include "Render/Renderer.h"
+#include "Render/IRenderer.h"
 #include "Attributes.h"
 
 struct [[Meta]] Model : public Node

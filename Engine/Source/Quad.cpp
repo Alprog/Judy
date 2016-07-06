@@ -1,6 +1,6 @@
 
 #include "Quad.h"
-#include "Render/Renderer.h"
+#include "Render/IRenderer.h"
 
 using base = Node;
 

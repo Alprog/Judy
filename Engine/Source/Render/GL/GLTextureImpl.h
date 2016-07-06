@@ -3,9 +3,9 @@
 
 #include "../Impl.h"
 #include "gl.h"
+#include "../Texture.h"
 
 class GLRenderer;
-class Texture;
 
 template <>
 class Impl<Texture, RendererType::GL>

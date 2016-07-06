@@ -2,8 +2,6 @@
 #include "DXConstantBufferImpl.h"
 #include "DXRenderer.h"
 #include "d3dx12.h"
-
-#include "../ConstantBuffer.h"
 #include "DXDescriptorHeap.h"
 
 Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffer* resource)

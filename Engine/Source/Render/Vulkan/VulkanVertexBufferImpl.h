@@ -3,9 +3,9 @@
 
 #include "vulkan.h"
 #include "../Impl.h"
+#include "../VertexBuffer.h"
 
 class VulkanRenderer;
-class VertexBuffer;
 
 template <>
 class Impl<VertexBuffer, RendererType::Vulkan>

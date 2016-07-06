@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../Renderer.h"
+#include "../IRenderer.h"
 
 #include "vulkan.h"
 
@@ -10,9 +10,9 @@
 #include "VulkanIndexBufferImpl.h"
 #include "VulkanVertexBufferImpl.h"
 #include "VulkanConstantBufferImpl.h"
-#include "../RendererBase.h"
+#include "../Renderer.h"
 
-class VulkanRenderer : public RendererBase<VulkanRenderer, RendererType::Vulkan>
+class VulkanRenderer : public Renderer<RendererType::Vulkan>
 {
 public:
     static const RendererType rendererType = RendererType::Vulkan;

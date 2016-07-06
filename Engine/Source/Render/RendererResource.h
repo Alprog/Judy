@@ -4,9 +4,6 @@
 #include "RendererType.h"
 #include "Impl.h"
 
-template <typename T, RendererType RT>
-class RendererBase;
-
 class RenderResource
 {
 public:
@@ -16,13 +13,16 @@ public:
     unsigned int id;
 };
 
+template <RendererType T>
+class Renderer;
+
 template <typename ResourceType>
 class RendererResource : public RenderResource
 {
 public:
-    template <typename R, RendererType RT>
-    inline Impl<ResourceType, RT>* GetImpl(RendererBase<R, RT>* renderer)
+    template <RendererType RendererT>
+    inline Impl<ResourceType, RendererT>* GetImpl(Renderer<RendererT>* renderer)
     {
-        return static_cast<Impl<ResourceType, RT>*>(renderer->resourceImpls[id]);
+        return renderer->GetImpl((ResourceType*)this);
     }
 };

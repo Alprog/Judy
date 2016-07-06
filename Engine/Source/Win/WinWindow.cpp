@@ -82,7 +82,7 @@ WinWindow::WinWindow()
 
     renderTarget = new WinRenderTarget(hWnd);
 
-    renderer = RenderManager::Instance()->renderers[(int)RendererType::Vulkan];
+    renderer = RenderManager::Instance()->renderers[(int)RendererType::GL];
 
     //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
     //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);

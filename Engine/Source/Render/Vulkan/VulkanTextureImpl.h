@@ -3,9 +3,9 @@
 
 #include "vulkan.h"
 #include "../Impl.h"
+#include "../Texture.h"
 
 class VulkanRenderer;
-class Texture;
 
 template <>
 class Impl<Texture, RendererType::Vulkan>

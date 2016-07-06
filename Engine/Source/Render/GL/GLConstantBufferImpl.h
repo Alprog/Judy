@@ -2,8 +2,8 @@
 #pragma once
 
 #include "../Impl.h"
+#include "../ConstantBuffer.h"
 
-class ConstantBuffer;
 class GLRenderer;
 
 template <>

@@ -4,9 +4,9 @@
 #include "gl.h"
 
 #include "../Impl.h"
+#include "../VertexBuffer.h"
 
 class GLRenderer;
-class VertexBuffer;
 
 template <>
 class Impl<VertexBuffer, RendererType::GL>

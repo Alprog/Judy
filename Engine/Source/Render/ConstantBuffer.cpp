@@ -2,7 +2,7 @@
 #include "ConstantBuffer.h"
 
 #include "RenderManager.h"
-#include "Renderer.h"
+#include "IRenderer.h"
 
 ConstantBuffer::ConstantBuffer()
 {

@@ -1,9 +1,9 @@
 
-#include "Renderer.h"
+#include "IRenderer.h"
 #include "RendererFrontend.h"
 #include "Node.h"
 
-void Renderer::Render(Node* scene, RenderTarget* target)
+void IRenderer::Render(Node* scene, RenderTarget* target)
 {
     RendererFrontend frontEnd;
     frontEnd.Render(scene);

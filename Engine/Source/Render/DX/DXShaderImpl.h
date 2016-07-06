@@ -4,9 +4,9 @@
 #include "../Shader.h"
 #include "dx.h"
 #include "../Impl.h"
+#include "../Shader.h"
 
 class DXRenderer;
-class Shader;
 
 template <>
 class Impl<Shader, RendererType::DX>

@@ -3,9 +3,9 @@
 
 #include "dx.h"
 #include "../Impl.h"
+#include "../IndexBuffer.h"
 
 class DXRenderer;
-class IndexBuffer;
 
 template <>
 class Impl<IndexBuffer, RendererType::DX>

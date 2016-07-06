@@ -3,9 +3,9 @@
 
 #include "vulkan.h"
 #include "../Impl.h"
+#include "../IndexBuffer.h"
 
 class VulkanRenderer;
-class IndexBuffer;
 
 template <>
 class Impl<IndexBuffer, RendererType::Vulkan>

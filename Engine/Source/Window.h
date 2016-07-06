@@ -5,7 +5,7 @@
 #include "Ref.h"
 #include "Node.h"
 #include "Render/RenderTarget.h"
-#include "Render/Renderer.h"
+#include "Render/IRenderer.h"
 #include "Attributes.h"
 
 class [[Meta]] Window : public Object
@@ -28,7 +28,7 @@ protected:
 
     [[Bind]] Ref<Node> scene;
     [[Bind]] RenderTarget* renderTarget;
-    [[Bind]] Renderer* renderer;
+    [[Bind]] IRenderer* renderer;
 
     //RenderTarget* RenderTarget1;
     //RenderTarget* RenderTarget2;

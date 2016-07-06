@@ -3,7 +3,7 @@
 #include <QLayout.h>
 #include "IDE.h"
 #include "WinRenderTarget.h"
-#include "Render/Renderer.h"
+#include "Render/IRenderer.h"
 
 SceneDocument::SceneDocument(Path path)
     : IDocument{path}

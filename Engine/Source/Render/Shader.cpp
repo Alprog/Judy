@@ -1,7 +1,7 @@
 
 #include "Shader.h"
 #include "RenderManager.h"
-#include "Renderer.h"
+#include "IRenderer.h"
 
 Shader::Shader(std::string source, Type type)
     : source {source}

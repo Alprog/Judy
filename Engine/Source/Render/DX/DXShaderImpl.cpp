@@ -1,6 +1,5 @@
 
 #include "DXShaderImpl.h"
-#include "DXShaderImpl.h"
 #include "d3dcompiler.h"
 #include <codecvt>
 

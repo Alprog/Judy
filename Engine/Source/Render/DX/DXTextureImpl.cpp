@@ -4,7 +4,6 @@
 
 #include "d3dx12.h"
 #include "Images.h"
-#include "../Texture.h"
 #include "DXDescriptorHeap.h"
 
 static const UINT TexturePixelSize = 4;

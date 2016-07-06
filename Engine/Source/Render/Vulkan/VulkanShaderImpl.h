@@ -3,9 +3,9 @@
 
 #include "vulkan.h"
 #include "../Impl.h"
+#include "../Shader.h"
 
 class VulkanRenderer;
-class Shader;
 
 template <>
 class Impl<Shader, RendererType::Vulkan>
