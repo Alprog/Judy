@@ -1,5 +1,6 @@
 
 #include "VulkanRenderer.h"
+#include <cassert>
 
 VulkanRenderer::VulkanRenderer()
 {
@@ -31,6 +32,15 @@ DebugCallback(VkFlags msgFlags, VkDebugReportObjectTypeEXT objType, uint64_t src
 void VulkanRenderer::Init()
 {
     InitInstance();
+    InitDevice();
+    InitSwapChain();
+}
+
+template <typename T>
+void VulkanRenderer::GetInstanceProcAddr(T& funcPointer, const char* funcName)
+{
+    funcPointer = (T)vkGetInstanceProcAddr(vulkanInstance, funcName);
+    assert(funcPointer);
 }
 
 void VulkanRenderer::InitInstance()
@@ -64,8 +74,11 @@ void VulkanRenderer::InitInstance()
         exit(err);
     }
 
-    regDebugExt = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(vulkanInstance, "vkCreateDebugReportCallbackEXT");
-    unregDebugExt = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(vulkanInstance, "vkDestroyDebugReportCallbackEXT");
+    GetInstanceProcAddr(regDebugExt, "vkCreateDebugReportCallbackEXT");
+    GetInstanceProcAddr(unregDebugExt, "vkDestroyDebugReportCallbackEXT");
+    GetInstanceProcAddr(getPhysicalDeviceSurfaceFormats, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+
+    //GetInstanceProcAddr(getPhysicalDeviceSurfaceFormats, vulkanInstance);
 
     VkDebugReportCallbackCreateInfoEXT debugInfo;
     debugInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
@@ -81,18 +94,30 @@ void VulkanRenderer::InitInstance()
     }
 }
 
+void VulkanRenderer::InitSurface()
+{
+    VkWin32SurfaceCreateInfoKHR surfaceInfo = {};
+    surfaceInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    surfaceInfo.pNext = nullptr;
+    surfaceInfo.flags = 0;
+    //surfaceInfo.hinstance = demo->connection;
+    //surfaceInfo.hwnd = demo->window;
+
+    auto err = vkCreateWin32SurfaceKHR(vulkanInstance, &surfaceInfo, nullptr, &surface);
+    assert(!err);
+}
+
 void VulkanRenderer::InitDevice()
 {
     uint32_t count = 0;
     vkEnumeratePhysicalDevices(vulkanInstance, &count, NULL);
 
-    VkPhysicalDevice gpu;
     if (count > 0)
     {
         VkPhysicalDevice* physicalDevices = new VkPhysicalDevice[count];
         vkEnumeratePhysicalDevices(vulkanInstance, &count, physicalDevices);
         gpu = physicalDevices[0];
-        delete[] physicalDevices;
+        //delete[] physicalDevices;
     }
 
     uint32_t queueFamilyIndex = 0; // hardcoded
@@ -127,6 +152,23 @@ void VulkanRenderer::InitDevice()
     {
         exit(0);
     }
+}
+
+void VulkanRenderer::InitSwapChain()
+{
+    uint32_t count;
+    auto err = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, nullptr);
+    assert(!err && count > 0);
+    VkSurfaceFormatKHR* formats = new VkSurfaceFormatKHR[count];
+    err = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, formats);
+
+    VkFormat format = formats[0].format;
+    VkColorSpaceKHR colorSpace = formats[0].colorSpace;
+    if (format == VK_FORMAT_UNDEFINED)
+    {
+        format = VK_FORMAT_B8G8R8A8_UNORM;
+    }
+
 }
 
 void VulkanRenderer::Destroy()

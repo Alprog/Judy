@@ -28,13 +28,22 @@ protected:
     void Destroy();
 
     void InitInstance();
+    void InitSurface();
     void InitDevice();
+    void InitSwapChain();
 
     void CheckLayers(std::vector<const char*>& names);
     void CheckExtensions(std::vector<const char*>& names);
 
     VkInstance vulkanInstance;
     VkDevice device;
+    VkPhysicalDevice gpu;
+    VkSurfaceKHR surface;
+
+    template <typename T>
+    void GetInstanceProcAddr(T& funcPointer, const char* funcName);
+
+    PFN_vkGetPhysicalDeviceSurfaceFormatsKHR getPhysicalDeviceSurfaceFormats = nullptr;
 
     PFN_vkCreateDebugReportCallbackEXT regDebugExt;
     PFN_vkDestroyDebugReportCallbackEXT unregDebugExt;
