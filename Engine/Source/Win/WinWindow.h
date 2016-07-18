@@ -16,6 +16,5 @@ public:
     HWND hWnd;
 
 private:
-
     HDC hDC;
 };

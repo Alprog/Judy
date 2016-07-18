@@ -12,6 +12,13 @@
 #include "VulkanConstantBufferImpl.h"
 #include "../Renderer.h"
 
+struct SwapchainBuffers
+{
+    VkImage image;
+    VkCommandBuffer cmd;
+    VkImageView view;
+};
+
 class VulkanRenderer : public Renderer<RendererType::Vulkan>
 {
 public:
@@ -28,22 +35,36 @@ protected:
     void Destroy();
 
     void InitInstance();
-    void InitSurface();
     void InitDevice();
-    void InitSwapChain();
+    void InitCommandBuffers();
+
+    void DrawHelper();
+
+    VkSurfaceKHR CreateSurface(RenderTarget* renderTarget);
+    VkSwapchainKHR CreateSwapChain(RenderTarget* renderTarget);
 
     void CheckLayers(std::vector<const char*>& names);
     void CheckExtensions(std::vector<const char*>& names);
 
+    VkSwapchainKHR GetSwapChain(RenderTarget* renderTarget);
+
     VkInstance vulkanInstance;
     VkDevice device;
     VkPhysicalDevice gpu;
-    VkSurfaceKHR surface;
+    VkQueue queue;
+    uint32_t queueFamilyIndex;
+    VkCommandBuffer setupCommandBuffer;
+    VkCommandBuffer drawCommandBuffer;
+    uint32_t bufferIndex;
+    SwapchainBuffers* buffers;
+
+    std::unordered_map<RenderTarget*, VkSwapchainKHR> swapChains;
 
     template <typename T>
     void GetInstanceProcAddr(T& funcPointer, const char* funcName);
 
     PFN_vkGetPhysicalDeviceSurfaceFormatsKHR getPhysicalDeviceSurfaceFormats = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR getPhysicalDeviceSurfaceCapabilities = nullptr;
 
     PFN_vkCreateDebugReportCallbackEXT regDebugExt;
     PFN_vkDestroyDebugReportCallbackEXT unregDebugExt;

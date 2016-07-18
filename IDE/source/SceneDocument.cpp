@@ -16,8 +16,9 @@ SceneDocument::SceneDocument(Path path)
     layout->addWidget(canvas);
     this->setLayout(layout);
 
+    auto hInstance = GetModuleHandle(nullptr);
     auto hWnd = (HWND)canvas->winId();
-    renderTarget = new WinRenderTarget(hWnd);
+    renderTarget = new WinRenderTarget(hInstance, hWnd);
 
     Reload();
 

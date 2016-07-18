@@ -9,7 +9,7 @@
 #include "Render/RenderManager.h"
 #include "Render/RendererType.h"
 
-Window* currentEventWindow = NULL;
+Window* currentEventWindow = nullptr;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -46,7 +46,7 @@ WinWindow::WinWindow()
 {
     SetProcessDPIAware();
 
-    HINSTANCE hInstance = GetModuleHandle(NULL);
+    auto hInstance = GetModuleHandle(nullptr);
 
     LPCWSTR className = L"MyClass";
 
@@ -76,11 +76,11 @@ WinWindow::WinWindow()
 
     auto title = L"Judy Window";
     hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, nullptr, nullptr, hInstance, nullptr);
-    currentEventWindow = NULL;
+    currentEventWindow = nullptr;
 
     dwStyle = WS_CHILD | WS_VISIBLE;
 
-    renderTarget = new WinRenderTarget(hWnd);
+    renderTarget = new WinRenderTarget(hInstance, hWnd);
 
     renderer = RenderManager::Instance()->renderers[(int)RendererType::Vulkan];
 
@@ -100,8 +100,8 @@ void WinWindow::ProcessEvents()
 {
     MSG msg;
     currentEventWindow = this;
-    PeekMessage(&msg, hWnd, NULL, NULL, PM_REMOVE);
+    PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE);
     TranslateMessage(&msg);
     DispatchMessage(&msg);
-    currentEventWindow = NULL;
+    currentEventWindow = nullptr;
 }
