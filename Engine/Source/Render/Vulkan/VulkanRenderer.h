@@ -12,11 +12,23 @@
 #include "VulkanConstantBufferImpl.h"
 #include "../Renderer.h"
 
-struct SwapchainBuffers
+struct RenderTargetContext
 {
-    VkImage image;
-    VkCommandBuffer cmd;
-    VkImageView view;
+    uint32_t width;
+    uint32_t height;
+    VkFormat colorFormat;
+    VkFormat depthFormat;
+
+    VkSwapchainKHR swapChain;
+    VkImage* presentImages;
+    VkImageView* presentImageViews;
+    uint32_t bufferIndex;
+
+    VkImage depthImage;
+    VkImageView depthImageView;
+
+    VkRenderPass renderPass;
+    VkFramebuffer* frameBuffers;
 };
 
 class VulkanRenderer : public Renderer<RendererType::Vulkan>
@@ -38,27 +50,35 @@ protected:
     void InitDevice();
     void InitCommandBuffers();
 
-    void DrawHelper();
-
-    VkSurfaceKHR CreateSurface(RenderTarget* renderTarget);
-    VkSwapchainKHR CreateSwapChain(RenderTarget* renderTarget);
-
     void CheckLayers(std::vector<const char*>& names);
     void CheckExtensions(std::vector<const char*>& names);
 
-    VkSwapchainKHR GetSwapChain(RenderTarget* renderTarget);
+    RenderTargetContext& GetContext(RenderTarget* renderTarget);
+    VkSurfaceKHR CreateSurface(RenderTarget* renderTarget);
+    VkSwapchainKHR CreateSwapChain(RenderTarget* renderTarget);
+    void InitPresentImages(RenderTargetContext& context);
+    void InitDepthBuffer(RenderTargetContext& context);
+    void InitRenderPass(RenderTargetContext& context);
+    void InitFrameBuffers(RenderTargetContext& context);
+
+    void DrawHelper(RenderTargetContext& context);
 
     VkInstance vulkanInstance;
     VkDevice device;
     VkPhysicalDevice gpu;
+    VkPhysicalDeviceMemoryProperties gpuMemoryProperties;
     VkQueue queue;
     uint32_t queueFamilyIndex;
     VkCommandBuffer setupCommandBuffer;
     VkCommandBuffer drawCommandBuffer;
-    uint32_t bufferIndex;
-    SwapchainBuffers* buffers;
 
-    std::unordered_map<RenderTarget*, VkSwapchainKHR> swapChains;
+
+    void SumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
+
+    void ResourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
+                         VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
+
+    std::unordered_map<RenderTarget*, RenderTargetContext> contexts;
 
     template <typename T>
     void GetInstanceProcAddr(T& funcPointer, const char* funcName);
