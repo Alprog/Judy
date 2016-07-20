@@ -20,6 +20,7 @@ struct RenderTargetContext
     VkFormat depthFormat;
 
     VkSwapchainKHR swapChain;
+    uint32_t imageCount;
     VkImage* presentImages;
     VkImageView* presentImageViews;
     uint32_t bufferIndex;

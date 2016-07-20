@@ -239,17 +239,16 @@ VkSwapchainKHR VulkanRenderer::CreateSwapChain(RenderTarget* renderTarget)
 
 void VulkanRenderer::InitPresentImages(RenderTargetContext& context)
 {
-    uint32_t imageCount;
-    auto err = vkGetSwapchainImagesKHR(device, context.swapChain, &imageCount, nullptr);
+    auto err = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, nullptr);
     assert(!err);
 
-    context.presentImages = new VkImage[imageCount];
-    err = vkGetSwapchainImagesKHR(device, context.swapChain, &imageCount, context.presentImages);
+    context.presentImages = new VkImage[context.imageCount];
+    err = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, context.presentImages);
     assert(!err);
 
-    context.presentImageViews = new VkImageView[imageCount];
+    context.presentImageViews = new VkImageView[context.imageCount];
 
-    for (auto i = 0; i < imageCount; i++)
+    for (auto i = 0; i < context.imageCount; i++)
     {
         VkImageViewCreateInfo viewInfo = {};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -427,7 +426,7 @@ void VulkanRenderer::DrawHelper(RenderTargetContext& context)
     ResourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, (VkAccessFlagBits)0, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
 
     VkClearValue clear_values[2] = {};
-    clear_values[0].color = {0.2f, 0.2f, 0.2f, 0.2f};
+    clear_values[0].color = {0.2f, 1.0f, 0.2f, 1.0f};
     clear_values[1].depthStencil = {0, 0};
 
     VkRenderPassBeginInfo rpBeginInfo = {};
@@ -439,12 +438,13 @@ void VulkanRenderer::DrawHelper(RenderTargetContext& context)
     rpBeginInfo.renderArea.offset.y = 0;
     rpBeginInfo.renderArea.extent.width = context.width;
     rpBeginInfo.renderArea.extent.height = context.height;
-    rpBeginInfo.clearValueCount = 2;
+    rpBeginInfo.clearValueCount = 1; // <---------- !
     rpBeginInfo.pClearValues = clear_values;
 
-    //vkCmdBeginRenderPass(drawCommandBuffer, &rpBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    auto a = drawCommandBuffer;
+    vkCmdBeginRenderPass(drawCommandBuffer, &rpBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-
+    vkCmdEndRenderPass(drawCommandBuffer);
 
 
     ResourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
@@ -488,14 +488,14 @@ void VulkanRenderer::InitRenderPass(RenderTargetContext& context)
     subpass.colorAttachmentCount = 1;
     subpass.pColorAttachments = &colorReference;
     subpass.pResolveAttachments = nullptr;
-    subpass.pDepthStencilAttachment = &depthReference;
+    subpass.pDepthStencilAttachment = nullptr; // &depthReference;  // <---------- !
     subpass.preserveAttachmentCount = 0;
     subpass.pPreserveAttachments = nullptr;
 
     VkRenderPassCreateInfo renderPassInfo = {};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.pNext = nullptr;
-    renderPassInfo.attachmentCount = 2;
+    renderPassInfo.attachmentCount = 1;  // <---------- !
     renderPassInfo.pAttachments = attachments;
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpass;
@@ -508,7 +508,25 @@ void VulkanRenderer::InitRenderPass(RenderTargetContext& context)
 
 void VulkanRenderer::InitFrameBuffers(RenderTargetContext& context)
 {
+    VkImageView attachments[2];
+    attachments[1] = context.depthImageView;
 
+    VkFramebufferCreateInfo frameBufferInfo = {};
+    frameBufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    frameBufferInfo.renderPass = context.renderPass;
+    frameBufferInfo.attachmentCount = 1;  // <---------- !
+    frameBufferInfo.pAttachments = attachments;
+    frameBufferInfo.width = context.width;
+    frameBufferInfo.height = context.height;
+    frameBufferInfo.layers = 1;
+
+    context.frameBuffers = new VkFramebuffer[context.imageCount];
+    for (auto i = 0; i < context.imageCount; i++)
+    {
+        attachments[0] = context.presentImageViews[i];
+        auto err = vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &context.frameBuffers[i]);
+        assert(!err);
+    }
 }
 
 void VulkanRenderer::SumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore)
@@ -572,7 +590,7 @@ RenderTargetContext& VulkanRenderer::GetContext(RenderTarget* renderTarget)
     }
     else
     {
-        RenderTargetContext context;
+        RenderTargetContext context = {};
         auto size = renderTarget->GetSize();
         context.width = size.x;
         context.height = size.y;
@@ -581,7 +599,7 @@ RenderTargetContext& VulkanRenderer::GetContext(RenderTarget* renderTarget)
 
         context.swapChain = CreateSwapChain(renderTarget);
         InitPresentImages(context);
-        InitDepthBuffer(context);
+        //InitDepthBuffer(context);
         InitRenderPass(context);
         InitFrameBuffers(context);
 
