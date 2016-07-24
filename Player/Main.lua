@@ -2,6 +2,9 @@
 require 'Class'
 require 'ModelDerived'
 --require 'Serializer'
+
+
+print(3)
 
 local app = App.Instance()
 local window = Window.Create()

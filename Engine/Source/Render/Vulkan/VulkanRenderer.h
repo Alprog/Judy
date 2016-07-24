@@ -12,6 +12,11 @@
 #include "VulkanConstantBufferImpl.h"
 #include "../Renderer.h"
 
+struct VulkanTestVertex
+{
+    float x, y, z, w;
+};
+
 struct RenderTargetContext
 {
     uint32_t width;
@@ -30,6 +35,10 @@ struct RenderTargetContext
 
     VkRenderPass renderPass;
     VkFramebuffer* frameBuffers;
+
+    VkPipeline pipeline;
+    VkPipelineLayout pipelineLayout;
+    VkDescriptorSet descriptorSet;
 };
 
 class VulkanRenderer : public Renderer<RendererType::Vulkan>
@@ -50,6 +59,8 @@ protected:
     void InitInstance();
     void InitDevice();
     void InitCommandBuffers();
+    void InitVertexBuffer();
+    void InitShaders();
 
     void CheckLayers(std::vector<const char*>& names);
     void CheckExtensions(std::vector<const char*>& names);
@@ -61,8 +72,10 @@ protected:
     void InitDepthBuffer(RenderTargetContext& context);
     void InitRenderPass(RenderTargetContext& context);
     void InitFrameBuffers(RenderTargetContext& context);
+    void InitPipeline(RenderTargetContext& context);
 
     void DrawHelper(RenderTargetContext& context);
+    VkShaderModule GetShaderModule(std::string fileName);
 
     VkInstance vulkanInstance;
     VkDevice device;
@@ -73,6 +86,9 @@ protected:
     VkCommandBuffer setupCommandBuffer;
     VkCommandBuffer drawCommandBuffer;
 
+    VkShaderModule vertexShader;
+    VkShaderModule fragmentShader;
+    VkBuffer vertexBuffer;
 
     void SumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
 
@@ -80,6 +96,8 @@ protected:
                          VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
 
     std::unordered_map<RenderTarget*, RenderTargetContext> contexts;
+
+    uint32_t GetMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
 
     template <typename T>
     void GetInstanceProcAddr(T& funcPointer, const char* funcName);
