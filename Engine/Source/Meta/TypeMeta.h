@@ -79,7 +79,7 @@ private:
     }
 
     template <typename T>
-    inline Any ReferenceHelper(Any& pointee, IF_NOT(T, Pointer)* = nullptr)
+    inline Any ReferenceHelper(Any& /*pointee*/, IF_NOT(T, Pointer)* = nullptr)
     {
         throw std::runtime_error("not implemented");
     }
@@ -93,7 +93,7 @@ private:
     }
 
     template <typename T>
-    static inline Any DereferenceHelper(Any& pointer, IF_NOT(T, AllowDereferencing)* = nullptr)
+    static inline Any DereferenceHelper(Any& /*pointer*/, IF_NOT(T, AllowDereferencing)* = nullptr)
     {
         throw std::runtime_error("invalid dereferencing");
     }
@@ -117,7 +117,7 @@ private:
     }
 
     template <typename T>
-    static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& object, IF_NOT(T, PointerToPolymorhic)* = nullptr)
+    static inline ITypeMeta* GetRunTimePointeeTypeHelper(Any& /*object*/, IF_NOT(T, PointerToPolymorhic)* = nullptr)
     {
         return TypeMetaOf<pointeeType>();
     }

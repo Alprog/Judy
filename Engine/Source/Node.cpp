@@ -9,7 +9,7 @@ Node::Node()
 {
 }
 
-Node::Node(int i)
+Node::Node(int /*i*/)
     : parent {nullptr}
 {
 }

@@ -16,7 +16,7 @@ Model::Model()
 
     renderState->vertexShader = ShaderManager::Instance()->GetShader("shadersTextured", Shader::Type::Vertex);
     renderState->pixelShader = ShaderManager::Instance()->GetShader("shadersTextured", Shader::Type::Pixel);
-    renderState->texture = TextureManager::Instance()->GetTexture("test.png");
+    renderState->texture = TextureManager::Instance()->GetTexture("skullbox.png");
 
     renderState->constantBuffer = new ConstantBuffer();
 

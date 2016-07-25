@@ -147,7 +147,7 @@ Matrix Matrix::Scaling(Vector3 s)
 Matrix Matrix::TRS(Vector3& translation, Quaternion& rotation, Vector3& scaling)
 {
 
-    DirectX::FXMMATRIX a = DirectX::XMMatrixRotationZ(0.9);
+    DirectX::FXMMATRIX a = DirectX::XMMatrixRotationZ(0.9f);
 
     /*printf("%f %f %f %f\n", a._11, a._12, a._13, a._14);
     printf("%f %f %f %f\n", a._21, a._22, a._23, a._24);

@@ -5,7 +5,7 @@
 void RendererFrontend::Render(Node* scene)
 {
     Context context;
-    context.View = Matrix::RotationX(3.1416);
+    context.View = Matrix::Identity; //Matrix::RotationX(3.1416);
     context.Projection = Matrix::OrthographicLH(2, 2, -2, 2);
     context.ViewProjection = context.View * context.Projection;
     contexts.push(context);

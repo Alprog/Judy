@@ -5,7 +5,7 @@ Scene::Scene()
 {
 }
 
-void Scene::Update(float delta)
+void Scene::Update(float /*delta*/)
 {
 
 }

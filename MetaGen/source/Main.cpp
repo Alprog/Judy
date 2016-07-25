@@ -53,7 +53,7 @@ void writeToFile(std::string fileName, std::string content)
     file.close();
 }
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
     CodeParser parser;
 

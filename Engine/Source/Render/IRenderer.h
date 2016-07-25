@@ -18,7 +18,7 @@ class Shader;
 class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
-class RenderCommand;
+struct RenderCommand;
 
 class IRenderer
 {
