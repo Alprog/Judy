@@ -7,12 +7,14 @@
     #include "Win/WinProcess.h"
     #include "Win/WinSocket.h"
     #include "Win/WinRenderTarget.h"
+    #include <Win/WinInputSystem.h>
 
     using PlatformApp = WinApp;
     using PlatformWindow = WinWindow;
     using PlatformProcess = WinProcess;
     using PlatformSocket = WinSocket;
     using PlatformRenderTarget = WinRenderTarget;
+    using PlatformInputSystem = WinInputSystem;
 #endif
 
 #if defined(LINUX) || defined(MAC)
@@ -38,5 +40,4 @@
     using PlatformApp = MacApp;
     using PlatformWindow = MacWindow;
 #endif
-
 

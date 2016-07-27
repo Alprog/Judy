@@ -1,0 +1,18 @@
+
+#pragma once
+#include "Singleton.h"
+#include "InputDevice.h"
+#include "Platforms.h"
+
+class InputSystem : public Singleton<PlatformInputSystem>
+{
+    friend class Singleton<InputSystem>;
+
+protected:
+    InputSystem();
+
+public:
+    virtual void UpdateState() = 0;
+
+    std::vector<InputDevice> devices;
+};

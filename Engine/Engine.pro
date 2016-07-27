@@ -6,7 +6,9 @@ CONFIG += staticlib
 
 INCLUDEPATH += \
     Source \
+    Source/Input \
     Source/Math \
+    Source/Net \
     Source/LuaMachine \
     Source/Containers \
     ../3rd-party/lua/source
@@ -89,7 +91,8 @@ HEADERS += \
     Source/Input/InputSystem.h \
     Source/Input/InputDevice.h \
     Source/Input/InputDeviceType.h \
-    Source/Input/Win/WinKeyboard.h
+    Source/Input/Win/WinKeyboard.h \
+    Source/Input/Win/WinInputSystem.h
 
 SOURCES += \
     Source/App.cpp \
@@ -115,7 +118,6 @@ SOURCES += \
     Source/Meta/FunctionMeta.cpp \
     Source/Meta/ITypeMeta.cpp \
     Source/Meta/AnyData.cpp \
-    Source/Singleton.cpp \
     Source/Pipe.cpp \
     Source/LuaMachine/Breakpoints.cpp \
     Source/LuaMachine/LuaMachine.cpp \
@@ -183,7 +185,9 @@ SOURCES += \
     Source/Render/IRenderer.cpp \
     Source/Input/InputSystem.cpp \
     Source/Input/InputDevice.cpp \
-    Source/Input/Win/WinKeyboard.cpp
+    Source/Input/Win/WinKeyboard.cpp \
+    Source/Input/Win/WinInputSystem.cpp \
+    Source/Singleton.cpp
 
 win {
     INCLUDEPATH += Source/Windows

@@ -2,19 +2,14 @@
 #pragma once
 #include "Singleton.h"
 #include "InputDevice.h"
-#include <Windows.h>
 
-class InputSystem : public Singleton<InputSystem>
+class InputSystem
 {
-    friend class Singleton<InputSystem>;
-
-private:
-    InputSystem();
+public:
+    static InputSystem* const Instance();
 
 public:
-    void UpdateState();
+    virtual void UpdateState() = 0;
 
     std::vector<InputDevice> devices;
-
-    HWND hWnd;
 };
