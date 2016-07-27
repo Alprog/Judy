@@ -2,6 +2,7 @@
 #include "App.h"
 #include "Platforms.h"
 #include <time.h>
+#include "Input/InputSystem.h"
 
 App* App::Instance()
 {
@@ -49,6 +50,8 @@ void App::StartMainLoop()
             window->ProcessEvents();
         }
         UpdateCollection();
+
+        InputSystem::Instance()->UpdateState();
 
         for (auto window : Windows)
         {

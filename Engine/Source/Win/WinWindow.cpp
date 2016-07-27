@@ -39,7 +39,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             break;
     }
 
-    return DefWindowProc (hWnd, message, wParam, lParam);
+    return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 WinWindow::WinWindow()
@@ -48,7 +48,7 @@ WinWindow::WinWindow()
 
     auto hInstance = GetModuleHandle(nullptr);
 
-    LPCWSTR className = L"MyClass";
+    LPCWSTR className = L"GameWindow";
 
     WNDCLASSEX wc;
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -82,7 +82,7 @@ WinWindow::WinWindow()
 
     renderTarget = new WinRenderTarget(hInstance, hWnd);
 
-    renderer = RenderManager::Instance()->renderers[(int)RendererType::DX];
+    renderer = RenderManager::Instance()->renderers[(int)RendererType::GL];
 
     //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
     //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);

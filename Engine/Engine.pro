@@ -85,7 +85,11 @@ HEADERS += \
     Source/Render/Vulkan/VulkanTextureImpl.h \
     Source/Render/Vulkan/VulkanVertexBufferImpl.h \
     Source/Render/IRenderer.h \
-    Source/Render/Renderer.h
+    Source/Render/Renderer.h \
+    Source/Input/InputSystem.h \
+    Source/Input/InputDevice.h \
+    Source/Input/InputDeviceType.h \
+    Source/Input/Win/WinKeyboard.h
 
 SOURCES += \
     Source/App.cpp \
@@ -176,7 +180,10 @@ SOURCES += \
     Source/Render/Vulkan/VulkanVertexBufferImpl.cpp \
     Source/Render/Vulkan/VulkanRenderer.cpp \
     Source/Render/RendererResource.cpp \
-    Source/Render/IRenderer.cpp
+    Source/Render/IRenderer.cpp \
+    Source/Input/InputSystem.cpp \
+    Source/Input/InputDevice.cpp \
+    Source/Input/Win/WinKeyboard.cpp
 
 win {
     INCLUDEPATH += Source/Windows
