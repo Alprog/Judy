@@ -187,7 +187,8 @@ SOURCES += \
     Source/Input/InputDevice.cpp \
     Source/Input/Win/WinKeyboard.cpp \
     Source/Input/Win/WinInputSystem.cpp \
-    Source/Singleton.cpp
+    Source/Singleton.cpp \
+    Source/PlatformSingleton.tpp
 
 win {
     INCLUDEPATH += Source/Windows

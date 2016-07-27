@@ -41,3 +41,5 @@
     using PlatformWindow = MacWindow;
 #endif
 
+template <typename T> struct PlatformType;
+template <> struct PlatformType<InputSystem> { using type = PlatformInputSystem; };

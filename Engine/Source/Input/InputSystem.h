@@ -3,11 +3,8 @@
 #include "Singleton.h"
 #include "InputDevice.h"
 
-class InputSystem
+class InputSystem : public PlatformSingleton<InputSystem>
 {
-public:
-    static InputSystem* const Instance();
-
 public:
     virtual void UpdateState() = 0;
 

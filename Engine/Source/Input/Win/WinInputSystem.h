@@ -5,7 +5,7 @@
 
 class WinInputSystem : public InputSystem
 {
-    friend class InputSystem;
+    friend class SingletonType;
 
 private:
     WinInputSystem();
