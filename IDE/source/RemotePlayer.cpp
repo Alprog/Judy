@@ -49,7 +49,7 @@ void RemotePlayer::Run()
     netNode = new NetNode();
     netNode->customWorkCallback = std::bind(&RemotePlayer::CustomNetWork, this);
     netNode->messageCallback = std::bind(&RemotePlayer::OnGetMessage, this, _1);
-    netNode->Connect("127.0.0.1", 2730);
+    netNode->Connect("127.0.0.1", 0xC0DE);
 
     for (auto& pair : breakpoints.getMap())
     {

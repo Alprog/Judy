@@ -92,7 +92,8 @@ HEADERS += \
     Source/Input/InputDevice.h \
     Source/Input/InputDeviceType.h \
     Source/Input/Win/WinKeyboard.h \
-    Source/Input/Win/WinInputSystem.h
+    Source/Input/Win/WinInputSystem.h \
+    Source/Input/Key.h
 
 SOURCES += \
     Source/App.cpp \

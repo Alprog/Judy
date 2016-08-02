@@ -11,7 +11,7 @@ win {
     PRE_TARGETDEPS += "..\3rd-Party\libpng.lib"
     PRE_TARGETDEPS += "..\3rd-Party\lua.lib"
 
-    LIBS += -ld3d12 -ldxgi -ld3dCompiler
+    LIBS += -ld3d12 -ldxgi -ld3dCompiler -lhid
     LIBS += -lUser32 -lGdi32 -lOpengl32 -lWs2_32
     LIBS += -L"$$(VULKAN_SDK)/bin" -lvulkan-1
 }

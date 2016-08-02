@@ -5,6 +5,7 @@
 
 class InputDevice
 {
-private:
+public:
+    void* Data;
     InputDeviceType Type;
 };

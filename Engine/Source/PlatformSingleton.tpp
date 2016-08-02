@@ -7,6 +7,6 @@
 template <typename T>
 T* const PlatformSingleton<T>::Instance()
 {
-    typename PlatformType<T>::type instance;
+    static typename PlatformType<T>::type instance;
     return &instance;
 }
