@@ -1,5 +1,5 @@
 {
     class = 'Settings',
-    projectPath = '/media/sf_Judy/Player',
-    playerPath = '/media/sf_Judy/Build/Linux/Player/Player'
+    projectPath = '/media/alprog/Data/Judy/Player/',
+    playerPath = '/media/alprog/Data/Judy/Player/'
 }

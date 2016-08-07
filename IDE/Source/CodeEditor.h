@@ -5,12 +5,9 @@
 #include "SciLexer.h"
 #include <QTimer>
 #include "string"
-
-#define Window SciWindow
 #include "../qt/ScintillaEdit.h"
-#undef Window
 
-class CodeEditor : public ScintillaEdit
+class CodeEditor : public Scintilla::ScintillaEdit
 {
     Q_OBJECT
 

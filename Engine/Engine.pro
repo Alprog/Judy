@@ -11,7 +11,7 @@ INCLUDEPATH += \
     Source/Net \
     Source/LuaMachine \
     Source/Containers \
-    ../3rd-party/lua/source
+    ../3rd-party/lua/Source
 
 HEADERS += \
     Source/*.h \

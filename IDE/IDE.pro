@@ -7,6 +7,8 @@ TEMPLATE = app
 CONFIG += qt
 QT += widgets
 
+DEFINES += SCI_NAMESPACE
+
 HEADERS += \
     Source/MainWindow.h \
     Source/Document.h \
