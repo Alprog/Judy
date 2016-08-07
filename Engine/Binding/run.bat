@@ -1,1 +1,0 @@
-tolua++ -o ../Source/Binding.cpp Binding.pkg

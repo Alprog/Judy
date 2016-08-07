@@ -15,6 +15,7 @@
     using PlatformSocket = WinSocket;
     using PlatformRenderTarget = WinRenderTarget;
     using PlatformInputSystem = WinInputSystem;
+    using PlatformGLContext = WinGLContext;
 #endif
 
 #if defined(LINUX) || defined(MAC)
@@ -28,9 +29,13 @@
 #ifdef LINUX
     #include "Linux/LinuxApp.h"
     #include "Linux/LinuxWindow.h"
+    #include "Linux/LinuxInputSystem.h"
+    #include "Render/GL/Linux/LinuxGLContext.h"
 
     using PlatformApp = LinuxApp;
     using PlatformWindow = LinuxWindow;
+    using PlatformInputSystem = LinuxInputSystem;
+    using PlatformGLContext = LinuxGLContext;
 #endif
 
 #ifdef MAC

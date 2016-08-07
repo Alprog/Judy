@@ -5,25 +5,27 @@
 
 #if WIN
     #include <windows.h>
+    #include "Win/WinGLContext.h"
+    #include "Win/WinRenderTarget.h"
 #endif
 
 #include "gl.h"
-
-#include "Win/WinGLContext.h"
-#include "Win/WinRenderTarget.h"
-
 #include "../Texture.h"
 
 #include "../IndexBuffer.h"
 #include "../VertexBuffer.h"
 #include "../ConstantBuffer.h"
 
+#include "Platforms.h"
+
 GLRenderer::GLRenderer()
 {
-    auto dummy = (GLContext*)new WinGLContext(0);
+#if WINDOWS
+    auto dummy = (GLContext*)new PlatformGLContext(0);
     dummy->MakeCurrent();
     glewInit();
     //delete dummy;
+#endif
 }
 
 void GLRenderer::Clear(Color color)
@@ -37,13 +39,19 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
     auto context = (GLContext*)contexts[renderTarget];
     if (context == nullptr)
     {
+#if WINDOWS
         auto hWnd = ((WinRenderTarget*)renderTarget)->hWnd;
         context = (GLContext*)new WinGLContext(hWnd);
+#elif LINUX
+
+#endif
         contexts[renderTarget] = context;
     }
 
     context->MakeCurrent();
+#if WINDOWS
     glewInit();
+#endif
 
     return context;
 }

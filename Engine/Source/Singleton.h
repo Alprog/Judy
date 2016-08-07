@@ -9,7 +9,7 @@ class Singleton
 public:
     using SingletonType = Singleton<T>;
 
-    inline static T* const Instance()
+    inline static T* Instance()
     {
         static T instance;
         return &instance;
@@ -22,7 +22,7 @@ class PlatformSingleton
 public:
     using SingletonType = PlatformSingleton<T>;
 
-    inline static T* const Instance();
+    inline static T* Instance();
 };
 
 template <typename T>
@@ -31,7 +31,7 @@ class TrivialSingleton
 public:
     static T instance;
 
-    inline static T* const Instance()
+    inline static T* Instance()
     {
         return &instance;
     }

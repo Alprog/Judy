@@ -1,5 +1,5 @@
 
-include(../../default.pri)
+include(../../Default.pri)
 
 TEMPLATE = lib
 TARGET = ../libpng
@@ -7,29 +7,29 @@ CONFIG += staticlib
 
 INCLUDEPATH += \
     source \
-    ../zlib/source \
+    ../zlib/Source \
 
 HEADERS += \
-    source/png.h \
-    source/pngconf.h \
-    source/pngdebug.h \
-    source/pnginfo.h \
-    source/pngstruct.h \
-    source/pngpriv.h
+    Source/png.h \
+    Source/pngconf.h \
+    Source/pngdebug.h \
+    Source/pnginfo.h \
+    Source/pngstruct.h \
+    Source/pngpriv.h
 
 SOURCES += \
-    source/png.c \
-    source/pngerror.c \
-    source/pngget.c \
-    source/pngmem.c \
-    source/pngpread.c \
-    source/pngread.c \
-    source/pngrio.c \
-    source/pngrtran.c \
-    source/pngrutil.c \
-    source/pngset.c \
-    source/pngtrans.c \
-    source/pngwio.c \
-    source/pngwrite.c \
-    source/pngwtran.c \
-    source/pngwutil.c
+    Source/png.c \
+    Source/pngerror.c \
+    Source/pngget.c \
+    Source/pngmem.c \
+    Source/pngpread.c \
+    Source/pngread.c \
+    Source/pngrio.c \
+    Source/pngrtran.c \
+    Source/pngrutil.c \
+    Source/pngset.c \
+    Source/pngtrans.c \
+    Source/pngwio.c \
+    Source/pngwrite.c \
+    Source/pngwtran.c \
+    Source/pngwutil.c

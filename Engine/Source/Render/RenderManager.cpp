@@ -1,15 +1,20 @@
 
 #include "RenderManager.h"
 
+#if !LINUX
 #include "Render/DX/DXRenderer.h"
-#include "Render/GL/GLRenderer.h"
 #include "Render/Vulkan/VulkanRenderer.h"
+#endif
+
+#include "Render/GL/GLRenderer.h"
 
 RenderManager::RenderManager()
 {
+#if !LINUX
     renderers.push_back(new DXRenderer());
-    renderers.push_back(new GLRenderer());
     renderers.push_back(new VulkanRenderer());
+#endif
+    renderers.push_back(new GLRenderer());
 }
 
 unsigned int RenderManager::RegisterResource(RenderResource* resource)

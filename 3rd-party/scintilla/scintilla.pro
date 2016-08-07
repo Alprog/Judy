@@ -1,5 +1,5 @@
 
-include(../../default.pri)
+include(../../Default.pri)
 
 TARGET = ../ScintillaEdit
 TEMPLATE = lib
@@ -56,7 +56,7 @@ SOURCES += \
     lexlib/CharacterSet.cxx \
     lexlib/CharacterCategory.cxx \
     lexlib/Accessor.cxx \
-    lexers/LexLua.cxx \
+    lexers/LexLua.cxx
 
 HEADERS += \
     qt/ScintillaEdit.h \

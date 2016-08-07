@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "../../3rd-Party/libpng/source/png.h"
+#include "../../3rd-party/libpng/Source/png.h"
 
 #define PNGSIGSIZE 8
 

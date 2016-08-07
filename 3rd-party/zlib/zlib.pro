@@ -1,5 +1,5 @@
 
-include(../../default.pri)
+include(../../Default.pri)
 
 TEMPLATE = lib
 TARGET = ../zlib
@@ -8,29 +8,29 @@ CONFIG += staticlib
 DEFINES += Z_SOLO
 
 INCLUDEPATH += \
-    source \
+    Source \
 
 HEADERS += \
-    source/crc32.h \
-    source/deflate.h \
-    source/inffast.h \
-    source/inffixed.h \
-    source/inflate.h \
-    source/inftrees.h \
-    source/trees.h \
-    source/zconf.h \
-    source/zlib.h \
-    source/zutil.h
+    Source/crc32.h \
+    Source/deflate.h \
+    Source/inffast.h \
+    Source/inffixed.h \
+    Source/inflate.h \
+    Source/inftrees.h \
+    Source/trees.h \
+    Source/zconf.h \
+    Source/zlib.h \
+    Source/zutil.h
 
 SOURCES += \
-    source/adler32.c \
-    source/compress.c \
-    source/crc32.c \
-    source/deflate.c \
-    source/infback.c \
-    source/inffast.c \
-    source/inflate.c \
-    source/inftrees.c \
-    source/trees.c \
-    source/uncompr.c \
-    source/zutil.c
+    Source/adler32.c \
+    Source/compress.c \
+    Source/crc32.c \
+    Source/deflate.c \
+    Source/infback.c \
+    Source/inffast.c \
+    Source/inflate.c \
+    Source/inftrees.c \
+    Source/trees.c \
+    Source/uncompr.c \
+    Source/zutil.c

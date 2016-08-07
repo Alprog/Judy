@@ -10,5 +10,5 @@ public:
     IndexBuffer();
     void Load();
 
-    std::vector<uint32_t> indices;
+    std::vector<unsigned int> indices;
 };

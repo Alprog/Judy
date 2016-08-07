@@ -35,13 +35,13 @@ public:
     virtual ITypeMeta::Flags getFlags() const override
     {
         const int flags =
-            (~is<ClassType>::Class + 1) & Flags::IsClass |
-            (~is<ClassType>::Pointer + 1) & Flags::IsPointer |
-            (~is<ClassType>::Ref + 1) & Flags::IsRef |
-            (~is<ClassType>::PointerToPolymorhic + 1) & Flags::IsPointerToPolymorhic |
-            (~is<ClassType>::CustomSerializing + 1) & Flags::IsCustomSerializing
+            (~is<ClassType>::Class + 1) & ITypeMeta::Flags::IsClass |
+            (~is<ClassType>::Pointer + 1) & ITypeMeta::Flags::IsPointer |
+            (~is<ClassType>::Ref + 1) & ITypeMeta::Flags::IsRef |
+            (~is<ClassType>::PointerToPolymorhic + 1) & ITypeMeta::Flags::IsPointerToPolymorhic |
+            (~is<ClassType>::CustomSerializing + 1) & ITypeMeta::Flags::IsCustomSerializing
         ;
-        return (Flags)flags;
+        return (ITypeMeta::Flags)flags;
     }
 
 

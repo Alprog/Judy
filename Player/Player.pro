@@ -5,7 +5,7 @@ include(../Engine/Include.pri)
 TEMPLATE = app
 
 INCLUDEPATH += \
-    ../3rd-party/lua/source \
+    ../3rd-party/lua/Source \
 
 SOURCES += \
     Source/Main.cpp \
@@ -17,6 +17,5 @@ HEADERS += \
 
 win {
     QMAKE_LFLAGS += /ENTRY:"mainCRTStartup"
+    LIBS += -lglew32s
 }
-
-LIBS += -lglew32s

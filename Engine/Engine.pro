@@ -1,5 +1,5 @@
 
-include(../default.pri)
+include(../Default.pri)
 
 TEMPLATE = lib
 CONFIG += staticlib
@@ -93,7 +93,9 @@ HEADERS += \
     Source/Input/InputDeviceType.h \
     Source/Input/Win/WinKeyboard.h \
     Source/Input/Win/WinInputSystem.h \
-    Source/Input/Key.h
+    Source/Input/Key.h \
+    Source/Input/Linux/LinuxInputSystem.h \
+    Source/Render/GL/Linux/LinuxGLContext.h
 
 SOURCES += \
     Source/App.cpp \
@@ -151,9 +153,6 @@ SOURCES += \
     Source/TextureManager.cpp \
     Source/ShaderManager.cpp \
     Source/Render/Texture.cpp \
-    Source/Render/DX/DXIndexBufferImpl.cpp \
-    Source/Render/DX/DXPipelineState.cpp \
-    Source/Render/DX/DXVertexBufferImpl.cpp \
     Source/Render/GL/GLContext.cpp \
     Source/Render/GL/GLIndexBufferImpl.cpp \
     Source/Render/GL/GLRenderer.cpp \
@@ -167,29 +166,18 @@ SOURCES += \
     Source/Render/RenderState.cpp \
     Source/Render/VertexBuffer.cpp \
     Source/Render/Shader.cpp \
-    Source/Render/DX/DXConstantBufferImpl.cpp \
     Source/Render/GL/GLConstantBufferImpl.cpp \
     Source/Render/ConstantBuffer.cpp \
-    Source/Render/DX/DXTextureImpl.cpp \
-    Source/Render/DX/DXShaderImpl.cpp \
     Source/Render/Impl.cpp \
-    Source/Render/DX/DXDescriptorHeap.cpp \
-    Source/Render/DX/DXDescriptorHandle.cpp \
     Source/Render/PipelineState.cpp \
-    Source/Render/Vulkan/VulkanConstantBufferImpl.cpp \
-    Source/Render/Vulkan/VulkanIndexBufferImpl.cpp \
-    Source/Render/Vulkan/VulkanShaderImpl.cpp \
-    Source/Render/Vulkan/VulkanTextureImpl.cpp \
-    Source/Render/Vulkan/VulkanVertexBufferImpl.cpp \
-    Source/Render/Vulkan/VulkanRenderer.cpp \
     Source/Render/RendererResource.cpp \
     Source/Render/IRenderer.cpp \
     Source/Input/InputSystem.cpp \
     Source/Input/InputDevice.cpp \
-    Source/Input/Win/WinKeyboard.cpp \
-    Source/Input/Win/WinInputSystem.cpp \
     Source/Singleton.cpp \
-    Source/PlatformSingleton.tpp
+    Source/PlatformSingleton.tpp \
+    Source/Input/Linux/LinuxInputSystem.cpp \
+    Source/Render/GL/Linux/LinuxGLContext.cpp
 
 win {
     INCLUDEPATH += Source/Windows
@@ -206,7 +194,23 @@ win {
         Source/Render/RenderTarget.cpp \
         Source/Render/DX/DXRenderer.cpp \
         Source/Render/DX/DXSwapChain.cpp \
-        Source/Win/WinGLContext.cpp
+        Source/Win/WinGLContext.cpp \
+        Source/Render/DX/DXTextureImpl.cpp \
+        Source/Render/DX/DXShaderImpl.cpp \
+        Source/Render/DX/DXDescriptorHeap.cpp \
+        Source/Render/DX/DXDescriptorHandle.cpp \
+        Source/Render/DX/DXConstantBufferImpl.cpp \
+        Source/Render/DX/DXIndexBufferImpl.cpp \
+        Source/Render/DX/DXPipelineState.cpp \
+        Source/Render/DX/DXVertexBufferImpl.cpp \
+        Source/Render/Vulkan/VulkanConstantBufferImpl.cpp \
+        Source/Render/Vulkan/VulkanIndexBufferImpl.cpp \
+        Source/Render/Vulkan/VulkanShaderImpl.cpp \
+        Source/Render/Vulkan/VulkanTextureImpl.cpp \
+        Source/Render/Vulkan/VulkanVertexBufferImpl.cpp \
+        Source/Render/Vulkan/VulkanRenderer.cpp \
+        Source/Input/Win/WinKeyboard.cpp \
+        Source/Input/Win/WinInputSystem.cpp
 }
 
 linux {

@@ -22,8 +22,8 @@ private:
 
     [[Serialize]] List<T> toList()
     {
-        List<T> list(size());
-        std::copy(begin(), end(), std::begin(list));
+        List<T> list(this->size());
+        std::copy(this->begin(), this->end(), std::begin(list));
         return list;
     }
 };

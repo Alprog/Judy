@@ -1,5 +1,0 @@
-$pfile "Math.pkg"
-$pfile "App.pkg"
-$pfile "Window.pkg"
-$pfile "Node.pkg"
-$pfile "Quad.pkg"

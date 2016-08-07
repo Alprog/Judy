@@ -93,15 +93,23 @@ WinWindow::WinWindow()
 
 WinWindow::~WinWindow()
 {
-    delete renderer;
+    //delete renderer;
 }
 
 void WinWindow::ProcessEvents()
 {
     MSG msg;
     currentEventWindow = this;
-    PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE);
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
+    while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
     currentEventWindow = nullptr;
+
+    while (PeekMessage(&msg, (HWND)-1, 0, 0, PM_REMOVE))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
 }

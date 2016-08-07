@@ -5,6 +5,9 @@
 
 #define VK_NUMRETURN 0x0F
 
+
+auto hkl = LoadKeyboardLayout(L"00000409", 0);
+
 LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -20,42 +23,38 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
                 if (rawInput->header.dwType == RIM_TYPEKEYBOARD)
                 {
-
                     auto flags = rawInput->data.keyboard.Flags;
                     auto message = rawInput->data.keyboard.Message;
-                    auto vkey = rawInput->data.keyboard.VKey;
-
+                    auto v = rawInput->data.keyboard.VKey;
+                    auto scanCode = rawInput->data.keyboard.MakeCode;
+                    auto spec = rawInput->data.keyboard.ExtraInformation;
                     bool e0 = (flags & RI_KEY_E0) == RI_KEY_E0;
 
-                    printf("%i %i", rawInput->data.keyboard.MakeCode, e0);
+                    auto vkey = 0; // Windows virtual key
+
+                    if (scanCode)
+                    {
+                        if ((flags & RI_KEY_E0) == RI_KEY_E0)
+                        {
+                            scanCode += 0xe0 << 8;
+                        }
+                        else if((flags & RI_KEY_E1) == RI_KEY_E1)
+                        {
+                            scanCode += 0xe1 << 8;
+                        }
+                        vkey = MapVirtualKeyEx(scanCode, MAPVK_VSC_TO_VK_EX, hkl);
+                        printf("try convert %i %i %i\n", rawInput->data.keyboard.MakeCode, flags, vkey);
+                    }
+
+                    if (vkey == 0)
+                    {
+                        vkey = rawInput->data.keyboard.VKey;
+                    }
+
+                    printf("+++%i %i\n", vkey, v);
 
                     switch (vkey)
                     {
-                        case VK_SHIFT:
-                        case VK_CONTROL:
-                        case VK_MENU:
-                            {
-                                auto makeCode = rawInput->data.keyboard.MakeCode;
-                                if ((flags & RI_KEY_E0) == RI_KEY_E0)
-                                {
-                                    makeCode += 0xe0 << 8;
-                                }
-                                else if((flags & RI_KEY_E1) == RI_KEY_E1)
-                                {
-                                    makeCode += 0xe1 << 8;
-                                }
-                                vkey = MapVirtualKey(makeCode, MAPVK_VSC_TO_VK_EX);
-                            }
-                            break;
-
-                        case VK_RETURN:
-                            if (e0) vkey = VK_NUMRETURN;
-                            break;
-
-                        case VK_OEM_2: // slash
-                            if (e0) vkey = VK_DIVIDE;
-                            break;
-
                         case VK_INSERT:
                             if (!e0) vkey = VK_NUMPAD0;
                             break;
@@ -68,7 +67,7 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
                             if (!e0) vkey = VK_NUMPAD2;
                             break;
 
-                        case VK_PRIOR:
+                        case VK_NEXT: // PgUp
                             if (!e0) vkey = VK_NUMPAD3;
                             break;
 
@@ -92,31 +91,25 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
                             if (!e0) vkey = VK_NUMPAD8;
                             break;
 
-                        case VK_NEXT:
+                        case VK_PRIOR: // PgDn
                             if (!e0) vkey = VK_NUMPAD9;
                             break;
 
                         case VK_DELETE:
                             if (!e0) vkey = VK_DECIMAL;
                             break;
+
+                        case VK_RETURN:
+                            if (e0) vkey = VK_NUMRETURN;
+                            break;
+
+                        case VK_OEM_2: // slash
+                            if (e0) vkey = VK_DIVIDE;
+                            break;
                     }
 
-//                    auto scanCode = rawInput->data.keyboard.MakeCode;
-//                    if (e0) scanCode = scanCode + (1 << 8);
-
-//                    auto k = static_cast<WinInputSystem*>(InputSystem::Instance())->keyMap[scanCode];
-//                    printf("press: %i\n", k);
-//                    return 0;
-
-                    auto key = static_cast<WinInputSystem*>(InputSystem::Instance())->keys[vkey];
-
-                    if (key == Key::None)
-                    {
-                        printf("none\n");
-                        return 0;
-                    }
-                    printf("KEY: %i", key);
-                    return 0;
+                    printf("--- %i %i\n", vkey, v);
+                    break;
 
                 }
 
@@ -134,7 +127,7 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
                 delete[] rawInput;
             }
-            return 0;
+            break;
 
 
         case WM_INPUT_DEVICE_CHANGE:

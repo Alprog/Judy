@@ -29,8 +29,8 @@ public:
     inline void add(T value) { base::push_back(value); }
 
 private:
-    friend iterator begin(List<T>* list) { return list->begin(); }
-    friend iterator end(List<T>* list) { return list->end(); }
+    friend typename std::vector<T>::iterator begin(List<T>* list) { return list->begin(); }
+    friend typename std::vector<T>::iterator end(List<T>* list) { return list->end(); }
 
     static void serialize(List<T> list, Serializer* serializer)
     {

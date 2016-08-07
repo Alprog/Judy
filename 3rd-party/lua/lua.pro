@@ -1,73 +1,73 @@
 
-include(../../default.pri)
+include(../../Default.pri)
 
 TEMPLATE = lib
 TARGET = ../lua
 CONFIG += staticlib
 
 HEADERS += \
-    source/lapi.h \
-    source/lauxlib.h \
-    source/lcode.h \
-    source/lctype.h \
-    source/ldebug.h \
-    source/ldo.h \
-    source/lfunc.h \
-    source/lgc.h \
-    source/llex.h \
-    source/llimits.h \
-    source/lmem.h \
-    source/lobject.h \
-    source/lopcodes.h \
-    source/lparser.h \
-    source/lstate.h \
-    source/lstring.h \
-    source/ltable.h \
-    source/ltm.h \
-    source/lua.h \
-    source/lua.hpp \
-    source/luaconf.h \
-    source/lualib.h \
-    source/lundump.h \
-    source/lvm.h \
-    source/lzio.h \
-    source/lprefix.h
+    Source/lapi.h \
+    Source/lauxlib.h \
+    Source/lcode.h \
+    Source/lctype.h \
+    Source/ldebug.h \
+    Source/ldo.h \
+    Source/lfunc.h \
+    Source/lgc.h \
+    Source/llex.h \
+    Source/llimits.h \
+    Source/lmem.h \
+    Source/lobject.h \
+    Source/lopcodes.h \
+    Source/lparser.h \
+    Source/lstate.h \
+    Source/lstring.h \
+    Source/ltable.h \
+    Source/ltm.h \
+    Source/lua.h \
+    Source/lua.hpp \
+    Source/luaconf.h \
+    Source/lualib.h \
+    Source/lundump.h \
+    Source/lvm.h \
+    Source/lzio.h \
+    Source/lprefix.h
 
 SOURCES += \
-    source/lapi.c \
-    source/lauxlib.c \
-    source/lbaselib.c \
-    source/lbitlib.c \
-    source/lcode.c \
-    source/lcorolib.c \
-    source/lctype.c \
-    source/ldblib.c \
-    source/ldebug.c \
-    source/ldo.c \
-    source/ldump.c \
-    source/lfunc.c \
-    source/lgc.c \
-    source/linit.c \
-    source/liolib.c \
-    source/llex.c \
-    source/lmathlib.c \
-    source/lmem.c \
-    source/loadlib.c \
-    source/lobject.c \
-    source/lopcodes.c \
-    source/loslib.c \
-    source/lparser.c \
-    source/lstate.c \
-    source/lstring.c \
-    source/lstrlib.c \
-    source/ltable.c \
-    source/ltablib.c \
-    source/ltm.c \
-    source/lua.c \
-    source/luac.c \
-    source/lundump.c \
-    source/lvm.c \
-    source/lzio.c \
-    source/lutf8lib.c
+    Source/lapi.c \
+    Source/lauxlib.c \
+    Source/lbaselib.c \
+    Source/lbitlib.c \
+    Source/lcode.c \
+    Source/lcorolib.c \
+    Source/lctype.c \
+    Source/ldblib.c \
+    Source/ldebug.c \
+    Source/ldo.c \
+    Source/ldump.c \
+    Source/lfunc.c \
+    Source/lgc.c \
+    Source/linit.c \
+    Source/liolib.c \
+    Source/llex.c \
+    Source/lmathlib.c \
+    Source/lmem.c \
+    Source/loadlib.c \
+    Source/lobject.c \
+    Source/lopcodes.c \
+    Source/loslib.c \
+    Source/lparser.c \
+    Source/lstate.c \
+    Source/lstring.c \
+    Source/lstrlib.c \
+    Source/ltable.c \
+    Source/ltablib.c \
+    Source/ltm.c \
+    Source/lua.c \
+    Source/luac.c \
+    Source/lundump.c \
+    Source/lvm.c \
+    Source/lzio.c \
+    Source/lutf8lib.c
 
 

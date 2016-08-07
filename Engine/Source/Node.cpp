@@ -105,7 +105,7 @@ void Node::Render(Matrix matrix, RendererFrontend* renderer)
 {
     for (auto& child : childs)
     {
-        auto& childMatrix = child->transform.getMatrix();
+        auto const& childMatrix = child->transform.getMatrix();
         child->Render(childMatrix * matrix, renderer);
     }
 }

@@ -1,11 +1,10 @@
 
 #pragma once
 
-#include "Object.h"
-#include "Window.h"
-
 #include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
+#include "Object.h"
+#include "Window.h"
 #include "Containers/Set.h"
 #include "Attributes.h"
 

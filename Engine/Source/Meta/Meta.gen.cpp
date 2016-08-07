@@ -27,12 +27,13 @@ template <typename T>
 void Meta::DefineList()
 {
     using type = List<T>;
+
     ClassDefiner<type>(this, "List<T>")
-        .templateArgument<T>()
-        .base<std::vector<T>>()
+        .template templateArgument<T>()
+        .template base<std::vector<T>>()
         .constructor()
-        .constructor<size_t>()
-        .constructor<std::initializer_list<T>>()
+        .template constructor<size_t>()
+        .template constructor<std::initializer_list<T>>()
         .method("at", &type::at)
         .method("add", &type::add)
         .function("serialize", &type::serialize)
@@ -45,9 +46,9 @@ void Meta::DefineMap()
 {
     using type = Map<T1, T2>;
     ClassDefiner<type>(this, "Map<T1, T2>")
-        .templateArgument<T1>()
-        .templateArgument<T2>()
-        .base<std::unordered_map<T1, T2>>()
+        .template templateArgument<T1>()
+        .template templateArgument<T2>()
+        .template base<std::unordered_map<T1, T2>>()
         .constructor()
         .function("serialize", &type::serialize)
         .function("deserialize", &type::deserialize)
@@ -59,10 +60,10 @@ void Meta::DefineSet()
 {
     using type = Set<T>;
     ClassDefiner<type>(this, "Set<T>")
-        .templateArgument<T>()
-        .base<std::unordered_set<T>>()
+        .template templateArgument<T>()
+        .template base<std::unordered_set<T>>()
         .constructor()
-        .constructor<List<T>>().attr("Serialize")
+        .template constructor<List<T>>().attr("Serialize")
         .method("toList", &type::toList).attr("Serialize")
     ;
 }
