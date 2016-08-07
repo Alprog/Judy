@@ -95,7 +95,8 @@ HEADERS += \
     Source/Input/Win/WinInputSystem.h \
     Source/Input/Key.h \
     Source/Input/Linux/LinuxInputSystem.h \
-    Source/Render/GL/Linux/LinuxGLContext.h
+    Source/Render/GL/Linux/LinuxGLContext.h \
+    Source/Linux/LinuxRenderTarget.h
 
 SOURCES += \
     Source/App.cpp \
@@ -177,7 +178,8 @@ SOURCES += \
     Source/Singleton.cpp \
     Source/PlatformSingleton.tpp \
     Source/Input/Linux/LinuxInputSystem.cpp \
-    Source/Render/GL/Linux/LinuxGLContext.cpp
+    Source/Render/GL/Linux/LinuxGLContext.cpp \
+    Source/Linux/LinuxRenderTarget.cpp
 
 win {
     INCLUDEPATH += Source/Windows

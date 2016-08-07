@@ -2,12 +2,14 @@
 #pragma once
 
 #include "Render/GL/GLContext.h"
+#include "Render/RenderTarget.h"
 #include <windows.h>
 
 class WinGLContext : GLContext
 {
 public:
-    WinGLContext(HWND hWnd);
+    WinGLContext(HWND hWnd = 0);
+    WinGLContext(RenderTarget* renderTarget);
 
     virtual void MakeCurrent() override;
     virtual void Swap() override;

@@ -1,11 +1,9 @@
 
 #pragma once
 
-
-
 enum class Key
 {
-    None,
+    Unknown,
     Ambiguity,
 
     Mouse_LMB,

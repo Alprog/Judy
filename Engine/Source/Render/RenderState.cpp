@@ -19,7 +19,7 @@ void RenderState::link()
 {
     programId = glCreateProgram();
 
-    GLRenderer* renderer = (GLRenderer*)RenderManager::Instance()->renderers[1];
+    GLRenderer* renderer = (GLRenderer*)RenderManager::Instance()->renderers[0];
 
     glAttachShader(programId, renderer->GetImpl(vertexShader)->id);
     glAttachShader(programId, renderer->GetImpl(pixelShader)->id);

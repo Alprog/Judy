@@ -1,7 +1,13 @@
 
 #include "WinGLContext.h"
+#include "WinRenderTarget.h"
 
 HGLRC WinGLContext::hRC = nullptr;
+
+WinGLContext::WinGLContext(RenderTarget* renderTarget)
+    : WinGLContext(static_cast<WinRenderTarget*>(renderTarget)->hWnd)
+{
+}
 
 WinGLContext::WinGLContext(HWND hWnd)
 {

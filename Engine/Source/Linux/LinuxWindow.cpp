@@ -1,41 +1,21 @@
 
 #include "LinuxWindow.h"
 
-#define Window XWindow
-#include<X11/X.h>
-#include<X11/Xlib.h>
-#include<GL/gl.h>
-#include<GL/glx.h>
-#undef Window
+#include "App.h"
+#include "../Render/RenderManager.h"
+#include "LinuxRenderTarget.h"
 
 #include <stdio.h>
-
-void DrawAQuad()
-{
-    glClearColor(1.0, 0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-1., 1., -1., 1., 1., 20.);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glBegin(GL_QUADS);
-    glColor3f(1., 0., 0.); glVertex3f(-.75, -.75, 0.);
-    glColor3f(0., 1., 0.); glVertex3f( .75, -.75, 0.);
-    glColor3f(0., 0., 1.); glVertex3f( .75,  .75, 0.);
-    glColor3f(1., 1., 0.); glVertex3f(-.75,  .75, 0.);
-    glEnd();
-}
-
+#include<GL/glew.h>
+#include<GL/gl.h>
+#include<GL/glx.h>
 
 LinuxWindow::LinuxWindow()
 {    
+    display = XOpenDisplay(NULL);
+
     GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 
-    Display *display = XOpenDisplay(NULL);
     XWindow root = DefaultRootWindow(display);
 
     XVisualInfo* vi = glXChooseVisual(display, 0, att);
@@ -44,12 +24,17 @@ LinuxWindow::LinuxWindow()
     swa.colormap = XCreateColormap(display, root, vi->visual, AllocNone);
     swa.event_mask = ExposureMask | KeyPressMask | StructureNotifyMask;
 
-    XWindow win = XCreateWindow(display, root, 0, 0, 600, 600, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
-    XMapWindow(display, win);
-    XStoreName(display, win, "WINDOW");
+    window = XCreateWindow(display, root, 0, 0, 600, 600, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
+    XMapWindow(display, window);
+    XStoreName(display, window, "WINDOW");
     XFlush(display);
 
-    GLXContext glc = glXCreateContext(display, vi, NULL, GL_TRUE);
+    renderTarget = new LinuxRenderTarget(display, window);
+    renderer = RenderManager::Instance()->renderers[0];
+
+    App::Instance()->AddWindow(this);
+
+    /*GLXContext glc = glXCreateContext(display, vi, NULL, GL_TRUE);
     glXMakeCurrent(display, win, glc);
 
     XEvent xev;
@@ -75,7 +60,7 @@ LinuxWindow::LinuxWindow()
         }
 
 
-    }
+    }*/
 
     /*XWindowAttributes gwa;
 
@@ -121,14 +106,11 @@ LinuxWindow::LinuxWindow()
 
 void LinuxWindow::ProcessEvents()
 {
-
-}
-
-void LinuxWindow::SetContext()
-{
-}
-
-void LinuxWindow::Swap()
-{
+    XEvent xev;
+    if (XCheckWindowEvent(display, window, KeyPressMask, &xev))
+    {
+        printf("HEREd \n");
+        fflush(stdout);
+    }
 }
 

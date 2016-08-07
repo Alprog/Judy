@@ -20,12 +20,10 @@
 
 GLRenderer::GLRenderer()
 {
-#if WINDOWS
-    auto dummy = (GLContext*)new PlatformGLContext(0);
+    auto dummy = (GLContext*)new PlatformGLContext();
     dummy->MakeCurrent();
     glewInit();
     //delete dummy;
-#endif
 }
 
 void GLRenderer::Clear(Color color)
@@ -39,19 +37,12 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
     auto context = (GLContext*)contexts[renderTarget];
     if (context == nullptr)
     {
-#if WINDOWS
-        auto hWnd = ((WinRenderTarget*)renderTarget)->hWnd;
-        context = (GLContext*)new WinGLContext(hWnd);
-#elif LINUX
-
-#endif
+        context = new PlatformGLContext(renderTarget);
         contexts[renderTarget] = context;
     }
 
     context->MakeCurrent();
-#if WINDOWS
     glewInit();
-#endif
 
     return context;
 }
