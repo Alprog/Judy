@@ -1,6 +1,6 @@
 
 #include "Window.h"
-#include "Platforms.h"
+#include <PlatformWindow.h>
 
 #ifdef WIN
 #include "Render/GL/GLRenderer.h"

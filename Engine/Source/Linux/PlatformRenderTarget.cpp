@@ -1,5 +1,5 @@
 
-#include "LinuxRenderTarget.h"
+#include <PlatformRenderTarget.h>
 
 LinuxRenderTarget::LinuxRenderTarget(Display* display, XWindow window)
     : display{display}

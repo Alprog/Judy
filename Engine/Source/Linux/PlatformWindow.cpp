@@ -1,9 +1,9 @@
 
-#include "LinuxWindow.h"
+#include <PlatformWindow.h>
+#include <PlatformRenderTarget.h>
 
 #include "App.h"
 #include "../Render/RenderManager.h"
-#include "LinuxRenderTarget.h"
 
 #include <stdio.h>
 #include<GL/glew.h>

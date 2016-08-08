@@ -20,3 +20,5 @@ public:
     Display* display;
     XWindow window;
 };
+
+using PlatformRenderTarget = LinuxRenderTarget;

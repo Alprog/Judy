@@ -1,6 +1,7 @@
 
 #include "App.h"
-#include "Platforms.h"
+#include <PlatformApp.h>
+
 #include <time.h>
 #include "Input/InputSystem.h"
 

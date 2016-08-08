@@ -19,3 +19,5 @@ public:
     Display* display;
     XWindow window;
 };
+
+using PlatformWindow = LinuxWindow;

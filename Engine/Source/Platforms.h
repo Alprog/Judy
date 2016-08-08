@@ -27,13 +27,9 @@
 #endif
 
 #ifdef LINUX
-    #include "Linux/LinuxApp.h"
-    #include "Linux/LinuxWindow.h"
     #include "Linux/LinuxInputSystem.h"
     #include "Render/GL/Linux/LinuxGLContext.h"
 
-    using PlatformApp = LinuxApp;
-    using PlatformWindow = LinuxWindow;
     using PlatformInputSystem = LinuxInputSystem;
     using PlatformGLContext = LinuxGLContext;
 #endif

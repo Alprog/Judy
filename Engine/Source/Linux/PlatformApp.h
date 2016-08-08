@@ -8,3 +8,5 @@ public:
     LinuxApp();
 };
 
+using PlatformApp = LinuxApp;
+
