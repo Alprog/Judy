@@ -1,5 +1,6 @@
 
-#include "InputSystem.h"
-#include "PlatformSingleton.tpp"
-template class PlatformSingleton<InputSystem>;
+#include <InputSystem.h>
+#include <PlatformInputSystem.h>
 
+#include <Singleton.tpp>
+template class Singleton<InputSystem, PlatformInputSystem>;

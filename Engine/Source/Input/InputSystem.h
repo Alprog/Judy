@@ -2,8 +2,11 @@
 #pragma once
 #include "Singleton.h"
 #include "InputDevice.h"
+#include "Platform.h"
 
-class InputSystem : public PlatformSingleton<InputSystem>
+PLATFORM_FORWARD_DECLARE(InputSystem)
+
+class InputSystem : public Singleton<InputSystem, PlatformInputSystem>
 {
 public:
     virtual void UpdateState() = 0;

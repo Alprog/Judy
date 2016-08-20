@@ -26,7 +26,7 @@ struct IBase<T, IF(T, Class)>
 };
 
 template <typename ClassType>
-class TypeMeta : public IBase<ClassType>::type, public TrivialSingleton<TypeMeta<ClassType>>
+class TypeMeta : public IBase<ClassType>::type, public Singleton<TypeMeta<ClassType>>
 {
 public:
     using pointeeType = typename pointeeOf<ClassType>::type;

@@ -27,10 +27,8 @@
 #endif
 
 #ifdef LINUX
-    #include "Linux/LinuxInputSystem.h"
     #include "Render/GL/Linux/LinuxGLContext.h"
 
-    using PlatformInputSystem = LinuxInputSystem;
     using PlatformGLContext = LinuxGLContext;
 #endif
 
@@ -42,5 +40,4 @@
     using PlatformWindow = MacWindow;
 #endif
 
-template <typename T> struct PlatformType;
-template <> struct PlatformType<InputSystem> { using type = PlatformInputSystem; };
+

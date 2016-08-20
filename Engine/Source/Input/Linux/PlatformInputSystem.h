@@ -15,3 +15,5 @@ public:
     virtual void UpdateState() override;
 
 };
+
+using PlatformInputSystem = LinuxInputSystem;

@@ -1,5 +1,5 @@
 
-#include "LinuxInputSystem.h"
+#include <PlatformInputSystem.h>
 #include <cassert>
 
 LinuxInputSystem::LinuxInputSystem()
@@ -15,4 +15,3 @@ void LinuxInputSystem::UpdateState()
 {
 
 }
-

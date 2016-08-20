@@ -23,6 +23,7 @@ win: dirs += Source/Render/DX Source/Render/Vulkan "$$(Vulkan_SDK)\Include"
 for(dir, dirs) {
     INCLUDEPATH += $$dir
     HEADERS += $$files($$dir/*.h)
+    HEADERS += $$files($$dir/*.tpp)
     SOURCES += $$files($$dir/*.cpp)
     SOURCES += $$files($$dir/*.mm)
 }
