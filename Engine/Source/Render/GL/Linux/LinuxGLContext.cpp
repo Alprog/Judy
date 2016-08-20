@@ -30,10 +30,5 @@ void LinuxGLContext::MakeCurrent()
 
 void LinuxGLContext::Swap()
 {
-    static float a = 0;
-    a = 1 - a;
-
-    glClearColor( 1.0, a, 0.0, 1.0 );
-    glClear(GL_COLOR_BUFFER_BIT);
     glXSwapBuffers(display, window);
 }

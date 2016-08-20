@@ -111,7 +111,7 @@ void GLRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* rende
     //glScissor(0, 0, 400, 800);
     //glEnable(GL_SCISSOR_TEST);
 
-    Color color { 0.3f, 0.3f, 0.3f, 1.0f };
+    Color color { 0.3f, 0.5f, 0.3f, 1.0f };
     Clear(color);
 
     for (auto& command : commands)
