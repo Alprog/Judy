@@ -9,7 +9,10 @@ PLATFORM_FORWARD_DECLARE(InputSystem)
 class InputSystem : public Singleton<InputSystem, PlatformInputSystem>
 {
 public:
-    virtual void UpdateState() = 0;
+    void UpdateState();
 
-    std::vector<InputDevice> devices;
+protected:
+    virtual void CheckHotPlugs() = 0;
+
+    std::vector<InputDevice*> devices;
 };

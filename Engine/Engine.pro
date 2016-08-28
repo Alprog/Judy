@@ -19,6 +19,7 @@ for(subdir, subdirs) {
 }
 
 win: dirs += Source/Render/DX Source/Render/Vulkan "$$(Vulkan_SDK)\Include"
+linux: dirs += /usr/include/libevdev-1.0
 
 for(dir, dirs) {
     INCLUDEPATH += $$dir

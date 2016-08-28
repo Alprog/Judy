@@ -6,6 +6,7 @@
 class InputDevice
 {
 public:
-    void* Data;
+    virtual void UpdateState() = 0;
+
     InputDeviceType Type;
 };

@@ -5,8 +5,8 @@
 #include "Render/RenderTarget.h"
 
 #define Window XWindow
-#include<X11/X.h>
-#include<X11/Xlib.h>
+#include <X11/X.h>
+#include <X11/Xlib.h>
 #undef Window
 
 class LinuxWindow : public Window

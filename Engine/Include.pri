@@ -29,7 +29,7 @@ linux {
     PRE_TARGETDEPS += "../3rd-party/liblibpng.a"
     PRE_TARGETDEPS += "../3rd-party/liblua.a"
 
-    LIBS += -lX11 -lGL -lGLEW -lpthread
+    LIBS += -lX11 -lGL -lGLEW -lpthread -ludev -levdev
 }
 
 mac {

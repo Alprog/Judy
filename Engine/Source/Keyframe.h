@@ -9,5 +9,4 @@ public:
 
     int Frame;
     T Value;
-
 };
