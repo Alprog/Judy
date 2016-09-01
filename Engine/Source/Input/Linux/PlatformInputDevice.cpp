@@ -2,6 +2,7 @@
 #include <PlatformInputDevice.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstring>
 
 LinuxInputDevice* LinuxInputDevice::Create(std::string filePath)
 {
@@ -42,28 +43,33 @@ LinuxInputDevice::~LinuxInputDevice()
 void LinuxInputDevice::UpdateState()
 {
     input_event event;
-
-    auto result = libevdev_next_event(device, LIBEVDEV_READ_FLAG_NORMAL, &event);
-
-    if (result < 0)
+    while (true)
     {
-        if (result != -EAGAIN)
+        auto result = libevdev_next_event(device, LIBEVDEV_READ_FLAG_NORMAL, &event);
+        if (result == -EAGAIN)
+        {
+            break;
+        }
+        else if (result == LIBEVDEV_READ_STATUS_SYNC)
+        {
+            HandleSynDropped();
+        }
+        else if (result == LIBEVDEV_READ_STATUS_SUCCESS)
+        {
+            auto typeName = libevdev_event_type_get_name(event.type);
+            auto codeName = libevdev_event_code_get_name(event.type, event.code);
+
+            if (strcmp(typeName, "EV_SYN") == 0 || strcmp(typeName, "EV_REL") == 0 || strcmp(typeName, "EV_MSC") == 0 || strcmp(typeName, "EV_ABS") == 0)
+                continue;
+
+            printf("%s %s %i\n", typeName, codeName, event.value);
+            fflush(stdout);
+        }
+        else
         {
             printf("error: %d\n", result);
+            break;
         }
-    }
-    else if (result == LIBEVDEV_READ_STATUS_SYNC)
-    {
-        HandleSynDropped();
-    }
-    else if (result == LIBEVDEV_READ_STATUS_SUCCESS)
-    {
-        const char* typeName = libevdev_event_type_get_name(event.type);
-        const char* codeName = libevdev_event_code_get_name(event.type, event.code);
-
-        const char* format = "We have an event!\n%d (%s) %s (%d)\n";
-        printf("%s %s\n", typeName, codeName);
-        fflush(stdout);
     }
 }
 

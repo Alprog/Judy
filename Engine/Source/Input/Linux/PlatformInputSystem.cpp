@@ -29,9 +29,6 @@ void LinuxInputSystem::RegisterAllDevices()
 {
     auto udevenum = udev_enumerate_new(udev);
     udev_enumerate_add_match_subsystem(udevenum, "input");
-    udev_enumerate_add_match_property(udevenum, "ID_INPUT_JOYSTICK", "1");
-    udev_enumerate_add_match_property(udevenum, "ID_INPUT_KEYBOARD", "1");
-    udev_enumerate_add_match_property(udevenum, "ID_INPUT_MOUSE", "1");
     udev_enumerate_scan_devices(udevenum);
 
     udev_list_entry* entry = udev_enumerate_get_list_entry(udevenum);
@@ -41,15 +38,26 @@ void LinuxInputSystem::RegisterAllDevices()
 
         auto udevDevice = udev_device_new_from_syspath(udev, path);
 
-        auto filePath = udev_device_get_devnode(udevDevice);
-        if (filePath != nullptr)
+        auto devNode = udev_device_get_devnode(udevDevice);
+        if (devNode != nullptr)
         {
-            TryAddDevice(filePath);
-        }
+            std::string filePath = devNode;
+            if (filePath.find("event") != std::string::npos)
+            {
+                auto serial = udev_device_get_property_value(udevDevice, "ID_SERIAL");
 
-        //const char* type = udev_device_get_property_value(dev, "ID_INPUT_JOYSTICK");
-        //printf("-- %s \n", type);
-        //fflush(stdout);
+                bool isMouse = udev_device_get_property_value(udevDevice, "ID_INPUT_MOUSE") != nullptr;
+                bool isKeyboard = udev_device_get_property_value(udevDevice, "ID_INPUT_KEYBOARD") != nullptr;
+                bool isGamepad = udev_device_get_property_value(udevDevice, "ID_INPUT_JOYSTICK") != nullptr;
+                bool isKey = udev_device_get_property_value(udevDevice, "ID_INPUT_KEY") != nullptr;
+
+                bool isKnownDevice = isMouse || isKeyboard || isGamepad || (isKey && serial != nullptr);
+                if (isKnownDevice)
+                {
+                    TryAddDevice(filePath);
+                }
+            }
+        }
 
         udev_device_unref(udevDevice);
     }
@@ -60,6 +68,8 @@ void LinuxInputSystem::TryAddDevice(std::string filePath)
     auto device = PlatformInputDevice::Create(filePath);
     if (device != nullptr)
     {
+        printf(">> %s\n", filePath.c_str());
+
         devices.push_back(device);
     }
 }
