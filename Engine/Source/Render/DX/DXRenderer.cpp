@@ -1,6 +1,6 @@
 
 #include "DXRenderer.h"
-#include "Win/WinRenderTarget.h"
+#include <PlatformRenderTarget.h>
 
 #include <d3dx12.h>
 

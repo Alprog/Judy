@@ -4,7 +4,7 @@
 
 #include "Meta/Meta.h"
 #include "Meta/Binder.h"
-#include "Lua.h"
+#include "Source/luainc.h"
 
 int const maxStackSize = 256;
 

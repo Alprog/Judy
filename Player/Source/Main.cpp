@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     if (debug)
     {
-        auto debugger = new RemoteDebbuger(luaMachine, "0xCODE");
+        auto debugger = new RemoteDebbuger(luaMachine, 0xC0DE);
         luaMachine->Do("Main.lua", true);
         delete debugger;
     }

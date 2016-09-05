@@ -3,7 +3,7 @@
 
 #include "../IRenderer.h"
 
-#include "vulkan.h"
+#include <vulkaninc.h>
 
 #include "VulkanShaderImpl.h"
 #include "VulkanTextureImpl.h"

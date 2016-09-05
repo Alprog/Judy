@@ -1,5 +1,7 @@
 
-#include "Binder.h"
+#include <Binder.h>
+
+#include "Source/luainc.h"
 
 #include "Meta.h"
 #include "TypeMeta.h"
@@ -7,7 +9,6 @@
 #include "MethodMeta.h"
 #include "ConstructorMeta.h"
 #include "ITypeMeta.h"
-#include "Lua.h"
 #include "Object.h"
 #include "Ref.h"
 

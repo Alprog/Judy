@@ -2,7 +2,7 @@
 #include "Object.h"
 
 #include "LuaMachine.h"
-#include "Lua.h"
+#include "luainc.h"
 
 Object::Object()
     : referenceCount{0}

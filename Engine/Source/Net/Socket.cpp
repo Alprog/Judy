@@ -1,6 +1,6 @@
 
-#include "Socket.h"
-#include "Platforms.h"
+#include <Socket.h>
+#include <PlatformSocket.h>
 
 Socket* Socket::Create()
 {

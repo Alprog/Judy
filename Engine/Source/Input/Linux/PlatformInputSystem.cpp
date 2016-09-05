@@ -90,6 +90,16 @@ void LinuxInputSystem::TryRemoveDevice(std::string filePath)
     }
 }
 
+void LinuxInputSystem::UpdateState()
+{
+    CheckHotPlugs();
+
+    for (auto device : devices)
+    {
+        device->UpdateState();
+    }
+}
+
 void LinuxInputSystem::CheckHotPlugs()
 {
     fd_set fileSet;

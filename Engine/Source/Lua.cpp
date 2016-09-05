@@ -1,5 +1,5 @@
 
-#include "Lua.h"
+#include "luainc.h"
 
 bool lua_isemptytable(lua_State* L, int index)
 {

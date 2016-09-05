@@ -1,7 +1,7 @@
 
 #include "VulkanRenderer.h"
 #include <cassert>
-#include "Platforms.h"
+#include <PlatformRenderTarget.h>
 
 VulkanRenderer::VulkanRenderer()
 {

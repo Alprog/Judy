@@ -5,8 +5,8 @@
 
 #if WIN
     #include <windows.h>
-    #include "Win/WinGLContext.h"
-    #include "Win/WinRenderTarget.h"
+    #include <PlatformGLContext.h>
+    #include <PlatformRenderTarget.h>
 #endif
 
 #include "gl.h"
@@ -15,8 +15,6 @@
 #include "../IndexBuffer.h"
 #include "../VertexBuffer.h"
 #include "../ConstantBuffer.h"
-
-#include "Platforms.h"
 
 GLRenderer::GLRenderer()
 {

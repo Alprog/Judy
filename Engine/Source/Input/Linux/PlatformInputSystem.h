@@ -13,7 +13,8 @@ private:
     ~LinuxInputSystem();
 
 protected:
-    virtual void CheckHotPlugs() override;
+    virtual void UpdateState() override;
+    void CheckHotPlugs();
 
 private:
     void RegisterAllDevices();

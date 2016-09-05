@@ -6,7 +6,7 @@
 #include "List.h"
 #include "ConstructorMeta.h"
 #include "Meta/TypeMeta.h"
-#include "Lua.h"
+#include "Source/luainc.h"
 #include "Object.h"
 
 Serializer::Serializer()

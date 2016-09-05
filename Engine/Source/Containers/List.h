@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Meta/Serializer.h"
-#include "Lua.h"
+#include "luainc.h"
 #include "Attributes.h"
 
 template <typename T>

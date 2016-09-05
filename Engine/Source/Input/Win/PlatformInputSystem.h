@@ -23,3 +23,5 @@ public:
 private:
     HWND hWnd;
 };
+
+using PlatfromInputSystem = WinInputSystem;

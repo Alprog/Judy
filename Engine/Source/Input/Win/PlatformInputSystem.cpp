@@ -1,7 +1,8 @@
 
-#include "WinInputSystem.h"
+#include <PlatformInputSystem.h>
 #include <cassert>
 #include <hidsdi.h>
+#include <PlatformInputDevice.h>
 
 #define VK_NUMRETURN 0x0F
 
@@ -189,9 +190,9 @@ void WinInputSystem::FindDevices()
         void* preparsedData = new char[size];
         GetRawInputDeviceInfo(deviceHeader.hDevice, RIDI_PREPARSEDDATA, preparsedData, &size);
 
-        InputDevice device;
-        device.Type = type;
-        device.Data = preparsedData;
+        auto device = new WinInputDevice();
+        device->Type = type;
+        //device- = preparsedData;
         devices.push_back(device);
     }
 
@@ -238,7 +239,7 @@ WinInputSystem::WinInputSystem()
 
 void WinInputSystem::InitKeys()
 {
-    keys.resize(256, Key::None);
+    keys.resize(256, Key::Unknown);
 
     keys[VK_SHIFT] = Key::Ambiguity;
     keys[VK_CONTROL] = Key::Ambiguity;

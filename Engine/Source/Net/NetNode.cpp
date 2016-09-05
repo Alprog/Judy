@@ -1,6 +1,6 @@
 
 #include "NetNode.h"
-#include "Lua.h"
+#include <luainc.h>
 
 const int MAX = 1024;
 

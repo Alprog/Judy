@@ -74,7 +74,7 @@ void Node::Reparent(Node* parent)
     }
 }
 
-#include "Lua.h"
+#include "luainc.h"
 
 void Node::Update(float delta)
 {
