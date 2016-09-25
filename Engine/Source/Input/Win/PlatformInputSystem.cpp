@@ -7,7 +7,7 @@
 #define VK_NUMRETURN 0x0F
 
 
-auto hkl = LoadKeyboardLayout(L"00000409", 0);
+auto hkl = LoadKeyboardLayout(L"00000409", 0); // English QWERTY
 
 LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

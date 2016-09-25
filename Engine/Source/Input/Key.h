@@ -1,7 +1,7 @@
 
 #pragma once
 
-enum class Key
+enum class Key : int
 {
     Unknown,
     Ambiguity,
