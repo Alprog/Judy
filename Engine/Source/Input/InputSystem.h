@@ -6,8 +6,10 @@
 
 PLATFORM_FORWARD_DECLARE(InputSystem)
 
-class InputSystem : public Singleton<InputSystem, PlatformInputSystem>
+class [[Meta]] InputSystem : public Singleton<InputSystem, PlatformInputSystem>
 {
+    friend class Meta;
+
 public:
     virtual void UpdateState() = 0;
 

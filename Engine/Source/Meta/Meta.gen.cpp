@@ -5,6 +5,9 @@
 #include "List.h"
 #include "Map.h"
 #include "Set.h"
+#include "InputDevice.h"
+#include "InputSystem.h"
+#include "VirtualDevice.h"
 #include "CallInfo.h"
 #include "CallStack.h"
 #include "DebugCommand.h"
@@ -21,13 +24,12 @@
 #include "Object.h"
 #include "Quad.h"
 #include "Window.h"
-#include "Render/RendererFrontend.h"
+#include <RendererFrontend.h>
 
 template <typename T>
 void Meta::DefineList()
 {
     using type = List<T>;
-
     ClassDefiner<type>(this, "List<T>")
         .template templateArgument<T>()
         .template base<std::vector<T>>()
@@ -77,6 +79,38 @@ void Meta::DefineClasses()
     DefineList<Ref<Node>>();
     DefineList<int>();
     DefineList<Window*>();
+
+    ClassDefiner<InputDevice>(this, "InputDevice")
+        .method("UpdateState", &InputDevice::UpdateState)
+        .method("IsPressed", &InputDevice::IsPressed)
+        .method("IsReleased", &InputDevice::IsReleased)
+        .method("WasPressed", &InputDevice::WasPressed)
+        .method("WasReleased", &InputDevice::WasReleased)
+        .method("OnPressed", &InputDevice::OnPressed)
+        .method("OnReleased", &InputDevice::OnReleased)
+        .field("Type", &InputDevice::Type)
+        .field("CurrentState", &InputDevice::CurrentState)
+        .field("PreviousState", &InputDevice::PreviousState)
+    ;
+
+    ClassDefiner<InputSystem>(this, "InputSystem")
+        .base<Singleton<InputSystem, PlatformInputSystem>>()
+        .method("UpdateState", &InputSystem::UpdateState)
+        .field("devices", &InputSystem::devices)
+    ;
+
+    ClassDefiner<VirtualDevice>(this, "VirtualDevice")
+        .base<Object>()
+        .constructor()
+        .method("AddKeySource", &VirtualDevice::AddKeySource).attr("Bind")
+        .method("IsPressed", &VirtualDevice::IsPressed).attr("Bind")
+        .method("IsReleased", &VirtualDevice::IsReleased).attr("Bind")
+        .method("WasPressed", &VirtualDevice::WasPressed).attr("Bind")
+        .method("WasReleased", &VirtualDevice::WasReleased).attr("Bind")
+        .method("OnPressed", &VirtualDevice::OnPressed).attr("Bind")
+        .method("OnReleased", &VirtualDevice::OnReleased).attr("Bind")
+        .field("Keys", &VirtualDevice::Keys)
+    ;
 
     ClassDefiner<CallInfo>(this, "CallInfo")
         .constructor()
@@ -192,6 +226,7 @@ void Meta::DefineClasses()
     ClassDefiner<Model>(this, "Model")
         .base<Node>()
         .constructor()
+        .method("Render", &Model::Render)
         .field("mesh", &Model::mesh)
         .field("renderState", &Model::renderState)
         .field("name", &Model::name).attr("Serialize").attr("Inspect")

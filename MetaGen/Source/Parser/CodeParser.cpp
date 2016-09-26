@@ -61,6 +61,11 @@ void CodeParser::removeDirectives(std::string& text)
 
 void CodeParser::parseClasses(Snippet* snippet, std::string headerName)
 {
+    if (headerName == "DXConstantBufferImpl.h")
+    {
+        volatile int a = 3;
+    }
+
     for (Statement statement : snippet->getStatements())
     {
         if (statement.isClass() && statement.hasDefinition())

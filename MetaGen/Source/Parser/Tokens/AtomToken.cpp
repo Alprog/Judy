@@ -15,3 +15,8 @@ const std::string AtomToken::getText() const
 {
     return text;
 }
+
+const bool AtomToken::isGroup() const
+{
+    return false;
+}

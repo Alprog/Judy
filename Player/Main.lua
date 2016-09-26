@@ -2,9 +2,9 @@
 require 'Class'
 require 'ModelDerived'
 --require 'Serializer'
-
-
-print(3)
+
+
+print(3)
 
 local app = App.Instance()
 local window = Window.Create()
@@ -17,6 +17,12 @@ function add()
 	print(model.foo)
 	scene:AddChild(model)
 end
+
+local virtualDevice = VirtualDevice.new0()
+virtualDevice:AddKeySource(0, nil, 0)
+virtualDevice:AddKeySource(0, nil, 1)
+
+local b = virtualDevice:IsPressed(0)
 
 add()
 

@@ -22,6 +22,16 @@ bool InputDevice::IsReleased(int keyCode)
     return !CurrentState.IsSet(keyCode);
 }
 
+bool InputDevice::WasPressed(int keyCode)
+{
+    return PreviousState.IsSet(keyCode);
+}
+
+bool InputDevice::WasReleased(int keyCode)
+{
+    return !PreviousState.IsSet(keyCode);
+}
+
 bool InputDevice::OnPressed(int keyCode)
 {
     return !PreviousState.IsSet(keyCode) && CurrentState.IsSet(keyCode);

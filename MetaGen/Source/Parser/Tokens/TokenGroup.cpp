@@ -58,19 +58,27 @@ const std::string TokenGroup::getText() const
     return text;
 }
 
+const bool TokenGroup::isGroup() const
+{
+    return true;
+}
+
 void TokenGroup::decay(std::string name)
 {
     auto index = indexOf(name);
     while (index >= 0)
     {
-        extractAt(index);
-        for (auto i = 0; i < name.size(); i++)
+        if (!tokens[index]->isGroup())
         {
-            auto text = name.substr(i, 1);
-            std::shared_ptr<Token> token { new AtomToken(text) };
-            insert(index, token);
+            extractAt(index);
+            for (auto i = 0; i < name.size(); i++)
+            {
+                auto text = name.substr(i, 1);
+                std::shared_ptr<Token> token { new AtomToken(text) };
+                insert(index + i, token);
+            }
         }
-        index = indexOf(name);
+        index = indexOf(name, index + 1);
     }
 }
 
@@ -168,6 +176,7 @@ void TokenGroup::makeBracketGroups()
 
 void TokenGroup::makeTemplateGroups()
 {
+    decay("<>");
     decay("<<");
     decay(">>");
     makeGroups("<", ">");

@@ -23,6 +23,7 @@ public:
 
     const std::string getName() const override;
     const std::string getText() const override;
+    const bool isGroup() const override;
 
     int indexOf(std::string tokenName, int startIndex = 0) const;
     int lastIndexOf(std::string tokenName) const;

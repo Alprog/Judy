@@ -105,14 +105,26 @@ inline Any GetArgument(lua_State* L, int index, ITypeMeta* typeMeta)
     {
         return (float)lua_tonumber(L, index);
     }
+    if (typeMeta == TypeMetaOf<bool>())
+    {
+        return lua_toboolean(L, index);
+    }
     else if (typeMeta == TypeMetaOf<char*>())
     {
         return lua_tostring(L, index);
     }
     else
     {
-        void* p = *(void**)lua_touserdata(L, index);
-        return p;
+        if (lua_isnil(L, index))
+        {
+            void* p = nullptr;
+            return p;
+        }
+        else
+        {
+            void* p = *(void**)lua_touserdata(L, index);
+            return p;
+        }
     }
 }
 
@@ -163,7 +175,11 @@ void pushObject(lua_State* L, Object* pointer, std::string className)
 
 inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
 {
-    if (type == TypeMetaOf<int>())
+    if (type == TypeMetaOf<bool>())
+    {
+        lua_pushboolean(L, result.as<bool>());
+    }
+    else if (type == TypeMetaOf<int>())
     {
         lua_pushinteger(L, result.as<int>());
     }

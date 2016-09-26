@@ -9,6 +9,7 @@ public:
     AtomToken(std::string text);
     const std::string getName() const override;
     const std::string getText() const override;
+    const bool isGroup() const override;
 
 private:
     std::string text;

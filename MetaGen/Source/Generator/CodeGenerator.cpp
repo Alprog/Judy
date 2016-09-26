@@ -10,9 +10,8 @@
     #define snprintf _snprintf
 #endif
 
-const std::string tab = "    ";
-const std::string tab2 = "        ";
-const std::string tab3 = "            ";
+template <int count>
+const std::string tab = std::string(count * 4, ' ');
 
 template <typename... ArgTypes>
 std::string format(const char* format, ArgTypes... args)
@@ -39,8 +38,8 @@ std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
         if (classInfo.isTemplate())
         {
             auto list = GenerateParametersList(classInfo, true);
-            stream << tab << "template <" << list << ">" << std::endl;
-            stream << tab << "void Define" << classInfo.name << "();" << std::endl;
+            stream << tab<1> << "template <" << list << ">" << std::endl;
+            stream << tab<1> << "void Define" << classInfo.name << "();" << std::endl;
             stream << std::endl;
         }
     }
@@ -101,7 +100,7 @@ std::string CodeGenerator::GenerateTemplateFunctions(std::vector<ClassInfo>& tem
         stream << "template <" << list << ">" << std::endl;
         stream << "void Meta::Define" << classInfo.name << "()" << std::endl;
         stream << "{" << std::endl;
-        stream << GenerateClassDefinition(classInfo);
+        stream << GenerateClassDefinition(classInfo, true);
         stream << "}" << std::endl;
         first = false;
     }
@@ -118,7 +117,7 @@ std::string CodeGenerator::GenerateMainFunction(std::vector<ClassInfo>& realClas
 
     for (auto& classInfo : realClasses)
     {
-        stream << std::endl << GenerateClassDefinition(classInfo);
+        stream << std::endl << GenerateClassDefinition(classInfo, false);
     }
 
     stream << "}" << std::endl;
@@ -197,7 +196,7 @@ std::string CodeGenerator::GenerateDefineTemplatesSection(std::vector<ClassInfo>
     std::stringstream stream;
     for (auto& typeInfo : templateInstances)
     {
-        stream << tab << "Define" << typeInfo.fullName << "();" << std::endl;
+        stream << tab<1> << "Define" << typeInfo.fullName << "();" << std::endl;
     }
     return stream.str();
 }
@@ -258,7 +257,7 @@ std::vector<TypeInfo> CodeGenerator::GetTemplateTypes(std::vector<ClassInfo>& cl
     return types;
 }
 
-std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
+std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool isTemplate)
 {
     std::stringstream stream;
 
@@ -267,22 +266,26 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     if (classInfo.isTemplate())
     {
         classFullName = className + "<" + GenerateParametersList(classInfo, false) + ">";
-        stream << tab << "using type = " << classFullName << ";" << std::endl;
+        stream << tab<1> << "using type = " << classFullName << ";" << std::endl;
         className = "type";
     }
 
-    stream << tab << "ClassDefiner<" << className << ">" << "(this, \"" << classFullName << "\")" << std::endl;
+    stream << tab<1> << "ClassDefiner<" << className << ">" << "(this, \"" << classFullName << "\")" << std::endl;
 
     // template arguments
     for (auto& parameter : classInfo.templateParameters)
     {
-        stream << tab2 << ".templateArgument<" << parameter << ">()" << std::endl;
+        stream << tab<2>;
+        stream << (isTemplate ? ".template templateArgument" : ".templateArgument");
+        stream << "<" << parameter << ">()" << std::endl;
     }
 
     // base classes
     for (auto& inheritanceInfo : classInfo.inheritances)
     {
-        stream << tab2 << ".base<" << inheritanceInfo.type.fullName << ">()" << std::endl;
+        stream << tab<2>;
+        stream << (isTemplate ? ".template base" : ".base");
+        stream << "<" << inheritanceInfo.type.fullName << ">()" << std::endl;
     }
 
     // constructors
@@ -291,9 +294,14 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
     {
         for (auto& constructor : classInfo.constructors)
         {
-            stream << tab2 << ".constructor";
-            if (constructor.arguments.size() > 0)
+            stream << tab<2>;
+            if (constructor.arguments.size() == 0)
             {
+                stream << ".constructor";
+            }
+            else
+            {
+                stream << (isTemplate ? ".template constructor" : ".constructor");
                 stream << "<";
                 auto first = true;
                 for (auto& argumentInfo : constructor.arguments)
@@ -318,21 +326,21 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
         if (!method.isOperator && !method.isFriend)
         {
             auto type = method.isStatic ? "function" : "method";
-            stream << tab2 << GenerateMethod(type, method, className);
+            stream << tab<2> << GenerateMethod(type, method, className);
         }
     }
 
     // properties
     for (auto& property : classInfo.properties)
     {
-        stream << tab2 << ".property(\"" << property.name << "\")" << GenerateAttributes(property) << std::endl;
+        stream << tab<2> << ".property(\"" << property.name << "\")" << GenerateAttributes(property) << std::endl;
         if (property.hasGetter())
         {
-            stream << tab3 << GenerateMethod("getter", property.getter, className);
+            stream << tab<3> << GenerateMethod("getter", property.getter, className);
         }
         if (property.hasSetter())
         {
-            stream << tab3 << GenerateMethod("setter", property.setter, className);
+            stream << tab<3> << GenerateMethod("setter", property.setter, className);
         }
     }
 
@@ -343,13 +351,13 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo)
         {
             if (!field.isStatic)
             {
-                stream << tab2 << ".field(\"" << field.name << "\", &" << className << "::" << field.name << ")";
+                stream << tab<2> << ".field(\"" << field.name << "\", &" << className << "::" << field.name << ")";
                 stream << GenerateAttributes(field) << std::endl;
             }
         }
     }
 
-    stream << tab << ";" << std::endl;
+    stream << tab<1> << ";" << std::endl;
 
     return stream.str();
 }
