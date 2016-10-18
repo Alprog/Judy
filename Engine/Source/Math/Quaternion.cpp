@@ -20,7 +20,7 @@ Quaternion::Quaternion(List<float> list)
 {
 }
 
-List<float> Quaternion::toList()
+List<float> Quaternion::ToList()
 {
     return {x, y, z, w};
 }

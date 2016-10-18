@@ -9,22 +9,22 @@ VirtualDevice::VirtualDevice()
 
 void VirtualDevice::AddKeySource(int index, InputDevice* device, int keyCode)
 {
-    if (index >= Keys.size())
+    if (index >= keys.size())
     {
-        Keys.resize(index + 1);
+        keys.resize(index + 1);
     }
 
     if (device != nullptr)
     {
-        Keys[index].push_back({device, keyCode});
+        keys[index].push_back({device, keyCode});
     }
 }
 
 bool VirtualDevice::IsPressed(int index)
 {
-    if (index >= Keys.size())
+    if (index >= keys.size())
     {
-        auto & sources = Keys[index];
+        auto & sources = keys[index];
         for (Source & source : sources)
         {
             if (source.device->IsPressed(source.keyCode))
@@ -43,9 +43,9 @@ bool VirtualDevice::IsReleased(int index)
 
 bool VirtualDevice::WasPressed(int index)
 {
-    if (index >= Keys.size())
+    if (index >= keys.size())
     {
-        auto & sources = Keys[index];
+        auto & sources = keys[index];
         for (Source & source : sources)
         {
             if (source.device->WasPressed(source.keyCode))

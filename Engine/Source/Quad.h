@@ -16,7 +16,7 @@ public:
 
     virtual void Render(Matrix matrix, RendererFrontend* renderer) override;
 
-    [[Serialize]] [[Inspect]] Vector2 Size;
-    [[Serialize]] [[Inspect]] std::string Shader;
-    [[Serialize]] [[Inspect]] std::string Texture;
+    [[Serialize]] [[Inspect]] Vector2 size;
+    [[Serialize]] [[Inspect]] std::string shader;
+    [[Serialize]] [[Inspect]] std::string texture;
 };

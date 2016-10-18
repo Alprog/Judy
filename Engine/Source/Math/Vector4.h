@@ -12,7 +12,7 @@ struct [[Meta]] Vector4
     Vector4(float x = 0, float y = 0, float z = 0, float w = 0);
 
     Vector4(List<float> list);
-    [[Serialize]] List<float> toList();
+    [[Serialize]] List<float> ToList();
 
     float Length();
     float SquaredLength();

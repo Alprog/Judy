@@ -21,5 +21,4 @@ public:
 
     ConstantBuffer* resource;
     UINT8* gpuDataBegin;
-
 };

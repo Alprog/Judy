@@ -16,7 +16,7 @@ public:
     static Window* Create();
     virtual ~Window();
 
-    void show();
+    void Show();
 
     virtual void ProcessEvents() = 0;
 

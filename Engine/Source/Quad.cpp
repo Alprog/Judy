@@ -6,7 +6,7 @@ using base = Node;
 
 Quad::Quad()
     : base()
-    , Size(1, 1)
+    , size(1, 1)
 {
 }
 

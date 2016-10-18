@@ -21,7 +21,7 @@ Vector4::Vector4(List<float> list)
 {
 }
 
-List<float> Vector4::toList()
+List<float> Vector4::ToList()
 {
     return {x, y, z, w};
 }

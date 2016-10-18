@@ -2,19 +2,19 @@
 #include "Transform2D.h"
 
 Transform2D::Transform2D()
-    : Pivot {Vector3::Zero}
-    , Translation {Vector3::Zero}
-    , Rotation {0}
-    , Scaling {Vector3::One}
+    : pivot {Vector3::Zero}
+    , translation {Vector3::Zero}
+    , rotation {0}
+    , scaling {Vector3::One}
 {
 }
 
 Matrix Transform2D::GetMatrix()
 {
-    Matrix matrix = Matrix::Translation(-Pivot);
-    matrix *= Matrix::Scaling(Scaling);
-    matrix *= Matrix::RotationZ(Rotation);
-    matrix *= Matrix::Translation(Translation);
-    matrix *= Matrix::Translation(Pivot);
+    Matrix matrix = Matrix::Translation(-pivot);
+    matrix *= Matrix::Scaling(scaling);
+    matrix *= Matrix::RotationZ(rotation);
+    matrix *= Matrix::Translation(translation);
+    matrix *= Matrix::Translation(pivot);
     return matrix;
 }

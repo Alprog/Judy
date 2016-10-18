@@ -1,9 +1,10 @@
 
-#include "DXDescriptorHeap.h"
+#include <DXDescriptorHeap.h>
+#include <stdio.h>
 
 DXDescriptorHeap::DXDescriptorHeap(ID3D12Device* device, UINT maxCount)
 {
-    D3D12_DESCRIPTOR_HEAP_DESC desc;
+    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.NumDescriptors = maxCount;
     desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;

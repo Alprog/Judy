@@ -24,7 +24,7 @@ protected:
     App();
     void UpdateCollection();
 
-    Set<Window*> Windows;
-    Set<Window*> AddedWindows;
-    Set<Window*> RemovedWindows;
+    Set<Window*> windows;
+    Set<Window*> addedWindows;
+    Set<Window*> removedWindows;
 };

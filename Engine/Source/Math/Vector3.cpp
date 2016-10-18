@@ -19,7 +19,7 @@ Vector3::Vector3(List<float> list)
 {
 }
 
-List<float> Vector3::toList()
+List<float> Vector3::ToList()
 {
     return {x, y, z};
 }

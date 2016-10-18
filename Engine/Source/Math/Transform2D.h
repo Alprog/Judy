@@ -6,12 +6,12 @@
 
 struct Transform2D
 {
-    Vector3 Pivot;
-    Vector3 Translation;
-    float Rotation;
-    Vector3 Scaling;
-
     Transform2D();
 
     Matrix GetMatrix();
+
+    Vector3 pivot;
+    Vector3 translation;
+    float rotation;
+    Vector3 scaling;
 };

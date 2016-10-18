@@ -83,7 +83,7 @@ void Window::Render()
     renderer->Render(scene, renderTarget);
 }
 
-void Window::show()
+void Window::Show()
 {
 }
 

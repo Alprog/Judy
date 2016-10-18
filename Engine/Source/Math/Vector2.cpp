@@ -22,7 +22,7 @@ Vector2::Vector2(List<float> list)
 {
 }
 
-List<float> Vector2::toList()
+List<float> Vector2::ToList()
 {
     return {x, y};
 }

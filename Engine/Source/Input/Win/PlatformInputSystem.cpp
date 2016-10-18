@@ -191,7 +191,7 @@ void WinInputSystem::FindDevices()
         GetRawInputDeviceInfo(deviceHeader.hDevice, RIDI_PREPARSEDDATA, preparsedData, &size);
 
         auto device = new WinInputDevice();
-        device->Type = type;
+        device->type = type;
         //device- = preparsedData;
         devices.push_back(device);
     }

@@ -20,7 +20,7 @@ private:
     {
     }
 
-    [[Serialize]] List<T> toList()
+    [[Serialize]] List<T> ToList()
     {
         List<T> list(this->size());
         std::copy(this->begin(), this->end(), std::begin(list));

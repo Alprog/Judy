@@ -21,8 +21,8 @@ public:
     bool OnPressed(int keyCode);
     bool OnReleased(int keyCode);
 
-    InputDeviceType Type;
+    InputDeviceType type;
 
-    KeysState CurrentState;
-    KeysState PreviousState;
+    KeysState currentState;
+    KeysState previousState;
 };

@@ -16,7 +16,7 @@ public:
     Map() = default;
 
 private:
-    static void serialize(Map<T1, T2> map, Serializer* serializer)
+    static void Serialize(Map<T1, T2> map, Serializer* serializer)
     {
         auto L = serializer->getL();
         auto keyType = TypeMetaOf<T1>();
@@ -30,7 +30,7 @@ private:
         }
     }
 
-    static Map<T1, T2> deserialize(Serializer* serializer)
+    static Map<T1, T2> Deserialize(Serializer* serializer)
     {
         auto L = serializer->getL();
         auto keyType = TypeMetaOf<T1>();

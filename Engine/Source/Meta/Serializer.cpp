@@ -39,7 +39,7 @@ void Serializer::Serialize(Any object, ITypeMeta* type)
     if (flags & ITypeMeta::IsCustomSerializing)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
-        classMeta->functions["serialize"]->Invoke(object, this);
+        classMeta->functions["Serialize"]->Invoke(object, this);
     }
     else if (flags & ITypeMeta::IsPointer)
     {
@@ -212,7 +212,7 @@ Any Serializer::Deserialize(ITypeMeta* type)
     if (flags & ITypeMeta::IsCustomSerializing)
     {
         auto classMeta = static_cast<IClassMeta*>(type);
-        return classMeta->functions["deserialize"]->Invoke(this);
+        return classMeta->functions["Deserialize"]->Invoke(this);
     }
     else if (flags & ITypeMeta::IsPointer)
     {

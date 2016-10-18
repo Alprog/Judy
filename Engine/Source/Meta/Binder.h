@@ -10,7 +10,7 @@ class Any;
 class ITypeMeta;
 class IFunctionMeta;
 
-using luaCFunction = int(*)(lua_State*);
+using luaCFunction = auto (*)(lua_State*) -> int;
 
 class LuaBinder
 {

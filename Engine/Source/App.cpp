@@ -18,35 +18,35 @@ App::App()
 
 void App::AddWindow(Window* window)
 {
-    AddedWindows.insert(window);
+    addedWindows.insert(window);
 }
 
 void App::RemoveWindow(Window* window)
 {
-    RemovedWindows.insert(window);
+    removedWindows.insert(window);
 }
 
 void App::UpdateCollection()
 {
-    for (auto window : AddedWindows)
+    for (auto window : addedWindows)
     {
-        Windows.insert(window);
+        windows.insert(window);
     }
-    AddedWindows.clear();
+    addedWindows.clear();
 
-    for (auto window : RemovedWindows)
+    for (auto window : removedWindows)
     {
-        Windows.erase(window);
+        windows.erase(window);
         delete window;
     }
-    RemovedWindows.clear();
+    removedWindows.clear();
 }
 
 void App::StartMainLoop()
 {
     do
     {
-        for (auto window : Windows)
+        for (auto window : windows)
         {
             window->ProcessEvents();
         }
@@ -54,11 +54,11 @@ void App::StartMainLoop()
 
         InputSystem::Instance()->UpdateState();
 
-        for (auto window : Windows)
+        for (auto window : windows)
         {
             window->Update();
             window->Render();
         }
     }
-    while (Windows.size() > 0);
+    while (windows.size() > 0);
 }

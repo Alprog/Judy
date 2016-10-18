@@ -15,7 +15,7 @@ struct [[Meta]] Vector2
     Vector2(float x, float y);
 
     [[Serialize]] Vector2(List<float> list);
-    [[Serialize]] List<float> toList();
+    [[Serialize]] List<float> ToList();
 
     float Length();
     float SquaredLength();
