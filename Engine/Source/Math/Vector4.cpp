@@ -21,17 +21,17 @@ Vector4::Vector4(List<float> list)
 {
 }
 
-List<float> Vector4::ToList()
+List<float> Vector4::toList()
 {
     return {x, y, z, w};
 }
 
-float Vector4::Length()
+float Vector4::length()
 {
     return sqrt(x * x + y * y + z * z + w * w);
 }
 
-float Vector4::SquaredLength()
+float Vector4::squaredLength()
 {
     return x * x + y * y + z * z + w * w;
 }

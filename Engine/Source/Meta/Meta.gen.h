@@ -1,10 +1,10 @@
 
     template <typename T>
-    void DefineList();
+    void defineList();
 
     template <typename T1, typename T2>
-    void DefineMap();
+    void defineMap();
 
     template <typename T>
-    void DefineSet();
+    void defineSet();
 

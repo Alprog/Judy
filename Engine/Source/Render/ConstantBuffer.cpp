@@ -6,14 +6,14 @@
 
 ConstantBuffer::ConstantBuffer()
 {
-    Load();
+    load();
 }
 
-void ConstantBuffer::Load()
+void ConstantBuffer::load()
 {
-    auto& renderers = RenderManager::Instance()->renderers;
+    auto& renderers = RenderManager::instance()->renderers;
     for (size_t i = 0; i < renderers.size(); i++)
     {
-        renderers[i]->CreateImpl(this);
+        renderers[i]->createImpl(this);
     }
 }

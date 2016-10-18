@@ -2,8 +2,6 @@
 #include "DXRenderer.h"
 #include <PlatformRenderTarget.h>
 
-#include <d3dx12.h>
-
 #include "DXPipelineState.h"
 #include "DXShaderImpl.h"
 #include "DXTextureImpl.h"
@@ -19,7 +17,7 @@
 
 DXRenderer::DXRenderer()
 {
-    Init();
+    init();
 }
 
 DXRenderer::~DXRenderer()
@@ -30,17 +28,17 @@ DXPipelineState* state = nullptr;
 D3D12_VIEWPORT viewport;
 D3D12_RECT scissorRect;
 
-void DXRenderer::Init()
+void DXRenderer::init()
 {
-    EnableDebugLayer();
-    CreateDevice();
-    CreateCommandQueue();
-    CreateDescriptorHeap();
-    CreateCommandAllocator();
-    CreateCommandListAndFence();
+    enableDebugLayer();
+    createDevice();
+    createCommandQueue();
+    createDescriptorHeap();
+    createCommandAllocator();
+    createCommandListAndFence();
 }
 
-void DXRenderer::EnableDebugLayer()
+void DXRenderer::enableDebugLayer()
 {
     ComPtr<ID3D12Debug> debugController;
     auto result = D3D12GetDebugInterface(IID_PPV_ARGS(&debugController));
@@ -50,7 +48,7 @@ void DXRenderer::EnableDebugLayer()
     }
 }
 
-void DXRenderer::CreateDevice()
+void DXRenderer::createDevice()
 {
     ComPtr<IDXGIFactory4> factory;
     auto result = CreateDXGIFactory1(IID_PPV_ARGS(&factory));
@@ -79,7 +77,7 @@ void DXRenderer::CreateDevice()
     if (FAILED(result)) throw;
 }
 
-void DXRenderer::CreateCommandQueue()
+void DXRenderer::createCommandQueue()
 {
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -89,7 +87,7 @@ void DXRenderer::CreateCommandQueue()
     if (FAILED(result)) throw;
 }
 
-void DXRenderer::CreateDescriptorHeap()
+void DXRenderer::createDescriptorHeap()
 {
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
     rtvHeapDesc.NumDescriptors = 2;
@@ -115,7 +113,7 @@ void DXRenderer::CreateDescriptorHeap()
     srvCbvHeap = new DXDescriptorHeap(device.Get(), 10);
 }
 
-void DXRenderer::CreateCommandListAndFence()
+void DXRenderer::createCommandListAndFence()
 {
     auto result = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator.Get(), nullptr, IID_PPV_ARGS(&commandList));
     if (FAILED(result)) throw;
@@ -130,7 +128,7 @@ void DXRenderer::CreateCommandListAndFence()
     fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 }
 
-ComPtr<IDXGISwapChain3> DXRenderer::GetSwapChain(RenderTarget* renderTarget)
+ComPtr<IDXGISwapChain3> DXRenderer::getSwapChain(RenderTarget* renderTarget)
 {
     auto it = swapChains.find(renderTarget);
     if (it != std::end(swapChains))
@@ -139,16 +137,16 @@ ComPtr<IDXGISwapChain3> DXRenderer::GetSwapChain(RenderTarget* renderTarget)
     }
     else
     {
-        auto size = renderTarget->GetSize();
+        auto size = renderTarget->getSize();
         auto hwnd = static_cast<WinRenderTarget*>(renderTarget)->hWnd;
 
-        auto swapChain = CreateSwapChain(hwnd, size.x, size.y);
+        auto swapChain = createSwapChain(hwnd, size.x, size.y);
         swapChains[renderTarget] = swapChain;
         return swapChain;
     }
 }
 
-ComPtr<IDXGISwapChain3> DXRenderer::CreateSwapChain(HWND hwnd, int width, int height)
+ComPtr<IDXGISwapChain3> DXRenderer::createSwapChain(HWND hwnd, int width, int height)
 {
     ComPtr<IDXGIFactory4> factory;
     auto result = CreateDXGIFactory1(IID_PPV_ARGS(&factory));
@@ -213,35 +211,35 @@ ComPtr<IDXGISwapChain3> DXRenderer::CreateSwapChain(HWND hwnd, int width, int he
     return swapChain3;
 }
 
-void DXRenderer::CreateCommandAllocator()
+void DXRenderer::createCommandAllocator()
 {
     auto result = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
     if (FAILED(result)) throw;
 }
 
-void DXRenderer::Clear(Color color)
+void DXRenderer::clear(Color color)
 {
 
 }
 
-void DXRenderer::Draw(RenderCommand renderCommand)
+void DXRenderer::draw(RenderCommand renderCommand)
 {
     auto mesh = renderCommand.mesh;
     auto texture = renderCommand.state->texture;
     auto constantBuffer = renderCommand.state->constantBuffer;
 
-    commandList->SetGraphicsRootDescriptorTable(0, GetImpl(texture)->descriptorHandle.GetGPU());
-    commandList->SetGraphicsRootDescriptorTable(1, GetImpl(constantBuffer)->descriptorHandle.GetGPU());
+    commandList->SetGraphicsRootDescriptorTable(0, getImpl(texture)->descriptorHandle.getGPU());
+    commandList->SetGraphicsRootDescriptorTable(1, getImpl(constantBuffer)->descriptorHandle.getGPU());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    commandList->IASetVertexBuffers(0, 1, &GetImpl(mesh->vertexBuffer)->vertexBufferView);
-    commandList->IASetIndexBuffer(&GetImpl(mesh->indexBuffer)->indexBufferView);
+    commandList->IASetVertexBuffers(0, 1, &getImpl(mesh->vertexBuffer)->vertexBufferView);
+    commandList->IASetIndexBuffer(&getImpl(mesh->indexBuffer)->indexBufferView);
 
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
-void DXRenderer::PopulateCommandList(std::vector<RenderCommand> commands)
+void DXRenderer::populateCommandList(std::vector<RenderCommand> commands)
 {
     auto result = commandAllocator->Reset();
     if (FAILED(result)) throw;
@@ -258,7 +256,7 @@ void DXRenderer::PopulateCommandList(std::vector<RenderCommand> commands)
 
     commandList->SetGraphicsRootSignature(state->rootSignature.Get());
 
-    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->Get() };
+    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
     viewport.Width = static_cast<float>(800);
@@ -283,7 +281,7 @@ void DXRenderer::PopulateCommandList(std::vector<RenderCommand> commands)
 
     for (auto& command : commands)
     {
-        Draw(command);
+        draw(command);
     }
 
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
@@ -293,7 +291,7 @@ void DXRenderer::PopulateCommandList(std::vector<RenderCommand> commands)
     if (FAILED(result)) throw;
 }
 
-void DXRenderer::WaitForPreviousFrame()
+void DXRenderer::waitForPreviousFrame()
 {
     auto result = commandQueue->Signal(fence.Get(), fenceValue);
     if (FAILED(result)) throw;
@@ -308,11 +306,11 @@ void DXRenderer::WaitForPreviousFrame()
     fenceValue++;
 }
 
-void DXRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
+void DXRenderer::render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
 {
-    auto swapChain = GetSwapChain(renderTarget);
+    auto swapChain = getSwapChain(renderTarget);
 
-    PopulateCommandList(commands);
+    populateCommandList(commands);
 
     ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
     commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
@@ -320,6 +318,6 @@ void DXRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* rende
     auto result = swapChain->Present(1, 0);
     if (FAILED(result)) throw;
 
-    WaitForPreviousFrame();
+    waitForPreviousFrame();
     frameIndex = swapChain->GetCurrentBackBufferIndex();
 }

@@ -17,19 +17,19 @@ int main(int argc, char *argv[])
         }
     }
 
-    Meta::Instance()->Init();
+    Meta::instance()->init();
 
-    auto luaMachine = LuaMachine::Instance();
+    auto luaMachine = LuaMachine::instance();
 
     if (debug)
     {
         auto debugger = new RemoteDebbuger(luaMachine, 0xC0DE);
-        luaMachine->Do("Main.lua", true);
+        luaMachine->execute("Main.lua", true);
         delete debugger;
     }
     else
     {
-        luaMachine->Do("Main.lua");
+        luaMachine->execute("Main.lua");
     }
 
 }

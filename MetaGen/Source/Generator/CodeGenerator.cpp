@@ -28,7 +28,7 @@ std::string format(const char* format, ArgTypes... args)
     return "";
 }
 
-std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
+std::string CodeGenerator::generateHeader(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
     stream << std::endl;
@@ -37,9 +37,9 @@ std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
     {
         if (classInfo.isTemplate())
         {
-            auto list = GenerateParametersList(classInfo, true);
+            auto list = generateParametersList(classInfo, true);
             stream << tab<1> << "template <" << list << ">" << std::endl;
-            stream << tab<1> << "void Define" << classInfo.name << "();" << std::endl;
+            stream << tab<1> << "void define" << classInfo.name << "();" << std::endl;
             stream << std::endl;
         }
     }
@@ -47,7 +47,7 @@ std::string CodeGenerator::GenerateHeader(std::vector<ClassInfo>& classes)
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateSource(std::vector<ClassInfo>& classes)
+std::string CodeGenerator::generateSource(std::vector<ClassInfo>& classes)
 {
     std::vector<ClassInfo> classTemplates;
     std::vector<ClassInfo> realClasses;
@@ -59,16 +59,16 @@ std::string CodeGenerator::GenerateSource(std::vector<ClassInfo>& classes)
 
     std::stringstream stream;
     stream << std::endl;
-    stream << GenerateIncludes(classes);
+    stream << generateIncludes(classes);
     stream << std::endl;
-    stream << GenerateTemplateFunctions(classTemplates);
+    stream << generateTemplateFunctions(classTemplates);
     stream << std::endl;
-    stream << GenerateMainFunction(realClasses, classTemplates);
+    stream << generateMainFunction(realClasses, classTemplates);
     stream << std::endl;
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
+std::string CodeGenerator::generateIncludes(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
     stream << "#include \"Meta.h\"" << std::endl;
@@ -89,42 +89,42 @@ std::string CodeGenerator::GenerateIncludes(std::vector<ClassInfo>& classes)
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateTemplateFunctions(std::vector<ClassInfo>& templateClasses)
+std::string CodeGenerator::generateTemplateFunctions(std::vector<ClassInfo>& templateClasses)
 {
     std::stringstream stream;
     auto first = true;
     for (auto& classInfo : templateClasses)
     {
         if (!first) { stream << std::endl; }
-        auto list = GenerateParametersList(classInfo, true);
+        auto list = generateParametersList(classInfo, true);
         stream << "template <" << list << ">" << std::endl;
         stream << "void Meta::Define" << classInfo.name << "()" << std::endl;
         stream << "{" << std::endl;
-        stream << GenerateClassDefinition(classInfo, true);
+        stream << generateClassDefinition(classInfo, true);
         stream << "}" << std::endl;
         first = false;
     }
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates)
+std::string CodeGenerator::generateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates)
 {
     std::stringstream stream;
     stream << "void Meta::DefineClasses()" << std::endl;
     stream << "{" << std::endl;
 
-    stream << GenerateDefineTemplatesSection(realClasses, classTemplates);
+    stream << generateDefineTemplatesSection(realClasses, classTemplates);
 
     for (auto& classInfo : realClasses)
     {
-        stream << std::endl << GenerateClassDefinition(classInfo, false);
+        stream << std::endl << generateClassDefinition(classInfo, false);
     }
 
     stream << "}" << std::endl;
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateDefineTemplatesSection(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates)
+std::string CodeGenerator::generateDefineTemplatesSection(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates)
 {
     struct Helper
     {
@@ -142,7 +142,7 @@ std::string CodeGenerator::GenerateDefineTemplatesSection(std::vector<ClassInfo>
     std::vector<TypeInfo> templateInstances;
 
     // find template instantiations from classes
-    for (auto& typeInfo : GetTemplateTypes(realClasses))
+    for (auto& typeInfo : getTemplateTypes(realClasses))
     {
         if (map.find(typeInfo.name) != std::end(map)) // known template class
         {
@@ -154,7 +154,7 @@ std::string CodeGenerator::GenerateDefineTemplatesSection(std::vector<ClassInfo>
     for (auto& classInfo : classTemplates)
     {
         std::vector<ClassInfo> vector {classInfo};
-        for (auto& typeInfo : GetTemplateTypes(vector))
+        for (auto& typeInfo : getTemplateTypes(vector))
         {
             if (map.find(typeInfo.name) != std::end(map)) // known template class
             {
@@ -196,12 +196,12 @@ std::string CodeGenerator::GenerateDefineTemplatesSection(std::vector<ClassInfo>
     std::stringstream stream;
     for (auto& typeInfo : templateInstances)
     {
-        stream << tab<1> << "Define" << typeInfo.fullName << "();" << std::endl;
+        stream << tab<1> << "define" << typeInfo.fullName << "();" << std::endl;
     }
     return stream.str();
 }
 
-std::vector<TypeInfo> CodeGenerator::GetTemplateTypes(std::vector<ClassInfo>& classes)
+std::vector<TypeInfo> CodeGenerator::getTemplateTypes(std::vector<ClassInfo>& classes)
 {
     std::vector<TypeInfo*> typeRefs;
     for (auto& classInfo : classes)
@@ -257,7 +257,7 @@ std::vector<TypeInfo> CodeGenerator::GetTemplateTypes(std::vector<ClassInfo>& cl
     return types;
 }
 
-std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool isTemplate)
+std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool isTemplate)
 {
     std::stringstream stream;
 
@@ -265,7 +265,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool is
     auto classFullName = className;
     if (classInfo.isTemplate())
     {
-        classFullName = className + "<" + GenerateParametersList(classInfo, false) + ">";
+        classFullName = className + "<" + generateParametersList(classInfo, false) + ">";
         stream << tab<1> << "using type = " << classFullName << ";" << std::endl;
         className = "type";
     }
@@ -316,7 +316,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool is
                 stream << ">";
             }
             stream << "()";
-            stream << GenerateAttributes(constructor) << std::endl;
+            stream << generateAttributes(constructor) << std::endl;
         }
     }
 
@@ -326,21 +326,21 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool is
         if (!method.isOperator && !method.isFriend)
         {
             auto type = method.isStatic ? "function" : "method";
-            stream << tab<2> << GenerateMethod(type, method, className);
+            stream << tab<2> << generateMethod(type, method, className);
         }
     }
 
     // properties
     for (auto& property : classInfo.properties)
     {
-        stream << tab<2> << ".property(\"" << property.name << "\")" << GenerateAttributes(property) << std::endl;
+        stream << tab<2> << ".property(\"" << property.name << "\")" << generateAttributes(property) << std::endl;
         if (property.hasGetter())
         {
-            stream << tab<3> << GenerateMethod("getter", property.getter, className);
+            stream << tab<3> << generateMethod("getter", property.getter, className);
         }
         if (property.hasSetter())
         {
-            stream << tab<3> << GenerateMethod("setter", property.setter, className);
+            stream << tab<3> << generateMethod("setter", property.setter, className);
         }
     }
 
@@ -352,7 +352,7 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool is
             if (!field.isStatic)
             {
                 stream << tab<2> << ".field(\"" << field.name << "\", &" << className << "::" << field.name << ")";
-                stream << GenerateAttributes(field) << std::endl;
+                stream << generateAttributes(field) << std::endl;
             }
         }
     }
@@ -362,15 +362,15 @@ std::string CodeGenerator::GenerateClassDefinition(ClassInfo& classInfo, bool is
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateMethod(std::string type, MethodInfo& method, std::string className)
+std::string CodeGenerator::generateMethod(std::string type, MethodInfo& method, std::string className)
 {
     std::stringstream stream;
     stream << "." << type << "(\"" << method.name << "\", &" << className << "::" << method.name << ")";
-    stream << GenerateAttributes(method) << std::endl;
+    stream << generateAttributes(method) << std::endl;
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateAttributes(MemberInfo& memberInfo)
+std::string CodeGenerator::generateAttributes(MemberInfo& memberInfo)
 {
     std::stringstream stream;
     for (auto& attributeInfo : memberInfo.attributes)
@@ -380,7 +380,7 @@ std::string CodeGenerator::GenerateAttributes(MemberInfo& memberInfo)
     return stream.str();
 }
 
-std::string CodeGenerator::GenerateParametersList(ClassInfo& classInfo, bool typenames)
+std::string CodeGenerator::generateParametersList(ClassInfo& classInfo, bool typenames)
 {
     std::stringstream stream;
     auto first = true;

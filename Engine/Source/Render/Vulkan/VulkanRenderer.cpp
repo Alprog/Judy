@@ -5,15 +5,15 @@
 
 VulkanRenderer::VulkanRenderer()
 {
-    Init();
+    init();
 }
 
-void VulkanRenderer::Draw(RenderCommand renderCommand)
+void VulkanRenderer::draw(RenderCommand renderCommand)
 {
 
 }
 
-void VulkanRenderer::Clear(Color color)
+void VulkanRenderer::clear(Color color)
 {
 
 }
@@ -25,23 +25,23 @@ DebugCallback(VkFlags msgFlags, VkDebugReportObjectTypeEXT objType, uint64_t src
     return false;
 }
 
-void VulkanRenderer::Init()
+void VulkanRenderer::init()
 {
-    InitInstance();
-    InitDevice();
-    InitCommandBuffers();
-    InitVertexBuffer();
-    InitShaders();
+    initInstance();
+    initDevice();
+    initCommandBuffers();
+    initVertexBuffer();
+    initShaders();
 }
 
 template <typename T>
-void VulkanRenderer::GetInstanceProcAddr(T& funcPointer, const char* funcName)
+void VulkanRenderer::getInstanceProcAddr(T& funcPointer, const char* funcName)
 {
     funcPointer = (T)vkGetInstanceProcAddr(vulkanInstance, funcName);
     assert(funcPointer);
 }
 
-void VulkanRenderer::InitInstance()
+void VulkanRenderer::initInstance()
 {
     VkApplicationInfo appInfo = {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -57,12 +57,12 @@ void VulkanRenderer::InitInstance()
     instanceInfo.pApplicationInfo = &appInfo;
 
     std::vector<const char*> layers = { "VK_LAYER_LUNARG_standard_validation" };
-    CheckLayers(layers);
+    checkLayers(layers);
     instanceInfo.enabledLayerCount = layers.size();
     instanceInfo.ppEnabledLayerNames = &layers[0];
 
     std::vector<const char*> extensions = { "VK_KHR_win32_surface", "VK_KHR_surface", "VK_EXT_debug_report" };
-    CheckExtensions(extensions);
+    checkExtensions(extensions);
     instanceInfo.enabledExtensionCount = extensions.size();
     instanceInfo.ppEnabledExtensionNames = &extensions[0];
 
@@ -72,10 +72,10 @@ void VulkanRenderer::InitInstance()
         exit(err);
     }
 
-    GetInstanceProcAddr(regDebugExt, "vkCreateDebugReportCallbackEXT");
-    GetInstanceProcAddr(unregDebugExt, "vkDestroyDebugReportCallbackEXT");
-    GetInstanceProcAddr(getPhysicalDeviceSurfaceFormats, "vkGetPhysicalDeviceSurfaceFormatsKHR");
-    GetInstanceProcAddr(getPhysicalDeviceSurfaceCapabilities, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+    getInstanceProcAddr(regDebugExt, "vkCreateDebugReportCallbackEXT");
+    getInstanceProcAddr(unregDebugExt, "vkDestroyDebugReportCallbackEXT");
+    getInstanceProcAddr(getPhysicalDeviceSurfaceFormats, "vkGetPhysicalDeviceSurfaceFormatsKHR");
+    getInstanceProcAddr(getPhysicalDeviceSurfaceCapabilities, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
 
 
     VkDebugReportCallbackCreateInfoEXT debugInfo;
@@ -92,7 +92,7 @@ void VulkanRenderer::InitInstance()
     }
 }
 
-VkSurfaceKHR VulkanRenderer::CreateSurface(RenderTarget* renderTarget)
+VkSurfaceKHR VulkanRenderer::createSurface(RenderTarget* renderTarget)
 {
     VkWin32SurfaceCreateInfoKHR surfaceInfo = {};
     surfaceInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
@@ -109,7 +109,7 @@ VkSurfaceKHR VulkanRenderer::CreateSurface(RenderTarget* renderTarget)
     return surface;
 }
 
-void VulkanRenderer::InitDevice()
+void VulkanRenderer::initDevice()
 {
     uint32_t count = 0;
     vkEnumeratePhysicalDevices(vulkanInstance, &count, NULL);
@@ -157,7 +157,7 @@ void VulkanRenderer::InitDevice()
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
 }
 
-void VulkanRenderer::InitCommandBuffers()
+void VulkanRenderer::initCommandBuffers()
 {
     VkCommandPoolCreateInfo poolInfo = {};
     poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -181,7 +181,7 @@ void VulkanRenderer::InitCommandBuffers()
     assert(!err);
 }
 
-uint32_t VulkanRenderer::GetMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags)
+uint32_t VulkanRenderer::getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags)
 {
     uint32_t memoryTypeBits = requirements.memoryTypeBits;
     for (uint32_t i = 0; i < 32; i++)
@@ -199,7 +199,7 @@ uint32_t VulkanRenderer::GetMemoryTypeIndex(VkMemoryRequirements& requirements, 
     return 0;
 }
 
-void VulkanRenderer::InitVertexBuffer()
+void VulkanRenderer::initVertexBuffer()
 {
     VkBufferCreateInfo vbInfo = {};
     vbInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -216,7 +216,7 @@ void VulkanRenderer::InitVertexBuffer()
     VkMemoryAllocateInfo allocateInfo = {};
     allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocateInfo.allocationSize = memoryRequirements.size;
-    allocateInfo.memoryTypeIndex = GetMemoryTypeIndex(memoryRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+    allocateInfo.memoryTypeIndex = getMemoryTypeIndex(memoryRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
     VkDeviceMemory vertexBufferMemory;
     err = vkAllocateMemory(device, &allocateInfo, nullptr, &vertexBufferMemory);
@@ -237,7 +237,7 @@ void VulkanRenderer::InitVertexBuffer()
     assert(!err);
 }
 
-void* ReadBinary(std::string filename, size_t *psize)
+void* readBinary(std::string filename, size_t *psize)
 {
     long int size;
     void* shaderCode;
@@ -264,10 +264,10 @@ void* ReadBinary(std::string filename, size_t *psize)
     return shaderCode;
 }
 
-VkShaderModule VulkanRenderer::GetShaderModule(std::string fileName)
+VkShaderModule VulkanRenderer::getShaderModule(std::string fileName)
 {
     size_t size;
-    void* code = ReadBinary(fileName, &size);
+    void* code = readBinary(fileName, &size);
 
     VkShaderModuleCreateInfo moduleInfo = {};
     moduleInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -283,13 +283,13 @@ VkShaderModule VulkanRenderer::GetShaderModule(std::string fileName)
     return module;
 }
 
-void VulkanRenderer::InitShaders()
+void VulkanRenderer::initShaders()
 {
-    vertexShader = GetShaderModule("vert.spv");
-    fragmentShader = GetShaderModule("frag.spv");
+    vertexShader = getShaderModule("vert.spv");
+    fragmentShader = getShaderModule("frag.spv");
 }
 
-void VulkanRenderer::InitPipeline(RenderTargetContext& context)
+void VulkanRenderer::initPipeline(RenderTargetContext& context)
 {
     VkPipelineLayoutCreateInfo layoutInfo = {};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -449,9 +449,9 @@ void VulkanRenderer::InitPipeline(RenderTargetContext& context)
 }
 
 
-VkSwapchainKHR VulkanRenderer::CreateSwapChain(RenderTarget* renderTarget)
+VkSwapchainKHR VulkanRenderer::createSwapChain(RenderTarget* renderTarget)
 {
-    auto surface = CreateSurface(renderTarget);
+    auto surface = createSurface(renderTarget);
 
     uint32_t count;
     auto err = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, nullptr);
@@ -471,7 +471,7 @@ VkSwapchainKHR VulkanRenderer::CreateSwapChain(RenderTarget* renderTarget)
     err = getPhysicalDeviceSurfaceCapabilities(gpu, surface, &capabilities);
     assert(!err);
 
-    auto size = renderTarget->GetSize();
+    auto size = renderTarget->getSize();
 
     auto w = capabilities.currentExtent.width;
     auto h = capabilities.currentExtent.height;
@@ -507,7 +507,7 @@ VkSwapchainKHR VulkanRenderer::CreateSwapChain(RenderTarget* renderTarget)
     return swapChain;
 }
 
-void VulkanRenderer::InitPresentImages(RenderTargetContext& context)
+void VulkanRenderer::initPresentImages(RenderTargetContext& context)
 {
     auto err = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, nullptr);
     assert(!err);
@@ -545,12 +545,12 @@ void VulkanRenderer::InitPresentImages(RenderTargetContext& context)
     context.bufferIndex = 0;
 }
 
-void VulkanRenderer::Destroy()
+void VulkanRenderer::destroy()
 {
     unregDebugExt(vulkanInstance, debugExtension, nullptr);
 }
 
-void FilterNames(std::vector<const char*>& names, std::unordered_set<std::string>& allowNames)
+void filterNames(std::vector<const char*>& names, std::unordered_set<std::string>& allowNames)
 {
     auto it = std::begin(names);
     while (it != std::end(names))
@@ -564,7 +564,7 @@ void FilterNames(std::vector<const char*>& names, std::unordered_set<std::string
     }
 }
 
-void VulkanRenderer::CheckLayers(std::vector<const char*>& names)
+void VulkanRenderer::checkLayers(std::vector<const char*>& names)
 {
     std::unordered_set<std::string> set;
 
@@ -581,10 +581,10 @@ void VulkanRenderer::CheckLayers(std::vector<const char*>& names)
         delete[] layerProperties;
     }
 
-    FilterNames(names, set);
+    filterNames(names, set);
 }
 
-void VulkanRenderer::CheckExtensions(std::vector<const char*>& names)
+void VulkanRenderer::checkExtensions(std::vector<const char*>& names)
 {
     std::unordered_set<std::string> set;
 
@@ -601,10 +601,10 @@ void VulkanRenderer::CheckExtensions(std::vector<const char*>& names)
         delete[] extensionProperties;
     }
 
-    FilterNames(names, set);
+    filterNames(names, set);
 }
 
-void VulkanRenderer::ResourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
+void VulkanRenderer::resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
                                      VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess)
 {
     VkImageMemoryBarrier barrier = {};
@@ -621,7 +621,7 @@ void VulkanRenderer::ResourceBarrier(VkImage& image, VkImageLayout oldStage, VkI
     vkCmdPipelineBarrier(drawCommandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
-void VulkanRenderer::InitDepthBuffer(RenderTargetContext& context)
+void VulkanRenderer::initDepthBuffer(RenderTargetContext& context)
 {
     VkImageCreateInfo imageInfo = {};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -647,7 +647,7 @@ void VulkanRenderer::InitDepthBuffer(RenderTargetContext& context)
     VkMemoryAllocateInfo allocateInfo = {};
     allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocateInfo.allocationSize = memoryRequirements.size;
-    allocateInfo.memoryTypeIndex = GetMemoryTypeIndex(memoryRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+    allocateInfo.memoryTypeIndex = getMemoryTypeIndex(memoryRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
     VkDeviceMemory deviceMemory = {};
     err = vkAllocateMemory(device, &allocateInfo, nullptr, &deviceMemory);
@@ -671,14 +671,14 @@ void VulkanRenderer::InitDepthBuffer(RenderTargetContext& context)
     assert(!err);
 }
 
-void VulkanRenderer::DrawHelper(RenderTargetContext& context)
+void VulkanRenderer::drawHelper(RenderTargetContext& context)
 {
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
     vkBeginCommandBuffer(drawCommandBuffer, &beginInfo);
-    ResourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, (VkAccessFlagBits)0, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+    resourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, (VkAccessFlagBits)0, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
 
     VkClearValue clear_values[2] = {};
 
@@ -724,11 +724,11 @@ void VulkanRenderer::DrawHelper(RenderTargetContext& context)
     vkCmdEndRenderPass(drawCommandBuffer);
 
 
-    ResourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
+    resourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
     vkEndCommandBuffer(drawCommandBuffer);
 }
 
-void VulkanRenderer::InitRenderPass(RenderTargetContext& context)
+void VulkanRenderer::initRenderPass(RenderTargetContext& context)
 {
     VkAttachmentDescription attachments[2] = {};
     attachments[0].format = context.colorFormat;
@@ -783,7 +783,7 @@ void VulkanRenderer::InitRenderPass(RenderTargetContext& context)
     assert(!err);
 }
 
-void VulkanRenderer::InitFrameBuffers(RenderTargetContext& context)
+void VulkanRenderer::initFrameBuffers(RenderTargetContext& context)
 {
     VkImageView attachments[2];
     attachments[1] = context.depthImageView;
@@ -806,7 +806,7 @@ void VulkanRenderer::InitFrameBuffers(RenderTargetContext& context)
     }
 }
 
-void VulkanRenderer::SumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore)
+void VulkanRenderer::sumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore)
 {
     VkPipelineStageFlags stageFlags = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
     VkSubmitInfo submitInfo = {};
@@ -824,9 +824,9 @@ void VulkanRenderer::SumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQue
     assert(!err);
 }
 
-void VulkanRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* target)
+void VulkanRenderer::render(std::vector<RenderCommand> commands, RenderTarget* target)
 {
-    RenderTargetContext& context = GetContext(target);
+    RenderTargetContext& context = getContext(target);
 
     VkSemaphore semaphore;
     VkSemaphoreCreateInfo semaphoreInfo = {};
@@ -837,8 +837,8 @@ void VulkanRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* t
     err = vkAcquireNextImageKHR(device, context.swapChain, UINT64_MAX, semaphore, VK_NULL_HANDLE, &context.bufferIndex);
     assert(!err);
 
-    DrawHelper(context);
-    SumbitCommamdsToQueue(drawCommandBuffer, queue, semaphore);
+    drawHelper(context);
+    sumbitCommamdsToQueue(drawCommandBuffer, queue, semaphore);
 
     VkPresentInfoKHR presentInfo = {};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -858,7 +858,7 @@ void VulkanRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* t
     vkDestroySemaphore(device, semaphore, nullptr);
 }
 
-RenderTargetContext& VulkanRenderer::GetContext(RenderTarget* renderTarget)
+RenderTargetContext& VulkanRenderer::getContext(RenderTarget* renderTarget)
 {
     auto it = contexts.find(renderTarget);
     if (it != std::end(contexts))
@@ -868,18 +868,18 @@ RenderTargetContext& VulkanRenderer::GetContext(RenderTarget* renderTarget)
     else
     {
         RenderTargetContext context = {};
-        auto size = renderTarget->GetSize();
+        auto size = renderTarget->getSize();
         context.width = size.x;
         context.height = size.y;
         context.colorFormat = VK_FORMAT_B8G8R8A8_UNORM;
         context.depthFormat = VK_FORMAT_D16_UNORM;
 
-        context.swapChain = CreateSwapChain(renderTarget);
-        InitPresentImages(context);
-        InitDepthBuffer(context);
-        InitRenderPass(context);
-        InitFrameBuffers(context);
-        InitPipeline(context);
+        context.swapChain = createSwapChain(renderTarget);
+        initPresentImages(context);
+        initDepthBuffer(context);
+        initRenderPass(context);
+        initFrameBuffers(context);
+        initPipeline(context);
 
         contexts[renderTarget] = context;
         return contexts[renderTarget];

@@ -11,36 +11,36 @@
 template <typename ReturnType, typename... ArgTypes>
 class FunctionMeta : public virtual IFunctionMeta
 {
-    virtual size_t GetArgCount() override
+    virtual size_t getArgCount() override
     {
         return sizeof...(ArgTypes);
     }
 
-    ITypeMeta* GetReturnType() override
+    ITypeMeta* getReturnType() override
     {
-        return TypeMetaOf<ReturnType>();
+        return typeMetaOf<ReturnType>();
     }
 
-    virtual std::vector<ITypeMeta*> GetArgTypes() override
+    virtual std::vector<ITypeMeta*> getArgTypes() override
     {
-        return { TypeMetaOf<ArgTypes>()... };
+        return { typeMetaOf<ArgTypes>()... };
     }
 };
 
 template <typename ReturnType>
 class FunctionMeta<ReturnType> : public virtual IFunctionMeta
 {
-    virtual size_t GetArgCount() override
+    virtual size_t getArgCount() override
     {
         return 0;
     }
 
-    ITypeMeta* GetReturnType() override
+    ITypeMeta* getReturnType() override
     {
-        return TypeMetaOf<ReturnType>();
+        return typeMetaOf<ReturnType>();
     }
 
-    virtual std::vector<ITypeMeta*> GetArgTypes() override
+    virtual std::vector<ITypeMeta*> getArgTypes() override
     {
         return {};
     }

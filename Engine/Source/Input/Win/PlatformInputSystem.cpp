@@ -139,7 +139,7 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-void WinInputSystem::FindDevices()
+void WinInputSystem::findDevices()
 {
     RAWINPUTDEVICELIST* pRawInputDeviceList;
 
@@ -201,8 +201,8 @@ void WinInputSystem::FindDevices()
 
 WinInputSystem::WinInputSystem()
 {
-    InitKeys();
-    FindDevices();
+    initKeys();
+    findDevices();
 
     auto hInstance = GetModuleHandle(nullptr);
     LPCWSTR className = L"InputWindow";
@@ -237,7 +237,7 @@ WinInputSystem::WinInputSystem()
     result = true;
 }
 
-void WinInputSystem::InitKeys()
+void WinInputSystem::initKeys()
 {
     keys.resize(256, Key::Unknown);
 
@@ -366,7 +366,7 @@ WinInputSystem::~WinInputSystem()
 {
 }
 
-void WinInputSystem::UpdateState()
+void WinInputSystem::updateState()
 {
     MSG msg;
     PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE);

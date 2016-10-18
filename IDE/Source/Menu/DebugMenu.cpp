@@ -5,66 +5,66 @@
 DebugMenu::DebugMenu(MainWindow* window)
     : BaseMenu{"Debug", window}
 {
-    playAction = createAction("Start", "play", SLOT(Play()), Qt::Key_F5);
-    pauseAction = createAction("Pause", "pause", SLOT(Pause()), Qt::Key_F6);
-    stopAction = createAction("Stop", "stop", SLOT(Stop()), QKeySequence(Qt::SHIFT +Qt::Key_F6));
+    playAction = createAction("Start", "play", SLOT(play()), Qt::Key_F5);
+    pauseAction = createAction("Pause", "pause", SLOT(pause()), Qt::Key_F6);
+    stopAction = createAction("Stop", "stop", SLOT(stop()), QKeySequence(Qt::SHIFT +Qt::Key_F6));
     stepActions = {
-        createAction("Step Into", "stepinto", SLOT(StepInto()), Qt::Key_F11),
-        createAction("Step Over", "stepover", SLOT(StepOver()), Qt::Key_F10),
-        createAction("Step Out", "stepout", SLOT(StepOut()), QKeySequence(Qt::SHIFT + Qt::Key_F11))
+        createAction("Step Into", "stepinto", SLOT(stepInto()), Qt::Key_F11),
+        createAction("Step Over", "stepover", SLOT(stepOver()), Qt::Key_F10),
+        createAction("Step Out", "stepout", SLOT(stepOut()), QKeySequence(Qt::SHIFT + Qt::Key_F11))
     };
 
     addActions({playAction, pauseAction, stopAction});
     addActions(stepActions);
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(Refresh()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(refresh()));
     timer.start(100);
 }
 
-void DebugMenu::Play()
+void DebugMenu::play()
 {
-    auto player = RemotePlayer::Instance();
-    if (!player->IsRunning())
+    auto player = RemotePlayer::instance();
+    if (!player->isRunning())
     {
-        player->Run();
+        player->run();
     }
-    else if (player->IsPaused())
+    else if (player->isPaused())
     {
-        player->SendCommand("continue");
+        player->sendCommand("resume");
     }
 }
 
-void DebugMenu::Stop()
+void DebugMenu::stop()
 {
-    RemotePlayer::Instance()->Stop();
+    RemotePlayer::instance()->stop();
 }
 
-void DebugMenu::Pause()
+void DebugMenu::pause()
 {
-    RemotePlayer::Instance()->SendCommand("pause");
+    RemotePlayer::instance()->sendCommand("pause");
 }
 
-void DebugMenu::StepInto()
+void DebugMenu::stepInto()
 {
-    RemotePlayer::Instance()->SendCommand("stepInto");
+    RemotePlayer::instance()->sendCommand("stepInto");
 }
 
-void DebugMenu::StepOver()
+void DebugMenu::stepOver()
 {
-    RemotePlayer::Instance()->SendCommand("stepOver");
+    RemotePlayer::instance()->sendCommand("stepOver");
 }
 
-void DebugMenu::StepOut()
+void DebugMenu::stepOut()
 {
-    RemotePlayer::Instance()->SendCommand("stepOut");
+    RemotePlayer::instance()->sendCommand("stepOut");
 }
 
-void DebugMenu::Refresh()
+void DebugMenu::refresh()
 {
-    RemotePlayer* remotePlayer = RemotePlayer::Instance();
-    bool isRunning = remotePlayer->IsRunning();
-    bool isConnected = remotePlayer->IsConnected();
-    bool isPaused = remotePlayer->IsPaused();
+    RemotePlayer* remotePlayer = RemotePlayer::instance();
+    bool isRunning = remotePlayer->isRunning();
+    bool isConnected = remotePlayer->isConnected();
+    bool isPaused = remotePlayer->isPaused();
 
     playAction->setEnabled(!isRunning || isPaused);
     pauseAction->setEnabled(isConnected && !isPaused);

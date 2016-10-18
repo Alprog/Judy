@@ -15,7 +15,7 @@ enum ColumnType
 
 InspectorModel::InspectorModel(Node* node)
 {
-    rootItem = InspectorItem::Create(node);
+    rootItem = InspectorItem::create(node);
 }
 
 InspectorModel::~InspectorModel()
@@ -23,28 +23,28 @@ InspectorModel::~InspectorModel()
     delete rootItem;
 }
 
-InspectorItem* InspectorModel::GetBaseItem(const QModelIndex& index) const
+InspectorItem* InspectorModel::getBaseItem(const QModelIndex& index) const
 {
     return static_cast<InspectorItem*>(index.internalPointer());
 }
 
-InspectorItem* InspectorModel::GetSubItem(const QModelIndex& index) const
+InspectorItem* InspectorModel::getSubItem(const QModelIndex& index) const
 {
-    auto baseItem = GetBaseItem(index);
+    auto baseItem = getBaseItem(index);
     if (baseItem == nullptr)
     {
         return rootItem;
     }
     else
     {
-        return baseItem->GetChild(index.row());
+        return baseItem->getChild(index.row());
     }
 }
 
 int InspectorModel::rowCount(const QModelIndex& index) const
 {
-    auto subItem = GetSubItem(index);
-    return subItem ? subItem->GetChildCount() : 0;
+    auto subItem = getSubItem(index);
+    return subItem ? subItem->getChildCount() : 0;
 }
 
 int InspectorModel::columnCount(const QModelIndex& index) const
@@ -54,7 +54,7 @@ int InspectorModel::columnCount(const QModelIndex& index) const
 
 QModelIndex InspectorModel::index(int row, int column, const QModelIndex& index) const
 {
-    auto subItem = GetSubItem(index);
+    auto subItem = getSubItem(index);
     if (subItem)
     {
         return createIndex(row, column, subItem);
@@ -64,7 +64,7 @@ QModelIndex InspectorModel::index(int row, int column, const QModelIndex& index)
 
 QModelIndex InspectorModel::parent(const QModelIndex& index) const
 {
-    auto baseItem = GetBaseItem(index);
+    auto baseItem = getBaseItem(index);
 
     if (baseItem == nullptr)
     {
@@ -77,13 +77,13 @@ QModelIndex InspectorModel::parent(const QModelIndex& index) const
     }
     else
     {
-        return createIndex(baseItem->GetRow(), 0, baseItem->GetParent());
+        return createIndex(baseItem->getRow(), 0, baseItem->getParent());
     }
 }
 
 QVariant InspectorModel::data(const QModelIndex& index, int role) const
 {
-    auto item = GetBaseItem(index);
+    auto item = getBaseItem(index);
 
     if (role == Qt::DisplayRole)
     {
@@ -91,11 +91,11 @@ QVariant InspectorModel::data(const QModelIndex& index, int role) const
         auto col = index.column();
         if (col == ColumnType::Name)
         {
-            return item->GetName(row);
+            return item->getName(row);
         }
         else if (col == ColumnType::Value)
         {
-            return item->GetValue(row);
+            return item->getValue(row);
         }
     }
 
@@ -117,10 +117,10 @@ bool InspectorModel::setData(const QModelIndex& index, const QVariant& value, in
 {
     if (index.column() != ColumnType::Value) { return false; }
 
-    auto item = GetBaseItem(index);
+    auto item = getBaseItem(index);
     if (role == Qt::EditRole)
     {
-        return item->SetValue(index.row(), value);
+        return item->setValue(index.row(), value);
     }
     return false;
 }

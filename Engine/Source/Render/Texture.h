@@ -8,7 +8,7 @@ class Texture : public RendererResource<Texture>
 {
 public:
     Texture(std::string name);
-    void Load();
+    void load();
 
 public:
     std::string name;

@@ -1,38 +1,38 @@
 
 #include <KeysState.h>
 
-bool KeysState::IsSet(int keyCode)
+bool KeysState::isSet(int keyCode)
 {
     if (keyCode < KEY_COUNT)
     {
-        return KnownKeys[keyCode];
+        return knownKeys[keyCode];
     }
     else
     {
-        return UnknownKeys.find(keyCode) != std::end(UnknownKeys);
+        return unknownKeys.find(keyCode) != std::end(unknownKeys);
     }
 }
 
-void KeysState::Set(int keyCode)
+void KeysState::set(int keyCode)
 {
     if (keyCode < KEY_COUNT)
     {
-        KnownKeys[keyCode] = true;
+        knownKeys[keyCode] = true;
     }
     else
     {
-        UnknownKeys.insert(keyCode);
+        unknownKeys.insert(keyCode);
     }
 }
 
-void KeysState::Unset(int keyCode)
+void KeysState::unset(int keyCode)
 {
     if (keyCode < KEY_COUNT)
     {
-        KnownKeys[keyCode] = false;
+        knownKeys[keyCode] = false;
     }
     else
     {
-        UnknownKeys.erase(keyCode);
+        unknownKeys.erase(keyCode);
     }
 }

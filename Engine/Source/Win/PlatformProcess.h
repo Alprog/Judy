@@ -10,9 +10,9 @@ public:
     WinProcess();
     ~WinProcess();
 
-    virtual void Run(std::string path, std::string commandLine, std::string directory);
-    virtual void Stop();
-    virtual bool IsRunning();
+    virtual void run(std::string path, std::string commandLine, std::string directory);
+    virtual void stop();
+    virtual bool isRunning();
 
     HANDLE handle;
 };

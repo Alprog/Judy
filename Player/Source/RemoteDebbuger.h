@@ -13,12 +13,12 @@ public:
     ~RemoteDebbuger();
 
 private:
-    void WaitForFinish();
+    void waitForFinish();
 
-    void OnBreak();
-    void OnResume();
-    void CustomNetWork();
-    void OnGetMessage(Any& message);
+    void onBreak();
+    void onResume();
+    void customNetWork();
+    void onGetMessage(Any& message);
 
 private:
     LuaMachine* luaMachine;

@@ -71,8 +71,8 @@ int main(int /*argc*/, char* /*argv*/[])
 
     auto classes = parser.getClasses();
 
-    auto headerText = generator.GenerateHeader(classes);
-    auto sourceText = generator.GenerateSource(classes);
+    auto headerText = generator.generateHeader(classes);
+    auto sourceText = generator.generateSource(classes);
     writeToFile("../Engine/source/Meta/Meta.gen.h", headerText);
     writeToFile("../Engine/source/Meta/Meta.gen.cpp", sourceText);
 }

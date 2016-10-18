@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <cstring>
 
-LinuxInputDevice* LinuxInputDevice::Create(std::string filePath)
+LinuxInputDevice* LinuxInputDevice::create(std::string filePath)
 {
     auto file = open(filePath.c_str(), O_RDONLY | O_NONBLOCK);
     if (file < 0)
@@ -40,7 +40,7 @@ LinuxInputDevice::~LinuxInputDevice()
     close(file);
 }
 
-void LinuxInputDevice::UpdateState()
+void LinuxInputDevice::updateState()
 {
     input_event event;
     while (true)
@@ -52,7 +52,7 @@ void LinuxInputDevice::UpdateState()
         }
         else if (result == LIBEVDEV_READ_STATUS_SYNC)
         {
-            HandleSynDropped();
+            handleSynDropped();
         }
         else if (result == LIBEVDEV_READ_STATUS_SUCCESS)
         {
@@ -73,7 +73,7 @@ void LinuxInputDevice::UpdateState()
     }
 }
 
-void LinuxInputDevice::HandleSynDropped()
+void LinuxInputDevice::handleSynDropped()
 {
     input_event event;
     int result = 0;

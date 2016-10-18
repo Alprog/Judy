@@ -19,29 +19,29 @@ public:
     Serializer();
     ~Serializer();
 
-    std::string Serialize(Any object);
+    std::string serialize(Any object);
 
     template <typename Type>
-    Type Deserialize(std::string text)
+    Type deserialize(std::string text)
     {
-        ITypeMeta* typeMeta = TypeMetaOf<Type>();
-        return Deserialize(text, typeMeta);
+        ITypeMeta* typeMeta = typeMetaOf<Type>();
+        return deserialize(text, typeMeta);
     }
 
-    Any Deserialize(std::string text, ITypeMeta* typeMeta = nullptr);
+    Any deserialize(std::string text, ITypeMeta* typeMeta = nullptr);
 
     inline lua_State* getL() const { return L; }
 
 private:
-    void Serialize(Any object, ITypeMeta* typeMeta);
-    void SerializeAsClass(Any& object, IClassMeta* type);
-    void SerializeClassFields(Any& pointer, IClassMeta* classMeta);
+    void serialize(Any object, ITypeMeta* typeMeta);
+    void serializeAsClass(Any& object, IClassMeta* type);
+    void serializeClassFields(Any& pointer, IClassMeta* classMeta);
 
-    Any DeserializeUnknown();
-    Any DeserializeUnknownTable();
-    Any DeserializeAsClass(IClassMeta* classMeta);
-    void DeserializeClassFields(Any& pointer, IClassMeta* classMeta);
-    Any Deserialize(ITypeMeta* const typeMeta);
+    Any deserializeUnknown();
+    Any deserializeUnknownTable();
+    Any deserializeAsClass(IClassMeta* classMeta);
+    void deserializeClassFields(Any& pointer, IClassMeta* classMeta);
+    Any deserialize(ITypeMeta* const typeMeta);
 
     lua_State* L;
 };

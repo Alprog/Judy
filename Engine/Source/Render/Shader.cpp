@@ -7,14 +7,14 @@ Shader::Shader(std::string source, Type type)
     : source {source}
     , type {type}
 {
-    Load();
+    load();
 }
 
-void Shader::Load()
+void Shader::load()
 {
-    auto& renderers = RenderManager::Instance()->renderers;
+    auto& renderers = RenderManager::instance()->renderers;
     for (size_t i = 0; i < renderers.size(); i++)
     {
-        renderers[i]->CreateImpl(this);
+        renderers[i]->createImpl(this);
     }
 }

@@ -8,18 +8,18 @@
 class CodeGenerator
 {
 public:
-    std::string GenerateHeader(std::vector<ClassInfo>& classes);
-    std::string GenerateSource(std::vector<ClassInfo>& classes);
+    std::string generateHeader(std::vector<ClassInfo>& classes);
+    std::string generateSource(std::vector<ClassInfo>& classes);
 
 private:
-    std::string GenerateIncludes(std::vector<ClassInfo>& classes);
-    std::string GenerateTemplateFunctions(std::vector<ClassInfo>& templateClasses);
-    std::string GenerateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
-    std::string GenerateDefineTemplatesSection(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
-    std::string GenerateClassDefinition(ClassInfo& classInfo, bool isTemplate);
-    std::string GenerateMethod(std::string type, MethodInfo& method, std::string className);
-    std::string GenerateAttributes(MemberInfo& memberInfo);
-    std::string GenerateParametersList(ClassInfo& classInfo, bool typenames);
+    std::string generateIncludes(std::vector<ClassInfo>& classes);
+    std::string generateTemplateFunctions(std::vector<ClassInfo>& templateClasses);
+    std::string generateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
+    std::string generateDefineTemplatesSection(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates);
+    std::string generateClassDefinition(ClassInfo& classInfo, bool isTemplate);
+    std::string generateMethod(std::string type, MethodInfo& method, std::string className);
+    std::string generateAttributes(MemberInfo& memberInfo);
+    std::string generateParametersList(ClassInfo& classInfo, bool typenames);
 
-    std::vector<TypeInfo> GetTemplateTypes(std::vector<ClassInfo>& classes);
+    std::vector<TypeInfo> getTemplateTypes(std::vector<ClassInfo>& classes);
 };

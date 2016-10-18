@@ -18,10 +18,10 @@ const int SETTER = 2;
 LuaBinder::LuaBinder(lua_State* L)
     : L { L }
 {
-    Init();
+    init();
 }
 
-int IndexFunction(lua_State* L)
+int indexFunction(lua_State* L)
 {
     // UK (userdata, key)
     lua_getuservalue(L, -2); // UKP (..., peertable)
@@ -58,7 +58,7 @@ int IndexFunction(lua_State* L)
     return 1;
 }
 
-int NewIndexFunction(lua_State* L)
+int newIndexFunction(lua_State* L)
 {
     // UKV (userdata, key, value)
 
@@ -91,25 +91,25 @@ int NewIndexFunction(lua_State* L)
 template <typename T>
 T* CheckType(lua_State* L, int n)
 {
-    char* name = TypeMetaOf<T>()->name;
+    char* name = typeMetaOf<T>()->name;
     return *(T**)luaL_checkudata(L, n, name);
 }
 
-inline Any GetArgument(lua_State* L, int index, ITypeMeta* typeMeta)
+inline Any getArgument(lua_State* L, int index, ITypeMeta* typeMeta)
 {
-    if (typeMeta == TypeMetaOf<int>())
+    if (typeMeta == typeMetaOf<int>())
     {
         return lua_tointeger(L, index);
     }
-    else if (typeMeta == TypeMetaOf<float>())
+    else if (typeMeta == typeMetaOf<float>())
     {
         return (float)lua_tonumber(L, index);
     }
-    if (typeMeta == TypeMetaOf<bool>())
+    if (typeMeta == typeMetaOf<bool>())
     {
         return lua_toboolean(L, index);
     }
-    else if (typeMeta == TypeMetaOf<char*>())
+    else if (typeMeta == typeMetaOf<char*>())
     {
         return lua_tostring(L, index);
     }
@@ -128,13 +128,13 @@ inline Any GetArgument(lua_State* L, int index, ITypeMeta* typeMeta)
     }
 }
 
-inline void ProcessArguments(lua_State* L, IFunctionMeta* function, std::vector<Any>& args)
+inline void processArguments(lua_State* L, IFunctionMeta* function, std::vector<Any>& args)
 {
-    auto types = function->GetArgTypes();
+    auto types = function->getArgTypes();
     int index = -(int)types.size();
     for (auto typeMeta : types)
     {
-        auto arg = GetArgument(L, index++, typeMeta);
+        auto arg = getArgument(L, index++, typeMeta);
         args.push_back(arg);
     }
 }
@@ -173,21 +173,21 @@ void pushObject(lua_State* L, Object* pointer, std::string className)
     }
 }
 
-inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
+inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
 {
-    if (type == TypeMetaOf<bool>())
+    if (type == typeMetaOf<bool>())
     {
         lua_pushboolean(L, result.as<bool>());
     }
-    else if (type == TypeMetaOf<int>())
+    else if (type == typeMetaOf<int>())
     {
         lua_pushinteger(L, result.as<int>());
     }
-    else if (type == TypeMetaOf<float>())
+    else if (type == typeMetaOf<float>())
     {
         lua_pushnumber(L, result.as<float>());
     }
-    else if (type == TypeMetaOf<char*>())
+    else if (type == typeMetaOf<char*>())
     {
         lua_pushstring(L, result.as<char*>());
     }
@@ -201,7 +201,7 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
             auto className = pointer->luaClass;
             if (className.empty())
             {
-                className = type->GetRunTimePointeeType(result)->name;
+                className = type->getRunTimePointeeType(result)->name;
             }
 
             pushObject(L, pointer, className);
@@ -214,58 +214,58 @@ inline void ProcessResult(lua_State* L, Any& result, ITypeMeta* type)
     }
 }
 
-int GetterInvoker(lua_State* L)
+int getterInvoker(lua_State* L)
 {
     auto field = (IFieldMeta*)lua_touserdata(L, lua_upvalueindex(1));
     Any object = *(void**)lua_touserdata(L, -1);
-    Any result = field->Get(object);
-    ProcessResult(L, result, field->GetType());
+    Any result = field->get(object);
+    processResult(L, result, field->getType());
     return 1;
 }
 
-int SetterInvoker(lua_State* L)
+int setterInvoker(lua_State* L)
 {
     auto field = (IFieldMeta*)lua_touserdata(L, lua_upvalueindex(1));
     Any object = *(void**)lua_touserdata(L, -2);
-    Any value = GetArgument(L, -1, field->GetType());
-    field->Set(object, value);
+    Any value = getArgument(L, -1, field->getType());
+    field->set(object, value);
     return 0;
 }
 
-int FunctionInvoker(lua_State* L)
+int functionInvoker(lua_State* L)
 {
     auto function = (IFunctionMeta*)lua_touserdata(L, lua_upvalueindex(1));
 
     std::vector<Any> args = {};
-    ProcessArguments(L, function, args);
+    processArguments(L, function, args);
 
-    auto returnType = function->GetReturnType();
+    auto returnType = function->getReturnType();
     if (returnType == nullptr)
     {
-        function->Invoke(args);
+        function->invoke(args);
         return 0;
     }
     else
     {
-        auto result = function->Invoke(args);
-        ProcessResult(L, result, returnType);
+        auto result = function->invoke(args);
+        processResult(L, result, returnType);
         return 1;
     }
 }
 
 std::string forceLuaClass = "";
 
-int SetForceLuaClass(lua_State* L)
+int setForceLuaClass(lua_State* L)
 {
     forceLuaClass = lua_tostring(L, -1);
     return 0;
 }
 
-int ConstructorInvoker(lua_State* L)
+int constructorInvoker(lua_State* L)
 {
     auto constructor = (IConstructorMeta*)lua_touserdata(L, lua_upvalueindex(1));
     std::vector<Any> args = {};
-    ProcessArguments(L, constructor, args);
+    processArguments(L, constructor, args);
     auto result = constructor->New(args);
 
     if (!forceLuaClass.empty())
@@ -274,42 +274,42 @@ int ConstructorInvoker(lua_State* L)
         forceLuaClass.clear();
     }
 
-    auto type = constructor->GetNewType();
-    ProcessResult(L, result, type);
+    auto type = constructor->getNewType();
+    processResult(L, result, type);
     return 1;
 }
 
-void LuaBinder::Init()
+void LuaBinder::init()
 {
     // metatable for userdata
     auto name = "Userdata";
     luaL_newmetatable(L, name); // M
-    lua_pushcfunction(L, IndexFunction); // MF
+    lua_pushcfunction(L, indexFunction); // MF
     lua_setfield(L, -2, "__index");  // M
-    lua_pushcfunction(L, NewIndexFunction);  // MF
+    lua_pushcfunction(L, newIndexFunction);  // MF
     lua_setfield(L, -2, "__newindex");  // M
     lua_pushcfunction(L, Object::GC);  // MF
     lua_setfield(L, -2, "__gc");  // M
     lua_setglobal(L, name); //
 
     // setForceLuaClass function
-    lua_pushcfunction(L, SetForceLuaClass);
+    lua_pushcfunction(L, setForceLuaClass);
     lua_setglobal(L, "SetForceLuaClass");
 }
 
-void LuaBinder::Bind(Meta* meta)
+void LuaBinder::bind(Meta* meta)
 {
     for (auto& typeMeta : meta->types)
     {
         if (typeMeta->getFlags() & ITypeMeta::IsClass)
         {
             auto classMeta = static_cast<IClassMeta*>(typeMeta);
-            BindClass(classMeta);
+            bindClass(classMeta);
         }
     }
 }
 
-void LuaBinder::BindClass(IClassMeta* classMeta)
+void LuaBinder::bindClass(IClassMeta* classMeta)
 {
     auto className = classMeta->name.c_str();
 
@@ -317,21 +317,21 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
 
     for (auto constructor : classMeta->constructors)
     {
-        size_t argCount = constructor->GetArgCount();
+        size_t argCount = constructor->getArgCount();
         std::string name = "new" + std::to_string(argCount);
-        BindHelper(name, ConstructorInvoker, constructor);
+        bindHelper(name, constructorInvoker, constructor);
     }
 
     for (auto& pair : classMeta->methods)
     {
         auto method = pair.second;
-        BindHelper(method->name, FunctionInvoker, method);
+        bindHelper(method->name, functionInvoker, method);
     }
 
     for (auto& pair : classMeta->functions)
     {
         auto function = pair.second;
-        BindHelper(function->name, FunctionInvoker, function);
+        bindHelper(function->name, functionInvoker, function);
     }
 
     // fields
@@ -341,8 +341,8 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
             auto field = pair.second;
 
             lua_newtable(L); // MP
-            BindHelper("GET", GetterInvoker, field);
-            BindHelper("SET", SetterInvoker, field);
+            bindHelper("GET", getterInvoker, field);
+            bindHelper("SET", setterInvoker, field);
 
             lua_setfield(L, -2, field->name.c_str()); // M
         }
@@ -372,7 +372,7 @@ void LuaBinder::BindClass(IClassMeta* classMeta)
     lua_setglobal(L, className);
 }
 
-void LuaBinder::BindHelper(std::string name, luaCFunction closure, void* upvalue)
+void LuaBinder::bindHelper(std::string name, luaCFunction closure, void* upvalue)
 {
     lua_pushlightuserdata(L, (void*)upvalue); // ML
     lua_pushcclosure(L, closure, 1); // MC

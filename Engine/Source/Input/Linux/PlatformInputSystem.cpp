@@ -25,7 +25,7 @@ LinuxInputSystem::~LinuxInputSystem()
 {
 }
 
-void LinuxInputSystem::RegisterAllDevices()
+void LinuxInputSystem::registerAllDevices()
 {
     auto udevenum = udev_enumerate_new(udev);
     udev_enumerate_add_match_subsystem(udevenum, "input");
@@ -63,7 +63,7 @@ void LinuxInputSystem::RegisterAllDevices()
     }
 }
 
-void LinuxInputSystem::TryAddDevice(std::string filePath)
+void LinuxInputSystem::tryAddDevice(std::string filePath)
 {
     auto device = PlatformInputDevice::Create(filePath);
     if (device != nullptr)
@@ -74,7 +74,7 @@ void LinuxInputSystem::TryAddDevice(std::string filePath)
     }
 }
 
-void LinuxInputSystem::TryRemoveDevice(std::string filePath)
+void LinuxInputSystem::tryRemoveDevice(std::string filePath)
 {
     for (auto it = std::begin(devices); it != std::end(devices);)
     {
@@ -90,17 +90,17 @@ void LinuxInputSystem::TryRemoveDevice(std::string filePath)
     }
 }
 
-void LinuxInputSystem::UpdateState()
+void LinuxInputSystem::updateState()
 {
-    CheckHotPlugs();
+    checkHotPlugs();
 
     for (auto device : devices)
     {
-        device->UpdateState();
+        device->updateState();
     }
 }
 
-void LinuxInputSystem::CheckHotPlugs()
+void LinuxInputSystem::checkHotPlugs()
 {
     fd_set fileSet;
     FD_ZERO(&fileSet);
@@ -121,11 +121,11 @@ void LinuxInputSystem::CheckHotPlugs()
                 std::string action = udev_device_get_action(dev);
                 if (action == "add")
                 {
-                    TryAddDevice(filePath);
+                    tryAddDevice(filePath);
                 }
                 else if (action == "remove")
                 {
-                    TryRemoveDevice(filePath);
+                    tryRemoveDevice(filePath);
                 }
             }
         }

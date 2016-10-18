@@ -13,30 +13,30 @@ class IDocument : public QWidget
 
 public:
     IDocument(Path documentPath);
-    virtual DocumentType GetType() const = 0;
+    virtual DocumentType getType() const = 0;
 
-    Path GetPath() { return documentPath; }
-    std::string GetName() { return documentPath.GetName(); }
-    std::string GetTabName();
+    Path getPath() { return documentPath; }
+    std::string getName() { return documentPath.getName(); }
+    std::string getTabName();
 
-    bool IsModifiedOutside();
-    void IgnoreOutsideModification();
+    bool isModifiedOutside();
+    void ignoreOutsideModification();
 
-    virtual void Save();
-    virtual bool Changed() const = 0;
+    virtual void save();
+    virtual bool changed() const = 0;
 
-    void Reload();
+    void reload();
 
 private:
-    QDateTime GetLastModifiedTime();
-    virtual void SetBinaryData(QByteArray data) = 0;
-    virtual QByteArray GetBinaryData() = 0;
+    QDateTime getLastModifiedTime();
+    virtual void setBinaryData(QByteArray data) = 0;
+    virtual QByteArray getBinaryData() = 0;
 
 private slots:
-    void OnModified();
+    void onModified();
 
 signals:
-    void Modified();
+    void modified();
 
 protected:
     Path documentPath;

@@ -27,14 +27,14 @@ public:
     inline bool isRef() const { return getFlags() & Flags::IsRef; }
     inline bool isCustomSerializing() const { return getFlags() & Flags::IsCustomSerializing; }
 
-    virtual Any Create() = 0;
+    virtual Any create() = 0;
 
-    virtual ITypeMeta* GetPointerType() = 0;
-    virtual ITypeMeta* GetPointeeType() = 0;
-    virtual ITypeMeta* GetRunTimePointeeType(Any object) = 0;
+    virtual ITypeMeta* getPointerType() = 0;
+    virtual ITypeMeta* getPointeeType() = 0;
+    virtual ITypeMeta* getRunTimePointeeType(Any object) = 0;
 
-    virtual Any Reference(Any& object) = 0;
-    virtual Any Dereference(Any& object) = 0;
+    virtual Any reference(Any& object) = 0;
+    virtual Any dereference(Any& object) = 0;
 
-    Any MakePointer(Any& object) { return GetPointerType()->Reference(object); }
+    Any makePointer(Any& object) { return getPointerType()->reference(object); }
 };

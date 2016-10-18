@@ -10,56 +10,56 @@ IDocument::IDocument(Path documentPath)
     this->documentPath = documentPath;
 }
 
-void IDocument::Reload()
+void IDocument::reload()
 {
     QFile file(documentPath.c_str());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
         QByteArray data = stream.readAll().toUtf8();
-        SetBinaryData(data);
+        setBinaryData(data);
         file.close();
 
-        modifiedTime = GetLastModifiedTime();
+        modifiedTime = getLastModifiedTime();
     }
 }
 
-void IDocument::IgnoreOutsideModification()
+void IDocument::ignoreOutsideModification()
 {
-    modifiedTime = GetLastModifiedTime();
+    modifiedTime = getLastModifiedTime();
 }
 
-bool IDocument::IsModifiedOutside()
+bool IDocument::isModifiedOutside()
 {
-    return modifiedTime < GetLastModifiedTime();
+    return modifiedTime < getLastModifiedTime();
 }
 
-QDateTime IDocument::GetLastModifiedTime()
+QDateTime IDocument::getLastModifiedTime()
 {
     QFileInfo info(documentPath.c_str());
     return info.lastModified();
 }
 
-std::string IDocument::GetTabName()
+std::string IDocument::getTabName()
 {
-    return Changed() ? GetName() + "*" : GetName();
+    return changed() ? getName() + "*" : getName();
 }
 
-void IDocument::Save()
+void IDocument::save()
 {
     QFile file(documentPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
         QTextStream stream(&file);
-        stream << GetBinaryData();
+        stream << getBinaryData();
         file.close();
-        modifiedTime = GetLastModifiedTime();
+        modifiedTime = getLastModifiedTime();
     }
 
-    this->OnModified();
+    this->onModified();
 }
 
-void IDocument::OnModified()
+void IDocument::onModified()
 {
-    this->Modified();
+    this->modified();
 }

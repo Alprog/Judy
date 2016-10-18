@@ -1,8 +1,6 @@
 
 Class('ModelDerived', Model)	
-
 local base = Model
-
-function ModelDerived:Update(dt)
-	base.Update(self, dt)
+function ModelDerived:update(dt)
+	base.update(self, dt)
 end

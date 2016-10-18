@@ -14,14 +14,14 @@ InspectorPane::InspectorPane()
     tree = new QTreeView();
     setWidget(tree);
 
-    connect(IDE::Instance(), SIGNAL(SelectNode(Node*)), this, SLOT(OnSelectNode(Node*)));
+    connect(IDE::instance(), SIGNAL(selectNode(Node*)), this, SLOT(onSelectNode(Node*)));
 }
 
 InspectorPane::~InspectorPane()
 {
 }
 
-void InspectorPane::OnSelectNode(Node* node)
+void InspectorPane::onSelectNode(Node* node)
 {
     auto model = new InspectorModel(node);
     tree->setModel(model);

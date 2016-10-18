@@ -18,8 +18,8 @@ public:
     LinuxGLContext();
     LinuxGLContext(RenderTarget* renderTarget);
 
-    virtual void MakeCurrent() override;
-    virtual void Swap() override;
+    virtual void makeCurrent() override;
+    virtual void swap() override;
 
     Display* display;
     XWindow window;

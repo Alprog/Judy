@@ -1,7 +1,7 @@
 
 #include "Platform.h"
 
-Platform CurrentPlatform()
+Platform currentPlatform()
 {
 #if WIN
     return Platform::Windows;
@@ -14,7 +14,7 @@ Platform CurrentPlatform()
 #endif
 }
 
-std::string GetPlatformName()
+std::string getPlatformName()
 {
 #if WIN
     return "windows";

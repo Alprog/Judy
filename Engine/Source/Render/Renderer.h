@@ -8,20 +8,20 @@ template <RendererType RendererT>
 class Renderer : public IRenderer
 {
 public:
-    virtual void CreateImpl(Texture* resource) override { Helper(resource); }
-    virtual void CreateImpl(Shader* resource) override { Helper(resource); }
-    virtual void CreateImpl(VertexBuffer* resource) override { Helper(resource); }
-    virtual void CreateImpl(ConstantBuffer* resource) override { Helper(resource); }
-    virtual void CreateImpl(IndexBuffer* resource) override { Helper(resource); }
+    virtual void createImpl(Texture* resource) override { helper(resource); }
+    virtual void createImpl(Shader* resource) override { helper(resource); }
+    virtual void createImpl(VertexBuffer* resource) override { helper(resource); }
+    virtual void createImpl(ConstantBuffer* resource) override { helper(resource); }
+    virtual void createImpl(IndexBuffer* resource) override { helper(resource); }
 
     template <typename ResourceT>
-    inline Impl<ResourceT, RendererT>* GetImpl(ResourceT* const resource)
+    inline Impl<ResourceT, RendererT>* getImpl(ResourceT* const resource)
     {
         return static_cast<Impl<ResourceT, RendererT>*>(resourceImpls[resource->id]);
     }
 
     template <typename ResourceT>
-    inline Impl<ResourceT, RendererT>* GetImpl(unsigned int id)
+    inline Impl<ResourceT, RendererT>* getImpl(unsigned int id)
     {
         return static_cast<Impl<ResourceT, RendererT>*>(resourceImpls[id]);
     }
@@ -30,7 +30,7 @@ protected:
     std::vector<void*> resourceImpls;
 
     template <typename ResourceT>
-    inline void Helper(ResourceT* resource)
+    inline void helper(ResourceT* resource)
     {
         auto id = resource->id;
 

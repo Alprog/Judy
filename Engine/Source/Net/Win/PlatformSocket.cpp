@@ -31,14 +31,14 @@ WinSocket::~WinSocket()
     }
 }
 
-bool WinSocket::SetBlockingMode(bool value)
+bool WinSocket::setBlockingMode(bool value)
 {
     auto mode = value ? 0ul : 1ul;
     auto result = ioctlsocket(handle, FIONBIO, &mode);
     return result == NO_ERROR;
 }
 
-void WinSocket::Listen(int port)
+void WinSocket::listen(int port)
 {
     struct sockaddr_in adress;
     adress.sin_family = AF_INET;
@@ -48,15 +48,15 @@ void WinSocket::Listen(int port)
     auto result = bind(handle, (sockaddr*)&adress, sizeof(adress));
     if (result == 0)
     {
-        listen(handle, 2);
+        ::listen(handle, 2);
     }
 }
 
-Socket* WinSocket::Accept()
+Socket* WinSocket::accept()
 {
     sockaddr clientAddress;
     int clientSize = sizeof(clientAddress);
-    SOCKET clientSocket = accept(handle, &clientAddress, &clientSize);
+    SOCKET clientSocket = ::accept(handle, &clientAddress, &clientSize);
     if (clientSocket == INVALID_SOCKET)
     {
         return nullptr;
@@ -64,30 +64,30 @@ Socket* WinSocket::Accept()
     return new WinSocket(clientSocket);
 }
 
-bool WinSocket::Connect(std::string host, int port)
+bool WinSocket::connect(std::string host, int port)
 {
     struct sockaddr_in adress;
     adress.sin_family = AF_INET;
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
-    auto result = connect(handle, (sockaddr*)&adress, sizeof(adress));
+    auto result = ::connect(handle, (sockaddr*)&adress, sizeof(adress));
     return result == NO_ERROR;
 }
 
-int WinSocket::Send(const char* buffer, int length)
+int WinSocket::send(const char* buffer, int length)
 {
-    return send(handle, buffer, length, 0);
+    return ::send(handle, buffer, length, 0);
 }
 
-int WinSocket::Receive(char* buffer, int max)
+int WinSocket::receive(char* buffer, int max)
 {
     return recv(handle, buffer, max, 0);
 }
 
-Socket::Error WinSocket::GetLastError()
+Socket::Error WinSocket::getLastError()
 {
-    int a = WSAGetLastError();
-    switch (a)
+    int err = WSAGetLastError();
+    switch (err)
     {
         case WSAEWOULDBLOCK:
             return Error::WouldBlock;

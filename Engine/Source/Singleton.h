@@ -9,7 +9,7 @@ class Singleton
 public:
     using SingletonType = Singleton<T, RealT>;
 
-    inline static T* Instance();
+    inline static T* instance();
 };
 
 template <typename T>
@@ -18,7 +18,7 @@ class Singleton<T, T>
 public:
     using SingletonType = Singleton<T, T>;
 
-    inline static T* Instance()
+    inline static T* instance()
     {
         static T instance;
         return &instance;

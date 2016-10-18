@@ -12,22 +12,22 @@ class ConstructorMeta : public IConstructorMeta, public FunctionMeta<ClassType, 
 public:
 
     template <size_t... I>
-    static inline Any StackInvoke(std::vector<Any>& args, index_sequence<I...>)
+    static inline Any stackInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
-        return Meta::Create<ClassType, ArgTypes...>( args.at(I)... );
+        return Meta::create<ClassType, ArgTypes...>( args.at(I)... );
     }
 
     template <size_t... I>
-    static inline Any HeapInvoke(std::vector<Any>& args, index_sequence<I...>)
+    static inline Any heapInvoke(std::vector<Any>& args, index_sequence<I...>)
     {
-        return Meta::CreateNew<ClassType, ArgTypes...>( args.at(I)... );
+        return Meta::createNew<ClassType, ArgTypes...>( args.at(I)... );
     }
 
-    virtual Any Invoke(std::vector<Any>& args) override
+    virtual Any invoke(std::vector<Any>& args) override
     {
         if (args.size() == sizeof...(ArgTypes))
         {
-            return StackInvoke(args, make_index_sequence<sizeof...(ArgTypes)>());
+            return stackInvoke(args, make_index_sequence<sizeof...(ArgTypes)>());
         }
         else
         {
@@ -39,7 +39,7 @@ public:
     {
         if (args.size() == sizeof...(ArgTypes))
         {
-            return HeapInvoke(args, make_index_sequence<sizeof...(ArgTypes)>());
+            return heapInvoke(args, make_index_sequence<sizeof...(ArgTypes)>());
         }
         else
         {
@@ -47,9 +47,9 @@ public:
         }
     }
 
-    virtual ITypeMeta* GetNewType() override
+    virtual ITypeMeta* getNewType() override
     {
-        return TypeMetaOf<ClassType*>();
+        return typeMetaOf<ClassType*>();
     }
 };
 

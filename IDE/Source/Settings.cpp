@@ -1,9 +1,9 @@
 
 #include "Settings.h"
 
-void Settings::InitMeta()
+void Settings::initMeta()
 {
-    auto meta = Meta::Instance();
+    auto meta = Meta::instance();
     ClassDefiner<Settings>(meta, "Settings")
         .constructor()
         .field("playerPath", &Settings::playerPath).attr("Serialize")

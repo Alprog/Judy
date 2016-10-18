@@ -2,7 +2,7 @@
 #include <Socket.h>
 #include <PlatformSocket.h>
 
-Socket* Socket::Create()
+Socket* Socket::create()
 {
     return new PlatformSocket();
 }

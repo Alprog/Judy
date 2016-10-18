@@ -9,5 +9,5 @@ class IConstructorMeta : public virtual IFunctionMeta
 {
 public:
     virtual Any New(std::vector<Any>& args) = 0;
-    virtual ITypeMeta* GetNewType() = 0;
+    virtual ITypeMeta* getNewType() = 0;
 };

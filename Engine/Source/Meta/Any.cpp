@@ -11,43 +11,43 @@ Any::Any(void)
 // copy constructor
 Any::Any(const Any& other)
 {
-    CopyData(other);
+    copyData(other);
 }
 
 // move constructor
 Any::Any(Any&& other)
 {
-    MoveData(other);
+    moveData(other);
 }
 
 // copy assigment operator
 Any& Any::operator=(const Any& other)
 {
-    DestroyData();
-    CopyData(other);
+    destroyData();
+    copyData(other);
     return *this;
 }
 
 // move assigment operator
 Any& Any::operator=(Any&& other)
 {
-    DestroyData();
-    MoveData(other);
+    destroyData();
+    moveData(other);
     return *this;
 }
 
 // destructor
 Any::~Any()
 {
-    DestroyData();
+    destroyData();
 }
 
-void Any::Detach()
+void Any::detach()
 {
     data = nullptr;
 }
 
-inline void Any::DestroyData()
+inline void Any::destroyData()
 {
     if (data != nullptr)
     {
@@ -55,7 +55,7 @@ inline void Any::DestroyData()
     }
 }
 
-inline void Any::CopyData(const Any& other)
+inline void Any::copyData(const Any& other)
 {
     if (other.data == nullptr)
     {
@@ -67,7 +67,7 @@ inline void Any::CopyData(const Any& other)
     }
 }
 
-inline void Any::MoveData(Any& other)
+inline void Any::moveData(Any& other)
 {
     data = other.data;
     other.data = nullptr;

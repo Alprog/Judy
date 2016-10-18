@@ -10,11 +10,11 @@ constexpr int KEY_COUNT = static_cast<int>(Key::COUNT);
 class KeysState
 {
 public:
-    bool IsSet(int keyCode);
-    void Set(int keyCode);
-    void Unset(int keyCode);
+    bool isSet(int keyCode);
+    void set(int keyCode);
+    void unset(int keyCode);
 
 private:
-    std::bitset<KEY_COUNT> KnownKeys;
-    std::set<int> UnknownKeys;
+    std::bitset<KEY_COUNT> knownKeys;
+    std::set<int> unknownKeys;
 };

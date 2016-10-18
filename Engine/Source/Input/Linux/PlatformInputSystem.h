@@ -13,13 +13,13 @@ private:
     ~LinuxInputSystem();
 
 protected:
-    virtual void UpdateState() override;
-    void CheckHotPlugs();
+    virtual void updateState() override;
+    void checkHotPlugs();
 
 private:
-    void RegisterAllDevices();
-    void TryAddDevice(std::string filePath);
-    void TryRemoveDevice(std::string filePath);
+    void registerAllDevices();
+    void tryAddDevice(std::string filePath);
+    void tryRemoveDevice(std::string filePath);
 
     udev* udev;
     udev_monitor* monitor;

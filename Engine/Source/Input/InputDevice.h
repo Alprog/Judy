@@ -12,14 +12,14 @@ class [[Meta]] InputDevice
 public:
     InputDevice();
 
-    virtual void UpdateState() = 0;
+    virtual void updateState() = 0;
 
-    bool IsPressed(int keyCode);
-    bool IsReleased(int keyCode);
-    bool WasPressed(int keyCode);
-    bool WasReleased(int keyCode);
-    bool OnPressed(int keyCode);
-    bool OnReleased(int keyCode);
+    bool isPressed(int keyCode);
+    bool isReleased(int keyCode);
+    bool wasPressed(int keyCode);
+    bool wasReleased(int keyCode);
+    bool onPressed(int keyCode);
+    bool onReleased(int keyCode);
 
     InputDeviceType type;
 

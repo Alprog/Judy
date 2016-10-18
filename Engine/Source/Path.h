@@ -11,26 +11,26 @@ public:
     Path(const char* pathCString);
     Path(const std::string& pathString);
 
-    static std::string GetCanonical(std::string pathString);
-    static bool IsAbsolute(const std::string& pathString);
+    static std::string getCanonical(std::string pathString);
+    static bool isAbsolute(const std::string& pathString);
 
-    static Path Combine(const std::string lhs, const std::string rhs);
-    void Append(const std::string pathString);
+    static Path combine(const std::string lhs, const std::string rhs);
+    void append(const std::string pathString);
 
-    void Cd(const Path pathString);
-    void CdUp();
+    void cd(const Path pathString);
+    void cdUp();
 
     friend Path operator+(const Path& lhs, const Path& rhs);
     Path& operator+=(const Path& rhs);
 
-    std::string GetName() const;
-    std::string GetExtension() const;
+    std::string getName() const;
+    std::string getExtension() const;
 
-    bool IsEmpty() const;
-    bool IsAbsolute() const;
-    bool IsRelative() const;
+    bool isEmpty() const;
+    bool isAbsolute() const;
+    bool isRelative() const;
 
-    static bool IsEqual(const Path& path1, const Path& path2, bool caseSensitive = true);
+    static bool isEqual(const Path& path1, const Path& path2, bool caseSensitive = true);
 
     inline operator std::string&()
     {
@@ -63,8 +63,8 @@ public:
     }
 
 private:
-    static void FixSlashes(std::string& pathString);
-    static void ApplyDots(std::string& pathString);
+    static void fixSlashes(std::string& pathString);
+    static void applyDots(std::string& pathString);
 
     std::string canonicalPath;
 };

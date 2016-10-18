@@ -7,12 +7,12 @@ HierarchyModel::HierarchyModel()
 {
 }
 
-void HierarchyModel::SetNode(Node* node)
+void HierarchyModel::setNode(Node* node)
 {
     rootNode = node;
 }
 
-Node* HierarchyModel::GetNode(const QModelIndex& index) const
+Node* HierarchyModel::getNode(const QModelIndex& index) const
 {
     if (!index.isValid())
     {
@@ -26,8 +26,8 @@ Node* HierarchyModel::GetNode(const QModelIndex& index) const
 
 int HierarchyModel::rowCount(const QModelIndex& index) const
 {
-    auto node = GetNode(index);
-    return node ? node->ChildCount() : 0;
+    auto node = getNode(index);
+    return node ? node->childCount() : 0;
 }
 
 int HierarchyModel::columnCount(const QModelIndex& index) const
@@ -37,20 +37,20 @@ int HierarchyModel::columnCount(const QModelIndex& index) const
 
 QModelIndex HierarchyModel::index(int row, int column, const QModelIndex& index) const
 {
-    auto node = GetNode(index);
+    auto node = getNode(index);
     if (node != nullptr)
     {
-        return createIndex(row, column, node->Child(row));
+        return createIndex(row, column, node->child(row));
     }
     return QModelIndex(); // invalid
 }
 
 QModelIndex HierarchyModel::parent(const QModelIndex& index) const
 {
-    auto node = GetNode(index);
+    auto node = getNode(index);
     if (node != rootNode)
     {
-        auto parent = node->Parent();
+        auto parent = node->getParent();
         if (parent && parent != rootNode)
         {
             return createIndex(0, 0, parent);
@@ -63,7 +63,7 @@ QVariant HierarchyModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole)
     {
-        auto node = GetNode(index);
+        auto node = getNode(index);
         return QString::fromStdString("Node");
     }
 

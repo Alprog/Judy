@@ -1,7 +1,6 @@
 
 #include "DXVertexBufferImpl.h"
 
-#include "d3dx12.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include "DXRenderer.h"
@@ -15,7 +14,7 @@ struct VertexA
 
 Impl<VertexBuffer, RendererType::DX>::Impl(DXRenderer* renderer, VertexBuffer* vb)
 {
-    auto device = renderer->GetDevice();
+    auto device = renderer->getDevice();
 
     const UINT vertexBufferSize = sizeof(VertexA) * vb->vertices.size();
 

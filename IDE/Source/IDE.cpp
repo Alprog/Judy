@@ -10,19 +10,19 @@
 IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
 {
-    Meta::Instance()->Init();
+    Meta::instance()->init();
 
-    LoadStyle();
-    LoadSettings();
-    Start();
+    loadStyle();
+    loadSettings();
+    start();
 }
 
-IDE* IDE::Instance()
+IDE* IDE::instance()
 {
     return static_cast<IDE*>(QApplication::instance());
 }
 
-void IDE::LoadStyle()
+void IDE::loadStyle()
 {
     QFile file("style.css");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -34,61 +34,61 @@ void IDE::LoadStyle()
     file.close();
 }
 
-std::string IDE::GetSettingsFilename()
+std::string IDE::getSettingsFilename()
 {
-    return "settings." + GetPlatformName() + ".lua";
+    return "settings." + getPlatformName() + ".lua";
 }
 
-void IDE::LoadSettings()
+void IDE::loadSettings()
 {
-    Settings::InitMeta();
+    Settings::initMeta();
 
-    auto fileName = GetSettingsFilename();
+    auto fileName = getSettingsFilename();
     QFile file(QString::fromStdString(fileName));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
         auto text = stream.readAll().toStdString();
-        settings = serializer.Deserialize(text);
+        settings = serializer.deserialize(text);
         file.close();
     }
 }
 
-void IDE::SaveSettings()
+void IDE::saveSettings()
 {
-    auto fileName = GetSettingsFilename();
+    auto fileName = getSettingsFilename();
     QFile file(QString::fromStdString(fileName));
     file.open(QIODevice::WriteOnly);
     QTextStream stream(&file);
-    auto text = serializer.Serialize(settings);
+    auto text = serializer.serialize(settings);
     stream << tr(text.c_str());
     file.close();
 }
 
-void IDE::Start()
+void IDE::start()
 {
     auto mainWindow = new MainWindow();
     mainWindow->showMaximized();
     windows.push_back(mainWindow);
 }
 
-MainWindow* IDE::GetMainWindow()
+MainWindow* IDE::getMainWindow()
 {
     return windows[0];
 }
 
-void IDE::FollowToCall(CallInfo callInfo)
+void IDE::followToCall(CallInfo callInfo)
 {
     auto mainWindow = windows[0];
-    auto path = Path::Combine(settings.projectPath, callInfo.source.substr(1));
-    mainWindow->documents->OpenAtLine(path, callInfo.line);
+    auto path = Path::combine(settings.projectPath, callInfo.source.substr(1));
+    mainWindow->documents->openAtLine(path, callInfo.line);
 }
 
-void IDE::OnPlayerStateChanged()
+void IDE::onPlayerStateChanged()
 {
-    auto& calls = RemotePlayer::Instance()->stack.calls;
+    auto& calls = RemotePlayer::instance()->stack.calls;
     if (calls.size() > 0)
     {
-        FollowToCall(calls[0]);
+        followToCall(calls[0]);
     }
 }

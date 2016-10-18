@@ -23,7 +23,7 @@ public:
         return Any::empty;
     }
 
-    Any Invoke(std::vector<Any>& args) override
+    Any invoke(std::vector<Any>& args) override
     {
         if (args.size() == sizeof...(ArgTypes) + 1)
         {

@@ -1,11 +1,10 @@
 
 #include "DXIndexBufferImpl.h"
 #include "DXRenderer.h"
-#include "d3dx12.h"
 
 Impl<IndexBuffer, RendererType::DX>::Impl(DXRenderer* renderer, IndexBuffer* ib)
 {
-    auto device = renderer->GetDevice();
+    auto device = renderer->getDevice();
 
     const UINT indexBufferSize = ib->indices.size() * sizeof(uint32_t);
 

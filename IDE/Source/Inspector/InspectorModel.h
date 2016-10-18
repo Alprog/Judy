@@ -25,8 +25,8 @@ public:
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
 private:
-    inline InspectorItem* GetBaseItem(const QModelIndex& index) const;
-    InspectorItem* GetSubItem(const QModelIndex& index) const;
+    inline InspectorItem* getBaseItem(const QModelIndex& index) const;
+    InspectorItem* getSubItem(const QModelIndex& index) const;
 
     InspectorItem* rootItem;
 };

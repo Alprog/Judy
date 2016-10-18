@@ -13,12 +13,12 @@ private:
     ~WinInputSystem();
 
 public:
-    virtual void UpdateState() override;
+    virtual void updateState() override;
 
     std::vector<Key> keys;
 
-    void InitKeys();
-    void FindDevices();
+    void initKeys();
+    void findDevices();
 
 private:
     HWND hWnd;

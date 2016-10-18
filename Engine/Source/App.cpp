@@ -5,7 +5,7 @@
 #include <time.h>
 #include "Input/InputSystem.h"
 
-App* App::Instance()
+App* App::instance()
 {
     static PlatformApp instance;
     return &instance;
@@ -13,20 +13,20 @@ App* App::Instance()
 
 App::App()
 {
-    Retain();
+    retain();
 }
 
-void App::AddWindow(Window* window)
+void App::addWindow(Window* window)
 {
     addedWindows.insert(window);
 }
 
-void App::RemoveWindow(Window* window)
+void App::removeWindow(Window* window)
 {
     removedWindows.insert(window);
 }
 
-void App::UpdateCollection()
+void App::updateCollection()
 {
     for (auto window : addedWindows)
     {
@@ -42,22 +42,22 @@ void App::UpdateCollection()
     removedWindows.clear();
 }
 
-void App::StartMainLoop()
+void App::startMainLoop()
 {
     do
     {
         for (auto window : windows)
         {
-            window->ProcessEvents();
+            window->processEvents();
         }
-        UpdateCollection();
+        updateCollection();
 
-        InputSystem::Instance()->UpdateState();
+        InputSystem::instance()->updateState();
 
         for (auto window : windows)
         {
-            window->Update();
-            window->Render();
+            window->update();
+            window->render();
         }
     }
     while (windows.size() > 0);

@@ -12,22 +12,22 @@ class Node;
 class InspectorItem
 {
 public:
-    static InspectorItem* Create(Node* node);
+    static InspectorItem* create(Node* node);
     InspectorItem(Any pointer, List<IFieldMeta*>* fields, InspectorItem* parent, int row);
     ~InspectorItem();
 
 private:
-    static List<IFieldMeta*>* GetFields(ITypeMeta* typeMeta);
+    static List<IFieldMeta*>* getFields(ITypeMeta* typeMeta);
 
 public:
-    QVariant GetName(int i);
-    QVariant GetValue(int i);
-    bool SetValue(int i, const QVariant& value);
+    QVariant getName(int i);
+    QVariant getValue(int i);
+    bool setValue(int i, const QVariant& value);
 
-    inline size_t GetChildCount() const { return childs.size(); }
-    inline InspectorItem* GetChild(size_t i) const { return childs[i]; }
-    inline InspectorItem* GetParent() const { return parent; }
-    inline int GetRow() const { return row; }
+    inline size_t getChildCount() const { return childs.size(); }
+    inline InspectorItem* getChild(size_t i) const { return childs[i]; }
+    inline InspectorItem* getParent() const { return parent; }
+    inline int getRow() const { return row; }
 
 private:
     Any localData;

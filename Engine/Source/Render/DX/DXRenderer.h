@@ -28,30 +28,30 @@ public:
     DXRenderer();
     virtual ~DXRenderer();
 
-    virtual void Render(std::vector<RenderCommand> commands, RenderTarget* target) override;
-    virtual void Draw(RenderCommand renderCommand) override;
+    virtual void render(std::vector<RenderCommand> commands, RenderTarget* target) override;
+    virtual void draw(RenderCommand renderCommand) override;
 
-    void Init();
-    void EnableDebugLayer();
-    void CreateDevice();
-    void CreateCommandQueue();
-    void CreateDescriptorHeap();
-    void CreateCommandAllocator();
-    void CreateCommandListAndFence();
-    void PopulateCommandList(std::vector<RenderCommand> commands);
-    void WaitForPreviousFrame();
+    void init();
+    void enableDebugLayer();
+    void createDevice();
+    void createCommandQueue();
+    void createDescriptorHeap();
+    void createCommandAllocator();
+    void createCommandListAndFence();
+    void populateCommandList(std::vector<RenderCommand> commands);
+    void waitForPreviousFrame();
 
-    ComPtr<IDXGISwapChain3> GetSwapChain(RenderTarget* renderTarget);
-    ComPtr<IDXGISwapChain3> CreateSwapChain(HWND hwnd, int width, int height);
+    ComPtr<IDXGISwapChain3> getSwapChain(RenderTarget* renderTarget);
+    ComPtr<IDXGISwapChain3> createSwapChain(HWND hwnd, int width, int height);
 
-    void Clear(Color color) override;
+    void clear(Color color) override;
 
-    inline ID3D12Device* GetDevice() { return device.Get(); }
-    inline ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
-    inline DXDescriptorHeap* GetSrvCbvHeap() { return srvCbvHeap; }
+    inline ID3D12Device* getDevice() { return device.Get(); }
+    inline ID3D12GraphicsCommandList* getCommandList() { return commandList.Get(); }
+    inline DXDescriptorHeap* getSrvCbvHeap() { return srvCbvHeap; }
 
-    inline ID3D12CommandAllocator* GetCommandAllocator() { return commandAllocator.Get(); }
-    inline ID3D12CommandQueue* GetCommandQueue() { return commandQueue.Get(); }
+    inline ID3D12CommandAllocator* getCommandAllocator() { return commandAllocator.Get(); }
+    inline ID3D12CommandQueue* getCommandQueue() { return commandQueue.Get(); }
 
 private:
     ComPtr<ID3D12Device> device;

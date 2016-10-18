@@ -7,7 +7,7 @@ VirtualDevice::VirtualDevice()
 
 }
 
-void VirtualDevice::AddKeySource(int index, InputDevice* device, int keyCode)
+void VirtualDevice::addKeySource(int index, InputDevice* device, int keyCode)
 {
     if (index >= keys.size())
     {
@@ -20,14 +20,14 @@ void VirtualDevice::AddKeySource(int index, InputDevice* device, int keyCode)
     }
 }
 
-bool VirtualDevice::IsPressed(int index)
+bool VirtualDevice::isPressed(int index)
 {
     if (index >= keys.size())
     {
         auto & sources = keys[index];
         for (Source & source : sources)
         {
-            if (source.device->IsPressed(source.keyCode))
+            if (source.device->isPressed(source.keyCode))
             {
                 return true;
             }
@@ -36,19 +36,19 @@ bool VirtualDevice::IsPressed(int index)
     return false;
 }
 
-bool VirtualDevice::IsReleased(int index)
+bool VirtualDevice::isReleased(int index)
 {
-    return !IsPressed(index);
+    return !isPressed(index);
 }
 
-bool VirtualDevice::WasPressed(int index)
+bool VirtualDevice::wasPressed(int index)
 {
     if (index >= keys.size())
     {
         auto & sources = keys[index];
         for (Source & source : sources)
         {
-            if (source.device->WasPressed(source.keyCode))
+            if (source.device->wasPressed(source.keyCode))
             {
                 return true;
             }
@@ -57,17 +57,17 @@ bool VirtualDevice::WasPressed(int index)
     return false;
 }
 
-bool VirtualDevice::WasReleased(int index)
+bool VirtualDevice::wasReleased(int index)
 {
-    return !WasPressed(index);
+    return !wasPressed(index);
 }
 
-bool VirtualDevice::OnPressed(int index)
+bool VirtualDevice::onPressed(int index)
 {
-    return !WasPressed(index) && IsPressed(index);
+    return !wasPressed(index) && isPressed(index);
 }
 
-bool VirtualDevice::OnReleased(int index)
+bool VirtualDevice::onReleased(int index)
 {
-    return WasPressed(index) && !IsPressed(index);
+    return wasPressed(index) && !isPressed(index);
 }

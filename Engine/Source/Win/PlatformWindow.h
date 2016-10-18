@@ -11,7 +11,7 @@ public:
     WinWindow();
     ~WinWindow();
 
-    virtual void ProcessEvents() override;
+    virtual void processEvents() override;
 
     HWND hWnd;
 

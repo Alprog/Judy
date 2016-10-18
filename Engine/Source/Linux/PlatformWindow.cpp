@@ -30,12 +30,12 @@ LinuxWindow::LinuxWindow()
     XFlush(display);
 
     renderTarget = new LinuxRenderTarget(display, window);
-    renderer = RenderManager::Instance()->renderers[0];
+    renderer = RenderManager::instance()->renderers[0];
 
-    App::Instance()->AddWindow(this);
+    App::instance()->addWindow(this);
 }
 
-void LinuxWindow::ProcessEvents()
+void LinuxWindow::processEvents()
 {
     XEvent xev;
 

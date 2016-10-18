@@ -4,7 +4,7 @@
 #include "Render/VertexBuffer.h"
 #include "Render/IndexBuffer.h"
 
-Mesh* CreateCubeMesh()
+Mesh* createCubeMesh()
 {
     auto mesh = new Mesh();
 

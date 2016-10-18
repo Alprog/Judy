@@ -15,7 +15,7 @@ public:
     };
 
     Shader(std::string source, Type type);
-    void Load();
+    void load();
 
 public:
     std::string source;

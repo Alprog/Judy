@@ -27,18 +27,18 @@ public:
     Any& operator=(Any&& other);       // move assigment operator
     ~Any();                            // destructor
 
-    void Detach(); // detach data (it will not be deleted)
+    void detach(); // detach data (it will not be deleted)
 
 private:
-    inline void DestroyData();
-    inline void CopyData(const Any& other);
-    inline void MoveData(Any& other);
+    inline void destroyData();
+    inline void copyData(const Any& other);
+    inline void moveData(Any& other);
 
 public:
     template <typename T>
     Any& operator=(T& value)
     {
-        DestroyData();
+        destroyData();
 
         data = new AnyData<T>(value);
         return *this;
@@ -56,11 +56,11 @@ public:
         return static_cast<AnyData<Type>*>(data)->data;
     }
 
-    inline ITypeMeta* GetType()
+    inline ITypeMeta* getType()
     {
         if (data != nullptr)
         {
-            return data->GetType();
+            return data->getType();
         }
         else
         {

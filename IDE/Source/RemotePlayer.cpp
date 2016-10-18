@@ -15,21 +15,21 @@ using namespace std::placeholders;
 RemotePlayer::RemotePlayer()
     : netNode{nullptr}
     , process{nullptr}
-    , isPaused{false}
+    , m_isPaused{false}
 {
-    connect(this, SIGNAL(StateChanged()), IDE::Instance(), SLOT(OnPlayerStateChanged()));
+    connect(this, SIGNAL(stateChanged()), IDE::instance(), SLOT(onPlayerStateChanged()));
 }
 
 RemotePlayer::~RemotePlayer()
 {
-    Stop();
+    stop();
 }
 
-void RemotePlayer::Run()
+void RemotePlayer::run()
 {
-    Stop();
+    stop();
 
-    auto& settings = IDE::Instance()->settings;
+    auto& settings = IDE::instance()->settings;
     auto path = settings.playerPath;
     auto directory = settings.projectPath;
     auto commandLine = "player -debug";
@@ -37,9 +37,9 @@ void RemotePlayer::Run()
     printf("%s %s %s\n", path.c_str(), directory.c_str(), commandLine);
     fflush(stdout);
 
-    process = Process::Create();
-    process->Run(path, commandLine, directory);
-    if (!process->IsRunning())
+    process = Process::create();
+    process->run(path, commandLine, directory);
+    if (!process->isRunning())
     {
         delete process;
         process = nullptr;
@@ -47,52 +47,52 @@ void RemotePlayer::Run()
     }
 
     netNode = new NetNode();
-    netNode->customWorkCallback = std::bind(&RemotePlayer::CustomNetWork, this);
-    netNode->messageCallback = std::bind(&RemotePlayer::OnGetMessage, this, _1);
-    netNode->Connect("127.0.0.1", 0xC0DE);
+    netNode->customWorkCallback = std::bind(&RemotePlayer::customNetWork, this);
+    netNode->messageCallback = std::bind(&RemotePlayer::onGetMessage, this, _1);
+    netNode->connect("127.0.0.1", 0xC0DE);
 
     for (auto& pair : breakpoints.getMap())
     {
-        netNode->Send(FileBreakpoints(pair.first, pair.second));
+        netNode->send(FileBreakpoints(pair.first, pair.second));
     }
-    netNode->Send(DebugCommand("continue"));
+    netNode->send(DebugCommand("resume"));
 }
 
-bool RemotePlayer::IsRunning()
+bool RemotePlayer::isRunning()
 {
     if (netNode != nullptr)
     {
-        if (netNode->GetState() != NetNode::State::Disconnected)
+        if (netNode->getState() != NetNode::State::Disconnected)
         {
             return true;
         }
         else
         {
-            Stop();
+            stop();
         }
     }
     return false;
 }
 
-bool RemotePlayer::IsConnected()
+bool RemotePlayer::isConnected()
 {
-    return netNode != nullptr && netNode->GetState() == NetNode::State::Connected;
+    return netNode != nullptr && netNode->getState() == NetNode::State::Connected;
 }
 
-bool RemotePlayer::IsPaused()
+bool RemotePlayer::isPaused()
 {
-    return isPaused;
+    return m_isPaused;
 }
 
-void RemotePlayer::SendCommand(std::string name)
+void RemotePlayer::sendCommand(std::string name)
 {
-    if (IsConnected())
+    if (isConnected())
     {
-        netNode->Send(DebugCommand(name));
+        netNode->send(DebugCommand(name));
     }
 }
 
-CallInfo* RemotePlayer::GetActiveCall()
+CallInfo* RemotePlayer::getActiveCall()
 {
     if (stack.calls.size() > 0)
     {
@@ -104,7 +104,7 @@ CallInfo* RemotePlayer::GetActiveCall()
     }
 }
 
-void RemotePlayer::Stop()
+void RemotePlayer::stop()
 {
     if (netNode != nullptr)
     {
@@ -116,34 +116,34 @@ void RemotePlayer::Stop()
         delete process;
         process = nullptr;
     }
-    isPaused = false;
+    m_isPaused = false;
     stack.calls.clear();
-    StateChanged();
+    stateChanged();
 }
 
-void RemotePlayer::CustomNetWork()
+void RemotePlayer::customNetWork()
 {
 }
 
-void RemotePlayer::OnGetMessage(Any& message)
+void RemotePlayer::onGetMessage(Any& message)
 {
-    if (message.GetType() == TypeMetaOf<LogMessage>())
+    if (message.getType() == typeMetaOf<LogMessage>())
     {
         auto text = message.as<LogMessage>().text;
         printf("%s", text.c_str());
         fflush(stdout);
     }
-    else if (message.GetType() == TypeMetaOf<CallStack>())
+    else if (message.getType() == typeMetaOf<CallStack>())
     {
-        isPaused = true;
+        m_isPaused = true;
         stack = message.as<CallStack>();
-        StateChanged();
+        stateChanged();
     }
-    else if (message.GetType() == TypeMetaOf<DebugCommand>())
+    else if (message.getType() == typeMetaOf<DebugCommand>())
     {
         stack.calls.clear();
-        isPaused = false;
-        StateChanged();
+        m_isPaused = false;
+        stateChanged();
     }
     else
     {
@@ -151,16 +151,16 @@ void RemotePlayer::OnGetMessage(Any& message)
     }
 }
 
-Set<int> RemotePlayer::GetBreakpoints(std::string source)
+Set<int> RemotePlayer::getBreakpoints(std::string source)
 {
-    return breakpoints.GetLines(source);
+    return breakpoints.getLines(source);
 }
 
-void RemotePlayer::SetBreakpoints(std::string source, Set<int> lines)
+void RemotePlayer::setBreakpoints(std::string source, Set<int> lines)
 {
-    bool changed = breakpoints.SetLines(source, lines);
-    if (changed && IsConnected())
+    bool changed = breakpoints.setLines(source, lines);
+    if (changed && isConnected())
     {
-        netNode->Send(FileBreakpoints(source, lines));
+        netNode->send(FileBreakpoints(source, lines));
     }
 }

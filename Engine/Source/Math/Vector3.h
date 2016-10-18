@@ -12,10 +12,10 @@ struct [[Meta]] Vector3
     Vector3(float x = 0, float y = 0, float z = 0);
 
     [[Serialize]] Vector3(List<float> list);
-    [[Serialize]] List<float> ToList();
+    [[Serialize]] List<float> toList();
 
-    float Length();
-    float SquaredLength();
+    float length();
+    float squaredLength();
 
     friend Vector3 operator-(const Vector3& vector);
     friend Vector3 operator+(const Vector3& lhs, const Vector3& rhs);

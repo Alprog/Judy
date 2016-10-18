@@ -20,24 +20,24 @@ class IDE : public QApplication
     IDE(int argc, char** argv);
 
 public:
-    static IDE* Instance();
-    void SaveSettings();
-    MainWindow* GetMainWindow();
-    void FollowToCall(CallInfo callInfo);
+    static IDE* instance();
+    void saveSettings();
+    MainWindow* getMainWindow();
+    void followToCall(CallInfo callInfo);
 
 private:
-    std::string GetSettingsFilename();
+    std::string getSettingsFilename();
 
-    void Start();
-    void LoadStyle();
-    void LoadSettings();
+    void start();
+    void loadStyle();
+    void loadSettings();
 
 signals:
-    void SelectScene(Node* scene);
-    void SelectNode(Node* node);
+    void selectScene(Node* scene);
+    void selectNode(Node* node);
 
 private slots:
-    void OnPlayerStateChanged();
+    void onPlayerStateChanged();
 
 public:
     Serializer serializer;

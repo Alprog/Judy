@@ -10,15 +10,15 @@ class LuaDocument : public IDocument
 public:
     LuaDocument(Path documentPath);
 
-    virtual DocumentType GetType() const override;
+    virtual DocumentType getType() const override;
 
-    virtual void Save() override;
-    virtual bool Changed() const override;
-    void GoToLine(int line);
+    virtual void save() override;
+    virtual bool changed() const override;
+    void goToLine(int line);
 
 private:
-    virtual void SetBinaryData(QByteArray data) override;
-    virtual QByteArray GetBinaryData() override;
+    virtual void setBinaryData(QByteArray data) override;
+    virtual QByteArray getBinaryData() override;
 
     CodeEditor* editor;
 };

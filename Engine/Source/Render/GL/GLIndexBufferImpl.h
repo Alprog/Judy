@@ -14,7 +14,7 @@ class Impl<IndexBuffer, RendererType::GL>
 public:
     Impl(GLRenderer* renderer, IndexBuffer* indexBuffer);
 
-    inline void Bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id); }
+    inline void bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id); }
 
     GLuint id;
 };

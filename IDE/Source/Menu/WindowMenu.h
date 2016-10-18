@@ -11,5 +11,5 @@ public:
     WindowMenu(MainWindow* window);
 
 private slots:
-    void Stub();
+    void stub();
 };

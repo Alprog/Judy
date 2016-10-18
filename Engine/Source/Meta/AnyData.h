@@ -4,13 +4,13 @@
 class ITypeMeta;
 
 template <typename T>
-ITypeMeta* TypeMetaOf();
+ITypeMeta* typeMetaOf();
 
 struct IAnyData
 {
     virtual ~IAnyData() {}
 
-    virtual ITypeMeta* GetType() = 0;
+    virtual ITypeMeta* getType() = 0;
     virtual IAnyData* copy() = 0;
 };
 
@@ -24,9 +24,9 @@ struct AnyData : public IAnyData
     {
     }
 
-    virtual ITypeMeta* GetType() override
+    virtual ITypeMeta* getType() override
     {
-        return TypeMetaOf<T>();
+        return typeMetaOf<T>();
     }
 
     virtual IAnyData* copy() override

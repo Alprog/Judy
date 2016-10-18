@@ -6,7 +6,7 @@ class MacApp : public App
 {
 public:
     MacApp();
-    virtual void StartMainLoop();
+    virtual void startMainLoop();
 
 };
 

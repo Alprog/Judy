@@ -22,17 +22,17 @@ Vector2::Vector2(List<float> list)
 {
 }
 
-List<float> Vector2::ToList()
+List<float> Vector2::toList()
 {
     return {x, y};
 }
 
-float Vector2::Length()
+float Vector2::length()
 {
     return sqrt(x * x + y * y);
 }
 
-float Vector2::SquaredLength()
+float Vector2::squaredLength()
 {
     return x * x + y * y;
 }

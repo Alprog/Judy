@@ -3,10 +3,10 @@
 #include "RendererFrontend.h"
 #include "Node.h"
 
-void IRenderer::Render(Node* scene, RenderTarget* target)
+void IRenderer::render(Node* scene, RenderTarget* target)
 {
     RendererFrontend frontEnd;
-    frontEnd.Render(scene);
+    frontEnd.render(scene);
 
-    this->Render(frontEnd.commands, target);
+    this->render(frontEnd.commands, target);
 }

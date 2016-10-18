@@ -16,33 +16,33 @@ public:
     Map() = default;
 
 private:
-    static void Serialize(Map<T1, T2> map, Serializer* serializer)
+    static void serialize(Map<T1, T2> map, Serializer* serializer)
     {
         auto L = serializer->getL();
-        auto keyType = TypeMetaOf<T1>();
-        auto valueType = TypeMetaOf<T2>();
+        auto keyType = typeMetaOf<T1>();
+        auto valueType = typeMetaOf<T2>();
         lua_newtable(L);
         for (auto& pair : map)
         {
-            Serialize(pair.first, keyType);
-            Serialize(pair.second, valueType);
+            serialize(pair.first, keyType);
+            serialize(pair.second, valueType);
             lua_settable(L, -3);
         }
     }
 
-    static Map<T1, T2> Deserialize(Serializer* serializer)
+    static Map<T1, T2> deserialize(Serializer* serializer)
     {
         auto L = serializer->getL();
-        auto keyType = TypeMetaOf<T1>();
-        auto valueType = TypeMetaOf<T2>();
+        auto keyType = typeMetaOf<T1>();
+        auto valueType = typeMetaOf<T2>();
 
         Map<T1, T2> map;
         lua_pushnil(L);
         while (lua_next(L, -2) != 0)
         {
-            T2 value = serializer->Deserialize(valueType);
+            T2 value = serializer->deserialize(valueType);
             lua_pop(L, 1);
-            T1 key = serializer->Deserialize(keyType);
+            T1 key = serializer->deserialize(keyType);
             map[key] = value;
         }
 

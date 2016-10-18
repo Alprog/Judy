@@ -19,18 +19,18 @@
 GLRenderer::GLRenderer()
 {
     auto dummy = (GLContext*)new PlatformGLContext();
-    dummy->MakeCurrent();
+    dummy->makeCurrent();
     glewInit();
     //delete dummy;
 }
 
-void GLRenderer::Clear(Color color)
+void GLRenderer::clear(Color color)
 {
     glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
+GLContext* GLRenderer::getContext(RenderTarget* renderTarget)
 {
     auto context = (GLContext*)contexts[renderTarget];
     if (context == nullptr)
@@ -39,13 +39,13 @@ GLContext* GLRenderer::GetContext(RenderTarget* renderTarget)
         contexts[renderTarget] = context;
     }
 
-    context->MakeCurrent();
+    context->makeCurrent();
     glewInit();
 
     return context;
 }
 
-void GLRenderer::Draw(RenderCommand command)
+void GLRenderer::draw(RenderCommand command)
 {
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
@@ -70,13 +70,13 @@ void GLRenderer::Draw(RenderCommand command)
     glUniform1i(location, 0);
 
     glActiveTexture(GL_TEXTURE0);
-    GLuint id = GetImpl(renderState->texture)->id;
+    GLuint id = getImpl(renderState->texture)->id;
     glBindTexture(GL_TEXTURE_2D, id);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    GetImpl(command.mesh->vertexBuffer)->Bind();
-    GetImpl(command.mesh->indexBuffer)->Bind();
+    getImpl(command.mesh->vertexBuffer)->bind();
+    getImpl(command.mesh->indexBuffer)->bind();
 
     glUseProgram(renderState->programId);
 
@@ -97,13 +97,13 @@ void GLRenderer::Draw(RenderCommand command)
     glDisableVertexAttribArray(0);
 }
 
-void GLRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
+void GLRenderer::render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
 {
-    auto context = GetContext(renderTarget);
+    auto context = getContext(renderTarget);
 
-    context->MakeCurrent();
+    context->makeCurrent();
 
-    auto size = renderTarget->GetSize();
+    auto size = renderTarget->getSize();
     glViewport(0, 0, size.x, size.y);
 
     //glScissor(0, 0, 400, 800);
@@ -119,12 +119,12 @@ void GLRenderer::Render(std::vector<RenderCommand> commands, RenderTarget* rende
         (float)'y' / 255
     };
 
-    Clear(color);
+    clear(color);
 
     for (auto& command : commands)
     {
-        Draw(command);
+        draw(command);
     }
 
-    context->Swap();
+    context->swap();
 }

@@ -13,15 +13,15 @@ class [[Meta]] Window : public Object
     friend class Meta;
 
 public:
-    static Window* Create();
+    static Window* create();
     virtual ~Window();
 
-    void Show();
+    void show();
 
-    virtual void ProcessEvents() = 0;
+    virtual void processEvents() = 0;
 
-    void Update();
-    void Render();
+    void update();
+    void render();
 
 protected:
     Window();

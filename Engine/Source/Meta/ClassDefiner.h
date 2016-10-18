@@ -18,7 +18,7 @@ public:
     PropertyMeta* lastProperty;
 
     ClassDefiner(Meta* meta, const char* name)
-        : classMeta{TypeMeta<ClassType>::Instance()}
+        : classMeta{TypeMeta<ClassType>::instance()}
         , lastMember{nullptr}
     {
         classMeta->name = name;
@@ -31,14 +31,14 @@ public:
     template <typename T>
     ClassDefiner& templateArgument()
     {
-        classMeta->templateArguments.push_back(TypeMetaOf<T>());
+        classMeta->templateArguments.push_back(typeMetaOf<T>());
         return *this;
     }
 
     template <typename T>
     ClassDefiner& base()
     {
-        auto baseType = (IClassMeta*)TypeMetaOf<T>();
+        auto baseType = (IClassMeta*)typeMetaOf<T>();
         classMeta->baseTypes.push_back(baseType);
         baseType->hasDerives = true;
         return *this;

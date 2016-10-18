@@ -17,14 +17,14 @@ LuaDocument::LuaDocument(Path documentPath)
     layout->addWidget(editor);
     this->setLayout(layout);
 
-    Reload();
+    reload();
 
     editor->emptyUndoBuffer();
 
-    connect(editor, SIGNAL(notifyChange()), this, SLOT(OnModified()));
+    connect(editor, SIGNAL(notifyChange()), this, SLOT(onModified()));
 
-    auto projectPath = Path(IDE::Instance()->settings.projectPath);
-    if (StartsWith(documentPath, projectPath))
+    auto projectPath = Path(IDE::instance()->settings.projectPath);
+    if (startsWith(documentPath, projectPath))
     {
         auto size = projectPath.str().size();
         auto source = "@" + documentPath.str().substr(size + 1);
@@ -35,35 +35,35 @@ LuaDocument::LuaDocument(Path documentPath)
     editor->updateActiveLine();
 }
 
-DocumentType LuaDocument::GetType() const
+DocumentType LuaDocument::getType() const
 {
     return DocumentType::Lua;
 }
 
-void LuaDocument::SetBinaryData(QByteArray data)
+void LuaDocument::setBinaryData(QByteArray data)
 {
     editor->setText(data.constData());
     editor->setSavePoint();
 }
 
-QByteArray LuaDocument::GetBinaryData()
+QByteArray LuaDocument::getBinaryData()
 {
     auto length = editor->length();
     return editor->getText(length + 1);
 }
 
-bool LuaDocument::Changed() const
+bool LuaDocument::changed() const
 {
     return editor->modify();
 }
 
-void LuaDocument::Save()
+void LuaDocument::save()
 {
     editor->setSavePoint();
-    IDocument::Save();
+    IDocument::save();
 }
 
-void LuaDocument::GoToLine(int line)
+void LuaDocument::goToLine(int line)
 {
     editor->gotoLine(line - 1);
     editor->setFocus(true);

@@ -11,11 +11,11 @@ public:
     WinGLContext(HWND hWnd = 0);
     WinGLContext(RenderTarget* renderTarget);
 
-    virtual void MakeCurrent() override;
-    virtual void Swap() override;
+    virtual void makeCurrent() override;
+    virtual void swap() override;
 
 private:
-    void SetupPixelFormat(HDC hDC);
+    void setupPixelFormat(HDC hDC);
 
     static HGLRC hRC; // render context
     HDC hDC;          // device context

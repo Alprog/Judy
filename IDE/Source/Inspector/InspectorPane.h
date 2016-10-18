@@ -16,7 +16,7 @@ public:
     ~InspectorPane();
 
 private slots:
-    void OnSelectNode(Node* node);
+    void onSelectNode(Node* node);
 
 private:
     QTreeView* tree;

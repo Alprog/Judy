@@ -18,8 +18,8 @@ public:
     ~HierarchyPane();
 
 private slots:
-    void OnSelectScene(Node* scene);
-    void OnSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+    void onSelectScene(Node* scene);
+    void onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 private:
     QTreeView* tree;

@@ -16,8 +16,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     switch(message)
     {
         case WM_CREATE:
-            App::Instance()->AddWindow(currentEventWindow);
-            currentEventWindow->Retain();
+            App::instance()->addWindow(currentEventWindow);
+            currentEventWindow->retain();
             printf("create!");
             fflush(stdout);
             break;
@@ -33,8 +33,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             break;
 
         case WM_DESTROY:
-            App::Instance()->RemoveWindow(currentEventWindow);
-            currentEventWindow->Release();
+            App::instance()->removeWindow(currentEventWindow);
+            currentEventWindow->release();
 
             break;
     }
@@ -82,7 +82,7 @@ WinWindow::WinWindow()
 
     renderTarget = new WinRenderTarget(hInstance, hWnd);
 
-    renderer = RenderManager::Instance()->renderers[(int)RendererType::GL];
+    renderer = RenderManager::instance()->renderers[(int)RendererType::GL];
 
     //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
     //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
@@ -96,7 +96,7 @@ WinWindow::~WinWindow()
     //delete renderer;
 }
 
-void WinWindow::ProcessEvents()
+void WinWindow::processEvents()
 {
     MSG msg;
     currentEventWindow = this;

@@ -21,7 +21,7 @@ DXDescriptorHeap::DXDescriptorHeap(ID3D12Device* device, UINT maxCount)
     handleIncrementSize = device->GetDescriptorHandleIncrementSize(desc.Type);
 }
 
-DXDescriptorHandle DXDescriptorHeap::GetNextHandle()
+DXDescriptorHandle DXDescriptorHeap::getNextHandle()
 {
     return DXDescriptorHandle(this, descriptorCount++);
 }

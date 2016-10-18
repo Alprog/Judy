@@ -24,24 +24,24 @@ public:
     NetNode();
     ~NetNode();
 
-    bool IsConnected() const;
-    bool HasOutput() const;
+    bool isConnected() const;
+    bool hasOutput() const;
 
-    void Start(int port);
-    void Connect(std::string host, int port);
-    void Send(Any any);
+    void start(int port);
+    void connect(std::string host, int port);
+    void send(Any any);
 
-    State GetState() const;
+    State getState() const;
 
 private:
-    void StartWork();
-    void Work();
+    void startWork();
+    void work();
 
-    void ClientWaitWork();
-    void ConnectWork();
-    void SendWork();
-    void ReceiveWork();
-    void ProcessMessages();
+    void clientWaitWork();
+    void connectWork();
+    void sendWork();
+    void receiveWork();
+    void processMessages();
 
 public:
     std::function<void(Any&)> messageCallback;

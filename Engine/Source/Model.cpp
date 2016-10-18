@@ -11,20 +11,20 @@ using base = Node;
 
 Model::Model()
 {
-    mesh = CreateCubeMesh();
+    mesh = createCubeMesh();
     renderState = new RenderState();
 
-    renderState->vertexShader = ShaderManager::Instance()->GetShader("shadersTextured", Shader::Type::Vertex);
-    renderState->pixelShader = ShaderManager::Instance()->GetShader("shadersTextured", Shader::Type::Pixel);
-    renderState->texture = TextureManager::Instance()->GetTexture("skullbox.png");
+    renderState->vertexShader = ShaderManager::instance()->getShader("shadersTextured", Shader::Type::Vertex);
+    renderState->pixelShader = ShaderManager::instance()->getShader("shadersTextured", Shader::Type::Pixel);
+    renderState->texture = TextureManager::instance()->getTexture("skullbox.png");
 
     renderState->constantBuffer = new ConstantBuffer();
 
     renderState->link();
 }
 
-void Model::Render(Matrix matrix, RendererFrontend* renderer)
+void Model::render(Matrix matrix, RendererFrontend* renderer)
 {
-    renderer->Draw(mesh, matrix, renderState);
-    base::Render(matrix, renderer);
+    renderer->draw(mesh, matrix, renderState);
+    base::render(matrix, renderer);
 }

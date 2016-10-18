@@ -15,14 +15,14 @@ Object::~Object()
 {
 }
 
-void Object::Retain()
+void Object::retain()
 {
     referenceCount++;
     printf("inc %i %p\n", referenceCount, this);
     fflush(stdout);
 }
 
-void Object::Release()
+void Object::release()
 {
     referenceCount--;
     printf("dec %i %p\n", referenceCount, this);
@@ -36,7 +36,7 @@ void Object::Release()
         else
         {
             // ensure that we don't keep luaObject manualy
-            LuaMachine::Instance()->ReleaseUserdata(luaObject);
+            LuaMachine::instance()->releaseUserdata(luaObject);
             // and wait when it garbage collected
         }
     }
@@ -78,7 +78,7 @@ int Object::GC(lua_State* L)
         if (keepUserdata)
         {
             // force keep userdata reference
-            LuaMachine::Instance()->RetainUserdata(object->luaObject);
+            LuaMachine::instance()->retainUserdata(object->luaObject);
 
             // mark for finalization again
             lua_getmetatable(L, -1); // UM

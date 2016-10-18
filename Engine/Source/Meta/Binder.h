@@ -16,13 +16,13 @@ class LuaBinder
 {
 public:
     LuaBinder(lua_State* L);
-    void Bind(Meta* meta);
+    void bind(Meta* meta);
 
 private:
-    void Init();
+    void init();
 
-    void BindClass(IClassMeta* classMeta);
-    void BindHelper(std::string name, luaCFunction closure, void* upvalue);
+    void bindClass(IClassMeta* classMeta);
+    void bindHelper(std::string name, luaCFunction closure, void* upvalue);
 
     lua_State* L;
 };

@@ -11,30 +11,30 @@ Breakpoints::Breakpoints()
 #endif
 }
 
-bool Breakpoints::IsEmpty()
+bool Breakpoints::isEmpty()
 {
     return map.size() == 0;
 }
 
-bool Breakpoints::IsAnySet(int line)
+bool Breakpoints::isAnySet(int line)
 {
     if (linesDirty)
     {
-        UpdateLines();
+        updateLines();
     }
     return lines.find(line) != std::end(lines);
 }
 
-bool Breakpoints::IsSet(std::string fileName, int line)
+bool Breakpoints::isSet(std::string fileName, int line)
 {
-    if (!caseSensitive) fileName = LowerCase(fileName);
+    if (!caseSensitive) fileName = lowerCase(fileName);
     auto& set = map[fileName];
     return set.find(line) != std::end(set);
 }
 
-bool Breakpoints::Clear(std::string fileName)
+bool Breakpoints::clear(std::string fileName)
 {
-    if (!caseSensitive) fileName = LowerCase(fileName);
+    if (!caseSensitive) fileName = lowerCase(fileName);
 
     auto exist = map.find(fileName) != std::end(map);
     if (exist)
@@ -46,9 +46,9 @@ bool Breakpoints::Clear(std::string fileName)
     return false;
 }
 
-Set<int> Breakpoints::GetLines(std::string fileName)
+Set<int> Breakpoints::getLines(std::string fileName)
 {
-    if (!caseSensitive) fileName = LowerCase(fileName);
+    if (!caseSensitive) fileName = lowerCase(fileName);
 
     auto exist = map.find(fileName) != std::end(map);
     if (exist)
@@ -61,13 +61,13 @@ Set<int> Breakpoints::GetLines(std::string fileName)
     }
 }
 
-bool Breakpoints::SetLines(std::string fileName, Set<int> lines)
+bool Breakpoints::setLines(std::string fileName, Set<int> lines)
 {
-    if (!caseSensitive) fileName = LowerCase(fileName);
+    if (!caseSensitive) fileName = lowerCase(fileName);
 
     if (lines.size() == 0)
     {
-        return Clear(fileName);
+        return clear(fileName);
     }
 
     auto exist = map.find(fileName) != std::end(map);
@@ -84,7 +84,7 @@ bool Breakpoints::SetLines(std::string fileName, Set<int> lines)
     return true;
 }
 
-void Breakpoints::UpdateLines()
+void Breakpoints::updateLines()
 {
     lines.clear();
     for (auto& pair : map)
@@ -102,7 +102,7 @@ const Breakpoints::MapType& Breakpoints::getMap() const
     return map;
 }
 
-void Breakpoints::SetCaseSensitive(bool value)
+void Breakpoints::setCaseSensitive(bool value)
 {
     this->caseSensitive = value;
 }

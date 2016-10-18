@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sstream>
 
-std::vector<std::string> Split(std::string string, std::string separator)
+std::vector<std::string> split(std::string string, std::string separator)
 {
     std::vector<std::string> result;
 
@@ -28,7 +28,7 @@ std::vector<std::string> Split(std::string string, std::string separator)
     return result;
 }
 
-std::string Join(std::vector<std::string> vector, std::string separator)
+std::string join(std::vector<std::string> vector, std::string separator)
 {
     std::stringstream stream;
 
@@ -45,7 +45,7 @@ std::string Join(std::vector<std::string> vector, std::string separator)
     return stream.str();
 }
 
-void Replace(std::string& string, std::string oldValue, std::string newValue)
+void replace(std::string& string, std::string oldValue, std::string newValue)
 {
     while (true)
     {
@@ -58,35 +58,35 @@ void Replace(std::string& string, std::string oldValue, std::string newValue)
     }
 }
 
-std::string GetReplaced(std::string string, std::string oldValue, std::string newValue)
+std::string getReplaced(std::string string, std::string oldValue, std::string newValue)
 {
-    Replace(string, oldValue, newValue);
+    replace(string, oldValue, newValue);
     return string;
 }
 
-std::string LowerCase(std::string string)
+std::string lowerCase(std::string string)
 {
     std::transform(std::begin(string), std::end(string), std::begin(string), tolower);
     return string;
 }
 
-std::string UpperCase(std::string string)
+std::string upperCase(std::string string)
 {
     std::transform(std::begin(string), std::end(string), std::begin(string), toupper);
     return string;
 }
 
-bool CaseInsensitiveCompare(const std::string& string1, const std::string& string2)
+bool caseInsensitiveCompare(const std::string& string1, const std::string& string2)
 {
-    return LowerCase(string1) == LowerCase(string2);
+    return lowerCase(string1) == lowerCase(string2);
 }
 
-bool StartsWith(const std::string& string, const std::string& pattern)
+bool startsWith(const std::string& string, const std::string& pattern)
 {
     return string.substr(0, pattern.size()) == pattern;
 }
 
-bool EndsWith(const std::string& string, const std::string& pattern)
+bool endsWith(const std::string& string, const std::string& pattern)
 {
     auto stringSize = string.size();
     auto patternSize = string.size();

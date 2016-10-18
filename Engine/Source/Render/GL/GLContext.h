@@ -4,6 +4,6 @@
 class GLContext
 {
 public:
-    virtual void MakeCurrent() = 0;
-    virtual void Swap() = 0;
+    virtual void makeCurrent() = 0;
+    virtual void swap() = 0;
 };

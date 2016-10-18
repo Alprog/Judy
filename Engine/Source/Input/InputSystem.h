@@ -11,7 +11,7 @@ class [[Meta]] InputSystem : public Singleton<InputSystem, PlatformInputSystem>
     friend class Meta;
 
 public:
-    virtual void UpdateState() = 0;
+    virtual void updateState() = 0;
 
 protected:
     std::vector<InputDevice*> devices;

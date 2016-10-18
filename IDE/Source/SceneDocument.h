@@ -12,16 +12,16 @@ class SceneDocument : public IDocument
 
 public:
     SceneDocument(Path path);
-    virtual DocumentType GetType() const override;
+    virtual DocumentType getType() const override;
 
-    virtual bool Changed() const override;
+    virtual bool changed() const override;
 
 private slots:
-    void Render();
+    void render();
 
 private:
-    virtual void SetBinaryData(QByteArray data) override;
-    virtual QByteArray GetBinaryData() override;
+    virtual void setBinaryData(QByteArray data) override;
+    virtual QByteArray getBinaryData() override;
 
     Node* scene;
     RenderTarget* renderTarget;

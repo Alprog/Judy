@@ -14,8 +14,8 @@ public:
     Object();
     virtual ~Object();
 
-    void Retain();
-    void Release();
+    void retain();
+    void release();
 
 private:
     static int GC(lua_State* L);

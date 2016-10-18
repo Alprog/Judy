@@ -11,7 +11,7 @@
 #include "Model.h"
 #include "Meta/Serializer.h"
 
-Window* Window::Create()
+Window* Window::create()
 {
     return new PlatformWindow();
 }
@@ -29,8 +29,8 @@ Window::Window()
     scene = node;
     scene->transform.setScaling(Vector3::One * 0.3f);
 
-    scene->AddChild(c1);
-    scene->AddChild(c2);
+    scene->addChild(c1);
+    scene->addChild(c2);
 
     c1->transform.setTranslation(Vector3(0.9f, 0.0f, -1.0f));
     c1->transform.setScaling(Vector3::One * 0.3f);
@@ -41,30 +41,30 @@ Window::Window()
     c2->name = "child2";
 
     auto serializer = new Serializer();
-    auto text = serializer->Serialize(scene);
+    auto text = serializer->serialize(scene);
     printf(text.c_str());
     fflush(stdout);
 
-    Node* obj = serializer->Deserialize<Node*>(text);
-    text = serializer->Serialize(obj);
+    Node* obj = serializer->deserialize<Node*>(text);
+    text = serializer->serialize(obj);
     printf(text.c_str());
     fflush(stdout);
 
-    Retain();
+    retain();
 }
 
 Window::~Window()
 {
 }
 
-void Window::Update()
+void Window::update()
 {
-    scene->Update(0.0);
+    scene->update(0.0);
 
     static float a = 0;
     a += 0.003f;
 
-    auto rotation = Quaternion::YawPitchRoll(0, 0, a);
+    auto rotation = Quaternion::yawPitchRoll(0, 0, a);
     scene->transform.setRotation(rotation);
 
     //auto translation = Vector3(0, 0, 0);
@@ -78,12 +78,12 @@ void Window::Update()
     //scene->transform.setTranslation(Vector3(0, a, 0));
 }
 
-void Window::Render()
+void Window::render()
 {
-    renderer->Render(scene, renderTarget);
+    renderer->render(scene, renderTarget);
 }
 
-void Window::Show()
+void Window::show()
 {
 }
 

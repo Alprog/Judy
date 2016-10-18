@@ -20,14 +20,14 @@ class [[Meta]] VirtualDevice : public Object
         int keyCode;
     };
 
-    [[Bind]] void AddKeySource(int index, InputDevice* device, int keyCode);
+    [[Bind]] void addKeySource(int index, InputDevice* device, int keyCode);
 
-    [[Bind]] bool IsPressed(int index);
-    [[Bind]] bool IsReleased(int index);
-    [[Bind]] bool WasPressed(int index);
-    [[Bind]] bool WasReleased(int index);
-    [[Bind]] bool OnPressed(int index);
-    [[Bind]] bool OnReleased(int index);
+    [[Bind]] bool isPressed(int index);
+    [[Bind]] bool isReleased(int index);
+    [[Bind]] bool wasPressed(int index);
+    [[Bind]] bool wasReleased(int index);
+    [[Bind]] bool onPressed(int index);
+    [[Bind]] bool onReleased(int index);
 
     std::vector<std::vector<Source>> keys;
 };

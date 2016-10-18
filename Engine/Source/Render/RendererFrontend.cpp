@@ -2,7 +2,7 @@
 #include "RendererFrontend.h"
 #include "Render/ConstantBuffer.h"
 
-void RendererFrontend::Render(Node* scene)
+void RendererFrontend::render(Node* scene)
 {
     Context context;
     context.View = Matrix::Identity; //Matrix::RotationX(3.1416);
@@ -11,7 +11,7 @@ void RendererFrontend::Render(Node* scene)
     contexts.push(context);
 
 
-    scene->Render(scene->transform.getMatrix(), this);
+    scene->render(scene->transform.getMatrix(), this);
 
 }
 
@@ -21,7 +21,7 @@ void RendererFrontend::Render(Node* scene)
 #include "Render/DX/DXRenderer.h"
 #endif
 
-void RendererFrontend::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
+void RendererFrontend::draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 {
     RenderCommand command;
     command.mesh = mesh;
@@ -30,8 +30,8 @@ void RendererFrontend::Draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     command.state->constantBuffer->data.MVP = matrix * contexts.back().ViewProjection;
 
 #if WINDOWS
-    DXRenderer* renderer = (DXRenderer*)RenderManager::Instance()->renderers[0];
-    renderer->GetImpl(command.state->constantBuffer)->Update();
+    DXRenderer* renderer = (DXRenderer*)RenderManager::instance()->renderers[0];
+    renderer->getImpl(command.state->constantBuffer)->update();
 #endif
 
     commands.push_back(command);

@@ -10,7 +10,7 @@ int const maxStackSize = 256;
 
 LuaMachine::LuaMachine()
     : L{nullptr}
-    , isStarted{false}
+    , m_isStarted{false}
     , breakCallback{nullptr}
     , resumeCallback{nullptr}
     , level{0}
@@ -30,7 +30,7 @@ LuaMachine::LuaMachine()
     lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
 
     binder = new LuaBinder(L);
-    LuaBinder(L).Bind(Meta::Instance());
+    LuaBinder(L).bind(Meta::instance());
 }
 
 LuaMachine::~LuaMachine()
@@ -48,22 +48,22 @@ LuaMachine::~LuaMachine()
     }
 }
 
-bool LuaMachine::IsStarted() const
+bool LuaMachine::isStarted() const
 {
-    return isStarted;
+    return m_isStarted;
 }
 
-bool LuaMachine::IsBreaked() const
+bool LuaMachine::isBreaked() const
 {
-    return isStarted && suspended;
+    return m_isStarted && suspended;
 }
 
-void hook(lua_State *L, lua_Debug *ar)
+void hookHelper(lua_State *L, lua_Debug *ar)
 {
-    LuaMachine::Instance()->Hook(ar);
+    LuaMachine::instance()->hook(ar);
 }
 
-void LuaMachine::Hook(lua_Debug *ar)
+void LuaMachine::hook(lua_Debug *ar)
 {
     if (ar->event == LUA_HOOKCALL)
     {
@@ -77,23 +77,23 @@ void LuaMachine::Hook(lua_Debug *ar)
     {
         if (level <= breakRequiredLevel)
         {
-            Break(ar);
+            onBreak(ar);
         }
         else
         {
-            if (breakpoints.IsAnySet(ar->currentline))
+            if (breakpoints.isAnySet(ar->currentline))
             {
                 lua_getinfo(L, "S", ar);
-                if (breakpoints.IsSet(ar->source, ar->currentline))
+                if (breakpoints.isSet(ar->source, ar->currentline))
                 {
-                    Break(ar);
+                    onBreak(ar);
                 }
             }
         }
     }
 }
 
-void LuaMachine::Break(lua_Debug *ar)
+void LuaMachine::onBreak(lua_Debug *ar)
 {
     breakRequiredLevel = 0;
 
@@ -103,18 +103,18 @@ void LuaMachine::Break(lua_Debug *ar)
     while (lua_getstack(L, index, ar))
     {
         lua_getinfo(L, "nSl", ar);
-        stack.calls.push_back(GetCallInfo(ar));
+        stack.calls.push_back(getCallInfo(ar));
         index++;
     }
 
     if (breakCallback) breakCallback();
 
-    SuspendExecution();
+    suspendExecution();
 
     if (resumeCallback) resumeCallback();
 }
 
-CallInfo LuaMachine::GetCallInfo(lua_Debug *ar)
+CallInfo LuaMachine::getCallInfo(lua_Debug *ar)
 {
     auto name = ar->name ? ar->name : "";
     auto source = ar->source ? ar->source : "";
@@ -124,7 +124,7 @@ CallInfo LuaMachine::GetCallInfo(lua_Debug *ar)
     return CallInfo(name, source, line, startLine, endLine);
 }
 
-void LuaMachine::SuspendExecution()
+void LuaMachine::suspendExecution()
 {
     suspended = true;
     while (suspended)
@@ -133,29 +133,29 @@ void LuaMachine::SuspendExecution()
     }
 }
 
-void LuaMachine::Do(std::string scriptName, bool debug)
+void LuaMachine::execute(std::string scriptName, bool debug)
 {
-    isStarted = true;
+    m_isStarted = true;
 
     if (debug)
     {
         int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE;
-        lua_sethook(L, hook, mask, 0);
-        SuspendExecution();
+        lua_sethook(L, hookHelper, mask, 0);
+        suspendExecution();
     }
 
     if (luaL_dofile(L, scriptName.c_str()))
     {
-        isStarted = false;
+        m_isStarted = false;
         printf("Something went wrong loading the chunk (syntax error?)\n");
         printf("%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);
     }
 
-    isStarted = false;
+    m_isStarted = false;
 }
 
-void LuaMachine::Pause()
+void LuaMachine::pause()
 {
     if (!suspended)
     {
@@ -163,7 +163,7 @@ void LuaMachine::Pause()
     }
 }
 
-void LuaMachine::Continue()
+void LuaMachine::resume()
 {
     if (suspended)
     {
@@ -171,7 +171,7 @@ void LuaMachine::Continue()
     }
 }
 
-void LuaMachine::StepInto()
+void LuaMachine::stepInto()
 {
     if (suspended)
     {
@@ -180,7 +180,7 @@ void LuaMachine::StepInto()
     }
 }
 
-void LuaMachine::StepOver()
+void LuaMachine::stepOver()
 {
     if (suspended)
     {
@@ -189,7 +189,7 @@ void LuaMachine::StepOver()
     }
 }
 
-void LuaMachine::StepOut()
+void LuaMachine::stepOut()
 {
     if (suspended)
     {
@@ -203,16 +203,16 @@ void stopHook(lua_State *L, lua_Debug *ar)
     luaL_error(L, "Stop execution");
 }
 
-void LuaMachine::Stop()
+void LuaMachine::stop()
 {
-    if (isStarted)
+    if (m_isStarted)
     {
         suspended = false;
         lua_sethook(L, stopHook, LUA_MASKCOUNT, 1);
     }
 }
 
-void LuaMachine::RetainUserdata(void* userdata)
+void LuaMachine::retainUserdata(void* userdata)
 {
     lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
     lua_pushuserdata(L, userdata); // TK
@@ -221,7 +221,7 @@ void LuaMachine::RetainUserdata(void* userdata)
     lua_pop(L, 1); //
 }
 
-void LuaMachine::ReleaseUserdata(void* userdata)
+void LuaMachine::releaseUserdata(void* userdata)
 {
     lua_getfield(L, LUA_REGISTRYINDEX, "UDATA"); // T
     lua_pushuserdata(L, userdata); // TK

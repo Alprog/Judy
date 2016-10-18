@@ -7,8 +7,8 @@
 class IFieldMeta : public IMemberMeta
 {
 public:
-    virtual void Set(Any& object, Any& value) = 0;
-    virtual Any Get(Any& object) = 0;
-    virtual Any GetAddr(Any& object) = 0;
-    virtual ITypeMeta* const GetType() = 0;
+    virtual void set(Any& object, Any& value) = 0;
+    virtual Any get(Any& object) = 0;
+    virtual Any getAddr(Any& object) = 0;
+    virtual ITypeMeta* const getType() = 0;
 };

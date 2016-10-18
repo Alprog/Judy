@@ -13,8 +13,8 @@ NetNode::NetNode()
     , customWorkCallback{nullptr}
 {
     serializer = new Serializer();
-    socket = Socket::Create();
-    socket->SetBlockingMode(false);
+    socket = Socket::create();
+    socket->setBlockingMode(false);
 }
 
 NetNode::~NetNode()
@@ -33,57 +33,57 @@ NetNode::~NetNode()
     delete serializer;
 }
 
-NetNode::State NetNode::GetState() const
+NetNode::State NetNode::getState() const
 {
     return state;
 }
 
-bool NetNode::IsConnected() const
+bool NetNode::isConnected() const
 {
     return state == State::Connected;
 }
 
-void NetNode::Start(int port)
+void NetNode::start(int port)
 {
     this->port = port;
-    socket->Listen(port);
+    socket->listen(port);
     this->state = State::ClientWaiting;
-    StartWork();
+    startWork();
 }
 
-void NetNode::Connect(std::string host, int port)
+void NetNode::connect(std::string host, int port)
 {
     this->host = host;
     this->port = port;
     this->state = State::Connecting;
-    StartWork();
+    startWork();
 }
 
-void NetNode::Send(Any any)
+void NetNode::send(Any any)
 {
     mutex.lock();
-    auto text = serializer->Serialize(any);
+    auto text = serializer->serialize(any);
     output.append(text);
     output += '\0';
     mutex.unlock();
 }
 
-void NetNode::StartWork()
+void NetNode::startWork()
 {
-    workThread = new std::thread(&NetNode::Work, this);
+    workThread = new std::thread(&NetNode::work, this);
 }
 
-void NetNode::Work()
+void NetNode::work()
 {
     while (state != State::Disconnected)
     {
         if (state == State::ClientWaiting)
         {
-            ClientWaitWork();
+            clientWaitWork();
         }
         else if (state == State::Connecting)
         {
-            ConnectWork();
+            connectWork();
         }
         else if (state == State::Connected)
         {
@@ -91,36 +91,36 @@ void NetNode::Work()
             {
                 customWorkCallback();
             }
-            SendWork();
-            ReceiveWork();
-            ProcessMessages();
+            sendWork();
+            receiveWork();
+            processMessages();
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 
-void NetNode::ClientWaitWork()
+void NetNode::clientWaitWork()
 {
-    auto clientSocket = socket->Accept();
+    auto clientSocket = socket->accept();
     if (clientSocket != nullptr)
     {
-        clientSocket->SetBlockingMode(false);
+        clientSocket->setBlockingMode(false);
         delete socket;
         socket = clientSocket;
         state = State::Connected;
     }
 }
 
-void NetNode::ConnectWork()
+void NetNode::connectWork()
 {
-    if (socket->Connect(host, port))
+    if (socket->connect(host, port))
     {
         state = State::Connected;
     }
     else
     {
-        auto error = socket->GetLastError();
+        auto error = socket->getLastError();
         if (error == Socket::Error::AlreadyConnected)
         {
             state = State::Connected;
@@ -128,18 +128,18 @@ void NetNode::ConnectWork()
         else if (error == Socket::Error::InvalidArgument)
         {
             delete socket;
-            socket = Socket::Create();
-            socket->SetBlockingMode(false);
+            socket = Socket::create();
+            socket->setBlockingMode(false);
         }
     }
 }
 
-bool NetNode::HasOutput() const
+bool NetNode::hasOutput() const
 {
     return output.size() > 0;
 }
 
-void NetNode::SendWork()
+void NetNode::sendWork()
 {
     auto length = output.size();
     if (length > 0)
@@ -148,7 +148,7 @@ void NetNode::SendWork()
         int totalSend = 0;
         while (totalSend < length)
         {
-            auto count = socket->Send(buffer + totalSend, length - totalSend);
+            auto count = socket->send(buffer + totalSend, length - totalSend);
             if (count < 0)
             {
                 break;
@@ -161,20 +161,20 @@ void NetNode::SendWork()
     }
 }
 
-void NetNode::ReceiveWork()
+void NetNode::receiveWork()
 {
     char buffer[MAX];
     int count;
     do
     {
-        count = socket->Receive(buffer, MAX);
+        count = socket->receive(buffer, MAX);
         if (count == 0)
         {
             state = State::Disconnected;
         }
         else if (count < 0)
         {
-            auto error = socket->GetLastError();
+            auto error = socket->getLastError();
             if (error != Socket::Error::WouldBlock)
             {
                 state = State::Disconnected;
@@ -188,7 +188,7 @@ void NetNode::ReceiveWork()
     while (count == MAX);
 }
 
-void NetNode::ProcessMessages()
+void NetNode::processMessages()
 {
     while (input.size())
     {
@@ -197,7 +197,7 @@ void NetNode::ProcessMessages()
         {
             auto messageText = input.substr(0, index);
             mutex.lock();
-            auto message = serializer->Deserialize(messageText);
+            auto message = serializer->deserialize(messageText);
             mutex.unlock();
             if (messageCallback != nullptr)
             {

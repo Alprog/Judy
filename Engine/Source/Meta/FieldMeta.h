@@ -10,9 +10,9 @@ template <typename ClassType, typename FieldType>
 class FieldMeta : public IFieldMeta
 {
 public:
-    virtual ITypeMeta* const GetType() override
+    virtual ITypeMeta* const getType() override
     {
-        return TypeMetaOf<FieldType>();
+        return typeMetaOf<FieldType>();
     }
 
     FieldMeta(std::string name, FieldType ClassType::*pointer)
@@ -21,17 +21,17 @@ public:
         this->pointer = pointer;
     }
 
-    virtual void Set(Any& object, Any& value) override
+    virtual void set(Any& object, Any& value) override
     {
         object.as<ClassType*>()->*pointer = value.as<FieldType>();
     }
 
-    virtual Any Get(Any& object) override
+    virtual Any get(Any& object) override
     {
         return object.as<ClassType*>()->*pointer;
     }
 
-    virtual Any GetAddr(Any& object) override
+    virtual Any getAddr(Any& object) override
     {
         return &(object.as<ClassType*>()->*pointer);
     }

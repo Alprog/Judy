@@ -7,37 +7,37 @@ InputDevice::InputDevice()
 {
 }
 
-void InputDevice::UpdateState()
+void InputDevice::updateState()
 {
     previousState = currentState;
 }
 
-bool InputDevice::IsPressed(int keyCode)
+bool InputDevice::isPressed(int keyCode)
 {
-    return currentState.IsSet(keyCode);
+    return currentState.isSet(keyCode);
 }
 
-bool InputDevice::IsReleased(int keyCode)
+bool InputDevice::isReleased(int keyCode)
 {
-    return !currentState.IsSet(keyCode);
+    return !currentState.isSet(keyCode);
 }
 
-bool InputDevice::WasPressed(int keyCode)
+bool InputDevice::wasPressed(int keyCode)
 {
-    return previousState.IsSet(keyCode);
+    return previousState.isSet(keyCode);
 }
 
-bool InputDevice::WasReleased(int keyCode)
+bool InputDevice::wasReleased(int keyCode)
 {
-    return !previousState.IsSet(keyCode);
+    return !previousState.isSet(keyCode);
 }
 
-bool InputDevice::OnPressed(int keyCode)
+bool InputDevice::onPressed(int keyCode)
 {
-    return !previousState.IsSet(keyCode) && currentState.IsSet(keyCode);
+    return !previousState.isSet(keyCode) && currentState.isSet(keyCode);
 }
 
-bool InputDevice::OnReleased(int keyCode)
+bool InputDevice::onReleased(int keyCode)
 {
-    return previousState.IsSet(keyCode) && !currentState.IsSet(keyCode);
+    return previousState.isSet(keyCode) && !currentState.isSet(keyCode);
 }

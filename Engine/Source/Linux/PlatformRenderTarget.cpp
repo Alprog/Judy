@@ -8,7 +8,7 @@ LinuxRenderTarget::LinuxRenderTarget(Display* display, XWindow window)
 }
 
 
-Vector2 LinuxRenderTarget::GetSize() const
+Vector2 LinuxRenderTarget::getSize() const
 {
     return Vector2(800, 800);
 }

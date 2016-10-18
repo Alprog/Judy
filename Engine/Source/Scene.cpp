@@ -5,12 +5,12 @@ Scene::Scene()
 {
 }
 
-void Scene::Update(float /*delta*/)
+void Scene::update(float /*delta*/)
 {
 
 }
 
-void Scene::Render()
+void Scene::render()
 {
 
 }

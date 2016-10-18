@@ -22,25 +22,24 @@ protected:
     ~RemotePlayer();
 
 public:
-    void Run();
-    void Stop();
+    void run();
+    void stop();
 
-    bool IsRunning();
-    bool IsConnected();
-    bool IsPaused();
+    bool isRunning();
+    bool isConnected();
+    bool isPaused();
 
-    void SendCommand(std::string name);
-    CallInfo* GetActiveCall();
-    Set<int> GetBreakpoints(std::string source);
-    void SetBreakpoints(std::string source, Set<int> lines);
+    void sendCommand(std::string name);
+    CallInfo* getActiveCall();
+    Set<int> getBreakpoints(std::string source);
+    void setBreakpoints(std::string source, Set<int> lines);
 
 signals:
-    void Break();
-    void StateChanged();
+    void stateChanged();
 
 private:
-    void CustomNetWork();
-    void OnGetMessage(Any& message);
+    void customNetWork();
+    void onGetMessage(Any& message);
 
 public:
     CallStack stack;
@@ -49,5 +48,5 @@ private:
     Process* process;
     NetNode* netNode;
     Breakpoints breakpoints;
-    bool isPaused;
+    bool m_isPaused;
 };

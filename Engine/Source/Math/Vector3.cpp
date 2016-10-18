@@ -19,17 +19,17 @@ Vector3::Vector3(List<float> list)
 {
 }
 
-List<float> Vector3::ToList()
+List<float> Vector3::toList()
 {
     return {x, y, z};
 }
 
-float Vector3::Length()
+float Vector3::length()
 {
     return sqrt(x * x + y * y + z * z);
 }
 
-float Vector3::SquaredLength()
+float Vector3::squaredLength()
 {
     return x * x + y * y + z * z;
 }

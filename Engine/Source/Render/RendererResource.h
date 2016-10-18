@@ -21,8 +21,8 @@ class RendererResource : public RenderResource
 {
 public:
     template <RendererType RendererT>
-    inline Impl<ResourceType, RendererT>* GetImpl(Renderer<RendererT>* renderer)
+    inline Impl<ResourceType, RendererT>* getImpl(Renderer<RendererT>* renderer)
     {
-        return renderer->GetImpl((ResourceType*)this);
+        return renderer->getImpl((ResourceType*)this);
     }
 };

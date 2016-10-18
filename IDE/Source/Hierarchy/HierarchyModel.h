@@ -9,7 +9,7 @@ class HierarchyModel : public QAbstractItemModel
 {
 public:
     HierarchyModel();
-    void SetNode(Node* node);
+    void setNode(Node* node);
 
     virtual int rowCount(const QModelIndex& index) const override;
     virtual int columnCount(const QModelIndex& index) const override;
@@ -17,7 +17,7 @@ public:
     virtual QModelIndex parent(const QModelIndex& index) const override;
     virtual QVariant data(const QModelIndex& index, int role) const override;
 
-    Node* GetNode(const QModelIndex& index) const;
+    Node* getNode(const QModelIndex& index) const;
 
 private:
     Node* rootNode;

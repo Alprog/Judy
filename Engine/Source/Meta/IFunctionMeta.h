@@ -8,16 +8,16 @@
 class IFunctionMeta : public IMemberMeta
 {
 public:
-    virtual ITypeMeta* GetReturnType() = 0;
-    virtual size_t GetArgCount() = 0;
-    virtual std::vector<ITypeMeta*> GetArgTypes() = 0;
+    virtual ITypeMeta* getReturnType() = 0;
+    virtual size_t getArgCount() = 0;
+    virtual std::vector<ITypeMeta*> getArgTypes() = 0;
 
-    virtual Any Invoke(std::vector<Any>& args) = 0;
+    virtual Any invoke(std::vector<Any>& args) = 0;
 
     template <typename... ArgTypes>
-    inline Any Invoke(ArgTypes... args)
+    inline Any invoke(ArgTypes... args)
     {
         std::vector<Any> vector{args...};
-        return Invoke(vector);
+        return invoke(vector);
     }
 };

@@ -6,6 +6,6 @@ class Scene
 public:
     Scene();
 
-    virtual void Update(float delta);
-    virtual void Render();
+    virtual void update(float delta);
+    virtual void render();
 };

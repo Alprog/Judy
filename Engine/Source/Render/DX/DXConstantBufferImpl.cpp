@@ -1,14 +1,13 @@
 
 #include "DXConstantBufferImpl.h"
 #include "DXRenderer.h"
-#include "d3dx12.h"
 #include "DXDescriptorHeap.h"
 
 Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffer* resource)
 {
     this->resource = resource;
 
-    auto device = renderer->GetDevice();
+    auto device = renderer->getDevice();
 
     auto result = device->CreateCommittedResource(
         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -24,8 +23,8 @@ Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffe
     cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
     cbvDesc.SizeInBytes = (sizeof(resource->data) + 255) & ~255;
 
-    descriptorHandle = renderer->GetSrvCbvHeap()->GetNextHandle();
-    device->CreateConstantBufferView(&cbvDesc, descriptorHandle.GetCPU());
+    descriptorHandle = renderer->getSrvCbvHeap()->getNextHandle();
+    device->CreateConstantBufferView(&cbvDesc, descriptorHandle.getCPU());
 
     resource->data.MVP = Matrix::Identity;
 

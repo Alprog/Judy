@@ -14,11 +14,11 @@ public:
     ~StackPane();
 
 private:
-    void Set(int row, int col, std::string text);
+    void set(int row, int col, std::string text);
 
 private slots:
-    void OnDoubleClicked(const QModelIndex& index);
-    void Work();
+    void onDoubleClicked(const QModelIndex& index);
+    void work();
 
 private:
     QTableWidget* table;

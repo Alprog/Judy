@@ -11,8 +11,8 @@ public:
     FileMenu(MainWindow* window);
 
 private slots:
-    void NewFile();
-    void OpenFile();
-    void SaveFile();
-    void SaveAsFile();
+    void newFile();
+    void openFile();
+    void saveFile();
+    void saveAsFile();
 };

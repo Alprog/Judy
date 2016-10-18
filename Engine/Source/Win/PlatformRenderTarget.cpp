@@ -7,7 +7,7 @@ WinRenderTarget::WinRenderTarget(HINSTANCE hInstance, HWND hWnd)
     this->hWnd = hWnd;
 }
 
-Vector2 WinRenderTarget::GetSize() const
+Vector2 WinRenderTarget::getSize() const
 {
     RECT rect;
     GetClientRect(hWnd, &rect);

@@ -14,7 +14,7 @@ class LinuxWindow : public Window
 public:
     LinuxWindow();
 
-    virtual void ProcessEvents();
+    virtual void processEvents();
 
     Display* display;
     XWindow window;

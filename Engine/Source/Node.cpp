@@ -18,33 +18,33 @@ Node::~Node()
 {
 }
 
-Node* Node::Parent()
+Node* Node::getParent()
 {
     return parent;
 }
 
-int Node::ChildCount()
+int Node::childCount()
 {
-    return (int)childs.size();
+    return childs.size();
 }
 
-Node* Node::Child(int i)
+Node* Node::child(int i)
 {
-    return childs[i].Get();
+    return childs[i].get();
 }
 
-void Node::AddChild(Node* node)
+void Node::addChild(Node* node)
 {
-    node->Unparent();
+    node->unparent();
     childs.push_back(Ref<Node>(node));
     node->parent = this;
 }
 
-void Node::RemoveChild(Node* node)
+void Node::removeChild(Node* node)
 {
     auto position = find_if(begin(childs), end(childs), [&](Ref<Node> const& ref)
     {
-        return ref.Get() == node;
+        return ref.get() == node;
     });
 
     if (position != end(childs))
@@ -54,58 +54,58 @@ void Node::RemoveChild(Node* node)
     }
 }
 
-void Node::Unparent()
+void Node::unparent()
 {
     if (parent != nullptr)
     {
-        parent->RemoveChild(this);
+        parent->removeChild(this);
     }
 }
 
-void Node::Reparent(Node* parent)
+void Node::reparent(Node* parent)
 {
     if (this->parent != nullptr)
     {
-        this->parent->RemoveChild(this);
+        this->parent->removeChild(this);
     }
     if (parent != nullptr)
     {
-        parent->AddChild(this);
+        parent->addChild(this);
     }
 }
 
 #include "luainc.h"
 
-void Node::Update(float delta)
+void Node::update(float delta)
 {
     if (luaObject == nullptr)
     {
-        UpdateHelper(delta);
+        updateHelper(delta);
     }
     else
     {
-        auto L = LuaMachine::Instance()->getL();
+        auto L = LuaMachine::instance()->getL();
         lua_pushuserdata(L, luaObject); // U
-        lua_getfield(L, -1, "Update"); // UF
+        lua_getfield(L, -1, "update"); // UF
         lua_insert(L, -2); // FU
         lua_pushnumber(L, delta); // FUV
         lua_call(L, 2, 0); //
     }
 }
 
-void Node::UpdateHelper(float delta)
+void Node::updateHelper(float delta)
 {
     for (auto& child : childs)
     {
-        child->Update(delta);
+        child->update(delta);
     }
 }
 
-void Node::Render(Matrix matrix, RendererFrontend* renderer)
+void Node::render(Matrix matrix, RendererFrontend* renderer)
 {
     for (auto& child : childs)
     {
         auto const& childMatrix = child->transform.getMatrix();
-        child->Render(childMatrix * matrix, renderer);
+        child->render(childMatrix * matrix, renderer);
     }
 }

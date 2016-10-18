@@ -5,11 +5,11 @@
 class Process
 {
 public:
-    static Process* Create();
+    static Process* create();
 
     virtual ~Process() = default;
 
-    virtual void Run(std::string path, std::string commandLine, std::string directory) = 0;
-    virtual void Stop() = 0;
-    virtual bool IsRunning() = 0;
+    virtual void run(std::string path, std::string commandLine, std::string directory) = 0;
+    virtual void stop() = 0;
+    virtual bool isRunning() = 0;
 };

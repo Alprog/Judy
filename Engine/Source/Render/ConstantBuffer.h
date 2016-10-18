@@ -9,7 +9,7 @@ class ConstantBuffer : public RendererResource<ConstantBuffer>
 public:
     ConstantBuffer();
 
-    void Load();
+    void load();
 
     struct
     {

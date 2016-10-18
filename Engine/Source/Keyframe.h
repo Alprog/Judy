@@ -7,6 +7,6 @@ class Keyframe
 public:
     Keyframe();
 
-    int Frame;
-    T Value;
+    int frame;
+    T value;
 };

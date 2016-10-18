@@ -20,12 +20,12 @@ Quaternion::Quaternion(List<float> list)
 {
 }
 
-List<float> Quaternion::ToList()
+List<float> Quaternion::toList()
 {
     return {x, y, z, w};
 }
 
-Quaternion Quaternion::YawPitchRoll(float yaw, float pitch, float roll) // Euler sequence 2; -1; -3
+Quaternion Quaternion::yawPitchRoll(float yaw, float pitch, float roll) // Euler sequence 2; -1; -3
 {
     auto c1 = cos(yaw / 2);
     auto s1 = sin(yaw / 2);

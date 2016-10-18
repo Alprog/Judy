@@ -13,16 +13,16 @@ class [[Meta]] App : public Object
     friend class Meta;
 
 public:
-    static App* Instance();
+    static App* instance();
 
-    void StartMainLoop();
+    void startMainLoop();
 
-    void AddWindow(Window* window);
-    void RemoveWindow(Window* window);
+    void addWindow(Window* window);
+    void removeWindow(Window* window);
 
 protected:
     App();
-    void UpdateCollection();
+    void updateCollection();
 
     Set<Window*> windows;
     Set<Window*> addedWindows;

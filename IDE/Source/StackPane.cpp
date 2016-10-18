@@ -36,8 +36,8 @@ StackPane::StackPane()
 
     setWidget(table);
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(Work()));
-    connect(table, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(OnDoubleClicked(const QModelIndex&)));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(work()));
+    connect(table, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onDoubleClicked(const QModelIndex&)));
     timer.start(100);
 }
 
@@ -45,34 +45,34 @@ StackPane::~StackPane()
 {
 }
 
-void StackPane::OnDoubleClicked(const QModelIndex& index)
+void StackPane::onDoubleClicked(const QModelIndex& index)
 {
     auto row = index.row();
-    auto& calls = RemotePlayer::Instance()->stack.calls;
+    auto& calls = RemotePlayer::instance()->stack.calls;
     if (row < calls.size())
     {
-        IDE::Instance()->FollowToCall(calls[row]);
+        IDE::instance()->followToCall(calls[row]);
     }
 }
 
-void StackPane::Work()
+void StackPane::work()
 {
-    auto& calls = RemotePlayer::Instance()->stack.calls;
+    auto& calls = RemotePlayer::instance()->stack.calls;
 
     table->setRowCount(calls.size());
     for (int i = 0; i < calls.size(); i++)
     {
         auto& callInfo = calls[i];
-        Set(i, 0, std::to_string(i));
-        Set(i, 1, callInfo.name);
-        Set(i, 2, callInfo.source);
-        Set(i, 3, std::to_string(callInfo.line));
+        set(i, 0, std::to_string(i));
+        set(i, 1, callInfo.name);
+        set(i, 2, callInfo.source);
+        set(i, 3, std::to_string(callInfo.line));
 
         table->setRowHeight(i, 20);
     }
 }
 
-void StackPane::Set(int row, int col, std::string text)
+void StackPane::set(int row, int col, std::string text)
 {
     auto* item = new QTableWidgetItem();
     item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);

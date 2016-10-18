@@ -11,6 +11,6 @@ public:
     std::unordered_map<std::string, Shader*> vertexShaders;
     std::unordered_map<std::string, Shader*> pixelShaders;
 
-    Shader* GetShader(std::string name, Shader::Type type);
+    Shader* getShader(std::string name, Shader::Type type);
 
 };

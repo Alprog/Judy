@@ -8,31 +8,31 @@ PropertyMeta::PropertyMeta(std::string name)
     this->name = name;
 }
 
-void PropertyMeta::Set(Any& object, Any& value)
+void PropertyMeta::set(Any& object, Any& value)
 {
     std::vector<Any> args {object, value};
-    setter->Invoke(args);
+    setter->invoke(args);
 }
 
-Any PropertyMeta::Get(Any& object)
+Any PropertyMeta::get(Any& object)
 {
-    return getter->Invoke(object);
+    return getter->invoke(object);
 }
 
-Any PropertyMeta::GetAddr(Any& object)
+Any PropertyMeta::getAddr(Any& object)
 {
     return Any::empty;
 }
 
-ITypeMeta* const PropertyMeta::GetType()
+ITypeMeta* const PropertyMeta::getType()
 {
     if (getter != nullptr)
     {
-        return getter->GetReturnType();
+        return getter->getReturnType();
     }
     else if (setter != nullptr)
     {
-        return setter->GetArgTypes()[0];
+        return setter->getArgTypes()[0];
     }
     else
     {

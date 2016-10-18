@@ -3,7 +3,7 @@
 #include "Render/Texture.h"
 #include "Images.h"
 
-Texture* TextureManager::GetTexture(std::string name)
+Texture* TextureManager::getTexture(std::string name)
 {
     auto it = textures.find(name);
     if (it != std::end(textures))

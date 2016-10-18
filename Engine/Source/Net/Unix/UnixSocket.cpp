@@ -27,14 +27,14 @@ UnixSocket::~UnixSocket()
     close(handle);
 }
 
-bool UnixSocket::SetBlockingMode(bool value)
+bool UnixSocket::setBlockingMode(bool value)
 {
     auto mode = value ? 0ul : 1ul;
     auto result = ioctl(handle, FIONBIO, &mode);
     return result == 0;
 }
 
-void UnixSocket::Listen(int port)
+void UnixSocket::listen(int port)
 {
     struct sockaddr_in adress;
     adress.sin_family = AF_INET;
@@ -44,7 +44,7 @@ void UnixSocket::Listen(int port)
     auto result = bind(handle, (sockaddr*)&adress, sizeof(adress));
     if (result == 0)
     {
-        listen(handle, 2);
+        ::listen(handle, 2);
     }
     else
     {
@@ -55,11 +55,11 @@ void UnixSocket::Listen(int port)
     }
 }
 
-Socket* UnixSocket::Accept()
+Socket* UnixSocket::accept()
 {
     struct sockaddr_in clientAddress;
     auto clientSize = (socklen_t)sizeof(clientAddress);
-    auto clientSocket = accept(handle, (sockaddr*)&clientAddress, &clientSize);
+    auto clientSocket = ::accept(handle, (sockaddr*)&clientAddress, &clientSize);
     if (clientSocket <= 0)
     {
         return nullptr;
@@ -67,27 +67,27 @@ Socket* UnixSocket::Accept()
     return new UnixSocket(clientSocket);
 }
 
-bool UnixSocket::Connect(std::string host, int port)
+bool UnixSocket::connect(std::string host, int port)
 {
     struct sockaddr_in adress;
     adress.sin_family = AF_INET;
     adress.sin_addr.s_addr = inet_addr(host.c_str());
     adress.sin_port = htons(port);
-    auto result = connect(handle, (sockaddr*)&adress, sizeof(adress));
+    auto result = ::connect(handle, (sockaddr*)&adress, sizeof(adress));
     return result == 0;
 }
 
-int UnixSocket::Send(const char* buffer, int length)
+int UnixSocket::send(const char* buffer, int length)
 {
-    return send(handle, buffer, length, 0);
+    return ::send(handle, buffer, length, 0);
 }
 
-int UnixSocket::Receive(char* buffer, int max)
+int UnixSocket::receive(char* buffer, int max)
 {
     return recv(handle, buffer, max, 0);
 }
 
-Socket::Error UnixSocket::GetLastError()
+Socket::Error UnixSocket::getLastError()
 {
     switch (errno)
     {   

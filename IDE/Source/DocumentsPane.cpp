@@ -21,36 +21,36 @@ DocumentsPane::DocumentsPane()
     setMovable(true);
     setUsesScrollButtons(true);
 
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(CloseTab(int)));
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(сloseTab(int)));
 }
 
-void DocumentsPane::Open(Path path)
+void DocumentsPane::open(Path path)
 {
-    if (!path.IsAbsolute())
+    if (!path.isAbsolute())
     {
-        path = Path::Combine(IDE::Instance()->settings.projectPath, path);
+        path = Path::combine(IDE::instance()->settings.projectPath, path);
     }
 
-    auto document = GetDocument(path);
+    auto document = getDocument(path);
     if (document != nullptr)
     {
         setCurrentWidget(document);
     }
     else
     {
-        document = CreateDocument(path);
+        document = createDocument(path);
         if (document != nullptr)
         {
-            connect(document, SIGNAL(Modified()), this, SLOT(UpdateTabNames()));
-            addTab(document, document->GetName().c_str());
+            connect(document, SIGNAL(modified()), this, SLOT(updateTabNames()));
+            addTab(document, document->getName().c_str());
             setCurrentWidget(document);
         }
     }
 }
 
-IDocument* DocumentsPane::CreateDocument(Path absolutePath)
+IDocument* DocumentsPane::createDocument(Path absolutePath)
 {
-    auto extension = LowerCase(absolutePath.GetExtension());
+    auto extension = lowerCase(absolutePath.getExtension());
     if (extension == "lua")
     {
         return new LuaDocument(absolutePath);
@@ -65,17 +65,17 @@ IDocument* DocumentsPane::CreateDocument(Path absolutePath)
     }
 }
 
-void DocumentsPane::OpenAtLine(Path path, int line)
+void DocumentsPane::openAtLine(Path path, int line)
 {
-    Open(path);
-    auto document = GetCurrentDocument();
-    if (document->GetType() == DocumentType::Lua)
+    open(path);
+    auto document = getCurrentDocument();
+    if (document->getType() == DocumentType::Lua)
     {
-        static_cast<LuaDocument*>(document)->GoToLine(line);
+        static_cast<LuaDocument*>(document)->goToLine(line);
     }
 }
 
-IDocument* DocumentsPane::GetDocument(Path path)
+IDocument* DocumentsPane::getDocument(Path path)
 {
 #if WIN
     const bool caseSensitive = false;
@@ -84,8 +84,8 @@ IDocument* DocumentsPane::GetDocument(Path path)
 #endif
     for (int i = 0; i < count(); i++)
     {
-        auto document = GetDocument(i);
-        if (Path::IsEqual(document->GetPath(), path, caseSensitive))
+        auto document = getDocument(i);
+        if (Path::isEqual(document->getPath(), path, caseSensitive))
         {
             return document;
         }
@@ -93,68 +93,68 @@ IDocument* DocumentsPane::GetDocument(Path path)
     return nullptr;
 }
 
-IDocument* DocumentsPane::GetDocument(int index)
+IDocument* DocumentsPane::getDocument(int index)
 {
     return (IDocument*)widget(index);
 }
 
-IDocument* DocumentsPane::GetCurrentDocument()
+IDocument* DocumentsPane::getCurrentDocument()
 {
     return (IDocument*)widget(currentIndex());
 }
 
-void DocumentsPane::SaveCurrentDocument()
+void DocumentsPane::saveCurrentDocument()
 {
     if (count() > 0)
     {
-        GetCurrentDocument()->Save();
+        getCurrentDocument()->save();
     }
 }
 
-void DocumentsPane::UpdateTabNames()
+void DocumentsPane::updateTabNames()
 {
     for (int i = 0; i < count(); i++)
     {
         auto document = (IDocument*)widget(i);
-        auto name = document->GetTabName();
+        auto name = document->getTabName();
         this->setTabText(i, name.c_str());
     }
 }
 
-void DocumentsPane::CheckOutsideModification()
+void DocumentsPane::checkOutsideModification()
 {
     bool toAll = false;
     bool reload = false;
 
     for (int i = 0; i < count(); i++)
     {
-        auto document = GetDocument(i);
-        if (document->IsModifiedOutside())
+        auto document = getDocument(i);
+        if (document->isModifiedOutside())
         {
             if (!toAll)
             {
                 setCurrentWidget(document);
-                int result = ReloadDocumentMessageBox(document);
+                int result = reloadDocumentMessageBox(document);
                 reload = (result == QMessageBox::Yes) || (result == QMessageBox::YesToAll);
                 toAll = (result == QMessageBox::YesToAll) || (result == QMessageBox::NoToAll);
             }
 
             if (reload)
             {
-                document->Reload();
+                document->reload();
             }
             else
             {
-                document->IgnoreOutsideModification();
+                document->ignoreOutsideModification();
             }
         }
     }
 }
 
-int DocumentsPane::ReloadDocumentMessageBox(IDocument* document)
+int DocumentsPane::reloadDocumentMessageBox(IDocument* document)
 {
     QMessageBox msgBox;
-    msgBox.setText(document->GetName().c_str());
+    msgBox.setText(document->getName().c_str());
 
     auto text = "This file has been modified by another program.\n"
                 "Do you want to reload it?";
@@ -166,11 +166,11 @@ int DocumentsPane::ReloadDocumentMessageBox(IDocument* document)
     return msgBox.exec();
 }
 
-void DocumentsPane::CloseTab(int index)
+void DocumentsPane::closeTab(int index)
 {
-    auto document = GetDocument(index);
+    auto document = getDocument(index);
 
-    if (document->Changed())
+    if (document->changed())
     {
         QMessageBox msgBox;
         msgBox.setText("The document has been modified.");
@@ -182,7 +182,7 @@ void DocumentsPane::CloseTab(int index)
         switch (result)
         {
             case QMessageBox::Save:
-                document->Save();
+                document->save();
                 break;
 
             case QMessageBox::Cancel:

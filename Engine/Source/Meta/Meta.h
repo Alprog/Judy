@@ -10,23 +10,23 @@
 class ITypeMeta;
 
 template <typename T>
-inline ITypeMeta* TypeMetaOf();
+inline ITypeMeta* typeMetaOf();
 
 class Meta : public Singleton<Meta>
 {
     friend class Singleton<Meta>;
 
 public:
-    void Init();
+    void init();
 
 private:
     #include "Meta.gen.h"
-    void DefineClasses();
+    void defineClasses();
 
     template <typename T>
-    void DefineBuildInType(std::string name)
+    void defineBuildInType(std::string name)
     {
-        auto meta = TypeMetaOf<T>();
+        auto meta = typeMetaOf<T>();
         meta->name = name;
         types.push_back(meta);
         typeMap.emplace(std::type_index(typeid(T)), meta);
@@ -34,18 +34,18 @@ private:
 
 public:
     template <typename T, typename... Types>
-    inline static T Create(Types... args)
+    inline static T create(Types... args)
     {
         return T(args...);
     }
 
     template <typename T, typename... Types>
-    inline static T* CreateNew(Types... args)
+    inline static T* createNew(Types... args)
     {
         return new T(args...);
     }
 
-    ITypeMeta* Find(std::type_index index);
+    ITypeMeta* find(std::type_index index);
 
 public:
     std::unordered_map<std::type_index, ITypeMeta*> typeMap;

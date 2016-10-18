@@ -14,18 +14,18 @@ Path::Path()
 
 Path::Path(const char* pathCString)
 {
-    canonicalPath = GetCanonical(pathCString);
+    canonicalPath = getCanonical(pathCString);
 }
 
 Path::Path(const std::string& pathString)
 {
-    canonicalPath = GetCanonical(pathString);
+    canonicalPath = getCanonical(pathString);
 }
 
-std::string Path::GetCanonical(std::string pathString)
+std::string Path::getCanonical(std::string pathString)
 {
-    FixSlashes(pathString);
-    ApplyDots(pathString);
+    fixSlashes(pathString);
+    applyDots(pathString);
 
     if (pathString.empty())
     {
@@ -35,13 +35,13 @@ std::string Path::GetCanonical(std::string pathString)
     return pathString;
 }
 
-void Path::FixSlashes(std::string& pathString)
+void Path::fixSlashes(std::string& pathString)
 {
     // fix backslashes
-    Replace(pathString, "\\", "/");
+    replace(pathString, "\\", "/");
 
     // remove slash duplicates
-    Replace(pathString, "//", "/");
+    replace(pathString, "//", "/");
 
     // remove last slash
     auto size = pathString.size();
@@ -51,13 +51,13 @@ void Path::FixSlashes(std::string& pathString)
     }
 }
 
-void Path::ApplyDots(std::string& pathString)
+void Path::applyDots(std::string& pathString)
 {
-    auto components = Split(pathString, "/");
+    auto components = split(pathString, "/");
     auto begin = std::begin(components);
     bool changed = false;
 
-    bool isAbsolute = IsAbsolute(pathString);
+    bool isAbsolute = Path::isAbsolute(pathString);
     size_t lastIndex = isAbsolute ? 1 : 0;
 
     auto upCount = 0;
@@ -91,11 +91,11 @@ void Path::ApplyDots(std::string& pathString)
 
     if (changed)
     {
-        pathString = Join(components, "/");
+        pathString = join(components, "/");
     }
 }
 
-bool Path::IsAbsolute(const std::string& pathString)
+bool Path::isAbsolute(const std::string& pathString)
 {
     auto size = pathString.size();
     if (size > 0)
@@ -115,7 +115,7 @@ bool Path::IsAbsolute(const std::string& pathString)
     return false;
 }
 
-Path Path::Combine(const std::string lhs, const std::string rhs)
+Path Path::combine(const std::string lhs, const std::string rhs)
 {
     if (lhs.empty())
     {
@@ -127,40 +127,40 @@ Path Path::Combine(const std::string lhs, const std::string rhs)
     }
 }
 
-void Path::Append(const std::string pathString)
+void Path::append(const std::string pathString)
 {
-    canonicalPath = GetCanonical(canonicalPath + "/" + pathString);
+    canonicalPath = getCanonical(canonicalPath + "/" + pathString);
 }
 
-void Path::Cd(const Path path)
+void Path::cd(const Path path)
 {
-    if (path.IsAbsolute())
+    if (path.isAbsolute())
     {
         canonicalPath = path.str();
     }
     else
     {
-        Append(path);
+        append(path);
     }
 }
 
-void Path::CdUp()
+void Path::cdUp()
 {
-    Cd("..");
+    cd("..");
 }
 
 Path operator+(const Path& lhs, const Path& rhs)
 {
-    return Path::Combine(lhs, rhs);
+    return Path::combine(lhs, rhs);
 }
 
 Path& Path::operator+=(const Path& rhs)
 {
-    Append(rhs.canonicalPath);
+    append(rhs.canonicalPath);
     return *this;
 }
 
-std::string Path::GetName() const
+std::string Path::getName() const
 {
     auto index = canonicalPath.find_last_of("/");
     if (index == std::string::npos)
@@ -173,9 +173,9 @@ std::string Path::GetName() const
     }
 }
 
-std::string Path::GetExtension() const
+std::string Path::getExtension() const
 {
-    auto name = GetName();
+    auto name = getName();
     auto index = name.find_last_of(".");
     if (index == std::string::npos)
     {
@@ -187,17 +187,17 @@ std::string Path::GetExtension() const
     }
 }
 
-bool Path::IsAbsolute() const
+bool Path::isAbsolute() const
 {
-    return IsAbsolute(canonicalPath);
+    return isAbsolute(canonicalPath);
 }
 
-bool Path::IsRelative() const
+bool Path::isRelative() const
 {
-    return !IsAbsolute(canonicalPath);
+    return !isAbsolute(canonicalPath);
 }
 
-bool Path::IsEqual(const Path& path1, const Path& path2, bool caseSensitive)
+bool Path::isEqual(const Path& path1, const Path& path2, bool caseSensitive)
 {
     if (caseSensitive)
     {
@@ -205,6 +205,6 @@ bool Path::IsEqual(const Path& path1, const Path& path2, bool caseSensitive)
     }
     else
     {
-        return CaseInsensitiveCompare(path1.canonicalPath, path2.canonicalPath);
+        return caseInsensitiveCompare(path1.canonicalPath, path2.canonicalPath);
     }
 }

@@ -2,7 +2,7 @@
 #include "ShaderManager.h"
 #include "Render/Shader.h"
 
-Shader* ShaderManager::GetShader(std::string name, Shader::Type type)
+Shader* ShaderManager::getShader(std::string name, Shader::Type type)
 {
     auto& shaders = type == Shader::Type::Vertex ? vertexShaders : pixelShaders;
 

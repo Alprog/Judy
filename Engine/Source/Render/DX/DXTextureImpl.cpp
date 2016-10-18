@@ -2,7 +2,6 @@
 #include "DXTextureImpl.h"
 #include "DXRenderer.h"
 
-#include "d3dx12.h"
 #include "Images.h"
 #include "DXDescriptorHeap.h"
 
@@ -10,12 +9,12 @@ static const UINT TexturePixelSize = 4;
 
 Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
 {
-    auto image = Images::LoadPng(resource->name);
+    auto image = Images::loadPng(resource->name);
 
-    auto device = renderer->GetDevice();
-    auto commandList = renderer->GetCommandList();
-    auto commandAllocator = renderer->GetCommandAllocator();
-    auto commandQueue = renderer->GetCommandQueue();
+    auto device = renderer->getDevice();
+    auto commandList = renderer->getCommandList();
+    auto commandAllocator = renderer->getCommandAllocator();
+    auto commandQueue = renderer->getCommandQueue();
 
     D3D12_RESOURCE_DESC textureDesc = {};
     textureDesc.MipLevels = 1;
@@ -48,7 +47,7 @@ Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
         nullptr,
         IID_PPV_ARGS(&textureUploadHeap)) MUST;
 
-    std::vector<UINT8> data = GenerateChessboard();
+    std::vector<UINT8> data = generateChessboard();
 
     D3D12_SUBRESOURCE_DATA textureData = {};
     textureData.pData = image->data;
@@ -68,15 +67,15 @@ Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = 1;
 
-    descriptorHandle = renderer->GetSrvCbvHeap()->GetNextHandle();
-    device->CreateShaderResourceView(texture.Get(), &srvDesc, descriptorHandle.GetCPU());
+    descriptorHandle = renderer->getSrvCbvHeap()->getNextHandle();
+    device->CreateShaderResourceView(texture.Get(), &srvDesc, descriptorHandle.getCPU());
 
-    static_cast<DXRenderer*>(renderer)->WaitForPreviousFrame();
+    static_cast<DXRenderer*>(renderer)->waitForPreviousFrame();
 
     delete image;
 }
 
-std::vector<UINT8> Impl<Texture, RendererType::DX>::GenerateChessboard()
+std::vector<UINT8> Impl<Texture, RendererType::DX>::generateChessboard()
 {
     const UINT rowPitch = 256 * TexturePixelSize;
     const UINT cellPitch = rowPitch >> 3;		// The width of a cell in the checkboard texture.

@@ -11,12 +11,12 @@ WinProcess::WinProcess()
 
 WinProcess::~WinProcess()
 {
-    Stop();
+    stop();
 }
 
-void WinProcess::Run(std::string path, std::string commandLine, std::string directory)
+void WinProcess::run(std::string path, std::string commandLine, std::string directory)
 {
-    Stop();
+    stop();
 
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     auto wpath = converter.from_bytes(path.c_str());
@@ -37,7 +37,7 @@ void WinProcess::Run(std::string path, std::string commandLine, std::string dire
     }
 }
 
-bool WinProcess::IsRunning()
+bool WinProcess::isRunning()
 {
     if (handle != 0)
     {
@@ -55,9 +55,9 @@ bool WinProcess::IsRunning()
     return false;
 }
 
-void WinProcess::Stop()
+void WinProcess::stop()
 {
-    if (IsRunning())
+    if (isRunning())
     {
         TerminateProcess(handle, 1);
     }

@@ -20,19 +20,19 @@ public:
     Node(int a);
     virtual ~Node();
 
-    Node* Parent();
-    int ChildCount();
-    Node* Child(int i);
+    Node* getParent();
+    int childCount();
+    Node* child(int i);
 
-    void AddChild(Node* node);
-    void RemoveChild(Node* node);
-    void Unparent();
-    void Reparent(Node* parent);
+    void addChild(Node* node);
+    void removeChild(Node* node);
+    void unparent();
+    void reparent(Node* parent);
 
-    void Update(float delta);
-    virtual void UpdateHelper(float delta);
+    void update(float delta);
+    virtual void updateHelper(float delta);
 
-    virtual void Render(Matrix matrix, RendererFrontend* renderer);
+    virtual void render(Matrix matrix, RendererFrontend* renderer);
 
     [[Serialize]] [[Inspect]] Transform transform;
 

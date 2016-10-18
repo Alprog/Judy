@@ -17,7 +17,7 @@ RenderManager::RenderManager()
     renderers.push_back(new GLRenderer());
 }
 
-unsigned int RenderManager::RegisterResource(RenderResource* resource)
+unsigned int RenderManager::registerResource(RenderResource* resource)
 {
     unsigned int id;
     if (freeIds.empty())
@@ -34,7 +34,7 @@ unsigned int RenderManager::RegisterResource(RenderResource* resource)
     return id;
 }
 
-void RenderManager::UnregisterResource(RenderResource* resource)
+void RenderManager::unregisterResource(RenderResource* resource)
 {
     auto id = resource->id;
     resources[id] = nullptr;

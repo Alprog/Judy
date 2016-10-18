@@ -14,12 +14,12 @@ DXDescriptorHandle::DXDescriptorHandle(DXDescriptorHeap* heap, int index)
 {
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE DXDescriptorHandle::GetCPU()
+CD3DX12_CPU_DESCRIPTOR_HANDLE DXDescriptorHandle::getCPU()
 {
-    return heap->GetCpuHandle(index);
+    return heap->getCpuHandle(index);
 }
 
-CD3DX12_GPU_DESCRIPTOR_HANDLE DXDescriptorHandle::GetGPU()
+CD3DX12_GPU_DESCRIPTOR_HANDLE DXDescriptorHandle::getGPU()
 {
-    return heap->GetGpuHandle(index);
+    return heap->getGpuHandle(index);
 }

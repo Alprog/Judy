@@ -12,9 +12,9 @@ public:
     Quaternion(float x = 0, float y = 0, float z = 0, float w = 1);
 
     [[Serialize]] Quaternion(List<float> list);
-    [[Serialize]] List<float> ToList();
+    [[Serialize]] List<float> toList();
 
-    static Quaternion YawPitchRoll(float yaw, float pitch, float roll);
+    static Quaternion yawPitchRoll(float yaw, float pitch, float roll);
 
     [[Bind]] float x, y, z, w;
 };

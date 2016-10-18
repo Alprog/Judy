@@ -48,34 +48,34 @@ public:
 
     VulkanRenderer();
 
-    virtual void Render(std::vector<RenderCommand> commands, RenderTarget* target) override;
-    virtual void Draw(RenderCommand renderCommand) override;
-    virtual void Clear(Color color) override;
+    virtual void render(std::vector<RenderCommand> commands, RenderTarget* target) override;
+    virtual void draw(RenderCommand renderCommand) override;
+    virtual void clear(Color color) override;
 
 protected:
-    void Init();
-    void Destroy();
+    void init();
+    void destroy();
 
-    void InitInstance();
-    void InitDevice();
-    void InitCommandBuffers();
-    void InitVertexBuffer();
-    void InitShaders();
+    void initInstance();
+    void initDevice();
+    void initCommandBuffers();
+    void initVertexBuffer();
+    void initShaders();
 
-    void CheckLayers(std::vector<const char*>& names);
-    void CheckExtensions(std::vector<const char*>& names);
+    void checkLayers(std::vector<const char*>& names);
+    void checkExtensions(std::vector<const char*>& names);
 
-    RenderTargetContext& GetContext(RenderTarget* renderTarget);
-    VkSurfaceKHR CreateSurface(RenderTarget* renderTarget);
-    VkSwapchainKHR CreateSwapChain(RenderTarget* renderTarget);
-    void InitPresentImages(RenderTargetContext& context);
-    void InitDepthBuffer(RenderTargetContext& context);
-    void InitRenderPass(RenderTargetContext& context);
-    void InitFrameBuffers(RenderTargetContext& context);
-    void InitPipeline(RenderTargetContext& context);
+    RenderTargetContext& getContext(RenderTarget* renderTarget);
+    VkSurfaceKHR createSurface(RenderTarget* renderTarget);
+    VkSwapchainKHR createSwapChain(RenderTarget* renderTarget);
+    void initPresentImages(RenderTargetContext& context);
+    void initDepthBuffer(RenderTargetContext& context);
+    void initRenderPass(RenderTargetContext& context);
+    void initFrameBuffers(RenderTargetContext& context);
+    void initPipeline(RenderTargetContext& context);
 
-    void DrawHelper(RenderTargetContext& context);
-    VkShaderModule GetShaderModule(std::string fileName);
+    void drawHelper(RenderTargetContext& context);
+    VkShaderModule getShaderModule(std::string fileName);
 
     VkInstance vulkanInstance;
     VkDevice device;
@@ -90,17 +90,17 @@ protected:
     VkShaderModule fragmentShader;
     VkBuffer vertexBuffer;
 
-    void SumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
+    void sumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
 
-    void ResourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
+    void resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
                          VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
 
     std::unordered_map<RenderTarget*, RenderTargetContext> contexts;
 
-    uint32_t GetMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
+    uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
 
     template <typename T>
-    void GetInstanceProcAddr(T& funcPointer, const char* funcName);
+    void getInstanceProcAddr(T& funcPointer, const char* funcName);
 
     PFN_vkGetPhysicalDeviceSurfaceFormatsKHR getPhysicalDeviceSurfaceFormats = nullptr;
     PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR getPhysicalDeviceSurfaceCapabilities = nullptr;

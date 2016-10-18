@@ -17,14 +17,14 @@ public:
     QList<QAction*> stepActions;
 
 private slots:
-    void Play();
-    void Pause();
-    void Stop();
-    void StepInto();
-    void StepOver();
-    void StepOut();
+    void play();
+    void pause();
+    void stop();
+    void stepInto();
+    void stepOver();
+    void stepOut();
 
-    void Refresh();
+    void refresh();
 
 private:
     QTimer timer;

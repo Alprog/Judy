@@ -8,7 +8,7 @@ class WinRenderTarget : public RenderTarget
 {
 public:
     WinRenderTarget(HINSTANCE hInstance, HWND hWnd);
-    virtual Vector2 GetSize() const override;
+    virtual Vector2 getSize() const override;
 
     HINSTANCE hInstance;
     HWND hWnd;

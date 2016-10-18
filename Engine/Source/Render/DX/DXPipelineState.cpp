@@ -3,11 +3,10 @@
 
 #include "DXShaderImpl.h"
 #include "DXRenderer.h"
-#include <d3dx12.h>
 
 DXPipelineState::DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRenderer* renderer)
 {
-    auto device = renderer->GetDevice();
+    auto device = renderer->getDevice();
 
     {
         CD3DX12_DESCRIPTOR_RANGE ranges[2];
@@ -55,8 +54,8 @@ DXPipelineState::DXPipelineState(Shader* vertexShader, Shader* pixelShader, DXRe
     psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
     psoDesc.pRootSignature = rootSignature.Get();
 
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader->GetImpl(renderer)->blob.Get());
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->GetImpl(renderer)->blob.Get());
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader->getImpl(renderer)->blob.Get());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->getImpl(renderer)->blob.Get());
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
     psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 

@@ -23,12 +23,12 @@ LinuxGLContext::LinuxGLContext()
     glc = glXCreateContext(display, vi, NULL, GL_TRUE);
 }
 
-void LinuxGLContext::MakeCurrent()
+void LinuxGLContext::makeCurrent()
 {
     glXMakeCurrent(display, window, glc);
 }
 
-void LinuxGLContext::Swap()
+void LinuxGLContext::swap()
 {
     glXSwapBuffers(display, window);
 }

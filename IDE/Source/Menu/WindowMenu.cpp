@@ -9,12 +9,12 @@ WindowMenu::WindowMenu(MainWindow* window)
     {
         auto str = std::to_string(i);
         auto name = str.c_str();
-        auto action = createAction(name, "", SLOT(Stub()));
+        auto action = createAction(name, "", SLOT(stub()));
         layoutMenu->addAction(action);
     }
 }
 
-void WindowMenu::Stub()
+void WindowMenu::stub()
 {
 }
 

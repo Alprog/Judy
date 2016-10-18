@@ -15,10 +15,10 @@ struct [[Meta]] Vector2
     Vector2(float x, float y);
 
     [[Serialize]] Vector2(List<float> list);
-    [[Serialize]] List<float> ToList();
+    [[Serialize]] List<float> toList();
 
-    float Length();
-    float SquaredLength();
+    float length();
+    float squaredLength();
 
     friend Vector2 operator-(const Vector2& vector);
     friend Vector2 operator+(const Vector2& lhs, const Vector2& rhs);

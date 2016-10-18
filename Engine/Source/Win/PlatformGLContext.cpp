@@ -44,17 +44,17 @@ WinGLContext::WinGLContext(HWND hWnd)
     }
 }
 
-void WinGLContext::MakeCurrent()
+void WinGLContext::makeCurrent()
 {
     wglMakeCurrent(hDC, hRC);
 }
 
-void WinGLContext::Swap()
+void WinGLContext::swap()
 {
     SwapBuffers(hDC);
 }
 
-void WinGLContext::SetupPixelFormat(HDC hDC)
+void WinGLContext::setupPixelFormat(HDC hDC)
 {
 
 }

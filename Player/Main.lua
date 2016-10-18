@@ -6,8 +6,8 @@ require 'ModelDerived'
 
 print(3)
 
-local app = App.Instance()
-local window = Window.Create()
+local app = App.instance()
+local window = Window.create()
 local scene = window.scene
 
 function add()
@@ -15,24 +15,24 @@ function add()
 	print(model)
 	--model.foo = 'abr'
 	print(model.foo)
-	scene:AddChild(model)
+	scene:addChild(model)
 end
 
-local virtualDevice = VirtualDevice.new0()
-virtualDevice:AddKeySource(0, nil, 0)
-virtualDevice:AddKeySource(0, nil, 1)
+local virtualDevice = VirtualDevice.new0()
+virtualDevice:addKeySource(0, nil, 0)
+virtualDevice:addKeySource(0, nil, 1)
 
-local b = virtualDevice:IsPressed(0)
+local b = virtualDevice:isPressed(0)
 
 add()
 
 collectgarbage()
 
 function remove()
-	local model = scene:Child(2)
+	local model = scene:child(2)
 	print(model)
 	print(model.foo)
-	scene:RemoveChild(model)
+	scene:removeChild(model)
 end
 
 --remove()
@@ -41,4 +41,4 @@ collectgarbage()
 
 print('---')
 
-app:StartMainLoop()
+app:startMainLoop()

@@ -17,20 +17,20 @@ RemoteDebbuger::RemoteDebbuger(LuaMachine* luaMachine, int port)
     , netNode{nullptr}
 {
     this->luaMachine = luaMachine;
-    luaMachine->breakCallback = std::bind(&RemoteDebbuger::OnBreak, this);
-    luaMachine->resumeCallback = std::bind(&RemoteDebbuger::OnResume, this);
+    luaMachine->breakCallback = std::bind(&RemoteDebbuger::onBreak, this);
+    luaMachine->resumeCallback = std::bind(&RemoteDebbuger::onResume, this);
 
     logPipe = new Pipe(stdout);
 
     netNode = new NetNode();
-    netNode->customWorkCallback = std::bind(&RemoteDebbuger::CustomNetWork, this);
-    netNode->messageCallback = std::bind(&RemoteDebbuger::OnGetMessage, this, _1);
-    netNode->Start(port);
+    netNode->customWorkCallback = std::bind(&RemoteDebbuger::customNetWork, this);
+    netNode->messageCallback = std::bind(&RemoteDebbuger::onGetMessage, this, _1);
+    netNode->start(port);
 }
 
 RemoteDebbuger::~RemoteDebbuger()
 {
-    WaitForFinish();
+    waitForFinish();
 
     if (netNode != nullptr)
     {
@@ -44,73 +44,73 @@ RemoteDebbuger::~RemoteDebbuger()
     }
 }
 
-void RemoteDebbuger::WaitForFinish()
+void RemoteDebbuger::waitForFinish()
 {
     fflush(stdout);
-    CustomNetWork();
-    while (netNode->IsConnected() && netNode->HasOutput())
+    customNetWork();
+    while (netNode->isConnected() && netNode->hasOutput())
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 
-void RemoteDebbuger::OnBreak()
+void RemoteDebbuger::onBreak()
 {
-    netNode->Send(luaMachine->stack);
+    netNode->send(luaMachine->stack);
 }
 
-void RemoteDebbuger::OnResume()
+void RemoteDebbuger::onResume()
 {
-    netNode->Send(DebugCommand("resumed"));
+    netNode->send(DebugCommand("resumed"));
 }
 
-void RemoteDebbuger::CustomNetWork()
+void RemoteDebbuger::customNetWork()
 {
     auto text = logPipe->readText();
     if (text.size() > 0)
     {
         text = std::regex_replace(text, std::regex("(\\r\\n)|(\\n)|(\\r)"), "\\n");
         text = std::regex_replace(text, std::regex("\\'"), "\\'");
-        netNode->Send(LogMessage(text));
+        netNode->send(LogMessage(text));
     }
 }
 
-void RemoteDebbuger::OnGetMessage(Any& message)
+void RemoteDebbuger::onGetMessage(Any& message)
 {
-    auto type = message.GetType();
-    if (type == TypeMetaOf<DebugCommand>())
+    auto type = message.getType();
+    if (type == typeMetaOf<DebugCommand>())
     {
         auto command = message.as<DebugCommand>();
         auto name = command.name;
-        if (name == "continue")
+        if (name == "resume")
         {
-            luaMachine->Continue();
+            luaMachine->resume();
         }
         else if (name == "pause")
         {
-            luaMachine->Pause();
+            luaMachine->pause();
         }
         else if (name == "stepInto")
         {
-            luaMachine->StepInto();
+            luaMachine->stepInto();
         }
         else if (name == "stepOver")
         {
-            luaMachine->StepOver();
+            luaMachine->stepOver();
         }
         else if (name == "stepOut")
         {
-            luaMachine->StepOut();
+            luaMachine->stepOut();
         }
         else if (name == "win")
         {
-            luaMachine->breakpoints.SetCaseSensitive(false);
+            luaMachine->breakpoints.setCaseSensitive(false);
         }
     }
-    else if (type == TypeMetaOf<FileBreakpoints>())
+    else if (type == typeMetaOf<FileBreakpoints>())
     {
         auto fileBreakpoints = message.as<FileBreakpoints>();
-        luaMachine->breakpoints.SetLines(fileBreakpoints.fileName, fileBreakpoints.lines);
+        luaMachine->breakpoints.setLines(fileBreakpoints.fileName, fileBreakpoints.lines);
 
         printf("breaks get\n");
         fflush(stdout);

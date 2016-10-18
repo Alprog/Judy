@@ -10,8 +10,8 @@ enum class Platform
     Unknown
 };
 
-Platform CurrentPlatform();
-std::string GetPlatformName();
+Platform currentPlatform();
+std::string getPlatformName();
 
 #if WIN
     #define PLATFORM_TYPE(x) Win ## x

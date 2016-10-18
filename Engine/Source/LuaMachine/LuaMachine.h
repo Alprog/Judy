@@ -15,32 +15,32 @@ struct lua_Debug;
 class LuaMachine : public Singleton<LuaMachine>
 {
     friend class Singleton<LuaMachine>;
-    friend void hook(lua_State *L, lua_Debug *ar);
+    friend void hookHelper(lua_State *L, lua_Debug *ar);
 
 private:
     LuaMachine();
     ~LuaMachine();
 
 public:
-    bool IsStarted() const;
-    bool IsBreaked() const;
+    bool isStarted() const;
+    bool isBreaked() const;
 
-    void Do(std::string scriptName, bool debug = false);
-    void Pause();
-    void Continue();
-    void StepInto();
-    void StepOver();
-    void StepOut();
-    void Stop();
+    void execute(std::string scriptName, bool debug = false);
+    void pause();
+    void resume();
+    void stepInto();
+    void stepOver();
+    void stepOut();
+    void stop();
 
-    void ReleaseUserdata(void* userdata);
-    void RetainUserdata(void* userdata);
+    void releaseUserdata(void* userdata);
+    void retainUserdata(void* userdata);
 
 private:
-    void Hook(lua_Debug *ar);
-    void Break(lua_Debug *ar);
-    CallInfo GetCallInfo(lua_Debug *ar);
-    void SuspendExecution();
+    void hook(lua_Debug *ar);
+    void onBreak(lua_Debug *ar);
+    CallInfo getCallInfo(lua_Debug *ar);
+    void suspendExecution();
 
 public:
     Breakpoints breakpoints;
@@ -53,7 +53,7 @@ private:
     lua_State* L;
     LuaBinder* binder;
     std::atomic<bool> suspended;
-    bool isStarted;
+    bool m_isStarted;
     int level;
     int breakRequiredLevel;
 };

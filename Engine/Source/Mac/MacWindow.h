@@ -7,9 +7,9 @@ class MacWindow : public Window
 public:
     MacWindow();
 
-    virtual void ProcessEvents();
-    virtual void SetContext();
-    virtual void Swap();
+    virtual void processEvents();
+    virtual void setContext();
+    virtual void swap();
 
 private:
 };

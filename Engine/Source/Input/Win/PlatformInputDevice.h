@@ -6,7 +6,7 @@
 class WinInputDevice : public InputDevice
 {
 public:
-    virtual void UpdateState() override
+    virtual void updateState() override
     {
     }
 };

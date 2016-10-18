@@ -11,7 +11,7 @@ MacApp::MacApp()
     application = [NSApplication sharedApplication];
 }
 
-void MacApp::StartMainLoop()
+void MacApp::startMainLoop()
 {
     [application run];
 }

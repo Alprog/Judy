@@ -12,19 +12,19 @@ class Breakpoints
 public:
     Breakpoints();
 
-    bool IsEmpty();
-    bool IsAnySet(int line);
-    bool IsSet(std::string source, int line);
+    bool isEmpty();
+    bool isAnySet(int line);
+    bool isSet(std::string source, int line);
 
-    bool Clear(std::string fileName);
-    Set<int> GetLines(std::string fileName);
-    bool SetLines(std::string fileName, Set<int> lines);
+    bool clear(std::string fileName);
+    Set<int> getLines(std::string fileName);
+    bool setLines(std::string fileName, Set<int> lines);
     const MapType& getMap() const;
 
-    void SetCaseSensitive(bool value);
+    void setCaseSensitive(bool value);
 
 private:
-    void UpdateLines();
+    void updateLines();
 
     MapType map;
     bool linesDirty;

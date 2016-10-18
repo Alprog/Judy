@@ -81,7 +81,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
         if (!modificationChecking)
         {
             modificationChecking = true;
-            documents->CheckOutsideModification();
+            documents->checkOutsideModification();
             modificationChecking = false;
         }
     }

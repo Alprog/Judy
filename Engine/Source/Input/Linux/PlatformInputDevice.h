@@ -8,17 +8,17 @@
 class LinuxInputDevice : public InputDevice
 {
 public:
-    static LinuxInputDevice* Create(std::string filePath);
+    static LinuxInputDevice* create(std::string filePath);
 
 private:
     LinuxInputDevice(std::string filePath, int file, libevdev* device);
     ~LinuxInputDevice();
 
 public:
-    virtual void UpdateState() override;
+    virtual void updateState() override;
 
 private:
-    void HandleSynDropped();
+    void handleSynDropped();
 
 public:
     std::string filePath;

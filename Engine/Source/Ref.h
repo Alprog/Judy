@@ -24,50 +24,50 @@ public:
     Ref(T* value)
 		: pointer { value }
 	{
-        Retain();
+        retain();
 	}
 
 	// normal assign operator
     Ref<T>& operator=(T* value)
 	{
-        Release();
+        release();
 		pointer = value;
-        Retain();
+        retain();
 		return *this;
 	}
 
 	// copy constructor
     Ref(const Ref<T>& other)
 	{
-        Copy(other);
+        copy(other);
 	}
 
 	// move constructor
     Ref(Ref<T>&& other)
 	{
-        Move(other);
+        move(other);
 	}
 
 	// copy assigment operator 
     Ref<T>& operator=(const Ref<T>& other)
 	{
-        Release();
-        Copy(other);
+        release();
+        copy(other);
 		return *this;
 	}
 
 	// move assigment operator 
     Ref<T>& operator=(Ref<T>&& other)
 	{
-        Release();
-        Move(other);
+        release();
+        move(other);
 		return *this;
 	}
 
 	// destructor
     ~Ref()
 	{
-        Release();
+        release();
 	}
 
 	T& operator*()
@@ -117,38 +117,38 @@ public:
 		return static_cast<Type>(pointer);
 	}*/
 
-    T* Get() const
+    T* get() const
 	{
 		return pointer;
 	}
 
 private:
-    inline void Retain()
+    inline void retain()
 	{
 		if (pointer != nullptr)
 		{
-            pointer->Retain();
+            pointer->retain();
 		}
 	}
 
-    inline void Release()
+    inline void release()
 	{
 		if (pointer != nullptr)
 		{
-            pointer->Release();
+            pointer->release();
 		}
 	}
 
-    inline void Copy(const Ref<T>& other)
+    inline void copy(const Ref<T>& other)
 	{
 		pointer = other.pointer;
 		if (pointer != nullptr)
 		{
-            pointer->Retain();
+            pointer->retain();
 		}
 	}
 
-    inline void Move(Ref<T>& other)
+    inline void move(Ref<T>& other)
 	{
 		pointer = other.pointer;
 		other.pointer = nullptr;

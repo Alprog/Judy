@@ -19,8 +19,8 @@ struct Context
 class RendererFrontend
 {
 public:
-    void Render(Node* scene);
-    void Draw(Mesh* mesh, Matrix matrix, RenderState* renderState);
+    void render(Node* scene);
+    void draw(Mesh* mesh, Matrix matrix, RenderState* renderState);
 
     std::queue<Context> contexts;
     std::vector<RenderCommand> commands;

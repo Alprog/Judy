@@ -15,20 +15,20 @@ class DocumentsPane : public QTabWidget
 public:
     DocumentsPane();
 
-    void Open(Path path);
-    void OpenAtLine(Path path, int line);
-    IDocument* GetCurrentDocument();
-    IDocument* GetDocument(Path path);
-    IDocument* GetDocument(int index);
+    void open(Path path);
+    void openAtLine(Path path, int line);
+    IDocument* getCurrentDocument();
+    IDocument* getDocument(Path path);
+    IDocument* getDocument(int index);
 
-    void SaveCurrentDocument();
-    void CheckOutsideModification();
+    void saveCurrentDocument();
+    void checkOutsideModification();
 
 private:
-    static IDocument* CreateDocument(Path absolutePath);
-    int ReloadDocumentMessageBox(IDocument* document);
+    static IDocument* createDocument(Path absolutePath);
+    int reloadDocumentMessageBox(IDocument* document);
 
 private slots:
-    void CloseTab(int index);
-    void UpdateTabNames();
+    void closeTab(int index);
+    void updateTabNames();
 };

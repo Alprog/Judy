@@ -10,10 +10,10 @@ class PropertyMeta : public IFieldMeta
 public:
     PropertyMeta(std::string name);
 
-    virtual void Set(Any& object, Any& value) override;
-    virtual Any Get(Any& object) override;
-    virtual Any GetAddr(Any& object) override;
-    virtual ITypeMeta* const GetType() override;
+    virtual void set(Any& object, Any& value) override;
+    virtual Any get(Any& object) override;
+    virtual Any getAddr(Any& object) override;
+    virtual ITypeMeta* const getType() override;
 
     IFunctionMeta* getter;
     IFunctionMeta* setter;

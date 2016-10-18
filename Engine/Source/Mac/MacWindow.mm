@@ -37,17 +37,17 @@ MacWindow::MacWindow()
     [window makeKeyAndOrderFront:window];
 }
 
-void MacWindow::ProcessEvents()
+void MacWindow::processEvents()
 {
 
 }
 
-void MacWindow::SetContext()
+void MacWindow::setContext()
 {
     [[view openGLContext] makeCurrentContext];
 }
 
-void MacWindow::Swap()
+void MacWindow::swap()
 {
     [[view openGLContext] flushBuffer];
 }

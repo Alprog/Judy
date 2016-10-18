@@ -17,4 +17,4 @@ struct Mesh
     IndexBuffer* indexBuffer;
 };
 
-Mesh* CreateCubeMesh();
+Mesh* createCubeMesh();

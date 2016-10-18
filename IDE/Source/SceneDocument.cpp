@@ -24,36 +24,36 @@ SceneDocument::SceneDocument(Path path)
     auto hWnd = (HWND)canvas->winId();
     renderTarget = new WinRenderTarget(hInstance, hWnd);
 #endif
-    Reload();
+    reload();
 
-    connect(&timer, SIGNAL(timeout()), this, SLOT(Render()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(render()));
 
-    IDE::Instance()->SelectScene(scene);
-    IDE::Instance()->SelectNode(scene);
+    IDE::instance()->selectScene(scene);
+    IDE::instance()->selectNode(scene);
 
     timer.start(20);
 }
 
-DocumentType SceneDocument::GetType() const
+DocumentType SceneDocument::getType() const
 {
     return DocumentType::Scene;
 }
 
-void SceneDocument::SetBinaryData(QByteArray data)
+void SceneDocument::setBinaryData(QByteArray data)
 {  
     auto text = data.toStdString();
-    auto& serializer = IDE::Instance()->serializer;
-    scene = serializer.Deserialize<Node*>(text);
+    auto& serializer = IDE::instance()->serializer;
+    scene = serializer.deserialize<Node*>(text);
 }
 
-QByteArray SceneDocument::GetBinaryData()
+QByteArray SceneDocument::getBinaryData()
 {
-    auto& serializer = IDE::Instance()->serializer;
-    auto text = serializer.Serialize(scene);
+    auto& serializer = IDE::instance()->serializer;
+    auto text = serializer.serialize(scene);
     return QByteArray::fromStdString(text);
 }
 
-bool SceneDocument::Changed() const
+bool SceneDocument::changed() const
 {
     return false;
 }
@@ -61,10 +61,10 @@ bool SceneDocument::Changed() const
 #include "Render/RenderManager.h"
 #include "Render/RendererType.h"
 
-void SceneDocument::Render()
+void SceneDocument::render()
 {
 #if WINDOWS
-    auto renderer = RenderManager::Instance()->renderers[(int)RendererType::GL];
+    auto renderer = RenderManager::instance()->renderers[(int)RendererType::GL];
     renderer->Render(scene, renderTarget);
 #endif
 }

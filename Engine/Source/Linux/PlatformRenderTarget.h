@@ -15,7 +15,7 @@ class LinuxRenderTarget : public RenderTarget
 public:
     LinuxRenderTarget(Display* display, XWindow window);
 
-    virtual Vector2 GetSize() const override;
+    virtual Vector2 getSize() const override;
 
     Display* display;
     XWindow window;

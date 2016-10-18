@@ -32,29 +32,29 @@ private:
     friend typename std::vector<T>::iterator begin(List<T>* list) { return list->begin(); }
     friend typename std::vector<T>::iterator end(List<T>* list) { return list->end(); }
 
-    static void Serialize(List<T> list, Serializer* serializer)
+    static void serialize(List<T> list, Serializer* serializer)
     {
         auto L = serializer->getL();
-        auto valueType = TypeMetaOf<T>();
+        auto valueType = typeMetaOf<T>();
         lua_newtable(L);
         for (auto i = 0; i < list.size(); i++)
         {
             auto value = list[i];
-            serializer->Serialize(value, valueType);
+            serializer->serialize(value, valueType);
             lua_seti(L, -2, i + 1);
         }
     }
 
-    static List<T> Deserialize(Serializer* serializer)
+    static List<T> deserialize(Serializer* serializer)
     {
         auto L = serializer->getL();
-        auto valueType = TypeMetaOf<T>();
+        auto valueType = typeMetaOf<T>();
 
         List<T> list;
         lua_pushnil(L);
         while (lua_next(L, -2) != 0)
         {
-            auto value = serializer->Deserialize(valueType);
+            auto value = serializer->deserialize(valueType);
             list.add(value);
             lua_pop(L, 1);
         }
