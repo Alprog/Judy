@@ -55,14 +55,6 @@ void GLRenderer::draw(RenderCommand command)
 
     auto mvp = renderState->constantBuffer->data.MVP;
 
-    /*for (auto i = 0; i < mesh->vertices.size(); i++)
-    {
-        auto v3 = mesh->vertices[i].Position;
-        auto v4 = v3 * mvp;
-
-        printf("%i\n", v4.x);
-    }*/
-
     GLuint location = glGetUniformLocation(renderState->programId, "MVP");
     glUniformMatrix4fv(location, 1, GL_FALSE, &mvp.m11);
 
