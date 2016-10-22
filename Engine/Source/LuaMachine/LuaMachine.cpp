@@ -10,7 +10,7 @@ int const maxStackSize = 256;
 
 LuaMachine::LuaMachine()
     : L{nullptr}
-    , m_isStarted{false}
+    , isStartedFlag{false}
     , breakCallback{nullptr}
     , resumeCallback{nullptr}
     , level{0}
@@ -50,12 +50,12 @@ LuaMachine::~LuaMachine()
 
 bool LuaMachine::isStarted() const
 {
-    return m_isStarted;
+    return isStartedFlag;
 }
 
 bool LuaMachine::isBreaked() const
 {
-    return m_isStarted && suspended;
+    return isStartedFlag && isSuspended;
 }
 
 void hookHelper(lua_State *L, lua_Debug *ar)
@@ -126,8 +126,8 @@ CallInfo LuaMachine::getCallInfo(lua_Debug *ar)
 
 void LuaMachine::suspendExecution()
 {
-    suspended = true;
-    while (suspended)
+    isSuspended = true;
+    while (isSuspended)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
@@ -135,7 +135,7 @@ void LuaMachine::suspendExecution()
 
 void LuaMachine::execute(std::string scriptName, bool debug)
 {
-    m_isStarted = true;
+    isStartedFlag = true;
 
     if (debug)
     {
@@ -146,18 +146,18 @@ void LuaMachine::execute(std::string scriptName, bool debug)
 
     if (luaL_dofile(L, scriptName.c_str()))
     {
-        m_isStarted = false;
+        isStartedFlag = false;
         printf("Something went wrong loading the chunk (syntax error?)\n");
         printf("%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);
     }
 
-    m_isStarted = false;
+    isStartedFlag = false;
 }
 
 void LuaMachine::pause()
 {
-    if (!suspended)
+    if (!isSuspended)
     {
         breakRequiredLevel = maxStackSize;
     }
@@ -165,36 +165,36 @@ void LuaMachine::pause()
 
 void LuaMachine::resume()
 {
-    if (suspended)
+    if (isSuspended)
     {
-        suspended = false;
+        isSuspended = false;
     }
 }
 
 void LuaMachine::stepInto()
 {
-    if (suspended)
+    if (isSuspended)
     {
         breakRequiredLevel = maxStackSize;
-        suspended = false;
+        isSuspended = false;
     }
 }
 
 void LuaMachine::stepOver()
 {
-    if (suspended)
+    if (isSuspended)
     {
         breakRequiredLevel = level;
-        suspended = false;
+        isSuspended = false;
     }
 }
 
 void LuaMachine::stepOut()
 {
-    if (suspended)
+    if (isSuspended)
     {
         breakRequiredLevel = level - 1;
-        suspended = false;
+        isSuspended = false;
     }
 }
 
@@ -205,9 +205,9 @@ void stopHook(lua_State *L, lua_Debug *ar)
 
 void LuaMachine::stop()
 {
-    if (m_isStarted)
+    if (isSuspended)
     {
-        suspended = false;
+        isSuspended = false;
         lua_sethook(L, stopHook, LUA_MASKCOUNT, 1);
     }
 }

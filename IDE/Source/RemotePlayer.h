@@ -48,5 +48,5 @@ private:
     Process* process;
     NetNode* netNode;
     Breakpoints breakpoints;
-    bool m_isPaused;
+    bool isPausedFlag;
 };

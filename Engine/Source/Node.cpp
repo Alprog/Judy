@@ -80,7 +80,7 @@ void Node::update(float delta)
 {
     if (luaObject == nullptr)
     {
-        updateHelper(delta);
+        updateInternal(delta);
     }
     else
     {
@@ -93,7 +93,7 @@ void Node::update(float delta)
     }
 }
 
-void Node::updateHelper(float delta)
+void Node::updateInternal(float delta)
 {
     for (auto& child : childs)
     {

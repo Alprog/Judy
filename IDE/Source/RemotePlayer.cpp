@@ -15,7 +15,7 @@ using namespace std::placeholders;
 RemotePlayer::RemotePlayer()
     : netNode{nullptr}
     , process{nullptr}
-    , m_isPaused{false}
+    , isPausedFlag{false}
 {
     connect(this, SIGNAL(stateChanged()), IDE::instance(), SLOT(onPlayerStateChanged()));
 }
@@ -81,7 +81,7 @@ bool RemotePlayer::isConnected()
 
 bool RemotePlayer::isPaused()
 {
-    return m_isPaused;
+    return isPausedFlag;
 }
 
 void RemotePlayer::sendCommand(std::string name)
@@ -116,7 +116,7 @@ void RemotePlayer::stop()
         delete process;
         process = nullptr;
     }
-    m_isPaused = false;
+    isPausedFlag = false;
     stack.calls.clear();
     stateChanged();
 }
@@ -135,14 +135,14 @@ void RemotePlayer::onGetMessage(Any& message)
     }
     else if (message.getType() == typeMetaOf<CallStack>())
     {
-        m_isPaused = true;
+        isPausedFlag = true;
         stack = message.as<CallStack>();
         stateChanged();
     }
     else if (message.getType() == typeMetaOf<DebugCommand>())
     {
         stack.calls.clear();
-        m_isPaused = false;
+        isPausedFlag = false;
         stateChanged();
     }
     else

@@ -52,8 +52,8 @@ public:
 private:
     lua_State* L;
     LuaBinder* binder;
-    std::atomic<bool> suspended;
-    bool m_isStarted;
+    std::atomic<bool> isSuspended;
+    bool isStartedFlag;
     int level;
     int breakRequiredLevel;
 };
