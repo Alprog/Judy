@@ -13,7 +13,7 @@ class [[Meta]] App : public Object
     friend class Meta;
 
 public:
-    static App* instance();
+    static App* getInstance();
 
     void startMainLoop();
 

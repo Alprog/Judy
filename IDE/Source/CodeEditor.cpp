@@ -156,7 +156,7 @@ void CodeEditor::init()
     connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
     timer.start(tickInterval);
 
-    connect(RemotePlayer::instance(), SIGNAL(stateChanged()), this, SLOT(updateActiveLine()));
+    connect(RemotePlayer::getInstance(), SIGNAL(stateChanged()), this, SLOT(updateActiveLine()));
 }
 
 void CodeEditor::tick()
@@ -193,7 +193,7 @@ void CodeEditor::updateActiveLine()
 {
     markerDeleteAll(ActiveLine);
 
-    auto call = RemotePlayer::instance()->getActiveCall();
+    auto call = RemotePlayer::getInstance()->getActiveCall();
     if (call != nullptr && caseInsensitiveCompare(call->source, source))
     {
         markerAdd(call->line - 1, ActiveLine);
@@ -233,7 +233,7 @@ void CodeEditor::pullBreakpoints()
 {
     markerDeleteAll(Breakpoint);
 
-    auto lines = RemotePlayer::instance()->getBreakpoints(source);
+    auto lines = RemotePlayer::getInstance()->getBreakpoints(source);
     for (auto line : lines)
     {
         markerAdd(line - 1, Breakpoint);
@@ -253,7 +253,7 @@ void CodeEditor::pushBreakpoints()
         line = markerNext(line + 1, mask);
     }
 
-    RemotePlayer::instance()->setBreakpoints(source, lines);
+    RemotePlayer::getInstance()->setBreakpoints(source, lines);
 }
 
 void CodeEditor::onMarginClicked(int position, int modifiers, int margin)

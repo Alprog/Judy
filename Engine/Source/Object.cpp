@@ -36,7 +36,7 @@ void Object::release()
         else
         {
             // ensure that we don't keep luaObject manualy
-            LuaMachine::instance()->releaseUserdata(luaObject);
+            LuaMachine::getInstance()->releaseUserdata(luaObject);
             // and wait when it garbage collected
         }
     }
@@ -78,7 +78,7 @@ int Object::GC(lua_State* L)
         if (keepUserdata)
         {
             // force keep userdata reference
-            LuaMachine::instance()->retainUserdata(object->luaObject);
+            LuaMachine::getInstance()->retainUserdata(object->luaObject);
 
             // mark for finalization again
             lua_getmetatable(L, -1); // UM

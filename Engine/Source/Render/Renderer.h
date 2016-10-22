@@ -8,6 +8,8 @@ template <RendererType RendererT>
 class Renderer : public IRenderer
 {
 public:
+    virtual RendererType getType() override { return RendererT; }
+
     virtual void createImpl(Texture* resource) override { helper(resource); }
     virtual void createImpl(Shader* resource) override { helper(resource); }
     virtual void createImpl(VertexBuffer* resource) override { helper(resource); }

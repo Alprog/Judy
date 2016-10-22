@@ -48,16 +48,16 @@ StackPane::~StackPane()
 void StackPane::onDoubleClicked(const QModelIndex& index)
 {
     auto row = index.row();
-    auto& calls = RemotePlayer::instance()->stack.calls;
+    auto& calls = RemotePlayer::getInstance()->stack.calls;
     if (row < calls.size())
     {
-        IDE::instance()->followToCall(calls[row]);
+        IDE::getInstance()->followToCall(calls[row]);
     }
 }
 
 void StackPane::work()
 {
-    auto& calls = RemotePlayer::instance()->stack.calls;
+    auto& calls = RemotePlayer::getInstance()->stack.calls;
 
     table->setRowCount(calls.size());
     for (int i = 0; i < calls.size(); i++)

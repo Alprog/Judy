@@ -17,6 +17,18 @@ RenderManager::RenderManager()
     renderers.push_back(new GLRenderer());
 }
 
+IRenderer* RenderManager::getRenderer(RendererType type)
+{
+    for (IRenderer* renderer : renderers)
+    {
+        if (renderer->getType() == type)
+        {
+            return renderer;
+        }
+    }
+    return nullptr;
+}
+
 unsigned int RenderManager::registerResource(RenderResource* resource)
 {
     unsigned int id;

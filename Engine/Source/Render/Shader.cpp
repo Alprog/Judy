@@ -12,7 +12,7 @@ Shader::Shader(std::string source, Type type)
 
 void Shader::load()
 {
-    auto& renderers = RenderManager::instance()->renderers;
+    auto& renderers = RenderManager::getInstance()->renderers;
     for (size_t i = 0; i < renderers.size(); i++)
     {
         renderers[i]->createImpl(this);

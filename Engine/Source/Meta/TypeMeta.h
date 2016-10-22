@@ -108,7 +108,7 @@ private:
         {
             pointeeType* pointer = object.as<T>();
             auto index = std::type_index(typeid(*pointer));
-            return Meta::instance()->find(index);
+            return Meta::getInstance()->find(index);
         }
         else
         {
@@ -128,7 +128,7 @@ private:
 template <typename T>
 inline ITypeMeta* typeMetaOf()
 {
-    return TypeMeta<typename fulldecay<T>::type>::instance();
+    return TypeMeta<typename fulldecay<T>::type>::getInstance();
 }
 
 template <>

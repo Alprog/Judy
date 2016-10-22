@@ -14,7 +14,7 @@ InspectorPane::InspectorPane()
     tree = new QTreeView();
     setWidget(tree);
 
-    connect(IDE::instance(), SIGNAL(selectNode(Node*)), this, SLOT(onSelectNode(Node*)));
+    connect(IDE::getInstance(), SIGNAL(selectNode(Node*)), this, SLOT(onSelectNode(Node*)));
 }
 
 InspectorPane::~InspectorPane()

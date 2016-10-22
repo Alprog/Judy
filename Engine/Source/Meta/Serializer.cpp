@@ -190,7 +190,7 @@ Any Serializer::deserializeUnknownTable()
     {
         std::string typeName = lua_tostring(L, -1);
         lua_pop(L, 1);
-        for (auto type : Meta::instance()->types)
+        for (auto type : Meta::getInstance()->types)
         {
             if (type->name == typeName)
             {

@@ -28,7 +28,7 @@ void DocumentsPane::open(Path path)
 {
     if (!path.isAbsolute())
     {
-        path = Path::combine(IDE::instance()->settings.projectPath, path);
+        path = Path::combine(IDE::getInstance()->settings.projectPath, path);
     }
 
     auto document = getDocument(path);

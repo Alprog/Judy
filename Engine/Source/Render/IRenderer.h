@@ -36,4 +36,6 @@ public:
     virtual void createImpl(IndexBuffer* resource) = 0;
     virtual void createImpl(Shader* resource) = 0;
     virtual void createImpl(ConstantBuffer* resource) = 0;
+
+    virtual RendererType getType() = 0;
 };

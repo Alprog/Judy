@@ -10,14 +10,14 @@
 IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
 {
-    Meta::instance()->init();
+    Meta::getInstance()->init();
 
     loadStyle();
     loadSettings();
     start();
 }
 
-IDE* IDE::instance()
+IDE* IDE::getInstance()
 {
     return static_cast<IDE*>(QApplication::instance());
 }
@@ -86,7 +86,7 @@ void IDE::followToCall(CallInfo callInfo)
 
 void IDE::onPlayerStateChanged()
 {
-    auto& calls = RemotePlayer::instance()->stack.calls;
+    auto& calls = RemotePlayer::getInstance()->stack.calls;
     if (calls.size() > 0)
     {
         followToCall(calls[0]);

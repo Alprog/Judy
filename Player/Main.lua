@@ -6,7 +6,7 @@ require 'ModelDerived'
 
 print(3)
 
-local app = App.instance()
+local app = App.getInstance()
 local window = Window.create()
 local scene = window.scene
 
@@ -29,7 +29,7 @@ add()
 collectgarbage()
 
 function remove()
-	local model = scene:child(2)
+	local model = scene:getChild(2)
 	print(model)
 	print(model.foo)
 	scene:removeChild(model)

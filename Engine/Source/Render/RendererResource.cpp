@@ -4,10 +4,10 @@
 
 RenderResource::RenderResource()
 {
-    this->id = RenderManager::instance()->registerResource(this);
+    this->id = RenderManager::getInstance()->registerResource(this);
 }
 
 RenderResource::~RenderResource()
 {
-    RenderManager::instance()->unregisterResource(this);
+    RenderManager::getInstance()->unregisterResource(this);
 }

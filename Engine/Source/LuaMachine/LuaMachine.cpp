@@ -30,7 +30,7 @@ LuaMachine::LuaMachine()
     lua_setfield(L, LUA_REGISTRYINDEX, "UDATA");
 
     binder = new LuaBinder(L);
-    LuaBinder(L).bind(Meta::instance());
+    LuaBinder(L).bind(Meta::getInstance());
 }
 
 LuaMachine::~LuaMachine()
@@ -60,7 +60,7 @@ bool LuaMachine::isBreaked() const
 
 void hookHelper(lua_State *L, lua_Debug *ar)
 {
-    LuaMachine::instance()->hook(ar);
+    LuaMachine::getInstance()->hook(ar);
 }
 
 void LuaMachine::hook(lua_Debug *ar)

@@ -30,7 +30,7 @@ void RendererFrontend::draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     command.state->constantBuffer->data.MVP = matrix * contexts.back().ViewProjection;
 
 #if WINDOWS
-    DXRenderer* renderer = (DXRenderer*)RenderManager::instance()->renderers[0];
+    DXRenderer* renderer = (DXRenderer*)RenderManager::getInstance()->renderers[0];
     renderer->getImpl(command.state->constantBuffer)->update();
 #endif
 

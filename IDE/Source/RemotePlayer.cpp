@@ -17,7 +17,7 @@ RemotePlayer::RemotePlayer()
     , process{nullptr}
     , isPausedFlag{false}
 {
-    connect(this, SIGNAL(stateChanged()), IDE::instance(), SLOT(onPlayerStateChanged()));
+    connect(this, SIGNAL(stateChanged()), IDE::getInstance(), SLOT(onPlayerStateChanged()));
 }
 
 RemotePlayer::~RemotePlayer()
@@ -29,7 +29,7 @@ void RemotePlayer::run()
 {
     stop();
 
-    auto& settings = IDE::instance()->settings;
+    auto& settings = IDE::getInstance()->settings;
     auto path = settings.playerPath;
     auto directory = settings.projectPath;
     auto commandLine = "player -debug";

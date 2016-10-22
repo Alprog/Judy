@@ -12,7 +12,7 @@
 InspectorItem* InspectorItem::create(Node* node)
 {
     auto index = std::type_index(typeid(*node));
-    auto typeMeta = Meta::instance()->find(index);
+    auto typeMeta = Meta::getInstance()->find(index);
     auto fields = getFields(typeMeta);
     return new InspectorItem(node, fields, nullptr, 0);
 }

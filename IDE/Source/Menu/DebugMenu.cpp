@@ -23,7 +23,7 @@ DebugMenu::DebugMenu(MainWindow* window)
 
 void DebugMenu::play()
 {
-    auto player = RemotePlayer::instance();
+    auto player = RemotePlayer::getInstance();
     if (!player->isRunning())
     {
         player->run();
@@ -36,32 +36,32 @@ void DebugMenu::play()
 
 void DebugMenu::stop()
 {
-    RemotePlayer::instance()->stop();
+    RemotePlayer::getInstance()->stop();
 }
 
 void DebugMenu::pause()
 {
-    RemotePlayer::instance()->sendCommand("pause");
+    RemotePlayer::getInstance()->sendCommand("pause");
 }
 
 void DebugMenu::stepInto()
 {
-    RemotePlayer::instance()->sendCommand("stepInto");
+    RemotePlayer::getInstance()->sendCommand("stepInto");
 }
 
 void DebugMenu::stepOver()
 {
-    RemotePlayer::instance()->sendCommand("stepOver");
+    RemotePlayer::getInstance()->sendCommand("stepOver");
 }
 
 void DebugMenu::stepOut()
 {
-    RemotePlayer::instance()->sendCommand("stepOut");
+    RemotePlayer::getInstance()->sendCommand("stepOut");
 }
 
 void DebugMenu::refresh()
 {
-    RemotePlayer* remotePlayer = RemotePlayer::instance();
+    RemotePlayer* remotePlayer = RemotePlayer::getInstance();
     bool isRunning = remotePlayer->isRunning();
     bool isConnected = remotePlayer->isConnected();
     bool isPaused = remotePlayer->isPaused();

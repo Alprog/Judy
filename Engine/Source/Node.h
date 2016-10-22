@@ -22,7 +22,7 @@ public:
 
     Node* getParent();
     int childCount();
-    Node* child(int i);
+    Node* getChild(int i);
 
     void addChild(Node* node);
     void removeChild(Node* node);

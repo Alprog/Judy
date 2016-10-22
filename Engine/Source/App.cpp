@@ -5,7 +5,7 @@
 #include <time.h>
 #include "Input/InputSystem.h"
 
-App* App::instance()
+App* App::getInstance()
 {
     static PlatformApp instance;
     return &instance;
@@ -52,7 +52,7 @@ void App::startMainLoop()
         }
         updateCollection();
 
-        InputSystem::instance()->updateState();
+        InputSystem::getInstance()->updateState();
 
         for (auto window : windows)
         {

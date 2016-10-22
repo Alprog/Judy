@@ -3,7 +3,7 @@
 
 void Settings::initMeta()
 {
-    auto meta = Meta::instance();
+    auto meta = Meta::getInstance();
     ClassDefiner<Settings>(meta, "Settings")
         .constructor()
         .field("playerPath", &Settings::playerPath).attr("Serialize")

@@ -17,9 +17,9 @@ int main(int argc, char *argv[])
         }
     }
 
-    Meta::instance()->init();
+    Meta::getInstance()->init();
 
-    auto luaMachine = LuaMachine::instance();
+    auto luaMachine = LuaMachine::getInstance();
 
     if (debug)
     {

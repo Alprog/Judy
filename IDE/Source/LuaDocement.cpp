@@ -23,7 +23,7 @@ LuaDocument::LuaDocument(Path documentPath)
 
     connect(editor, SIGNAL(notifyChange()), this, SLOT(onModified()));
 
-    auto projectPath = Path(IDE::instance()->settings.projectPath);
+    auto projectPath = Path(IDE::getInstance()->settings.projectPath);
     if (startsWith(documentPath, projectPath))
     {
         auto size = projectPath.str().size();

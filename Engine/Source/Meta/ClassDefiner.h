@@ -18,7 +18,7 @@ public:
     PropertyMeta* lastProperty;
 
     ClassDefiner(Meta* meta, const char* name)
-        : classMeta{TypeMeta<ClassType>::instance()}
+        : classMeta{TypeMeta<ClassType>::getInstance()}
         , lastMember{nullptr}
     {
         classMeta->name = name;

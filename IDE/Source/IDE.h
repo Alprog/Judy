@@ -20,7 +20,7 @@ class IDE : public QApplication
     IDE(int argc, char** argv);
 
 public:
-    static IDE* instance();
+    static IDE* getInstance();
     void saveSettings();
     MainWindow* getMainWindow();
     void followToCall(CallInfo callInfo);

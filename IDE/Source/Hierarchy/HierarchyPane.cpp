@@ -15,7 +15,7 @@ HierarchyPane::HierarchyPane()
 
     setWidget(tree);
 
-    connect(IDE::instance(), SIGNAL(selectScene(Node*)), this, SLOT(onSelectScene(Node*)));
+    connect(IDE::getInstance(), SIGNAL(selectScene(Node*)), this, SLOT(onSelectScene(Node*)));
 
 }
 
@@ -27,7 +27,7 @@ void HierarchyPane::onSelectionChanged(const QItemSelection& selected, const QIt
 {
     auto index = tree->selectionModel()->currentIndex();
     auto node = model.getNode(index);
-    IDE::instance()->selectNode(node);
+    IDE::getInstance()->selectNode(node);
 }
 
 void HierarchyPane::onSelectScene(Node* scene)

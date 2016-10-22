@@ -28,7 +28,7 @@ int Node::childCount()
     return childs.size();
 }
 
-Node* Node::child(int i)
+Node* Node::getChild(int i)
 {
     return childs[i].get();
 }
@@ -84,7 +84,7 @@ void Node::update(float delta)
     }
     else
     {
-        auto L = LuaMachine::instance()->getL();
+        auto L = LuaMachine::getInstance()->getL();
         lua_pushuserdata(L, luaObject); // U
         lua_getfield(L, -1, "update"); // UF
         lua_insert(L, -2); // FU

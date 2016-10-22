@@ -28,8 +28,8 @@ SceneDocument::SceneDocument(Path path)
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(render()));
 
-    IDE::instance()->selectScene(scene);
-    IDE::instance()->selectNode(scene);
+    IDE::getInstance()->selectScene(scene);
+    IDE::getInstance()->selectNode(scene);
 
     timer.start(20);
 }
@@ -42,13 +42,13 @@ DocumentType SceneDocument::getType() const
 void SceneDocument::setBinaryData(QByteArray data)
 {  
     auto text = data.toStdString();
-    auto& serializer = IDE::instance()->serializer;
+    auto& serializer = IDE::getInstance()->serializer;
     scene = serializer.deserialize<Node*>(text);
 }
 
 QByteArray SceneDocument::getBinaryData()
 {
-    auto& serializer = IDE::instance()->serializer;
+    auto& serializer = IDE::getInstance()->serializer;
     auto text = serializer.serialize(scene);
     return QByteArray::fromStdString(text);
 }
@@ -64,7 +64,7 @@ bool SceneDocument::changed() const
 void SceneDocument::render()
 {
 #if WINDOWS
-    auto renderer = RenderManager::instance()->renderers[(int)RendererType::GL];
+    auto renderer = RenderManager::getInstance()->renderers[(int)RendererType::GL];
     renderer->Render(scene, renderTarget);
 #endif
 }

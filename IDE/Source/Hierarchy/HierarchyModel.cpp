@@ -40,7 +40,7 @@ QModelIndex HierarchyModel::index(int row, int column, const QModelIndex& index)
     auto node = getNode(index);
     if (node != nullptr)
     {
-        return createIndex(row, column, node->child(row));
+        return createIndex(row, column, node->getChild(row));
     }
     return QModelIndex(); // invalid
 }
