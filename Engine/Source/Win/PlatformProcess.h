@@ -15,6 +15,7 @@ public:
     virtual bool isRunning();
 
     HANDLE handle;
+    HANDLE outFileHandle;
 };
 
 using PlatformProcess = WinProcess;

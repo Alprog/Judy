@@ -10,6 +10,8 @@
 #include "LuaMachine/CallStack.h"
 #include "IDE.h"
 
+#define NO_STDIO_REDIRECT
+
 using namespace std::placeholders;
 
 RemotePlayer::RemotePlayer()
@@ -34,7 +36,7 @@ void RemotePlayer::run()
     auto directory = settings.projectPath;
     auto commandLine = "player -debug";
 
-    printf("%s %s %s\n", path.c_str(), directory.c_str(), commandLine);
+    fprintf(stdout, "%s %s %s\n", path.c_str(), directory.c_str(), commandLine);
     fflush(stdout);
 
     process = Process::create();
