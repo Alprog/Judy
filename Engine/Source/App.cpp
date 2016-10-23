@@ -4,6 +4,7 @@
 
 #include <time.h>
 #include "Input/InputSystem.h"
+#include <chrono>
 
 void App::addWindow(Window* window)
 {
@@ -33,8 +34,14 @@ void App::updateCollection()
 
 void App::startMainLoop()
 {
+    auto prev = std::chrono::system_clock::now();
+
     do
     {
+        auto cur = std::chrono::system_clock::now();
+        float delta = static_cast<std::chrono::duration<float>>(cur - prev).count();
+        prev = cur;
+
         for (auto window : windows)
         {
             window->processEvents();
@@ -45,7 +52,7 @@ void App::startMainLoop()
 
         for (auto window : windows)
         {
-            window->update();
+            window->update(delta);
             window->render();
         }
     }

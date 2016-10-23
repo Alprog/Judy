@@ -57,9 +57,9 @@ Window::~Window()
 {
 }
 
-void Window::update()
+void Window::update(float delta)
 {
-    scene->update(0.0);
+    scene->update(delta);
 
     //auto translation = Vector3(0, 0, 0);
     //scene->transform.setTranslation(translation);
