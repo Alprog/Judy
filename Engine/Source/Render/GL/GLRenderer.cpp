@@ -47,6 +47,8 @@ GLContext* GLRenderer::getContext(RenderTarget* renderTarget)
 
 void GLRenderer::draw(RenderCommand command)
 {
+    GLenum a = glGetError();
+
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
     glDisable(GL_CULL_FACE);
@@ -55,11 +57,22 @@ void GLRenderer::draw(RenderCommand command)
 
     auto mvp = renderState->constantBuffer->data.MVP;
 
+
+    a = glGetError();
+
     GLuint location = glGetUniformLocation(renderState->programId, "MVP");
+
+    a = glGetError();
+
     glUniformMatrix4fv(location, 1, GL_FALSE, &mvp.m11);
 
+    a = glGetError();
+
     location = glGetUniformLocation(renderState->programId, "mainTexture");
+
+    a = glGetError();
     glUniform1i(location, 0);
+    a = glGetError();
 
     glActiveTexture(GL_TEXTURE0);
     GLuint id = getImpl(renderState->texture)->id;
@@ -69,7 +82,6 @@ void GLRenderer::draw(RenderCommand command)
 
     getImpl(command.mesh->vertexBuffer)->bind();
     getImpl(command.mesh->indexBuffer)->bind();
-
     glUseProgram(renderState->programId);
 
     glEnable(GL_DEPTH_TEST);

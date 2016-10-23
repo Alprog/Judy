@@ -63,9 +63,9 @@ bool SceneDocument::changed() const
 
 void SceneDocument::render()
 {
-#if WINDOWS
-    auto renderer = RenderManager::getInstance()->renderers[(int)RendererType::GL];
-    renderer->Render(scene, renderTarget);
+#if WIN
+    auto renderer = RenderManager::getInstance()->getRenderer(RendererType::GL);
+    renderer->render(scene, renderTarget);
 #endif
 }
 

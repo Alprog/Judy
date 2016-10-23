@@ -9,6 +9,8 @@ uniform mat4 worldMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+uniform mat4 MVP;
+
 void main(void)
 {
 	// Calculate the position of the vertex against the world, view, and projection matrices.
