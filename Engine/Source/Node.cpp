@@ -7,11 +7,13 @@
 Node::Node()
     : parent {nullptr}
 {
+    transform.retain();
 }
 
 Node::Node(int /*i*/)
     : parent {nullptr}
 {
+    transform.retain();
 }
 
 Node::~Node()

@@ -14,7 +14,7 @@ class Impl<ConstantBuffer, RendererType::DX>
 {
 public:
     Impl(DXRenderer* renderer, ConstantBuffer* resource);
-    void Update();
+    void update();
 
     ComPtr<ID3D12Resource> constantBuffer;
     DXDescriptorHandle descriptorHandle;

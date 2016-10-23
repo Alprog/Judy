@@ -15,7 +15,7 @@ void RendererFrontend::render(Node* scene)
 
 }
 
-#if WINDOWS
+#if WIN
 #include "Render/DX/DXConstantBufferImpl.h"
 #include "RenderManager.h"
 #include "Render/DX/DXRenderer.h"
@@ -29,8 +29,8 @@ void RendererFrontend::draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
 
     command.state->constantBuffer->data.MVP = matrix * contexts.back().ViewProjection;
 
-#if WINDOWS
-    DXRenderer* renderer = (DXRenderer*)RenderManager::getInstance()->renderers[0];
+#if WIN
+    DXRenderer* renderer = (DXRenderer*)RenderManager::getInstance()->getRenderer(RendererType::DX);
     renderer->getImpl(command.state->constantBuffer)->update();
 #endif
 

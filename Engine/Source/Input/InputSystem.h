@@ -14,6 +14,7 @@ class [[Meta]] InputSystem : public SingletonObject<InputSystem, PlatformInputSy
 public:
     virtual void updateState() = 0;
 
+    bool isPressed(int keyCode);
     bool onPressed(int keyCode);
 
 protected:

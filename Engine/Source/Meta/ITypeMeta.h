@@ -21,6 +21,7 @@ public:
 
     std::string name;
     virtual Flags getFlags() const = 0;
+    virtual size_t getSize() const = 0;
 
     inline bool isClass() const { return getFlags() & Flags::IsClass; }
     inline bool isPointer() const { return getFlags() & Flags::IsPointer; }

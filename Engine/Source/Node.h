@@ -36,6 +36,8 @@ public:
 
     [[Serialize, Inspect]] Transform transform;
 
+    Transform* getTransform() { return &transform; }
+
 private:
     Node* parent;
     [[Serialize]] List<Ref<Node>> childs;

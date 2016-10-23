@@ -113,7 +113,7 @@ inline Any getArgument(lua_State* L, int index, ITypeMeta* typeMeta)
     {
         return lua_tostring(L, index);
     }
-    else
+    else if (typeMeta->isPointer())
     {
         if (lua_isnil(L, index))
         {
@@ -125,6 +125,11 @@ inline Any getArgument(lua_State* L, int index, ITypeMeta* typeMeta)
             void* p = *(void**)lua_touserdata(L, index);
             return p;
         }
+    }
+    else
+    {
+        Any p = *(void**)lua_touserdata(L, index);
+        return typeMeta->dereference(p);
     }
 }
 
@@ -139,6 +144,38 @@ inline void processArguments(lua_State* L, IFunctionMeta* function, std::vector<
     }
 }
 
+void setMetatable(lua_State* L, std::string className, bool gc)
+{
+    // set metatable
+    luaL_getmetatable(L, gc ? "Userdata" : "Value"); // UM
+    lua_setmetatable(L, -2); // U
+
+    // create peer table
+    {
+        lua_newtable(L); // UP
+
+        lua_getglobal(L, className.c_str()); // UPM
+        if (lua_isnil(L, -1))
+        {
+            throw std::runtime_error("unknown type");
+        }
+        lua_setmetatable(L, -2); // UP
+
+        lua_setuservalue(L, -2); // U
+    }
+}
+
+void pushStruct(lua_State* L, void* pointer, ITypeMeta* type)
+{
+    auto dataSize = type->getSize();
+    auto udata = (void**)lua_newuserdata(L, sizeof(void*) + dataSize);
+    void* dataStart = udata + 1;
+    *udata = dataStart;
+    memcpy(dataStart, pointer, dataSize);
+
+    setMetatable(L, type->name, false);
+}
+
 void pushObject(lua_State* L, Object* pointer, std::string className)
 {
     if (pointer->luaObject != nullptr)
@@ -151,26 +188,7 @@ void pushObject(lua_State* L, Object* pointer, std::string className)
     *udata = pointer;
     pointer->luaObject = udata;
 
-    // set metatable
-    luaL_getmetatable(L, "Userdata"); // UM
-    lua_setmetatable(L, -2); // U
-
-    // create peer table
-    {
-        lua_newtable(L); // UP
-
-        printf("%s\n", className.c_str());
-        fflush(stdout);
-
-        lua_getglobal(L, className.c_str()); // UPM
-        if (lua_isnil(L, -1))
-        {
-            throw std::runtime_error("unknown type");
-        }
-        lua_setmetatable(L, -2); // UP
-
-        lua_setuservalue(L, -2); // U
-    }
+    setMetatable(L, className, true);
 }
 
 inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
@@ -208,8 +226,7 @@ inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
         }
         else
         {
-            // todo: send full userdata
-            throw std::runtime_error("not implemented");
+            pushStruct(L, result.getAddress(), type);
         }
     }
 }
@@ -281,7 +298,7 @@ int constructorInvoker(lua_State* L)
 
 void LuaBinder::init()
 {
-    // metatable for userdata
+    // metatable for object userdata
     auto name = "Userdata";
     luaL_newmetatable(L, name); // M
     lua_pushcfunction(L, indexFunction); // MF
@@ -292,9 +309,18 @@ void LuaBinder::init()
     lua_setfield(L, -2, "__gc");  // M
     lua_setglobal(L, name); //
 
+    // metatable for value userdata
+    name = "Value";
+    luaL_newmetatable(L, name); // M
+    lua_pushcfunction(L, indexFunction); // MF
+    lua_setfield(L, -2, "__index");  // M
+    lua_pushcfunction(L, newIndexFunction);  // MF
+    lua_setfield(L, -2, "__newindex");  // M
+    lua_setglobal(L, name); //
+
     // setForceLuaClass function
     lua_pushcfunction(L, setForceLuaClass);
-    lua_setglobal(L, "SetForceLuaClass");
+    lua_setglobal(L, "setForceLuaClass");
 }
 
 void LuaBinder::bind(Meta* meta)

@@ -3,11 +3,11 @@
 
 #include "Vector3.h"
 #include "Quaternion.h"
-
 #include "Matrix.h"
 #include "Attributes.h"
+#include "Object.h"
 
-struct [[Meta]] Transform
+struct [[Meta]] Transform : public Object
 {
     friend class Meta;
 

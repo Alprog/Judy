@@ -44,6 +44,10 @@ public:
         return (ITypeMeta::Flags)flags;
     }
 
+    virtual size_t getSize() const override
+    {
+        return sizeof(ClassType);
+    }
 
     virtual Any create() override { return createHelper<ClassType>(); }
 

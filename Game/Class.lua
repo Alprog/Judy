@@ -5,11 +5,11 @@ function Class(name, base)
 	setmetatable(class, base)
 	
 	class.new = function()
-		SetForceLuaClass(name)
+		setForceLuaClass(name)
 		return base.new0()
 	end
 	
-	_G[name] = class
-
+	_G[name] = class
+
 	return class, base
 end

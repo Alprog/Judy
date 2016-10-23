@@ -26,16 +26,14 @@ Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffe
     descriptorHandle = renderer->getSrvCbvHeap()->getNextHandle();
     device->CreateConstantBufferView(&cbvDesc, descriptorHandle.getCPU());
 
-    resource->data.MVP = Matrix::Identity;
-
     CD3DX12_RANGE readRange(0, 0);
     result = constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&gpuDataBegin));
     if (FAILED(result)) throw;
 
-    Update();
+    update();
 }
 
-void Impl<ConstantBuffer, RendererType::DX>::Update()
+void Impl<ConstantBuffer, RendererType::DX>::update()
 {
     memcpy(gpuDataBegin, &resource->data, sizeof(resource->data));
 }

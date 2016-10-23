@@ -27,7 +27,7 @@ Window::Window()
 //quad->Size = Vector2(0.3f, 0.3f);
 
     scene = node;
-    scene->transform.setScaling(Vector3::One * 0.3f);
+    /*scene->transform.setScaling(Vector3::One * 0.3f);
 
     scene->addChild(c1);
     scene->addChild(c2);
@@ -48,7 +48,7 @@ Window::Window()
     Node* obj = serializer->deserialize<Node*>(text);
     text = serializer->serialize(obj);
     printf(text.c_str());
-    fflush(stdout);
+    fflush(stdout);*/
 
     retain();
 }
@@ -60,12 +60,6 @@ Window::~Window()
 void Window::update()
 {
     scene->update(0.0);
-
-    static float a = 0;
-    a += 0.003f;
-
-    auto rotation = Quaternion::yawPitchRoll(0, 0, a);
-    scene->transform.setRotation(rotation);
 
     //auto translation = Vector3(0, 0, 0);
     //scene->transform.setTranslation(translation);
