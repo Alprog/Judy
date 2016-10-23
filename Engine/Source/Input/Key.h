@@ -127,6 +127,5 @@ enum class Key : int
     Key_NumEnter,
     Key_NumDecimal,
 
-
     COUNT
 };

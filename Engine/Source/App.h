@@ -3,25 +3,22 @@
 
 #include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
-#include "Object.h"
+#include "SingletonObject.h"
 #include "Window.h"
 #include "Containers/Set.h"
 #include "Attributes.h"
 
-class [[Meta]] App : public Object
+class [[Meta]] App : public SingletonObject<App>
 {
     friend class Meta;
 
 public:
-    static App* getInstance();
-
     void startMainLoop();
 
     void addWindow(Window* window);
     void removeWindow(Window* window);
 
 protected:
-    App();
     void updateCollection();
 
     Set<Window*> windows;

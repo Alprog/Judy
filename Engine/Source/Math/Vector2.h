@@ -26,5 +26,5 @@ struct [[Meta]] Vector2
 
     friend Vector2 operator*(const Vector2& vector, const float& value);
 
-    [[Bind]] [[Inspect]] float x, y;
+    [[Bind, Inspect]] float x, y;
 };

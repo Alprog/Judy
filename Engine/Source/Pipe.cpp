@@ -25,8 +25,6 @@ enum Pipes
 
 Pipe::Pipe(FILE* file)
 {
-    auto save = dup(fileno(file));
-
     pipe(descriptors);
     dup2(descriptors[WRITE], fileno(file));
 

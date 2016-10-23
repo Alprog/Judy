@@ -17,5 +17,5 @@ struct [[Meta]] Model : public Node
     Mesh* mesh;
     RenderState* renderState;
 
-    [[Serialize]] [[Inspect]] std::string name;
+    [[Serialize, Inspect]] std::string name;
 };

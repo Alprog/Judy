@@ -44,15 +44,12 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
                             scanCode += 0xe1 << 8;
                         }
                         vkey = MapVirtualKeyEx(scanCode, MAPVK_VSC_TO_VK_EX, hkl);
-                        printf("try convert %i %i %i\n", rawInput->data.keyboard.MakeCode, flags, vkey);
                     }
 
                     if (vkey == 0)
                     {
                         vkey = rawInput->data.keyboard.VKey;
                     }
-
-                    printf("+++%i %i\n", vkey, v);
 
                     switch (vkey)
                     {
@@ -109,7 +106,17 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
                             break;
                     }
 
-                    printf("--- %i %i\n", vkey, v);
+                    auto inputSystem = static_cast<WinInputSystem*>(InputSystem::getInstance());
+
+                    int key = 0;
+
+                    if (vkey < inputSystem->keys.size())
+                    {
+                        key = (int)inputSystem->keys[vkey];
+                    }
+
+                    inputSystem->handleEvent(rawInput->header.hDevice, key, message);
+
                     break;
 
                 }
@@ -137,6 +144,28 @@ LRESULT CALLBACK InputWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     }
 
     return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void WinInputSystem::handleEvent(HANDLE handle, int key, int message)
+{
+    for (auto dev : devices)
+    {
+        auto device = static_cast<WinInputDevice*>(dev);
+
+        if (device->handle == handle)
+        {
+            switch (message)
+            {
+                case WM_KEYDOWN:
+                    device->currentState.set(key);
+                    break;
+
+                case WM_KEYUP:
+                    device->currentState.unset(key);
+                    break;
+            }
+        }
+    }
 }
 
 void WinInputSystem::findDevices()
@@ -192,7 +221,7 @@ void WinInputSystem::findDevices()
 
         auto device = new WinInputDevice();
         device->type = type;
-        //device- = preparsedData;
+        device->handle = deviceHeader.hDevice;
         devices.push_back(device);
     }
 
@@ -368,48 +397,16 @@ WinInputSystem::~WinInputSystem()
 
 void WinInputSystem::updateState()
 {
+    for (auto device : devices)
+    {
+        device->updateState();
+    }
+
     MSG msg;
-    PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE);
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-
-//    for (auto& device : devices)
-//    {
-//        if (device.Type != InputDeviceType::GamePad)
-//            continue;
-
-//        auto data = (PHIDP_PREPARSED_DATA)device.Data;
-
-//        HIDP_CAPS Caps;
-//        HidP_GetCaps(data, &Caps);
-
-//        auto buttonCaps = new HIDP_BUTTON_CAPS[Caps.NumberInputButtonCaps];
-//        HidP_GetButtonCaps(HidP_Input, buttonCaps, &Caps.NumberInputButtonCaps, data);
-
-
-//        for (int i = 0; i < Caps.NumberInputButtonCaps; i++)
-//        {
-//            auto& caps = buttonCaps[i];
-//            ULONG count = caps.Range.UsageMax - caps.Range.UsageMin + 1;
-//            printf("%i [%i-%i]", count, caps.Range.UsageMin, caps.Range.UsageMax);
-
-//            auto usages = new USAGE[count];
-//            PCHAR report = new char[1000];
-//            HidP_GetUsages(HidP_Input, caps.UsagePage, 0, usages, &count, data, report, 1000);
-
-//            for (int j = 0; j < count; j++)
-//            {
-//                USAGE usage = usages[j];
-//                if (usage)
-//                {
-//                    printf("BUTTON %i", usage);
-//                }
-
-//            }
-
-//        }
-
-//    }
-
+    while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
 }
 

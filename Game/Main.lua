@@ -2,13 +2,15 @@
 require 'Class'
 require 'ModelDerived'
 --require 'Serializer'
-
+require 'Keys'
 
 print(3)
 
 local app = App.getInstance()
 local window = Window.create()
 local scene = window.scene
+
+local inputSystem = InputSystem.getInstance()
 
 function add()
 	local model = ModelDerived.new()

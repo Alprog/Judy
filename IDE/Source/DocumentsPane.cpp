@@ -21,7 +21,7 @@ DocumentsPane::DocumentsPane()
     setMovable(true);
     setUsesScrollButtons(true);
 
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(сloseTab(int)));
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
 
 void DocumentsPane::open(Path path)

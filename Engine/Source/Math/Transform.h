@@ -13,15 +13,15 @@ struct [[Meta]] Transform
 
     Transform();
 
-    Property [[Bind]] [[Inspect]] translation;
+    Property [[Bind, Inspect]] translation;
     void setTranslation(Vector3 translation);
     Vector3 getTranslation() const;
 
-    Property [[Bind]] [[Inspect]] rotation;
+    Property [[Bind, Inspect]] rotation;
     Quaternion getRotation() const;
     void setRotation(Quaternion quaternion);
 
-    Property [[Bind]] [[Inspect]] scaling;
+    Property [[Bind, Inspect]] scaling;
     Vector3 getScaling() const;
     void setScaling(Vector3 scaling);
 

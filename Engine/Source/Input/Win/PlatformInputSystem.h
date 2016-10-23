@@ -20,6 +20,8 @@ public:
     void initKeys();
     void findDevices();
 
+    void handleEvent(HANDLE handle, int key, int message);
+
 private:
     HWND hWnd;
 };

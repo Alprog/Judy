@@ -34,7 +34,7 @@ public:
 
     virtual void render(Matrix matrix, RendererFrontend* renderer);
 
-    [[Serialize]] [[Inspect]] Transform transform;
+    [[Serialize, Inspect]] Transform transform;
 
 private:
     Node* parent;

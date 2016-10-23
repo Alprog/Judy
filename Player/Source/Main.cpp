@@ -17,6 +17,11 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (fileno(stdout) <= 0)
+    {
+        freopen("log.txt", "w", stdout);
+    }
+
     Meta::getInstance()->init();
 
     auto luaMachine = LuaMachine::getInstance();

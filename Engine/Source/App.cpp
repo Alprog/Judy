@@ -5,17 +5,6 @@
 #include <time.h>
 #include "Input/InputSystem.h"
 
-App* App::getInstance()
-{
-    static PlatformApp instance;
-    return &instance;
-}
-
-App::App()
-{
-    retain();
-}
-
 void App::addWindow(Window* window)
 {
     addedWindows.insert(window);

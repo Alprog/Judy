@@ -1,17 +1,20 @@
 
 #pragma once
-#include "Singleton.h"
+
+#include "SingletonObject.h"
 #include "InputDevice.h"
 #include "Platform.h"
 
 PLATFORM_FORWARD_DECLARE(InputSystem)
 
-class [[Meta]] InputSystem : public Singleton<InputSystem, PlatformInputSystem>
+class [[Meta]] InputSystem : public SingletonObject<InputSystem, PlatformInputSystem>
 {
     friend class Meta;
 
 public:
     virtual void updateState() = 0;
+
+    bool onPressed(int keyCode);
 
 protected:
     std::vector<InputDevice*> devices;

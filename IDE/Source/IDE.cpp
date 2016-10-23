@@ -10,6 +10,11 @@
 IDE::IDE(int argc, char** argv)
     : QApplication(argc, argv)
 {
+    if (fileno(stdout) <= 0)
+    {
+        freopen("log.txt", "w", stdout);
+    }
+
     Meta::getInstance()->init();
 
     loadStyle();

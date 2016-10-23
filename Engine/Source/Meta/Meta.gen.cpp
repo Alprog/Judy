@@ -94,9 +94,11 @@ void Meta::defineClasses()
     ;
 
     ClassDefiner<InputSystem>(this, "InputSystem")
-        .base<Singleton<InputSystem, PlatformInputSystem>>()
+        .base<Object>()
+        .function("getInstance", &InputSystem::getInstance)
         .method("updateState", &InputSystem::updateState)
         .field("devices", &InputSystem::devices)
+        .method("onPressed", &InputSystem::onPressed)
     ;
 
     ClassDefiner<VirtualDevice>(this, "VirtualDevice")
