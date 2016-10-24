@@ -315,7 +315,7 @@ void DXRenderer::render(std::vector<RenderCommand> commands, RenderTarget* rende
     ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
     commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
-    auto result = swapChain->Present(1, 0);
+    auto result = swapChain->Present(0, 0);
     if (FAILED(result)) throw;
 
     waitForPreviousFrame();

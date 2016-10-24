@@ -82,18 +82,35 @@ WinWindow::WinWindow()
 
     renderTarget = new WinRenderTarget(hInstance, hWnd);
 
-    renderer = RenderManager::getInstance()->getRenderer(RendererType::DX);
+    renderer = RenderManager::getInstance()->getRenderer(RendererType::GL);
 
-    //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
+    //hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 800, 800, hWnd, NULL, hInstance, NULL);
+    //renderTarget1 = new WinRenderTarget(hInstance, hWnd1);
 
-    //auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    //RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
+    renderTarget1 = renderTarget;
+
+    hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 800, 800, hWnd, NULL, hInstance, NULL);
+    renderTarget2 = new WinRenderTarget(hInstance, hWnd2);
+
+    //renderTarget = renderTarget1;
 }
 
 WinWindow::~WinWindow()
 {
-    //delete renderer;
+}
+
+#include <DXRenderer.h>
+
+void WinWindow::switchRenderType()
+{
+    static int type = 0;
+    type++;
+    type = type % (int)RendererType::Count;
+
+    renderTarget = type == 0 ? renderTarget2 : renderTarget1;
+    ShowWindow(hWnd2, type == 0 ? SW_SHOW : SW_HIDE);
+
+    renderer = RenderManager::getInstance()->getRenderer(static_cast<RendererType>(type));
 }
 
 void WinWindow::processEvents()

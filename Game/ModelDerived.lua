@@ -1,8 +1,8 @@
 
 Class('ModelDerived', Model)	
 local base = Model
-
-local yaw, pitch, roll = 0, 0, 0
+
+local yaw, pitch, roll = 0, 0, 0
 
 function ModelDerived:update(dt)
 	base.update(self, dt)		
@@ -24,10 +24,19 @@ function ModelDerived:update(dt)
 	self:getTransform().translation = pos
 
 	if inputSystem:isPressed(Keys.Key_Left) then yaw = yaw - shift end
-	if inputSystem:isPressed(Keys.Key_Right) then yaw = yaw + shift end	if inputSystem:isPressed(Keys.Key_Down) then pitch = pitch - shift end
+	if inputSystem:isPressed(Keys.Key_Right) then yaw = yaw + shift end	if inputSystem:isPressed(Keys.Key_Down) then pitch = pitch - shift end
 	if inputSystem:isPressed(Keys.Key_Up) then pitch = pitch + shift end
 	if inputSystem:isPressed(Keys.Key_Q) then roll = roll - shift end
 	if inputSystem:isPressed(Keys.Key_E) then roll = roll + shift end
 	
+	if inputSystem:onPressed(Keys.Key_F1) then
+		self:switchRenderType()
+	end
+
 	self:getTransform().rotation = Quaternion.yawPitchRoll(yaw, pitch, roll)
+end
+
+function ModelDerived:switchRenderType()
+	local app = App.getInstance()
+	app.window:switchRenderType()
 end
