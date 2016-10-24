@@ -138,7 +138,7 @@ ComPtr<IDXGISwapChain3> DXRenderer::getSwapChain(RenderTarget* renderTarget)
     else
     {
         auto size = renderTarget->getSize();
-        auto hwnd = static_cast<WinRenderTarget*>(renderTarget)->hWnd;
+        auto hwnd = static_cast<WinRenderTarget*>(renderTarget)->hWndEx;
 
         auto swapChain = createSwapChain(hwnd, size.x, size.y);
         swapChains[renderTarget] = swapChain;

@@ -78,21 +78,8 @@ WinWindow::WinWindow()
     hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, nullptr, nullptr, hInstance, nullptr);
     currentEventWindow = nullptr;
 
-    dwStyle = WS_CHILD | WS_VISIBLE;
-
     renderTarget = new WinRenderTarget(hInstance, hWnd);
-
-    renderer = RenderManager::getInstance()->getRenderer(RendererType::GL);
-
-    //hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 800, 800, hWnd, NULL, hInstance, NULL);
-    //renderTarget1 = new WinRenderTarget(hInstance, hWnd1);
-
-    renderTarget1 = renderTarget;
-
-    hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 800, 800, hWnd, NULL, hInstance, NULL);
-    renderTarget2 = new WinRenderTarget(hInstance, hWnd2);
-
-    //renderTarget = renderTarget1;
+    renderer = RenderManager::getInstance()->getRenderer(RendererType::DX);
 }
 
 WinWindow::~WinWindow()
@@ -106,9 +93,6 @@ void WinWindow::switchRenderType()
     static int type = 0;
     type++;
     type = type % (int)RendererType::Count;
-
-    renderTarget = type == 0 ? renderTarget2 : renderTarget1;
-    ShowWindow(hWnd2, type == 0 ? SW_SHOW : SW_HIDE);
 
     renderer = RenderManager::getInstance()->getRenderer(static_cast<RendererType>(type));
 }
