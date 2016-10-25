@@ -20,9 +20,6 @@ Window::Window()
 {
     auto node = new Node();
 
-    auto c1 = new Model();
-    auto c2 = new Model();
-
 //auto quad = new Quad();
 //quad->Size = Vector2(0.3f, 0.3f);
 

@@ -18,10 +18,10 @@
 
 GLRenderer::GLRenderer()
 {
-    auto dummy = (GLContext*)new PlatformGLContext();
+    auto dummy = new PlatformGLContext();
     dummy->makeCurrent();
     glewInit();
-    //delete dummy;
+    delete dummy;
 }
 
 void GLRenderer::clear(Color color)
@@ -57,28 +57,16 @@ void GLRenderer::draw(RenderCommand command)
 
     auto mvp = renderState->constantBuffer->data.MVP;
 
-
-    a = glGetError();
-
     GLuint location = glGetUniformLocation(renderState->programId, "MVP");
-
-    a = glGetError();
-
     glUniformMatrix4fv(location, 1, GL_FALSE, &mvp.m11);
 
-    a = glGetError();
-
     location = glGetUniformLocation(renderState->programId, "mainTexture");
-
-    a = glGetError();
     glUniform1i(location, 0);
-    a = glGetError();
-
     glActiveTexture(GL_TEXTURE0);
     GLuint id = getImpl(renderState->texture)->id;
     glBindTexture(GL_TEXTURE_2D, id);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     getImpl(command.mesh->vertexBuffer)->bind();
     getImpl(command.mesh->indexBuffer)->bind();

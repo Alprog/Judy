@@ -9,6 +9,7 @@ Build
 IDE/cache
 *.pdb
 Player/cache
+log.txt
 
 *.vcxproj
 *.vcxproj.user
