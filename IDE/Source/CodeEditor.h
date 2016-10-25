@@ -12,7 +12,14 @@ class CodeEditor : public Scintilla::ScintillaEdit
     Q_OBJECT
 
 public:
-    CodeEditor(QWidget* parent = 0);
+    enum class Type
+    {
+        Unknown,
+        Lua,
+        HLSL
+    };
+
+    CodeEditor(Type type, QWidget* parent = 0);
     void setSource(std::string source);
 
     void pullBreakpoints();
@@ -30,7 +37,9 @@ public slots:
     void updateActiveLine();
 
 private:
-    void init();
+    void init(Type type);
+    void setLuaLexer();
+    void setHlslLexer();
 
     std::string source;
     QTimer timer;

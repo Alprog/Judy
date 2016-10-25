@@ -10,7 +10,7 @@
 #include <QTableWidget>
 #include <string>
 #include "Utils.h"
-#include "LuaDocement.h"
+#include "TextDocument.h"
 #include "SceneDocument.h"
 
 #include "IDE.h"
@@ -51,9 +51,9 @@ void DocumentsPane::open(Path path)
 IDocument* DocumentsPane::createDocument(Path absolutePath)
 {
     auto extension = lowerCase(absolutePath.getExtension());
-    if (extension == "lua")
+    if (extension == "lua" || extension == "hlsl")
     {
-        return new LuaDocument(absolutePath);
+        return new TextDocument(absolutePath, extension);
     }
     else if (extension == "scene")
     {
@@ -71,7 +71,7 @@ void DocumentsPane::openAtLine(Path path, int line)
     auto document = getCurrentDocument();
     if (document->getType() == DocumentType::Lua)
     {
-        static_cast<LuaDocument*>(document)->goToLine(line);
+        static_cast<TextDocument*>(document)->goToLine(line);
     }
 }
 
