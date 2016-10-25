@@ -20,9 +20,6 @@ Window::Window()
 {
     auto node = new Node();
 
-    auto c1 = new Model();
-    auto c2 = new Model();
-
 //auto quad = new Quad();
 //quad->Size = Vector2(0.3f, 0.3f);
 
@@ -57,9 +54,9 @@ Window::~Window()
 {
 }
 
-void Window::update()
+void Window::update(float delta)
 {
-    scene->update(0.0);
+    scene->update(delta);
 
     //auto translation = Vector3(0, 0, 0);
     //scene->transform.setTranslation(translation);

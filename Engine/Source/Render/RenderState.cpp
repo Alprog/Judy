@@ -19,12 +19,14 @@ void RenderState::link()
 {
     programId = glCreateProgram();
 
-    GLRenderer* renderer = (GLRenderer*)RenderManager::getInstance()->renderers[0];
+    GLRenderer* renderer = (GLRenderer*)RenderManager::getInstance()->getRenderer(RendererType::GL);
 
-    glAttachShader(programId, renderer->getImpl(vertexShader)->id);
-    glAttachShader(programId, renderer->getImpl(pixelShader)->id);
+    auto vid = renderer->getImpl(vertexShader)->id;
+    auto pid = renderer->getImpl(pixelShader)->id;
+
+    glAttachShader(programId, vid);
+    glAttachShader(programId, pid);
     glLinkProgram(programId);
-
 
     GLint isLinked;
     glGetProgramiv(programId, GL_LINK_STATUS, &isLinked);

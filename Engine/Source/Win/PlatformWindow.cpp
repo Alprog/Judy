@@ -78,22 +78,23 @@ WinWindow::WinWindow()
     hWnd = CreateWindowEx(NULL, className, title, dwStyle, x, y, width, height, nullptr, nullptr, hInstance, nullptr);
     currentEventWindow = nullptr;
 
-    dwStyle = WS_CHILD | WS_VISIBLE;
-
     renderTarget = new WinRenderTarget(hInstance, hWnd);
-
     renderer = RenderManager::getInstance()->getRenderer(RendererType::DX);
-
-    //auto hWnd1 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 0, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    //RenderTarget1 = (RenderTarget*)new WinRenderTarget(hWnd1);
-
-    //auto hWnd2 = CreateWindowEx(NULL, L"EDIT", L"", dwStyle, 400, 0, 400, 800, hWnd, NULL, hInstance, NULL);
-    //RenderTarget2 = (RenderTarget*)new WinRenderTarget(hWnd2);
 }
 
 WinWindow::~WinWindow()
 {
-    //delete renderer;
+}
+
+#include <DXRenderer.h>
+
+void WinWindow::switchRenderType()
+{
+    static int type = 0;
+    type++;
+    type = type % (int)RendererType::Count;
+
+    renderer = RenderManager::getInstance()->getRenderer(static_cast<RendererType>(type));
 }
 
 void WinWindow::processEvents()

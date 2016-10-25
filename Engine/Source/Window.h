@@ -20,8 +20,10 @@ public:
 
     virtual void processEvents() = 0;
 
-    void update();
+    void update(float delta);
     void render();
+
+    virtual void switchRenderType() = 0;
 
 protected:
     Window();

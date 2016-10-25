@@ -15,6 +15,8 @@ public:
 
     HWND hWnd;
 
+    virtual void switchRenderType() override;
+
 private:
     HDC hDC;
 };

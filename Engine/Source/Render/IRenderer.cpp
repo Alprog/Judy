@@ -8,5 +8,6 @@ void IRenderer::render(Node* scene, RenderTarget* target)
     RendererFrontend frontEnd;
     frontEnd.render(scene);
 
+    target->onRendering(getType());
     this->render(frontEnd.commands, target);
 }

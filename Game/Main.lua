@@ -9,12 +9,14 @@ print(3)
 local app = App.getInstance()
 local window = Window.create()
 local scene = window.scene
+
+app.window = window
 
 local inputSystem = InputSystem.getInstance()
 
 function add()
 	local model = ModelDerived.new()
-	print(model)
+	print(model)
 	--model.foo = 'abr'
 	print(model.foo)
 	scene:addChild(model)

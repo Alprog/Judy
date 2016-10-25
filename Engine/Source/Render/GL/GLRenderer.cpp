@@ -18,10 +18,10 @@
 
 GLRenderer::GLRenderer()
 {
-    auto dummy = (GLContext*)new PlatformGLContext();
+    auto dummy = new PlatformGLContext();
     dummy->makeCurrent();
     glewInit();
-    //delete dummy;
+    delete dummy;
 }
 
 void GLRenderer::clear(Color color)
@@ -47,6 +47,8 @@ GLContext* GLRenderer::getContext(RenderTarget* renderTarget)
 
 void GLRenderer::draw(RenderCommand command)
 {
+    GLenum a = glGetError();
+
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
     glDisable(GL_CULL_FACE);
@@ -60,16 +62,14 @@ void GLRenderer::draw(RenderCommand command)
 
     location = glGetUniformLocation(renderState->programId, "mainTexture");
     glUniform1i(location, 0);
-
     glActiveTexture(GL_TEXTURE0);
     GLuint id = getImpl(renderState->texture)->id;
     glBindTexture(GL_TEXTURE_2D, id);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     getImpl(command.mesh->vertexBuffer)->bind();
     getImpl(command.mesh->indexBuffer)->bind();
-
     glUseProgram(renderState->programId);
 
     glEnable(GL_DEPTH_TEST);

@@ -30,8 +30,7 @@ LinuxWindow::LinuxWindow()
     XFlush(display);
 
     renderTarget = new LinuxRenderTarget(display, window);
-    renderer = RenderManager::getInstance()->renderers[0];
-
+    renderer = RenderManager::getInstance()->getRenderer(RendererType:GL);
     App::getInstance()->addWindow(this);
 }
 
