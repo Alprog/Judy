@@ -5,11 +5,12 @@ win {
     INCLUDEPATH += "..\3rd-party\lua\Source"
 
     LIBS += -L"..\Engine" -lEngine
-    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua
+    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua -lglslang -lspirv-cross
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
     PRE_TARGETDEPS += "..\3rd-party\zlib.lib"
     PRE_TARGETDEPS += "..\3rd-party\libpng.lib"
     PRE_TARGETDEPS += "..\3rd-party\lua.lib"
+    PRE_TARGETDEPS += "..\3rd-party\glslang.lib"
 
     LIBS += -ld3d12 -ldxgi -ld3dCompiler -lhid
     LIBS += -lUser32 -lGdi32 -lOpengl32 -lWs2_32 -lglew32s
