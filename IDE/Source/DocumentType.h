@@ -3,7 +3,7 @@
 
 enum class DocumentType
 {
-    Lua,
+    Text,
     Scene,
     Unknown
 };

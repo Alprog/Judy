@@ -2,6 +2,9 @@
 #include "FileMenu.h"
 #include <QFileDialog>
 
+#include "../TextDocument.h"
+#include "../CrossCompiler/CrossCompiler.h"
+
 FileMenu::FileMenu(MainWindow* window)
     : BaseMenu{"File", window}
 {
@@ -10,7 +13,8 @@ FileMenu::FileMenu(MainWindow* window)
         createAction("New", "new", SLOT(newFile()), QKeySequence::New),
         createAction("Open", "open", SLOT(openFile()), QKeySequence::Open),
         createAction("Save", "save", SLOT(saveFile()), QKeySequence::Save),
-        createAction("Save As", "", SLOT(saveAsFile()), QKeySequence::SaveAs)
+        createAction("Save As", "", SLOT(saveAsFile()), QKeySequence::SaveAs),
+        createAction("Compile", "", SLOT(compile()), Qt::Key_F3)
     };
     addActions(actions);
 }
@@ -36,4 +40,14 @@ void FileMenu::saveFile()
 
 void FileMenu::saveAsFile()
 {
+}
+
+void FileMenu::compile()
+{
+    IDocument* document = window->documents->getCurrentDocument();
+    if (document && document->getType() == DocumentType::Text)
+    {
+        auto text = static_cast<TextDocument*>(document)->getText();
+        CrossCompiler::getInstance()->Translate(text);
+    }
 }

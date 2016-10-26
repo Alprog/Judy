@@ -40,7 +40,12 @@ TextDocument::TextDocument(Path documentPath, std::string extension)
 
 DocumentType TextDocument::getType() const
 {
-    return DocumentType::Lua;
+    return DocumentType::Text;
+}
+
+std::string TextDocument::getText()
+{
+    return getBinaryData().toStdString();
 }
 
 void TextDocument::setBinaryData(QByteArray data)

@@ -5,7 +5,7 @@ win {
     INCLUDEPATH += "..\3rd-party\lua\Source"
 
     LIBS += -L"..\Engine" -lEngine
-    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua -lglslang -lspirv-cross
+    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
     PRE_TARGETDEPS += "..\3rd-party\zlib.lib"
     PRE_TARGETDEPS += "..\3rd-party\libpng.lib"
@@ -23,8 +23,7 @@ linux {
     INCLUDEPATH += "../3rd-party/lua/Source"
 
     LIBS += -L"../Engine" -lEngine
-
-    LIBS += -L"../3rd-party" -llibpng -llua -lzlib
+    LIBS += -L"../3rd-party" -lzlib -llibpng -llua
     PRE_TARGETDEPS += "../Engine/libEngine.a"
     PRE_TARGETDEPS += "../3rd-party/libzlib.a"
     PRE_TARGETDEPS += "../3rd-party/liblibpng.a"

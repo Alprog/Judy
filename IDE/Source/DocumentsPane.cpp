@@ -69,7 +69,7 @@ void DocumentsPane::openAtLine(Path path, int line)
 {
     open(path);
     auto document = getCurrentDocument();
-    if (document->getType() == DocumentType::Lua)
+    if (document->getType() == DocumentType::Text)
     {
         static_cast<TextDocument*>(document)->goToLine(line);
     }

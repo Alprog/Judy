@@ -11,6 +11,7 @@ public:
     TextDocument(Path documentPath, std::string extension);
 
     virtual DocumentType getType() const override;
+    std::string getText();
 
     virtual void save() override;
     virtual bool changed() const override;
