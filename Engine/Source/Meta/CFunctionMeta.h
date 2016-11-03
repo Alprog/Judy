@@ -5,6 +5,7 @@
 #include <vector>
 #include "Any.h"
 #include "IndexSequence.h"
+#include <TypeTraits.h>
 
 template <typename ReturnType, typename... ArgTypes>
 class CFunctionMeta : public FunctionMeta<ReturnType, ArgTypes...>

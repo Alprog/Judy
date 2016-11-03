@@ -1,6 +1,7 @@
 
 win {
     INCLUDEPATH += "..\Engine\Source"
+    INCLUDEPATH += "..\Engine\Source\Meta\TypeTraits"
     INCLUDEPATH += "..\Engine\Source\Win"
     INCLUDEPATH += "..\3rd-party\lua\Source"
 
@@ -19,6 +20,7 @@ win {
 
 linux {
     INCLUDEPATH += "../Engine/Source"
+    INCLUDEPATH += "../Engine/Source/Meta/TypeTraits"
     INCLUDEPATH += "../Engine/Source/Linux"
     INCLUDEPATH += "../3rd-party/lua/Source"
 
@@ -34,6 +36,7 @@ linux {
 
 mac {
     INCLUDEPATH += "../Engine/Source"
+    INCLUDEPATH += "../Engine/Source/Meta/TypeTraits"
     INCLUDEPATH += "../Engine/Source/Mac"
     INCLUDEPATH += "../3rd-party/lua/Source"
 

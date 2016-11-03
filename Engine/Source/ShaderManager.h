@@ -4,6 +4,7 @@
 #include "Singleton.h"
 #include <string>
 #include "Render/Shader.h"
+#include <unordered_map>
 
 class ShaderManager : public Singleton<ShaderManager>
 {

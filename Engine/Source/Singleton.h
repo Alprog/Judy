@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "Meta/Sfinae.h"
-
 template <typename T, typename RealT = T>
 class Singleton
 {

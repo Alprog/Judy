@@ -11,7 +11,7 @@ void RendererFrontend::render(Node* scene)
     contexts.push(context);
 
 
-    scene->render(scene->transform.getMatrix(), this);
+    scene->render(scene->transform->getMatrix(), this);
 
 }
 

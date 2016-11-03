@@ -165,7 +165,7 @@ void setMetatable(lua_State* L, std::string className, bool gc)
     }
 }
 
-void pushStruct(lua_State* L, void* pointer, ITypeMeta* type)
+void pushValue(lua_State* L, void* pointer, ITypeMeta* type)
 {
     auto dataSize = type->getSize();
     auto udata = (void**)lua_newuserdata(L, sizeof(void*) + dataSize);
@@ -176,7 +176,14 @@ void pushStruct(lua_State* L, void* pointer, ITypeMeta* type)
     setMetatable(L, type->name, false);
 }
 
-void pushObject(lua_State* L, Object* pointer, std::string className)
+void pushPointer(lua_State* L, void* pointer, ITypeMeta* type)
+{
+    auto udata = (void**)lua_newuserdata(L, sizeof(void*)); // U
+    *udata = pointer;
+    setMetatable(L, type->name, false);
+}
+
+void pushObjectPointer(lua_State* L, Object* pointer, std::string className)
 {
     if (pointer->luaObject != nullptr)
     {
@@ -193,26 +200,34 @@ void pushObject(lua_State* L, Object* pointer, std::string className)
 
 inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
 {
-    if (type == typeMetaOf<bool>())
+    auto flags = type->getFlags();
+
+    if (flags & ITypeMeta::Flags::IsBuiltIn)
     {
-        lua_pushboolean(L, result.as<bool>());
+        if (type == typeMetaOf<bool>())
+        {
+            lua_pushboolean(L, result.as<bool>());
+        }
+        else if (type == typeMetaOf<int>())
+        {
+            lua_pushinteger(L, result.as<int>());
+        }
+        else if (type == typeMetaOf<float>())
+        {
+            lua_pushnumber(L, result.as<float>());
+        }
+        else if (type == typeMetaOf<char*>())
+        {
+            lua_pushstring(L, result.as<char*>());
+        }
+        else
+        {
+            throw new std::exception("unknown built in type");
+        }
     }
-    else if (type == typeMetaOf<int>())
+    else if (flags & ITypeMeta::Flags::IsPointer)
     {
-        lua_pushinteger(L, result.as<int>());
-    }
-    else if (type == typeMetaOf<float>())
-    {
-        lua_pushnumber(L, result.as<float>());
-    }
-    else if (type == typeMetaOf<char*>())
-    {
-        lua_pushstring(L, result.as<char*>());
-    }
-    else
-    {
-        auto flags = type->getFlags();
-        if (flags & ITypeMeta::Flags::IsPointer)
+        if (flags & ITypeMeta::Flags::IsPointerToObject)
         {
             auto pointer = result.as<Object*>();
 
@@ -222,13 +237,18 @@ inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
                 className = type->getRunTimePointeeType(result)->name;
             }
 
-            pushObject(L, pointer, className);
+            pushObjectPointer(L, pointer, className);
         }
         else
         {
-            pushStruct(L, result.getAddress(), type);
+            pushPointer(L, result.as<void*>(), type);
         }
     }
+    else
+    {
+        pushValue(L, result.getAddress(), type);
+    }
+
 }
 
 int getterInvoker(lua_State* L)

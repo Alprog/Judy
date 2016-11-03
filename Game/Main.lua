@@ -10,7 +10,20 @@ local app = App.getInstance()
 local window = Window.create()
 local scene = window.scene
 
-app.window = window
+local n = Node.new0()
+
+function f()	
+	local t = n:getTransform()
+	t.custom = "feg"
+	print(t.custom)
+	
+end
+
+f()
+collectgarbage()
+print(n:getTransform().custom)
+
+app.window = window
 
 local inputSystem = InputSystem.getInstance()
 
