@@ -36,7 +36,7 @@ enum Markers
     ActiveLine
 };
 
-CodeEditor::CodeEditor(Type type, QWidget* parent)
+CodeEditor::CodeEditor(HighlightType type, QWidget* parent)
     : ScintillaEdit(parent)
     , mouseTime{0}
     , mousePoint{0, 0}
@@ -49,7 +49,7 @@ void CodeEditor::setSource(std::string source)
     this->source = source;
 }
 
-void CodeEditor::init(Type type)
+void CodeEditor::init(HighlightType type)
 {
     setTabWidth(4);
 
@@ -63,11 +63,11 @@ void CodeEditor::init(Type type)
 
     switch (type)
     {
-        case Type::Lua:
+        case HighlightType::Lua:
             setLuaLexer();
             break;
 
-        case Type::HLSL:
+        case HighlightType::HLSL:
             setHlslLexer();
             break;
     }
@@ -131,7 +131,6 @@ void CodeEditor::init(Type type)
 
     connect(RemotePlayer::getInstance(), SIGNAL(stateChanged()), this, SLOT(updateActiveLine()));
 }
-
 
 void CodeEditor::setLuaLexer()
 {

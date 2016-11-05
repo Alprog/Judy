@@ -2,7 +2,8 @@
 #include "FileMenu.h"
 #include <QFileDialog>
 
-#include "../TextDocument.h"
+#include "../LuaDocument.h"
+#include "../HlslDocument.h"
 #include "../CrossCompiler/CrossCompiler.h"
 
 FileMenu::FileMenu(MainWindow* window)
@@ -45,9 +46,9 @@ void FileMenu::saveAsFile()
 void FileMenu::compile()
 {
     IDocument* document = window->documents->getCurrentDocument();
-    if (document && document->getType() == DocumentType::Text)
-    {
-        auto text = static_cast<TextDocument*>(document)->getText();
-        CrossCompiler::getInstance()->Translate(text);
-    }
+//    if (document && document->getType() == DocumentType::Text)
+//    {
+//        auto text = static_cast<TextDocument*>(document)->getText();
+//        CrossCompiler::getInstance()->Translate(text);
+//    }
 }

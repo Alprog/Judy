@@ -9,19 +9,6 @@ print(3)
 local app = App.getInstance()
 local window = Window.create()
 local scene = window.scene
-
-local n = Node.new0()
-
-function f()	
-	local t = n:getTransform()
-	t.custom = "feg"
-	print(t.custom)
-	
-end
-
-f()
-collectgarbage()
-print(n:getTransform().custom)
 
 app.window = window
 

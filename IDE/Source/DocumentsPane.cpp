@@ -10,7 +10,8 @@
 #include <QTableWidget>
 #include <string>
 #include "Utils.h"
-#include "TextDocument.h"
+#include "LuaDocument.h"
+#include "HlslDocument.h"
 #include "SceneDocument.h"
 
 #include "IDE.h"
@@ -20,6 +21,7 @@ DocumentsPane::DocumentsPane()
     setTabsClosable(true);
     setMovable(true);
     setUsesScrollButtons(true);
+    tabBar()->setObjectName("documentsTabs");
 
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
@@ -51,9 +53,13 @@ void DocumentsPane::open(Path path)
 IDocument* DocumentsPane::createDocument(Path absolutePath)
 {
     auto extension = lowerCase(absolutePath.getExtension());
-    if (extension == "lua" || extension == "hlsl")
+    if (extension == "lua")
     {
-        return new TextDocument(absolutePath, extension);
+        return new LuaDocument(absolutePath);
+    }
+    else if (extension == "hlsl")
+    {
+        return new HlslDocument(absolutePath);
     }
     else if (extension == "scene")
     {
@@ -69,9 +75,9 @@ void DocumentsPane::openAtLine(Path path, int line)
 {
     open(path);
     auto document = getCurrentDocument();
-    if (document->getType() == DocumentType::Text)
+    if (document->getType() == DocumentType::Lua)
     {
-        static_cast<TextDocument*>(document)->goToLine(line);
+        static_cast<LuaDocument*>(document)->goToLine(line);
     }
 }
 

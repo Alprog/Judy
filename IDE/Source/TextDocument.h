@@ -2,22 +2,19 @@
 #pragma once
 
 #include "Document.h"
-
-class CodeEditor;
+#include "CodeEditor.h"
 
 class TextDocument : public IDocument
 {
 public:
-    TextDocument(Path documentPath, std::string extension);
+    TextDocument(std::string documentPath, CodeEditor::HighlightType highlightType = CodeEditor::HighlightType::None);
 
     virtual DocumentType getType() const override;
-    std::string getText();
-
     virtual void save() override;
     virtual bool changed() const override;
     void goToLine(int line);
 
-private:
+protected:
     virtual void setBinaryData(QByteArray data) override;
     virtual QByteArray getBinaryData() override;
 

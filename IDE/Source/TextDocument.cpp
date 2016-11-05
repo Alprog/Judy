@@ -1,18 +1,11 @@
 
 #include "TextDocument.h"
-#include <QLayout>
-#include "CodeEditor.h"
-#include "Path.h"
-#include "IDE.h"
-#include "Utils.h"
+#include <QVBoxLayout>
 
-TextDocument::TextDocument(Path documentPath, std::string extension)
+TextDocument::TextDocument(std::string documentPath, CodeEditor::HighlightType highlightType)
     : IDocument{documentPath}
 {
-    auto type = CodeEditor::Type::Unknown;
-    if (extension == "lua") type = CodeEditor::Type::Lua;
-    if (extension == "hlsl") type = CodeEditor::Type::HLSL;
-    editor = new CodeEditor(type);
+    editor = new CodeEditor(highlightType);
 
     auto layout = new QGridLayout();
     layout->setSpacing(0);
@@ -25,27 +18,11 @@ TextDocument::TextDocument(Path documentPath, std::string extension)
     editor->emptyUndoBuffer();
 
     connect(editor, SIGNAL(notifyChange()), this, SLOT(onModified()));
-
-    auto projectPath = Path(IDE::getInstance()->settings.projectPath);
-    if (startsWith(documentPath, projectPath))
-    {
-        auto size = projectPath.str().size();
-        auto source = "@" + documentPath.str().substr(size + 1);
-        editor->setSource(source);
-    }
-
-    editor->pullBreakpoints();
-    editor->updateActiveLine();
 }
 
 DocumentType TextDocument::getType() const
 {
     return DocumentType::Text;
-}
-
-std::string TextDocument::getText()
-{
-    return getBinaryData().toStdString();
 }
 
 void TextDocument::setBinaryData(QByteArray data)
