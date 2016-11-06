@@ -1492,6 +1492,11 @@ void TShader::setEntryPoint(const char* entryPoint)
     intermediate->setEntryPointName(entryPoint);
 }
 
+void TShader::addEntryPoint(std::string entryPoint, EShLanguage stage)
+{
+    intermediate->entryPoints.push_back({entryPoint, stage});
+}
+
 void TShader::setShiftSamplerBinding(unsigned int base) { intermediate->setShiftSamplerBinding(base); }
 void TShader::setShiftTextureBinding(unsigned int base) { intermediate->setShiftTextureBinding(base); }
 void TShader::setShiftUboBinding(unsigned int base)     { intermediate->setShiftUboBinding(base); }

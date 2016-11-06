@@ -397,6 +397,16 @@ protected:
     bool promoteUnary(TIntermUnary&);
     bool promoteBinary(TIntermBinary&);
     
+public:
+    struct EntryPoint
+    {
+        std::string name;
+        EShLanguage stage;
+    };
+
+    std::vector<EntryPoint> entryPoints;
+
+protected:
     const EShLanguage language;  // stage, known at construction time
     EShSource source;            // source language, known a bit later
     std::string entryPointName;

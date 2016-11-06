@@ -967,7 +967,7 @@ void Builder::addMemberDecoration(Id id, unsigned int member, Decoration decorat
 // Comments in header
 Function* Builder::makeEntryPoint(const char* entryPoint)
 {
-    assert(! mainFunction);
+    //assert(! mainFunction);
 
     Block* entry;
     std::vector<Id> params;

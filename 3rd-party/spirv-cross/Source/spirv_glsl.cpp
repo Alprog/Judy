@@ -281,7 +281,7 @@ string CompilerGLSL::compile()
 		emit_header();
 		emit_resources();
 
-		emit_function(get<SPIRFunction>(entry_point), 0);
+        //emit_function(get<SPIRFunction>(entry_point), 0);
 
 		pass_count++;
 	} while (force_recompile);

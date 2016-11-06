@@ -771,14 +771,17 @@ TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* gls
       inMain(false), mainTerminated(false), linkageOnly(false),
       glslangIntermediate(glslangIntermediate)
 {
-    spv::ExecutionModel executionModel = TranslateExecutionModel(glslangIntermediate->getStage());
-
     builder.clearAccessChain();
     builder.setSource(TranslateSourceLanguage(glslangIntermediate->getSource(), glslangIntermediate->getProfile()), glslangIntermediate->getVersion());
     stdBuiltins = builder.import("GLSL.std.450");
     builder.setMemoryModel(spv::AddressingModelLogical, spv::MemoryModelGLSL450);
-    shaderEntry = builder.makeEntryPoint(glslangIntermediate->getEntryPointName().c_str());
-    entryPoint = builder.addEntryPoint(executionModel, shaderEntry, glslangIntermediate->getEntryPointName().c_str());
+
+    for (auto& point : glslangIntermediate->entryPoints)
+    {
+        spv::ExecutionModel executionModel = TranslateExecutionModel(point.stage);
+        shaderEntry = builder.makeEntryPoint(point.name.c_str());
+        entryPoint = builder.addEntryPoint(executionModel, shaderEntry, point.name.c_str());
+    }
 
     // Add the source extensions
     const auto& sourceExtensions = glslangIntermediate->getRequestedExtensions();
