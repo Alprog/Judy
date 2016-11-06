@@ -72,8 +72,7 @@ std::string CrossCompiler::SpirvToHumanReadable(QByteArray spirvBinary)
 std::string CrossCompiler::SpirvToGlsl(QByteArray spirvBinary)
 {
     auto data = toInternalFormat(spirvBinary);
-    auto compiler = new spirv_cross::CompilerGLSL(data);
-
-    delete compiler;
-    return "dfdk";
+    spirv_cross::CompilerGLSL compiler(data);
+    auto glslText = compiler.compile();
+    return glslText;
 }

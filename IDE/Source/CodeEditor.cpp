@@ -116,7 +116,7 @@ void CodeEditor::setText(std::string text)
     bool isReadOnly = readOnly();
     setReadOnly(false);
     Scintilla::ScintillaEdit::setText(text.c_str());
-    setReadOnly(true);
+    setReadOnly(isReadOnly);
 }
 
 void CodeEditor::setSource(std::string source)
