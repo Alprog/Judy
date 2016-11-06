@@ -1070,9 +1070,13 @@ TIntermAggregate* HlslParseContext::handleFunctionDefinition(const TSourceLoc& l
         currentFunctionType = new TType(EbtVoid);
     functionReturnsValue = false;
 
-    inEntryPoint = function.getName().compare(intermediate.getEntryPointName().c_str()) == 0;
+
+    auto entryPoint = intermediate.getEntryPoint(function.getName().c_str());
+
+    inEntryPoint = entryPoint != nullptr;
+
     if (inEntryPoint) {
-        intermediate.setEntryPointMangledName(function.getMangledName().c_str());
+        entryPoint->mangledName = function.getMangledName().c_str();
         intermediate.incrementEntryPointCount();
         remapEntryPointIO(function);
         if (entryPointOutput) {

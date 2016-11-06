@@ -41,8 +41,10 @@ QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
     const char * text = hlslText.c_str();
     shader->setStrings(&text, 1);
 
-    shader->addEntryPoint("psmain", EShLanguage::EShLangFragment);
-    shader->addEntryPoint("vsmain", EShLanguage::EShLangVertex);
+    //shader->setEntryPoint("aaa");
+    shader->addEntryPoint("aaa", EShLanguage::EShLangFragment);
+    shader->addEntryPoint("bbb", EShLanguage::EShLangFragment);
+    //shader->addEntryPoint("vsmain", EShLanguage::EShLangVertex);
 
     program->addShader(shader);
 
@@ -88,8 +90,6 @@ std::string CrossCompiler::SpirvToGlsl(QByteArray spirvBinary)
 {
     auto data = toInternalFormat(spirvBinary);
     spirv_cross::CompilerGLSL compiler(data);
-
-    compiler.set_entry_point("main");
 
     auto options = compiler.get_options();
     options.vulkan_semantics = true;

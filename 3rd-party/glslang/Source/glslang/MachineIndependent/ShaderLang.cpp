@@ -699,7 +699,7 @@ bool ProcessDeferred(
         parseContext = new HlslParseContext(symbolTable, intermediate, false, version, profile, spvVersion,
                                             compiler->getLanguage(), compiler->infoSink, forwardCompatible, messages);
     } else {
-        intermediate.setEntryPointName("main");
+        intermediate.addEntryPoint("main", EShLangVertex);
         parseContext = new TParseContext(symbolTable, intermediate, false, version, profile, spvVersion,
                                          compiler->getLanguage(), compiler->infoSink, forwardCompatible, messages);
     }
@@ -1489,12 +1489,12 @@ void TShader::setStringsWithLengthsAndNames(
 
 void TShader::setEntryPoint(const char* entryPoint)
 {
-    intermediate->setEntryPointName(entryPoint);
+    throw std::exception("error");
 }
 
 void TShader::addEntryPoint(std::string entryPoint, EShLanguage stage)
 {
-    intermediate->entryPoints.push_back({entryPoint, stage});
+    intermediate->addEntryPoint(entryPoint, stage);
 }
 
 void TShader::setShiftSamplerBinding(unsigned int base) { intermediate->setShiftSamplerBinding(base); }

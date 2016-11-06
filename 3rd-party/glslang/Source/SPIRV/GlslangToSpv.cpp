@@ -172,9 +172,9 @@ protected:
     spv::Id createShortCircuit(glslang::TOperator, glslang::TIntermTyped& left, glslang::TIntermTyped& right);
     spv::Id getExtBuiltins(const char* name);
 
-    spv::Function* shaderEntry;
+    std::map<std::string, spv::Function*> shaderEntries;
     spv::Function* currentFunction;
-    spv::Instruction* entryPoint;
+    spv::Instruction* entryPointA;
     int sequenceDepth;
 
     spv::SpvBuildLogger* logger;
@@ -765,7 +765,7 @@ bool HasNonLayoutQualifiers(const glslang::TType& type, const glslang::TQualifie
 //
 
 TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* glslangIntermediate, spv::SpvBuildLogger* buildLogger)
-    : TIntermTraverser(true, false, true), shaderEntry(nullptr), currentFunction(nullptr),
+    : TIntermTraverser(true, false, true), currentFunction(nullptr),
       sequenceDepth(0), logger(buildLogger),
       builder((glslang::GetKhronosToolId() << 16) | GeneratorVersion, logger),
       inMain(false), mainTerminated(false), linkageOnly(false),
@@ -779,9 +779,10 @@ TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* gls
     for (auto& point : glslangIntermediate->entryPoints)
     {
         spv::ExecutionModel executionModel = TranslateExecutionModel(point.stage);
-        shaderEntry = builder.makeEntryPoint(point.name.c_str());
-        entryPoint = builder.addEntryPoint(executionModel, shaderEntry, point.name.c_str());
-    }
+        auto shaderEntry = builder.makeEntryPoint(point.name.c_str());
+        shaderEntries[point.mangledName] = shaderEntry;
+        entryPointA = builder.addEntryPoint(executionModel, shaderEntry, point.name.c_str());
+
 
     // Add the source extensions
     const auto& sourceExtensions = glslangIntermediate->getRequestedExtensions();
@@ -900,6 +901,7 @@ TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* gls
         break;
     }
 
+    }
 }
 
 // Finish everything and dump
@@ -907,7 +909,7 @@ void TGlslangToSpvTraverser::dumpSpv(std::vector<unsigned int>& out)
 {
     // finish off the entry-point SPV instruction by adding the Input/Output <id>
     for (auto it = iOSet.cbegin(); it != iOSet.cend(); ++it)
-        entryPoint->addIdOperand(*it);
+        entryPointA->addIdOperand(*it);
 
     builder.eliminateDeadDecorations();
     builder.dump(out);
@@ -916,7 +918,7 @@ void TGlslangToSpvTraverser::dumpSpv(std::vector<unsigned int>& out)
 TGlslangToSpvTraverser::~TGlslangToSpvTraverser()
 {
     if (! mainTerminated) {
-        spv::Block* lastMainBlock = shaderEntry->getLastBlock();
+        spv::Block* lastMainBlock = shaderEntries.begin()->second->getLastBlock();
         builder.setBuildPoint(lastMainBlock);
         builder.leaveFunction();
     }
@@ -1385,6 +1387,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
     case glslang::EOpFunction:
         if (visit == glslang::EvPreVisit) {
             if (isShaderEntryPoint(node)) {
+                auto shaderEntry = shaderEntries[node->getName().c_str()];
                 inMain = true;
                 builder.setBuildPoint(shaderEntry->getLastBlock());
                 currentFunction = shaderEntry;
@@ -2557,7 +2560,7 @@ void TGlslangToSpvTraverser::declareUseOfStructMember(const glslang::TTypeList& 
 
 bool TGlslangToSpvTraverser::isShaderEntryPoint(const glslang::TIntermAggregate* node)
 {
-    return node->getName().compare(glslangIntermediate->getEntryPointMangledName().c_str()) == 0;
+    return glslangIntermediate->isEntryPointMangledName(node->getName().c_str());
 }
 
 // Make all the functions, skeletally, without actually visiting their bodies.
@@ -2619,7 +2622,7 @@ void TGlslangToSpvTraverser::makeFunctions(const glslang::TIntermSequence& glslF
 // Process all the initializers, while skipping the functions and link objects
 void TGlslangToSpvTraverser::makeGlobalInitializers(const glslang::TIntermSequence& initializers)
 {
-    builder.setBuildPoint(shaderEntry->getLastBlock());
+    builder.setBuildPoint(shaderEntries.begin()->second->getLastBlock());
     for (int i = 0; i < (int)initializers.size(); ++i) {
         glslang::TIntermAggregate* initializer = initializers[i]->getAsAggregate();
         if (initializer && initializer->getOp() != glslang::EOpFunction && initializer->getOp() != glslang::EOpLinkerObjects) {

@@ -258,7 +258,13 @@ public:
     Id getId() const { return functionInstruction.getResultId(); }
     Id getParamId(int p) { return parameterInstructions[p]->getResultId(); }
 
-    void addBlock(Block* block) { blocks.push_back(block); }
+    void addBlock(Block* block) {
+
+        Id id = getId();
+        printf("addBlock %i\n", getId());
+
+        blocks.push_back(block);
+    }
     void removeBlock(Block* block)
     {
         auto found = find(blocks.begin(), blocks.end(), block);
