@@ -19,8 +19,10 @@ public:
         HLSL
     };
 
-    CodeEditor(HighlightType type, QWidget* parent = 0);
+    CodeEditor(QWidget* parent = 0);
+    void setText(std::string text);
     void setSource(std::string source);
+    void setHighlightType(HighlightType type);
 
     void pullBreakpoints();
     void pushBreakpoints();
@@ -37,7 +39,6 @@ public slots:
     void updateActiveLine();
 
 private:
-    void init(HighlightType type);
     void setLuaLexer();
     void setHlslLexer();
 

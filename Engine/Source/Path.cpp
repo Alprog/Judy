@@ -160,6 +160,19 @@ Path& Path::operator+=(const Path& rhs)
     return *this;
 }
 
+Path Path::getParentPath() const
+{
+    auto index = canonicalPath.find_last_of("/");
+    if (index == std::string::npos)
+    {
+        return "";
+    }
+    else
+    {
+        return canonicalPath.substr(0, index);
+    }
+}
+
 std::string Path::getName() const
 {
     auto index = canonicalPath.find_last_of("/");
@@ -173,13 +186,27 @@ std::string Path::getName() const
     }
 }
 
-std::string Path::getExtension() const
+std::string Path::getNameWithoutExtension() const
 {
     auto name = getName();
     auto index = name.find_last_of(".");
     if (index == std::string::npos)
     {
         return name;
+    }
+    else
+    {
+        return name.substr(0, index);
+    }
+}
+
+std::string Path::getExtension() const
+{
+    auto name = getName();
+    auto index = name.find_last_of(".");
+    if (index == std::string::npos)
+    {
+        return "";
     }
     else
     {

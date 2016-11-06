@@ -5,6 +5,8 @@
 #include <SPIRV/SpvBuilder.h>
 #include <SPIRV/disassemble.h>
 #include <SPIRV/GlslangToSpv.h>
+#include <sstream>
+#include <spirv_glsl.hpp>
 
 const int defaultVersion = 110;
 
@@ -13,7 +15,7 @@ CrossCompiler::CrossCompiler()
     glslang::InitializeProcess();
 }
 
-void CrossCompiler::Translate(std::string hlslText)
+QByteArray CrossCompiler::HlslToSpirv(std::string hlslText)
 {
     auto messagesType = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules | EShMsgReadHlsl);
     auto stage = EShLanguage::EShLangVertex;
@@ -43,8 +45,35 @@ void CrossCompiler::Translate(std::string hlslText)
     spv::SpvBuildLogger logger;
     glslang::GlslangToSpv(*program->getIntermediate(stage), spirvBinary, &logger);
 
-    glslang::OutputSpvHex(spirvBinary, "hex.txt");
-    glslang::OutputSpvBin(spirvBinary, "spv.txt");
+    auto dataStart = (char*)&spirvBinary[0];
+    auto dataLength = spirvBinary.size() * sizeof(unsigned int) / sizeof(char);
+    QByteArray data;
+    data.append(dataStart, dataLength);
+    return data;
+}
 
-    spv::Disassemble(std::cout, spirvBinary);
+std::vector<unsigned int> toInternalFormat(QByteArray spirvBinary)
+{
+    std::vector<unsigned int> data;
+    auto size = spirvBinary.count() * sizeof(char) / sizeof(unsigned int);
+    data.resize(size);
+    memcpy(&data[0], spirvBinary.data(), spirvBinary.count());
+    return data;
+}
+
+std::string CrossCompiler::SpirvToHumanReadable(QByteArray spirvBinary)
+{
+    auto data = toInternalFormat(spirvBinary);
+    std::stringstream stream;
+    spv::Disassemble(stream, data);
+    return stream.str();
+}
+
+std::string CrossCompiler::SpirvToGlsl(QByteArray spirvBinary)
+{
+    auto data = toInternalFormat(spirvBinary);
+    auto compiler = new spirv_cross::CompilerGLSL(data);
+
+    delete compiler;
+    return "dfdk";
 }

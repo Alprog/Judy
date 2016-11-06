@@ -6,7 +6,8 @@
 class LuaDocument : public TextDocument
 {
 public:
-    LuaDocument(Path documentPath);
+    LuaDocument();
 
     virtual DocumentType getType() const override;
+    virtual void reload() override;
 };

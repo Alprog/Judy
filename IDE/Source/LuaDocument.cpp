@@ -5,9 +5,20 @@
 #include "IDE.h"
 #include "Utils.h"
 
-LuaDocument::LuaDocument(Path documentPath)
-    : TextDocument{documentPath, CodeEditor::HighlightType::Lua}
+LuaDocument::LuaDocument()
+    : TextDocument(CodeEditor::HighlightType::Lua)
 {
+}
+
+DocumentType LuaDocument::getType() const
+{
+    return DocumentType::Lua;
+}
+
+void LuaDocument::reload()
+{
+    TextDocument::reload();
+
     auto projectPath = Path(IDE::getInstance()->settings.projectPath);
     if (startsWith(documentPath, projectPath))
     {
@@ -18,9 +29,4 @@ LuaDocument::LuaDocument(Path documentPath)
 
     editor->pullBreakpoints();
     editor->updateActiveLine();
-}
-
-DocumentType LuaDocument::getType() const
-{
-    return DocumentType::Lua;
 }

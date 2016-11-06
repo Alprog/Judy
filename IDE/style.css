@@ -30,9 +30,14 @@ QToolBar
 	border: none;
 }
 
-QTabWidget#bottomTabs
+QTabWidget
 {
 	border: none;
+}
+
+QTabWidget#documentsTabs
+{
+	border: 1px solid;
 }
 
 QTabBar::tab
@@ -71,9 +76,4 @@ QTabBar#documentsTabs::tab:hover
 QHeaderView::section 
 {
 	background-color: #2D2D2D;
-}
-
-QWidget#AAA
-{
-	background: #333333;
 }

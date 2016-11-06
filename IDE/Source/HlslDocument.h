@@ -2,11 +2,19 @@
 #pragma once
 
 #include "TextDocument.h"
+#include "SpirvDocument.h"
 
 class HlslDocument : public TextDocument
 {
 public:
-    HlslDocument(std::string documentPath);
+    HlslDocument();
 
     virtual DocumentType getType() const override;
+
+    virtual void save() override;
+    virtual void reload() override;
+
+private:
+    SpirvDocument* spirvDocument;
+    TextDocument* glslDocument;
 };

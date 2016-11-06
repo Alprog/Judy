@@ -36,20 +36,10 @@ enum Markers
     ActiveLine
 };
 
-CodeEditor::CodeEditor(HighlightType type, QWidget* parent)
+CodeEditor::CodeEditor(QWidget* parent)
     : ScintillaEdit(parent)
     , mouseTime{0}
     , mousePoint{0, 0}
-{
-    init(type);
-}
-
-void CodeEditor::setSource(std::string source)
-{
-    this->source = source;
-}
-
-void CodeEditor::init(HighlightType type)
 {
     setTabWidth(4);
 
@@ -60,17 +50,6 @@ void CodeEditor::init(HighlightType type)
     styleClearAll();
 
     setSelBack(true, blueSelect);
-
-    switch (type)
-    {
-        case HighlightType::Lua:
-            setLuaLexer();
-            break;
-
-        case HighlightType::HLSL:
-            setHlslLexer();
-            break;
-    }
 
     styleSetSize(STYLE_LINENUMBER, 10);
     styleSetFore(STYLE_LINENUMBER, blue);
@@ -130,6 +109,36 @@ void CodeEditor::init(HighlightType type)
     timer.start(tickInterval);
 
     connect(RemotePlayer::getInstance(), SIGNAL(stateChanged()), this, SLOT(updateActiveLine()));
+}
+
+void CodeEditor::setText(std::string text)
+{
+    bool isReadOnly = readOnly();
+    setReadOnly(false);
+    Scintilla::ScintillaEdit::setText(text.c_str());
+    setReadOnly(true);
+}
+
+void CodeEditor::setSource(std::string source)
+{
+    this->source = source;
+}
+
+void CodeEditor::setHighlightType(HighlightType type)
+{
+    switch (type)
+    {
+        case HighlightType::Lua:
+            setLuaLexer();
+            break;
+
+        case HighlightType::HLSL:
+            setHlslLexer();
+            break;
+
+        default:
+            styleSetFore(SCE_C_DEFAULT, white);
+    }
 }
 
 void CodeEditor::setLuaLexer()
