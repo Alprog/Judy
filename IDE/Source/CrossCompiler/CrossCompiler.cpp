@@ -15,30 +15,45 @@ CrossCompiler::CrossCompiler()
     glslang::InitializeProcess();
 }
 
-QByteArray CrossCompiler::HlslToSpirv(std::string hlslText)
+QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
 {
     auto messagesType = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules | EShMsgReadHlsl);
-    auto stage = EShLanguage::EShLangVertex;
+
+
+    EShLanguage stage;
+    switch (type)
+    {
+        case Shader::Type::Vertex:
+            stage = EShLanguage::EShLangVertex;
+            break;
+
+        case Shader::Type::Pixel:
+            stage = EShLanguage::EShLangFragment;
+            break;
+
+        default:
+            throw std::exception("Unknown shader type");
+    }
+
     auto program = new glslang::TProgram();
     auto shader = new glslang::TShader(stage);
 
     const char * text = hlslText.c_str();
     shader->setStrings(&text, 1);
-    shader->setEntryPoint("main");
+
+    shader->addEntryPoint("psmain", EShLanguage::EShLangFragment);
+    shader->addEntryPoint("vsmain", EShLanguage::EShLangVertex);
+
     program->addShader(shader);
 
-    //shader->setShiftSamplerBinding(baseSamplerBinding[stage]);
-    //shader->setShiftTextureBinding(baseTextureBinding[stage]);
-    //shader->setShiftUboBinding(baseUboBinding[stage]);
+    if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
+        throw std::exception(shader->getInfoLog());
 
-    bool parsed = shader->parse(&DefaultResources, defaultVersion, false, messagesType);
-    printf("parsed %i\n", parsed);
+    if (!program->link(messagesType))
+        throw std::exception(shader->getInfoLog());
 
-    bool linked = program->link(messagesType);
-    printf("linked %i\n", linked);
-
-    bool mappedIO = program->mapIO();
-    printf("mappedIO %i\n", mappedIO);
+    if (!program->mapIO())
+        throw std::exception(shader->getInfoLog());
 
     std::vector<unsigned int> spirvBinary;
     std::string warningsErrors;
@@ -73,6 +88,13 @@ std::string CrossCompiler::SpirvToGlsl(QByteArray spirvBinary)
 {
     auto data = toInternalFormat(spirvBinary);
     spirv_cross::CompilerGLSL compiler(data);
+
+    compiler.set_entry_point("main");
+
+    auto options = compiler.get_options();
+    options.vulkan_semantics = true;
+    compiler.set_options(options);
+
     auto glslText = compiler.compile();
     return glslText;
 }

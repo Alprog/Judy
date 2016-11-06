@@ -5,7 +5,7 @@ struct PSInput
     vec4 position;
 };
 
-layout(binding = 0, std140) uniform ConstantBuffer
+layout(set = 0, binding = 0, std140) uniform ConstantBuffer
 {
     mat4 MVP;
 } _16;

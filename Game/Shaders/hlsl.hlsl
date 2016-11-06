@@ -14,4 +14,4 @@ PSInput main(float4 position : POSITION)
 	PSInput result;
 	result.position = mul(position, MVP);
 	return result;
-}
+} 

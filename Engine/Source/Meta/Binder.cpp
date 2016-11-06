@@ -222,7 +222,7 @@ inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
         }
         else
         {
-            throw new std::exception("unknown built in type");
+            throw std::exception("unknown built in type");
         }
     }
     else if (flags & ITypeMeta::Flags::IsPointer)
@@ -397,7 +397,7 @@ void LuaBinder::bindClass(IClassMeta* classMeta)
     // base type
     if (classMeta->baseTypes.size() > 1)
     {
-        throw new std::runtime_error("multiple inheritance not implemented");
+        throw std::runtime_error("multiple inheritance not implemented");
     }
     for (auto baseType : classMeta->baseTypes)
     {

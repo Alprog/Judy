@@ -38,13 +38,20 @@ void HlslDocument::save()
 
     auto hlslText = this->getText();
 
-    auto spirvBinary = compiler->HlslToSpirv(hlslText);
-    spirvDocument->setBinaryData(spirvBinary);
-    spirvDocument->save();
+    try
+    {
+        auto spirvBinary = compiler->HlslToSpirv(hlslText, Shader::Type::Vertex);
+        spirvDocument->setBinaryData(spirvBinary);
+        spirvDocument->save();
 
-    auto glslText = compiler->SpirvToGlsl(spirvBinary);
-    glslDocument->setText(glslText);
-    glslDocument->save();
+        auto glslText = compiler->SpirvToGlsl(spirvBinary);
+        glslDocument->setText(glslText);
+        glslDocument->save();
+    }
+    catch (std::exception exeption)
+    {
+        printf("%s\n", exeption.what());
+    }
 }
 
 void HlslDocument::reload()

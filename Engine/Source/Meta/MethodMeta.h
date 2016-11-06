@@ -34,7 +34,7 @@ public:
         }
         else
         {
-            throw new std::exception();
+            throw std::exception();
         }
     }
 
