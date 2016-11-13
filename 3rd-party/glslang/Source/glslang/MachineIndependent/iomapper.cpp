@@ -61,7 +61,7 @@
 //    c. implicit dead bindings are left un-bound.
 //
 
-   
+
 namespace glslang {
 
 // Map of IDs to bindings
@@ -168,7 +168,7 @@ protected:
 
             infoSink.info.message(EPrefixInternalError, err.c_str());
             assignError = true;
-            
+
             return 0;
         }
 
@@ -204,11 +204,11 @@ protected:
         for (int binding = base; binding < (base + required); ++binding)
             if (usedBindings.find(binding) != usedBindings.end())
                 return false;
-        
+
         return true;
     }
 
-    // Find a free binding spot 
+    // Find a free binding spot
     int getFreeBinding(const TType&, int nextBinding) {
         while (!hasNFreeSlots(nextBinding, 1))
             ++nextBinding;
@@ -253,7 +253,10 @@ bool TIoMapper::addStage(EShLanguage, TIntermediate& intermediate, TInfoSink& in
     root->traverse(&it_binding_all);
 
     // Traverse just live code to find things that need implicit bindings.
-    it_binding_live.pushFunction(intermediate.getEntryPointMangledName().c_str());
+    for (auto& entryPoint : intermediate.entryPoints)
+    {
+        it_binding_live.pushFunction(entryPoint.mangledName.c_str());
+    }
 
     while (! it_binding_live.functions.empty()) {
         TIntermNode* function = it_binding_live.functions.back();

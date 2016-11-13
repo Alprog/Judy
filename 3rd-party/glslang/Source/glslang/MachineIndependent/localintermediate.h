@@ -80,7 +80,7 @@ struct TCall {
 // A generic 1-D range.
 struct TRange {
     TRange(int start, int last) : start(start), last(last) { }
-    bool overlap(const TRange& rhs) const 
+    bool overlap(const TRange& rhs) const
     {
         return last >= rhs.start && start <= rhs.last;
     }
@@ -165,10 +165,10 @@ public:
 
     void setSource(EShSource s) { source = s; }
     EShSource getSource() const { return source; }
-    void setEntryPointName(const char* ep) { entryPointName = ep; }
-    void setEntryPointMangledName(const char* ep) { entryPointMangledName = ep; }
-    const std::string& getEntryPointName() const { return entryPointName; }
-    const std::string& getEntryPointMangledName() const { return entryPointMangledName; }
+    //void setEntryPointName(const char* ep) { entryPointName = ep; }
+    //void setEntryPointMangledName(const char* ep) { entryPointMangledName = ep; }
+    //const std::string& getEntryPointName() const { return entryPointName; }
+    //const std::string& getEntryPointMangledName() const { return entryPointMangledName; }
 
     void setShiftSamplerBinding(unsigned int shift) { shiftSamplerBinding = shift; }
     unsigned int getShiftSamplerBinding() const { return shiftSamplerBinding; }
@@ -182,7 +182,7 @@ public:
     bool getFlattenUniformArrays()        const { return flattenUniformArrays; }
     void setNoStorageFormat(bool b)             { useUnknownFormat = b; }
     bool getNoStorageFormat()             const { return useUnknownFormat; }
-    
+
     void setVersion(int v) { version = v; }
     int getVersion() const { return version; }
     void setProfile(EProfile p) { profile = p; }
@@ -263,7 +263,7 @@ public:
     void addSymbolLinkageNode(TIntermAggregate*& linkage, TSymbolTable&, const TString&);
     void addSymbolLinkageNode(TIntermAggregate*& linkage, const TSymbol&);
 
-    bool setInvocations(int i) 
+    bool setInvocations(int i)
     {
         if (invocations != TQualifier::layoutNotSet)
             return invocations == i;
@@ -305,7 +305,7 @@ public:
     TVertexOrder getVertexOrder() const { return vertexOrder; }
     void setPointMode() { pointMode = true; }
     bool getPointMode() const { return pointMode; }
-    
+
     bool setLocalSize(int dim, int size)
     {
         if (localSize[dim] > 1)
@@ -396,7 +396,53 @@ protected:
     bool promote(TIntermOperator*);
     bool promoteUnary(TIntermUnary&);
     bool promoteBinary(TIntermBinary&);
-    
+
+public:
+    struct EntryPoint
+    {
+        std::string name;
+        std::string mangledName;
+        EShLanguage stage;
+    };
+
+    void addEntryPoint(std::string name, EShLanguage stage)
+    {
+        entryPoints.push_back({name, "", stage});
+    };
+
+    EntryPoint* getEntryPoint(std::string name)
+    {
+        for (auto& entryPoint : entryPoints)
+        {
+            if (name == entryPoint.name)
+                return &entryPoint;
+        }
+        return nullptr;
+    }
+
+    bool isEntryPointName(std::string name) const
+    {
+        for (auto& entryPoint : entryPoints)
+        {
+            if (name == entryPoint.name)
+                return true;
+        }
+        return false;
+    }
+
+    bool isEntryPointMangledName(std::string mangledName) const
+    {
+        for (auto& entryPoint : entryPoints)
+        {
+            if (mangledName == entryPoint.mangledName)
+                return true;
+        }
+        return false;
+    }
+
+    std::vector<EntryPoint> entryPoints;
+
+protected:
     const EShLanguage language;  // stage, known at construction time
     EShSource source;            // source language, known a bit later
     std::string entryPointName;

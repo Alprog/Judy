@@ -8,6 +8,8 @@
 #include <sstream>
 #include <spirv_glsl.hpp>
 
+#include <QString>
+
 const int defaultVersion = 110;
 
 CrossCompiler::CrossCompiler()
@@ -36,29 +38,78 @@ QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
     }
 
     auto program = new glslang::TProgram();
-    auto shader = new glslang::TShader(stage);
 
-    const char * text = hlslText.c_str();
-    shader->setStrings(&text, 1);
+    {
+        auto shader = new glslang::TShader(EShLanguage::EShLangVertex);
 
-    shader->addEntryPoint("psmain", EShLanguage::EShLangFragment);
-    shader->addEntryPoint("vsmain", EShLanguage::EShLangVertex);
+        const char * text = hlslText.c_str();
+        shader->setStrings(&text, 1);
 
-    program->addShader(shader);
+        shader->addEntryPoint("vsmain", EShLanguage::EShLangVertex);
 
-    if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
-        throw std::exception(shader->getInfoLog());
+        program->addShader(shader);
+
+        if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
+            throw std::exception(shader->getInfoLog());
+    }
+
+    {
+        auto shader = new glslang::TShader(EShLanguage::EShLangVertex);
+
+        const char * text = hlslText.c_str();
+        shader->setStrings(&text, 1);
+
+        shader->addEntryPoint("vsmain2", EShLanguage::EShLangVertex);
+
+        program->addShader(shader);
+
+        if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
+            throw std::exception(shader->getInfoLog());
+    }
+
+    {
+        auto shader = new glslang::TShader(EShLanguage::EShLangFragment);
+
+        const char * text = hlslText.c_str();
+        shader->setStrings(&text, 1);
+
+        shader->addEntryPoint("psmain", EShLanguage::EShLangFragment);
+
+        program->addShader(shader);
+
+        if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
+            throw std::exception(shader->getInfoLog());
+    }
+
+    {
+        auto shader = new glslang::TShader(EShLanguage::EShLangFragment);
+
+        QString qs = QString(hlslText.c_str());
+        qs.replace("0, 0, 0, 0", "1, 1, 1, 1");
+
+        auto s = qs.toStdString();
+
+        const char * text = s.c_str();
+        shader->setStrings(&text, 1);
+
+        shader->addEntryPoint("psmain2", EShLanguage::EShLangFragment);
+
+        program->addShader(shader);
+
+        if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
+            throw std::exception(shader->getInfoLog());
+    }
 
     if (!program->link(messagesType))
-        throw std::exception(shader->getInfoLog());
+        throw std::exception(program->getInfoLog());
 
-    if (!program->mapIO())
-        throw std::exception(shader->getInfoLog());
+    //if (!program->mapIO())
+    //    throw std::exception(program->getInfoLog());
 
     std::vector<unsigned int> spirvBinary;
     std::string warningsErrors;
     spv::SpvBuildLogger logger;
-    glslang::GlslangToSpv(*program->getIntermediate(stage), spirvBinary, &logger);
+    glslang::GlslangToSpv(*program->getIntermediate(EShLanguage::EShLangVertex), spirvBinary, &logger);
 
     auto dataStart = (char*)&spirvBinary[0];
     auto dataLength = spirvBinary.size() * sizeof(unsigned int) / sizeof(char);
@@ -88,8 +139,6 @@ std::string CrossCompiler::SpirvToGlsl(QByteArray spirvBinary)
 {
     auto data = toInternalFormat(spirvBinary);
     spirv_cross::CompilerGLSL compiler(data);
-
-    compiler.set_entry_point("main");
 
     auto options = compiler.get_options();
     options.vulkan_semantics = true;

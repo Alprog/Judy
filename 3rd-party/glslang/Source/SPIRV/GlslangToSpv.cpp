@@ -172,9 +172,9 @@ protected:
     spv::Id createShortCircuit(glslang::TOperator, glslang::TIntermTyped& left, glslang::TIntermTyped& right);
     spv::Id getExtBuiltins(const char* name);
 
-    spv::Function* shaderEntry;
+    std::map<std::string, spv::Function*> shaderEntries;
     spv::Function* currentFunction;
-    spv::Instruction* entryPoint;
+    spv::Instruction* entryPointA;
     int sequenceDepth;
 
     spv::SpvBuildLogger* logger;
@@ -765,20 +765,24 @@ bool HasNonLayoutQualifiers(const glslang::TType& type, const glslang::TQualifie
 //
 
 TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* glslangIntermediate, spv::SpvBuildLogger* buildLogger)
-    : TIntermTraverser(true, false, true), shaderEntry(nullptr), currentFunction(nullptr),
+    : TIntermTraverser(true, false, true), currentFunction(nullptr),
       sequenceDepth(0), logger(buildLogger),
       builder((glslang::GetKhronosToolId() << 16) | GeneratorVersion, logger),
       inMain(false), mainTerminated(false), linkageOnly(false),
       glslangIntermediate(glslangIntermediate)
 {
-    spv::ExecutionModel executionModel = TranslateExecutionModel(glslangIntermediate->getStage());
-
     builder.clearAccessChain();
     builder.setSource(TranslateSourceLanguage(glslangIntermediate->getSource(), glslangIntermediate->getProfile()), glslangIntermediate->getVersion());
     stdBuiltins = builder.import("GLSL.std.450");
     builder.setMemoryModel(spv::AddressingModelLogical, spv::MemoryModelGLSL450);
-    shaderEntry = builder.makeEntryPoint(glslangIntermediate->getEntryPointName().c_str());
-    entryPoint = builder.addEntryPoint(executionModel, shaderEntry, glslangIntermediate->getEntryPointName().c_str());
+
+    for (auto& point : glslangIntermediate->entryPoints)
+    {
+        spv::ExecutionModel executionModel = TranslateExecutionModel(point.stage);
+        auto shaderEntry = builder.makeEntryPoint(point.name.c_str());
+        shaderEntries[point.mangledName] = shaderEntry;
+        entryPointA = builder.addEntryPoint(executionModel, shaderEntry, point.name.c_str());
+
 
     // Add the source extensions
     const auto& sourceExtensions = glslangIntermediate->getRequestedExtensions();
@@ -897,6 +901,7 @@ TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* gls
         break;
     }
 
+    }
 }
 
 // Finish everything and dump
@@ -904,7 +909,7 @@ void TGlslangToSpvTraverser::dumpSpv(std::vector<unsigned int>& out)
 {
     // finish off the entry-point SPV instruction by adding the Input/Output <id>
     for (auto it = iOSet.cbegin(); it != iOSet.cend(); ++it)
-        entryPoint->addIdOperand(*it);
+        entryPointA->addIdOperand(*it);
 
     builder.eliminateDeadDecorations();
     builder.dump(out);
@@ -913,7 +918,7 @@ void TGlslangToSpvTraverser::dumpSpv(std::vector<unsigned int>& out)
 TGlslangToSpvTraverser::~TGlslangToSpvTraverser()
 {
     if (! mainTerminated) {
-        spv::Block* lastMainBlock = shaderEntry->getLastBlock();
+        spv::Block* lastMainBlock = shaderEntries.begin()->second->getLastBlock();
         builder.setBuildPoint(lastMainBlock);
         builder.leaveFunction();
     }
@@ -1382,6 +1387,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
     case glslang::EOpFunction:
         if (visit == glslang::EvPreVisit) {
             if (isShaderEntryPoint(node)) {
+                auto shaderEntry = shaderEntries[node->getName().c_str()];
                 inMain = true;
                 builder.setBuildPoint(shaderEntry->getLastBlock());
                 currentFunction = shaderEntry;
@@ -1628,7 +1634,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
 
                 // Does it need a swizzle inversion?  If so, evaluation is inverted;
                 // operate first on the swizzle base, then apply the swizzle.
-                if (glslangOperands[0]->getAsOperator() && 
+                if (glslangOperands[0]->getAsOperator() &&
                     glslangOperands[0]->getAsOperator()->getOp() == glslang::EOpVectorSwizzle)
                     invertedType = convertGlslangToSpvType(glslangOperands[0]->getAsBinaryNode()->getLeft()->getType());
             }
@@ -1955,7 +1961,7 @@ spv::Id TGlslangToSpvTraverser::getSampledType(const glslang::TSampler& sampler)
 // is applied.
 spv::Id TGlslangToSpvTraverser::getInvertedSwizzleType(const glslang::TIntermTyped& node)
 {
-    if (node.getAsOperator() && 
+    if (node.getAsOperator() &&
         node.getAsOperator()->getOp() == glslang::EOpVectorSwizzle)
         return convertGlslangToSpvType(node.getAsBinaryNode()->getLeft()->getType());
     else
@@ -2554,7 +2560,7 @@ void TGlslangToSpvTraverser::declareUseOfStructMember(const glslang::TTypeList& 
 
 bool TGlslangToSpvTraverser::isShaderEntryPoint(const glslang::TIntermAggregate* node)
 {
-    return node->getName().compare(glslangIntermediate->getEntryPointMangledName().c_str()) == 0;
+    return glslangIntermediate->isEntryPointMangledName(node->getName().c_str());
 }
 
 // Make all the functions, skeletally, without actually visiting their bodies.
@@ -2616,7 +2622,7 @@ void TGlslangToSpvTraverser::makeFunctions(const glslang::TIntermSequence& glslF
 // Process all the initializers, while skipping the functions and link objects
 void TGlslangToSpvTraverser::makeGlobalInitializers(const glslang::TIntermSequence& initializers)
 {
-    builder.setBuildPoint(shaderEntry->getLastBlock());
+    builder.setBuildPoint(shaderEntries.begin()->second->getLastBlock());
     for (int i = 0; i < (int)initializers.size(); ++i) {
         glslang::TIntermAggregate* initializer = initializers[i]->getAsAggregate();
         if (initializer && initializer->getOp() != glslang::EOpFunction && initializer->getOp() != glslang::EOpLinkerObjects) {
@@ -3007,7 +3013,7 @@ spv::Id TGlslangToSpvTraverser::createImageTextureFunctionCall(glslang::TIntermO
         }
         // copy the projective coordinate if we have to
         if (projTargetComp != projSourceComp) {
-            spv::Id projComp = builder.createCompositeExtract(params.coords, 
+            spv::Id projComp = builder.createCompositeExtract(params.coords,
                                                               builder.getScalarTypeId(builder.getTypeId(params.coords)),
                                                               projSourceComp);
             params.coords = builder.createCompositeInsert(projComp, params.coords,

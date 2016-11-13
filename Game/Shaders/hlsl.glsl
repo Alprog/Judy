@@ -3,20 +3,30 @@
 struct PSInput
 {
     vec4 position;
+    vec2 uv;
 };
 
 layout(set = 0, binding = 0, std140) uniform ConstantBuffer
 {
     mat4 MVP;
-} _16;
+} _83;
 
-layout(location = 0) in vec4 position;
-
-void main()
+void vsmain()
 {
     PSInput result;
-    result.position = (_16.MVP * position);
+    result.position = vec4(position_, 1.0);
+    result.uv = vec2(uv_.xy);
     gl_Position = result.position;
+    uv = result.uv;
     gl_Position.z = 2.0 * gl_Position.z - gl_Position.w;
+}
+
+void vsmain2()
+{
+    PSInput result;
+    result.position = vec4(position_, 1.0);
+    result.uv = vec2(uv_.xy);
+    result = result.position;
+    uv = result.uv;
 }
 
