@@ -311,8 +311,6 @@ public:
     void setFlattenUniformArrays(bool flatten);
     void setNoStorageFormat(bool useUnknownFormat);
 
-    void addEntryPoint(std::string entryPoint, EShLanguage stage);
-
     // Interface to #include handlers.
     //
     // To support #include, a client of Glslang does the following:

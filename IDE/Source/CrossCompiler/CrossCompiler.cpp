@@ -45,7 +45,7 @@ QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
         const char * text = hlslText.c_str();
         shader->setStrings(&text, 1);
 
-        shader->addEntryPoint("vsmain", EShLanguage::EShLangVertex);
+        shader->setEntryPoint("vsmain");
 
         program->addShader(shader);
 
@@ -59,7 +59,7 @@ QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
         const char * text = hlslText.c_str();
         shader->setStrings(&text, 1);
 
-        shader->addEntryPoint("vsmain2", EShLanguage::EShLangVertex);
+        shader->setEntryPoint("vsmain2");
 
         program->addShader(shader);
 
@@ -73,7 +73,7 @@ QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
         const char * text = hlslText.c_str();
         shader->setStrings(&text, 1);
 
-        shader->addEntryPoint("psmain", EShLanguage::EShLangFragment);
+        shader->setEntryPoint("psmain");
 
         program->addShader(shader);
 
@@ -92,7 +92,7 @@ QByteArray CrossCompiler::HlslToSpirv(std::string hlslText, Shader::Type type)
         const char * text = s.c_str();
         shader->setStrings(&text, 1);
 
-        shader->addEntryPoint("psmain2", EShLanguage::EShLangFragment);
+        shader->setEntryPoint("psmain2");
 
         program->addShader(shader);
 
