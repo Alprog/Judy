@@ -261,8 +261,6 @@ public:
     void addBlock(Block* block) {
 
         Id id = getId();
-        printf("addBlock %i\n", getId());
-
         blocks.push_back(block);
     }
     void removeBlock(Block* block)

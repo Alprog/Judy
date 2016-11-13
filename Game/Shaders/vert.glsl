@@ -9,18 +9,19 @@ struct PSInput
 layout(set = 0, binding = 0, std140) uniform ConstantBuffer
 {
     mat4 MVP;
-} _31;
+} _46;
 
-layout(set = 0, binding = 0) uniform texture2D g_texture;
-layout(set = 0, binding = 0) uniform sampler g_sampler;
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec4 uv;
+layout(location = 0) out vec2 uv_1;
 
-void aaa()
+void vsmain()
 {
-    _entryPointOutput = textureLod(sampler2D(g_texture, g_sampler), uv, 0.0);
-}
-
-void bbb()
-{
-    _entryPointOutput = textureLod(sampler2D(g_texture, g_sampler), uv, 0.0);
+    PSInput result;
+    result.position = vec4(position, 1.0);
+    result.uv = vec2(uv.xy);
+    gl_Position = result.position;
+    uv_1 = result.uv;
+    gl_Position.z = 2.0 * gl_Position.z - gl_Position.w;
 }
 

@@ -1,5 +1,5 @@
 
-#pragma ps
+#pragma ps psmain
 
 struct PSInput
 {
@@ -7,10 +7,7 @@ struct PSInput
 	float2 uv : TEXCOORD;
 };
 
-Texture2D g_texture : register(t0);
-SamplerState g_sampler : register(s0);
-
-float4 vsmain(PSInput input) : SV_TARGET
-{ 
-	return g_texture.Sample(g_sampler, input.uv) + float4(0, 0, 1, 0);
-} 
+float4 psmain(PSInput input) : SV_TARGET 
+{   
+	return float4(0, 0, 0, 0); 
+}

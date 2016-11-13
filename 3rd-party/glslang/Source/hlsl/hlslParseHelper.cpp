@@ -1070,18 +1070,18 @@ TIntermAggregate* HlslParseContext::handleFunctionDefinition(const TSourceLoc& l
         currentFunctionType = new TType(EbtVoid);
     functionReturnsValue = false;
 
-
-    auto entryPoint = intermediate.getEntryPoint(function.getName().c_str());
-
-    inEntryPoint = entryPoint != nullptr;
-
+    inEntryPoint = function.getName().compare(intermediate.getEntryPointName().c_str()) == 0;
     if (inEntryPoint) {
-        entryPoint->mangledName = function.getMangledName().c_str();
+        intermediate.setEntryPointMangledName(function.getMangledName().c_str());
         intermediate.incrementEntryPointCount();
+        entryPointOutput = nullptr;
         remapEntryPointIO(function);
         if (entryPointOutput) {
             if (shouldFlatten(entryPointOutput->getType()))
                 flatten(loc, *entryPointOutput);
+
+            nextInLocation = 0;
+            nextOutLocation = 0;
             assignLocations(*entryPointOutput);
         }
     } else
@@ -2910,8 +2910,7 @@ void HlslParseContext::handleSemantic(TSourceLoc loc, TQualifier& qualifier, con
     // Also, in DX10 if a SV value is present as the input of a stage, but isn't appropriate for that
     // stage, it would just be ignored as it is likely there as part of an output struct from one stage
     // to the next
-    
-    
+        
     bool bParseDX9 = false;
     if (bParseDX9) {
         if (semanticUpperCase == "PSIZE")

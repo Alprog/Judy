@@ -4757,6 +4757,8 @@ spv::Id TGlslangToSpvTraverser::getSymbolId(const glslang::TIntermSymbol* symbol
             addDecoration(id, memory[i]);
     }
 
+    printf("BUILD_IN %i", symbol->getQualifier().builtIn);
+
     // built-in variable decorations
     spv::BuiltIn builtIn = TranslateBuiltInDecoration(symbol->getQualifier().builtIn, false);
     if (builtIn != spv::BuiltInMax)

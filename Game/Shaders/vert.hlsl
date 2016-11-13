@@ -1,9 +1,6 @@
 
-#pragma main vs
-
-#pragma aaa ps
-#pragma bbb ps
-#pragma ccc ps
+#pragma vs vsmain
+#pragma ps psmain
 
 cbuffer ConstantBuffer : register(b0)
 {
@@ -16,30 +13,12 @@ struct PSInput
 	float2 uv : TEXCOORD;
 };
 
-Texture2D g_texture : register(t0); 
-SamplerState g_sampler : register(s0);  
- 
-PSInput main(float3 position : POSITION, float4 uv : TEXCOORD)
+PSInput vsmain(float3 position : POSITION, float4 uv : TEXCOORD)
 {
 	PSInput result;  
  
-	result.position = mul(float4(position, 1), MVP); 
+	result.position = float4(position, 1); 
 	result.uv = uv;
     
 	return result;
-}
- 
-float4 aaa(PSInput input) : SV_TARGET 
-{   
-	return g_texture.Sample(g_sampler, input.uv); 
-} 
-
-float4 bbb(PSInput input) : SV_TARGET 
-{   
-	return g_texture.Sample(g_sampler, input.uv); 
-} 
-
-float4 ccc(PSInput input) : SV_TARGET 
-{   
-	return g_texture.Sample(g_sampler, input.uv); 
 }

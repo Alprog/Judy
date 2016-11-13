@@ -285,8 +285,8 @@ VkShaderModule VulkanRenderer::getShaderModule(std::string fileName)
 
 void VulkanRenderer::initShaders()
 {
-    vertexShader = getShaderModule("vert.spv");
-    fragmentShader = getShaderModule("frag.spv");
+    vertexShader = getShaderModule("Shaders/test2.spirv");
+    fragmentShader = getShaderModule("Shaders/test2.spirv");
 }
 
 void VulkanRenderer::initPipeline(RenderTargetContext& context)
@@ -417,12 +417,12 @@ void VulkanRenderer::initPipeline(RenderTargetContext& context)
     shaderStageInfo[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStageInfo[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
     shaderStageInfo[0].module = vertexShader;
-    shaderStageInfo[0].pName = "main";
+    shaderStageInfo[0].pName = "vsmain";
     shaderStageInfo[0].pSpecializationInfo = nullptr;
     shaderStageInfo[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStageInfo[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
     shaderStageInfo[1].module = fragmentShader;
-    shaderStageInfo[1].pName = "main";
+    shaderStageInfo[1].pName = "psmain";
     shaderStageInfo[1].pSpecializationInfo = nullptr;
 
     VkGraphicsPipelineCreateInfo pipelineCreateInfo = {};

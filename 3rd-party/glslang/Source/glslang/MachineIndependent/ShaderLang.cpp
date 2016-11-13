@@ -699,7 +699,7 @@ bool ProcessDeferred(
         parseContext = new HlslParseContext(symbolTable, intermediate, false, version, profile, spvVersion,
                                             compiler->getLanguage(), compiler->infoSink, forwardCompatible, messages);
     } else {
-        intermediate.addEntryPoint("main", EShLangVertex);
+        intermediate.setEntryPointName("main");
         parseContext = new TParseContext(symbolTable, intermediate, false, version, profile, spvVersion,
                                          compiler->getLanguage(), compiler->infoSink, forwardCompatible, messages);
     }
@@ -1489,12 +1489,12 @@ void TShader::setStringsWithLengthsAndNames(
 
 void TShader::setEntryPoint(const char* entryPoint)
 {
-    throw std::exception("error");
+    intermediate->setEntryPointName(entryPoint);
 }
 
 void TShader::addEntryPoint(std::string entryPoint, EShLanguage stage)
 {
-    intermediate->addEntryPoint(entryPoint, stage);
+    intermediate->entryPoints.push_back({entryPoint, stage});
 }
 
 void TShader::setShiftSamplerBinding(unsigned int base) { intermediate->setShiftSamplerBinding(base); }
@@ -1644,20 +1644,20 @@ bool TProgram::linkStage(EShLanguage stage, EShMessages messages)
     // reusing it's TIntermediate instead of merging into a new one.
     //
     TIntermediate *firstIntermediate = stages[stage].front()->intermediate;
-    if (stages[stage].size() == 1)
+//    if (stages[stage].size() == 1)
         intermediate[stage] = firstIntermediate;
-    else {
-        intermediate[stage] = new TIntermediate(stage,
-                                                firstIntermediate->getVersion(),
-                                                firstIntermediate->getProfile());
-        newedIntermediate[stage] = true;
-    }
+//    else {
+//        intermediate[stage] = new TIntermediate(stage,
+//                                                firstIntermediate->getVersion(),
+//                                                firstIntermediate->getProfile());
+//        newedIntermediate[stage] = true;
+//    }
 
     infoSink->info << "\nLinked " << StageName(stage) << " stage:\n\n";
 
     if (stages[stage].size() > 1) {
         std::list<TShader*>::const_iterator it;
-        for (it = stages[stage].begin(); it != stages[stage].end(); ++it)
+        for (it = ++stages[stage].begin(); it != stages[stage].end(); ++it)
             intermediate[stage]->merge(*infoSink, *(*it)->intermediate);
     }
 

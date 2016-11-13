@@ -253,10 +253,7 @@ bool TIoMapper::addStage(EShLanguage, TIntermediate& intermediate, TInfoSink& in
     root->traverse(&it_binding_all);
 
     // Traverse just live code to find things that need implicit bindings.
-    for (auto& entryPoint : intermediate.entryPoints)
-    {
-        it_binding_live.pushFunction(entryPoint.mangledName.c_str());
-    }
+    it_binding_live.pushFunction(intermediate.getEntryPointMangledName().c_str());
 
     while (! it_binding_live.functions.empty()) {
         TIntermNode* function = it_binding_live.functions.back();

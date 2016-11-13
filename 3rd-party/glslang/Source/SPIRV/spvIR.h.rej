@@ -1,0 +1,16 @@
+diff a/3rd-party/glslang/Source/SPIRV/spvIR.h b/3rd-party/glslang/Source/SPIRV/spvIR.h	(rejected hunks)
+@@ -258,7 +258,13 @@
+     Id getId() const { return functionInstruction.getResultId(); }
+     Id getParamId(int p) { return parameterInstructions[p]->getResultId(); }
+ 
+-    void addBlock(Block* block) { blocks.push_back(block); }
++    void addBlock(Block* block) {
++
++        Id id = getId();
++        printf("addBlock %i\n", getId());
++
++        blocks.push_back(block);
++    }
+     void removeBlock(Block* block)
+     {
+         auto found = find(blocks.begin(), blocks.end(), block);
