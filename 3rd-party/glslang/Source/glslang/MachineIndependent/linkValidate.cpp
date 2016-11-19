@@ -186,7 +186,7 @@ void TIntermediate::merge(TInfoSink& infoSink, TIntermediate& unit)
     TIntermSequence& linkerObjects = findLinkerObjects();
     TIntermSequence& unitLinkerObjects = unit.findLinkerObjects();
 
-    mergeBodies(infoSink, globals, unitGlobals);
+    mergeBodies(infoSink, globals, unitGlobals, &unit);
     mergeLinkerObjects(infoSink, linkerObjects, unitLinkerObjects);
 
     ioAccessed.insert(unit.ioAccessed.begin(), unit.ioAccessed.end());
@@ -196,24 +196,20 @@ void TIntermediate::merge(TInfoSink& infoSink, TIntermediate& unit)
 // Merge the function bodies and global-level initializers from unitGlobals into globals.
 // Will error check duplication of function bodies for the same signature.
 //
-void TIntermediate::mergeBodies(TInfoSink& infoSink, TIntermSequence& globals, const TIntermSequence& unitGlobals)
+void TIntermediate::mergeBodies(TInfoSink& infoSink, TIntermSequence& globals, const TIntermSequence& unitGlobals, TIntermediate* unit)
 {
     for (unsigned int unitChild = 0; unitChild < unitGlobals.size() - 1; ++unitChild)
     {
         TIntermAggregate* unitBody = unitGlobals[unitChild]->getAsAggregate();
 
-        printf("unitbody %s \n", unitBody->getName().c_str());
-
         bool conflict = false;
         for (unsigned int child = 0; child < globals.size() - 1; ++child)
         {
             TIntermAggregate* body = globals[child]->getAsAggregate();
-
-            printf("body %s \n", unitBody->getName().c_str());
-
             if (body && unitBody && body->getOp() == EOpFunction && unitBody->getOp() == EOpFunction && body->getName() == unitBody->getName())
             {
-                if (unitBody->getName() == "vsmain2(vf3;vf4;")
+                bool isEntryPoint = unit->isEntryPointMangledName(unitBody->getName().c_str());
+                if (isEntryPoint)
                 {
                     globals[child] = unitBody;
                 }

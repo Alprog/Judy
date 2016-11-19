@@ -1639,14 +1639,7 @@ bool TProgram::linkStage(EShLanguage stage, EShMessages messages)
     // reusing it's TIntermediate instead of merging into a new one.
     //
     TIntermediate *firstIntermediate = stages[stage].front()->intermediate;
-//    if (stages[stage].size() == 1)
-        intermediate[stage] = firstIntermediate;
-//    else {
-//        intermediate[stage] = new TIntermediate(stage,
-//                                                firstIntermediate->getVersion(),
-//                                                firstIntermediate->getProfile());
-//        newedIntermediate[stage] = true;
-//    }
+    intermediate[stage] = firstIntermediate;
 
     infoSink->info << "\nLinked " << StageName(stage) << " stage:\n\n";
 

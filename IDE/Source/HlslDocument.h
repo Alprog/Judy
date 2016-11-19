@@ -15,6 +15,8 @@ public:
     virtual void reload() override;
 
 private:
-    SpirvDocument* spirvDocument;
-    TextDocument* glslDocument;
+    SpirvDocument* vsSpirvDocument;
+    SpirvDocument* psSpirvDocument;
+    TextDocument* vsGlslDocument;
+    TextDocument* psGlslDocument;
 };

@@ -8,14 +8,18 @@
 HlslDocument::HlslDocument()
     : TextDocument(CodeEditor::HighlightType::HLSL)
 {
-    spirvDocument = new SpirvDocument();
-    glslDocument = new TextDocument();
+    vsSpirvDocument = new SpirvDocument();
+    psSpirvDocument = new SpirvDocument();
+    vsGlslDocument = new TextDocument();
+    psGlslDocument = new TextDocument();
 
     auto tabPanel = new QTabWidget();
     tabPanel->setTabPosition(QTabWidget::South);
     tabPanel->addTab(editor, "HLSL");
-    tabPanel->addTab(spirvDocument, "SPIRV");
-    tabPanel->addTab(glslDocument, "GLSL");
+    tabPanel->addTab(vsSpirvDocument, "SPIRV VS");
+    tabPanel->addTab(psSpirvDocument, "SPIRV PS");
+    tabPanel->addTab(vsGlslDocument, "GLSL VS");
+    tabPanel->addTab(psGlslDocument, "GLSL PS");
 
     auto layout = new QGridLayout();
     layout->setSpacing(0);
@@ -40,13 +44,25 @@ void HlslDocument::save()
 
     try
     {
-        auto spirvBinary = compiler->HlslToSpirv(hlslText, Shader::Type::Vertex);
-        spirvDocument->setBinaryData(spirvBinary);
-        spirvDocument->save();
+        auto spirvBinary = compiler->hlslToSpirv(hlslText);
+        if (spirvBinary.vs.size() > 0)
+        {
+            vsSpirvDocument->setBinaryData(spirvBinary.vs);
+            vsSpirvDocument->save();
 
-        auto glslText = compiler->SpirvToGlsl(spirvBinary);
-        glslDocument->setText(glslText);
-        glslDocument->save();
+            auto glslText = compiler->spirvToGlsl(spirvBinary.vs);
+            vsGlslDocument->setText(glslText);
+            vsGlslDocument->save();
+        }
+        if (spirvBinary.ps.size() > 0)
+        {
+            psSpirvDocument->setBinaryData(spirvBinary.ps);
+            psSpirvDocument->save();
+
+            auto glslText = compiler->spirvToGlsl(spirvBinary.ps);
+            psGlslDocument->setText(glslText);
+            psGlslDocument->save();
+        }
     }
     catch (std::exception exeption)
     {
@@ -58,14 +74,22 @@ void HlslDocument::reload()
 {
     TextDocument::reload();
 
-    auto directoryPath = documentPath.getParentPath();
+    auto directoryPath = documentPath.getParentPath() + "gen";
     auto baseName = documentPath.getNameWithoutExtension();
 
-    auto spirvPath = Path::combine(directoryPath, baseName + ".spirv");
-    spirvDocument->open(spirvPath);
-    spirvDocument->setReadOnly(true);
+    auto vsSpirvPath = Path::combine(directoryPath, baseName + ".vs.spirv");
+    vsSpirvDocument->open(vsSpirvPath);
+    vsSpirvDocument->setReadOnly(true);
 
-    auto glslPath = Path::combine(directoryPath, baseName + ".glsl");
-    glslDocument->open(glslPath);
-    glslDocument->setReadOnly(true);
+    auto psSpirvPath = Path::combine(directoryPath, baseName + ".ps.spirv");
+    psSpirvDocument->open(psSpirvPath);
+    psSpirvDocument->setReadOnly(true);
+
+    auto vsGlslPath = Path::combine(directoryPath, baseName + ".vs.glsl");
+    vsGlslDocument->open(vsGlslPath);
+    vsGlslDocument->setReadOnly(true);
+
+    auto psGlslPath = Path::combine(directoryPath, baseName + ".ps.glsl");
+    psGlslDocument->open(psGlslPath);
+    psGlslDocument->setReadOnly(true);
 }

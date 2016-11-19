@@ -1,6 +1,8 @@
 
 #include <Singleton.h>
 #include <string>
+#include <vector>
+#include <map>
 #include <QByteArray>
 #include "Render/Shader.h"
 
@@ -8,16 +10,23 @@ class CrossCompiler : public Singleton<CrossCompiler>
 {
     friend class SingletonType;
 
-    enum class Stage
+    using Pragmas = std::vector<std::pair<std::string, std::string>>;
+    using EntryPoints = std::map<std::string, std::vector<std::string>>;
+
+    struct Spirv
     {
-        Vertex
+        QByteArray vs, gs, ps;
     };
 
 private:
     CrossCompiler();
 
 public:
-    QByteArray HlslToSpirv(std::string hlslText, Shader::Type type);
-    std::string SpirvToHumanReadable(QByteArray spirvBinary);
-    std::string SpirvToGlsl(QByteArray spirvBinary);
+    Spirv hlslToSpirv(std::string hlslText);
+    std::string spirvToHumanReadable(QByteArray spirvBinary);
+    std::string spirvToGlsl(QByteArray spirvBinary);
+
+private:
+    EntryPoints getEntryPoints(std::string hlslText);
+    Pragmas getPragmas(std::string hlslText);
 };

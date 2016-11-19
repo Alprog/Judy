@@ -1,6 +1,5 @@
 
 #pragma vs vsmain
-#pragma ps psmain
 
 cbuffer ConstantBuffer : register(b0)
 {

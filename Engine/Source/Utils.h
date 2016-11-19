@@ -16,3 +16,10 @@ bool caseInsensitiveCompare(const std::string& string1, const std::string& strin
 
 bool startsWith(const std::string& string, const std::string& pattern);
 bool endsWith(const std::string& string, const std::string& pattern);
+
+
+template <typename CT, typename T>
+bool contains(CT container, T item)
+{
+    return std::find(std::begin(container), std::end(container), item) != std::end(container);
+}

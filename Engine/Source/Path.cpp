@@ -58,10 +58,10 @@ void Path::applyDots(std::string& pathString)
     bool changed = false;
 
     bool isAbsolute = Path::isAbsolute(pathString);
-    size_t lastIndex = isAbsolute ? 1 : 0;
+    int lastIndex = isAbsolute ? 1 : 0;
 
     auto upCount = 0;
-    for (size_t i = components.size() - 1; i >= lastIndex; i--)
+    for (int i = components.size() - 1; i >= lastIndex; i--)
     {
         auto component = components[i];
         if (component == ".")

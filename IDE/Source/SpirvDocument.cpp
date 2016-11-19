@@ -6,7 +6,7 @@ void SpirvDocument::setBinaryData(QByteArray binaryData)
 {
     this->binaryData = binaryData;
 
-    auto text = CrossCompiler::getInstance()->SpirvToHumanReadable(binaryData);
+    auto text = CrossCompiler::getInstance()->spirvToHumanReadable(binaryData);
     this->setText(text);
 }
 

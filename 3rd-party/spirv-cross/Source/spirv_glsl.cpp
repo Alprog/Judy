@@ -283,7 +283,8 @@ string CompilerGLSL::compile()
 
         for (auto& pair : entry_points)
         {
-            emit_function(get<SPIRFunction>(pair.second.self), 0);
+            SPIREntryPoint& entryPoint = pair.second;
+            emit_function(get<SPIRFunction>(entryPoint.self), 0);
         }
 
 		pass_count++;

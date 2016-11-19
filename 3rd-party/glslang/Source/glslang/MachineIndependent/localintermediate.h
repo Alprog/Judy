@@ -135,6 +135,13 @@ class TVariable;
 //
 class TIntermediate {
 public:
+    struct EntryPoint
+    {
+        std::string name;
+        std::string mangledName;
+        EShLanguage stage;
+    };
+
     explicit TIntermediate(EShLanguage l, int v = 0, EProfile p = ENoProfile) :
         source(EShSourceNone), language(l), profile(p), version(v), treeRoot(0),
         numEntryPoints(0), numErrors(0), numPushConstants(0), recursive(false),
@@ -383,7 +390,7 @@ public:
 protected:
     TIntermSymbol* addSymbol(int Id, const TString&, const TType&, const TConstUnionArray&, TIntermTyped* subtree, const TSourceLoc&);
     void error(TInfoSink& infoSink, const char*);
-    void mergeBodies(TInfoSink&, TIntermSequence& globals, const TIntermSequence& unitGlobals);
+    void mergeBodies(TInfoSink&, TIntermSequence& globals, const TIntermSequence& unitGlobals, TIntermediate* unit);
     void mergeLinkerObjects(TInfoSink&, TIntermSequence& linkerObjects, const TIntermSequence& unitLinkerObjects);
     void mergeImplicitArraySizes(TType&, const TType&);
     void mergeErrorCheck(TInfoSink&, const TIntermSymbol&, const TIntermSymbol&, bool crossStage);
@@ -398,13 +405,6 @@ protected:
     bool promoteBinary(TIntermBinary&);
     
 public:
-    struct EntryPoint
-    {
-        std::string name;
-        std::string mangledName;
-        EShLanguage stage;
-    };
-
     void addEntryPoint(std::string name, EShLanguage stage)
     {
         entryPoints.push_back({name, "", stage});
