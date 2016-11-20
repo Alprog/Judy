@@ -5,6 +5,8 @@
 
 class Path
 {
+    friend class std::hash<Path>;
+
 public:
     Path();
 
@@ -70,4 +72,13 @@ private:
     static void applyDots(std::string& pathString);
 
     std::string canonicalPath;
+};
+
+template<>
+struct std::hash<Path>
+{
+    size_t operator()(const Path& path) const
+    {
+        return std::hash<std::string>()(path.canonicalPath);
+    }
 };

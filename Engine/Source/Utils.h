@@ -17,6 +17,8 @@ bool caseInsensitiveCompare(const std::string& string1, const std::string& strin
 bool startsWith(const std::string& string, const std::string& pattern);
 bool endsWith(const std::string& string, const std::string& pattern);
 
+std::string toStr(std::wstring wstr);
+std::wstring toWStr(std::string str);
 
 template <typename CT, typename T>
 bool contains(CT container, T item)

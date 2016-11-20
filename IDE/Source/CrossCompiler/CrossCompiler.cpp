@@ -105,7 +105,7 @@ std::string CrossCompiler::spirvToGlsl(QByteArray spirvBinary)
     spirv_cross::CompilerGLSL compiler(data);
 
     auto options = compiler.get_options();
-    options.vulkan_semantics = true;
+    options.version = 440;
     compiler.set_options(options);
 
     auto glslText = compiler.compile();

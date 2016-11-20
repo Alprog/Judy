@@ -1,0 +1,16 @@
+
+#pragma once
+
+#include <Path.h>
+
+class ShaderBunch
+{
+public:
+    static const ShaderBunch* get(Path path);
+
+
+private:
+    ShaderBunch(Path path);
+
+    Path hlslPath;
+};

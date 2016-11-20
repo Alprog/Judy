@@ -1,6 +1,7 @@
 
 #include "DXRenderer.h"
 #include <PlatformRenderTarget.h>
+#include <ShaderManager.h>
 
 #include "DXPipelineState.h"
 #include "DXShaderImpl.h"
@@ -246,8 +247,8 @@ void DXRenderer::populateCommandList(std::vector<RenderCommand> commands)
 
     if (state == nullptr)
     {
-        auto vertexShader = new Shader("shadersTextured", Shader::Type::Vertex);
-        auto pixelShader = new Shader("shadersTextured", Shader::Type::Pixel);
+        auto vertexShader = ShaderManager::getInstance()->getShader("Shaders/test", "vsmain");
+        auto pixelShader = ShaderManager::getInstance()->getShader("Shaders/test", "psmain");
         state = new DXPipelineState(vertexShader, pixelShader, this);
     }
 

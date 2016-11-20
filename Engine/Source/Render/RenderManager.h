@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Singleton.h"
-#include "RendererResource.h"
+#include "RenderResource.h"
 #include <queue>
 
 class IRenderer;
@@ -14,12 +14,12 @@ public:
 
     IRenderer* getRenderer(RendererType type);
 
-    unsigned int registerResource(RenderResource* resource);
-    void unregisterResource(RenderResource* resource);
+    unsigned int registerResource(IRenderResource* resource);
+    void unregisterResource(IRenderResource* resource);
 
     std::vector<IRenderer*> renderers;
 
 private:
-    std::vector<RenderResource*> resources;
+    std::vector<IRenderResource*> resources;
     std::queue<unsigned int> freeIds;
 };

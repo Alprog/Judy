@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "RendererResource.h"
+#include "RenderResource.h"
 
 enum class CullMode : char
 {

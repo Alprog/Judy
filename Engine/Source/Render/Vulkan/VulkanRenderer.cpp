@@ -285,8 +285,8 @@ VkShaderModule VulkanRenderer::getShaderModule(std::string fileName)
 
 void VulkanRenderer::initShaders()
 {
-    vertexShader = getShaderModule("Shaders/test2.spirv");
-    fragmentShader = getShaderModule("Shaders/test2.spirv");
+    vertexShader = getShaderModule("Shaders/gen/test.vs.spirv");
+    fragmentShader = getShaderModule("Shaders/gen/test.ps.spirv");
 }
 
 void VulkanRenderer::initPipeline(RenderTargetContext& context)

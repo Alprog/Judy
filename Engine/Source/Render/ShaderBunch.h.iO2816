@@ -1,0 +1,17 @@
+
+#pragma once
+
+#include <Path.h>
+
+class ShaderBunch
+{
+public:
+    static const ShaderBunch* get(Path path);
+
+    std::string getGlslVertSource();
+
+private:
+    ShaderBunch(Path path);
+
+    Path hlslPath;
+};

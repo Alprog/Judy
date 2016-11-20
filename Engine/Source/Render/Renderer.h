@@ -2,7 +2,7 @@
 #pragma once
 
 #include "IRenderer.h"
-#include "RendererResource.h"
+#include "RenderResource.h"
 
 template <RendererType RendererT>
 class Renderer : public IRenderer

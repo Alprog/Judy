@@ -2,6 +2,7 @@
 #include "GLShaderImpl.h"
 
 #include "GLRenderer.h"
+#include "ShaderBunch.h"
 
 #include <fstream>
 #include <sstream>
@@ -9,39 +10,32 @@
 
 Impl<Shader, RendererType::GL>::Impl(GLRenderer* renderer, Shader* shader)
 {
-    auto isVerts = shader->type == Shader::Type::Vertex;
+    auto isVerts = shader->type == ShaderType::Vertex;
+    auto blobType = isVerts ? ShaderBunch::BlobType::GlslVertex : ShaderBunch::BlobType::GlslPixel;
 
-    auto path = shader->source + (isVerts ? ".vs" : ".ps");
+    auto defineLine = "#define " + shader->entryPoint + " main\n";
+    auto source = defineLine + shader->bunch->getSourceText(blobType);
 
-    std::ifstream fstream { path };
-    if (fstream.is_open() )
+    auto sourceBuffer = source.c_str();
+    id = glCreateShader(isVerts ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+    glShaderSource(id, 1, &sourceBuffer, nullptr);
+    glCompileShader(id);
+
+    GLint isCompiled;
+    glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
+    if(isCompiled == GL_FALSE)
     {
-        std::stringstream buffer;
-        buffer << fstream.rdbuf();
-        auto string = buffer.str();
+        GLint maxLength = 0;
+        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
 
-        const char* source = string.c_str();
+        std::vector<GLchar> errorLog(maxLength);
+        glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
 
-        id = glCreateShader(isVerts ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
-        glShaderSource(id, 1, &source, nullptr);
-        glCompileShader(id);
+        auto a = (char*)glGetString(GL_VERSION);
 
-        GLint isCompiled;
-        glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
-        if(isCompiled == GL_FALSE)
-        {
-            GLint maxLength = 0;
-            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
+        // --
 
-            std::vector<GLchar> errorLog(maxLength);
-            glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
-
-            // --
-
-            glDeleteShader(id);
-            id = 0;
-        }
+        glDeleteShader(id);
+        id = 0;
     }
-
-
 }

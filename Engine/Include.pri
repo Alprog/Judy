@@ -1,9 +1,11 @@
 
+INCLUDEPATH += "..\Engine\Source"
+INCLUDEPATH += "..\Engine\Source\Render"
+INCLUDEPATH += "..\Engine\Source\Meta\TypeTraits"
+INCLUDEPATH += "../3rd-party/lua/Source"
+
 win {
-    INCLUDEPATH += "..\Engine\Source"
-    INCLUDEPATH += "..\Engine\Source\Meta\TypeTraits"
     INCLUDEPATH += "..\Engine\Source\Win"
-    INCLUDEPATH += "..\3rd-party\lua\Source"
 
     LIBS += -L"..\Engine" -lEngine
     LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua
@@ -19,10 +21,7 @@ win {
 }
 
 linux {
-    INCLUDEPATH += "../Engine/Source"
-    INCLUDEPATH += "../Engine/Source/Meta/TypeTraits"
     INCLUDEPATH += "../Engine/Source/Linux"
-    INCLUDEPATH += "../3rd-party/lua/Source"
 
     LIBS += -L"../Engine" -lEngine
     LIBS += -L"../3rd-party" -lzlib -llibpng -llua
@@ -35,10 +34,7 @@ linux {
 }
 
 mac {
-    INCLUDEPATH += "../Engine/Source"
-    INCLUDEPATH += "../Engine/Source/Meta/TypeTraits"
     INCLUDEPATH += "../Engine/Source/Mac"
-    INCLUDEPATH += "../3rd-party/lua/Source"
 
     LIBS += -L"../Engine" -lEngine
     LIBS += -L"../3rd-party" -lzlib -llibpng -llua

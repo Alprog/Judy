@@ -96,3 +96,13 @@ bool endsWith(const std::string& string, const std::string& pattern)
     }
     return false;
 }
+
+std::string toStr(std::wstring wstr)
+{
+    return std::string(wstr.begin(), wstr.end());
+}
+
+std::wstring toWStr(std::string str)
+{
+    return std::wstring(str.begin(), str.end());
+}

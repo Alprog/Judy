@@ -1,17 +1,20 @@
 
 #pragma once
 
-#include "Singleton.h"
-#include <string>
-#include "Render/Shader.h"
+#include <Singleton.h>
+#include <Shader.h>
+#include <Path.h>
+#include <ShaderBunch.h>
 #include <unordered_map>
+#include <string>
+#include <memory>
 
 class ShaderManager : public Singleton<ShaderManager>
 {
 public:
-    std::unordered_map<std::string, Shader*> vertexShaders;
-    std::unordered_map<std::string, Shader*> pixelShaders;
+    ShaderBunch* getShaderBunch(Path path);
+    Shader* getShader(Path bunchPath, std::string entryPoint);
 
-    Shader* getShader(std::string name, Shader::Type type);
-
+private:
+    std::unordered_map<Path, std::unique_ptr<ShaderBunch>> bunches;
 };
