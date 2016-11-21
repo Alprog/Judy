@@ -31,7 +31,7 @@ public:
         }
         else
         {
-            throw new std::exception();
+            throw std::exception();
         }
     }
 
@@ -43,7 +43,7 @@ public:
         }
         else
         {
-            throw new std::exception();
+            throw std::exception();
         }
     }
 

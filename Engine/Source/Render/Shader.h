@@ -1,23 +1,20 @@
 
 #pragma once
 
+#include <RenderResource.h>
+#include <ShaderType.h>
 #include <string>
-#include "RendererResource.h"
 
-class Shader : public RendererResource<Shader>
+class ShaderBunch;
+
+class Shader : public RenderResource<Shader>
 {
 public:
-
-    enum class Type
-    {
-        Vertex,
-        Pixel
-    };
-
-    Shader(std::string source, Type type);
+    Shader(ShaderBunch* bunch, ShaderType type, std::string entryPoint);
     void load();
 
 public:
-    std::string source;
-    Type type;
+    ShaderBunch* bunch;
+    ShaderType type;
+    std::string entryPoint;
 };

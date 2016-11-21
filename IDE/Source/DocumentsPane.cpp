@@ -10,7 +10,8 @@
 #include <QTableWidget>
 #include <string>
 #include "Utils.h"
-#include "LuaDocement.h"
+#include "LuaDocument.h"
+#include "HlslDocument.h"
 #include "SceneDocument.h"
 
 #include "IDE.h"
@@ -20,6 +21,8 @@ DocumentsPane::DocumentsPane()
     setTabsClosable(true);
     setMovable(true);
     setUsesScrollButtons(true);
+    setObjectName("documentsTabs");
+    tabBar()->setObjectName("documentsTabs");
 
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
@@ -38,9 +41,11 @@ void DocumentsPane::open(Path path)
     }
     else
     {
-        document = createDocument(path);
+        auto extension = path.getExtension();
+        document = createDocumentByExtension(extension);
         if (document != nullptr)
         {
+            document->open(path);
             connect(document, SIGNAL(modified()), this, SLOT(updateTabNames()));
             addTab(document, document->getName().c_str());
             setCurrentWidget(document);
@@ -48,16 +53,20 @@ void DocumentsPane::open(Path path)
     }
 }
 
-IDocument* DocumentsPane::createDocument(Path absolutePath)
+IDocument* DocumentsPane::createDocumentByExtension(std::string extension)
 {
-    auto extension = lowerCase(absolutePath.getExtension());
+    extension = lowerCase(extension);
     if (extension == "lua")
     {
-        return new LuaDocument(absolutePath);
+        return new LuaDocument();
+    }
+    else if (extension == "hlsl")
+    {
+        return new HlslDocument();
     }
     else if (extension == "scene")
     {
-        return new SceneDocument(absolutePath);
+        return new SceneDocument();
     }
     else
     {

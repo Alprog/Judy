@@ -2,7 +2,7 @@
 #pragma once
 
 #include <vector>
-#include <type_traits>
+#include <TypeTraits.h>
 
 #include "ITypeMeta.h"
 #include "IClassMeta.h"
@@ -35,10 +35,13 @@ public:
     virtual ITypeMeta::Flags getFlags() const override
     {
         const int flags =
+            (~is<ClassType>::BuiltIn + 1) & ITypeMeta::Flags::IsBuiltIn |
             (~is<ClassType>::Class + 1) & ITypeMeta::Flags::IsClass |
+            (~is<ClassType>::Object + 1) & ITypeMeta::Flags::IsObject |
             (~is<ClassType>::Pointer + 1) & ITypeMeta::Flags::IsPointer |
-            (~is<ClassType>::Ref + 1) & ITypeMeta::Flags::IsRef |
+            (~is<ClassType>::PointerToObject + 1) & ITypeMeta::Flags::IsPointerToObject |
             (~is<ClassType>::PointerToPolymorhic + 1) & ITypeMeta::Flags::IsPointerToPolymorhic |
+            (~is<ClassType>::Ref + 1) & ITypeMeta::Flags::IsRef |
             (~is<ClassType>::CustomSerializing + 1) & ITypeMeta::Flags::IsCustomSerializing
         ;
         return (ITypeMeta::Flags)flags;

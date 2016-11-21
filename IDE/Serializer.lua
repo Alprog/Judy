@@ -12,7 +12,7 @@ function TableToString( object, tab, replaceTable )
 		table.insert(keys, pos, k)
 		table.insert(values, pos, v)
 	end
-	
+		
 	local first = true
 	for j = 1, #keys do
 		local key = keys[j]

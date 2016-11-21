@@ -4,11 +4,11 @@
 #include "RendererType.h"
 #include "Impl.h"
 
-class RenderResource
+class IRenderResource
 {
 public:
-    RenderResource();
-    ~RenderResource();
+    IRenderResource();
+    ~IRenderResource();
 
     unsigned int id;
 };
@@ -17,7 +17,7 @@ template <RendererType T>
 class Renderer;
 
 template <typename ResourceType>
-class RendererResource : public RenderResource
+class RenderResource : public IRenderResource
 {
 public:
     template <RendererType RendererT>

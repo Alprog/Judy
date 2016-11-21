@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "RendererResource.h"
+#include "RenderResource.h"
 #include <string>
 
-class Texture : public RendererResource<Texture>
+class Texture : public RenderResource<Texture>
 {
 public:
     Texture(std::string name);

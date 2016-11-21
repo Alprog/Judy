@@ -172,9 +172,17 @@ protected:
     spv::Id createShortCircuit(glslang::TOperator, glslang::TIntermTyped& left, glslang::TIntermTyped& right);
     spv::Id getExtBuiltins(const char* name);
 
-    spv::Function* shaderEntry;
+    struct EntryData
+    {
+        spv::Function* shaderEntry;
+        spv::Instruction* entryPoint;
+        std::set<spv::Id> ids;
+    };
+
+    std::map<std::string, EntryData> entryDatas;
+    EntryData* currentEntryData;
+
     spv::Function* currentFunction;
-    spv::Instruction* entryPoint;
     int sequenceDepth;
 
     spv::SpvBuildLogger* logger;
@@ -184,7 +192,6 @@ protected:
     bool inMain;
     bool mainTerminated;
     bool linkageOnly;                  // true when visiting the set of objects in the AST present only for establishing interface, whether or not they were statically used
-    std::set<spv::Id> iOSet;           // all input/output variables from either static use or declaration of interface
     const glslang::TIntermediate* glslangIntermediate;
     spv::Id stdBuiltins;
     std::unordered_map<const char*, spv::Id> extBuiltinMap;
@@ -765,146 +772,161 @@ bool HasNonLayoutQualifiers(const glslang::TType& type, const glslang::TQualifie
 //
 
 TGlslangToSpvTraverser::TGlslangToSpvTraverser(const glslang::TIntermediate* glslangIntermediate, spv::SpvBuildLogger* buildLogger)
-    : TIntermTraverser(true, false, true), shaderEntry(nullptr), currentFunction(nullptr),
+    : TIntermTraverser(true, false, true), currentFunction(nullptr),
       sequenceDepth(0), logger(buildLogger),
       builder((glslang::GetKhronosToolId() << 16) | GeneratorVersion, logger),
       inMain(false), mainTerminated(false), linkageOnly(false),
       glslangIntermediate(glslangIntermediate)
 {
-    spv::ExecutionModel executionModel = TranslateExecutionModel(glslangIntermediate->getStage());
-
     builder.clearAccessChain();
     builder.setSource(TranslateSourceLanguage(glslangIntermediate->getSource(), glslangIntermediate->getProfile()), glslangIntermediate->getVersion());
     stdBuiltins = builder.import("GLSL.std.450");
     builder.setMemoryModel(spv::AddressingModelLogical, spv::MemoryModelGLSL450);
-    shaderEntry = builder.makeEntryPoint(glslangIntermediate->getEntryPointName().c_str());
-    entryPoint = builder.addEntryPoint(executionModel, shaderEntry, glslangIntermediate->getEntryPointName().c_str());
 
-    // Add the source extensions
-    const auto& sourceExtensions = glslangIntermediate->getRequestedExtensions();
-    for (auto it = sourceExtensions.begin(); it != sourceExtensions.end(); ++it)
-        builder.addSourceExtension(it->c_str());
+    for (auto& point : glslangIntermediate->entryPoints)
+    {
+        EntryData data;
 
-    // Add the top-level modes for this shader.
+        spv::ExecutionModel executionModel = TranslateExecutionModel(point.stage);
+        auto shaderEntry  = builder.makeEntryPoint(point.name.c_str());
 
-    if (glslangIntermediate->getXfbMode()) {
-        builder.addCapability(spv::CapabilityTransformFeedback);
-        builder.addExecutionMode(shaderEntry, spv::ExecutionModeXfb);
+        data.shaderEntry = shaderEntry;
+        data.entryPoint = builder.addEntryPoint(executionModel, shaderEntry, point.name.c_str());
+
+        entryDatas[point.mangledName] = data;
+
+        // Add the source extensions
+        const auto& sourceExtensions = glslangIntermediate->getRequestedExtensions();
+        for (auto it = sourceExtensions.begin(); it != sourceExtensions.end(); ++it)
+            builder.addSourceExtension(it->c_str());
+
+        // Add the top-level modes for this shader.
+
+        if (glslangIntermediate->getXfbMode()) {
+            builder.addCapability(spv::CapabilityTransformFeedback);
+            builder.addExecutionMode(shaderEntry, spv::ExecutionModeXfb);
+        }
+
+        unsigned int mode;
+        switch (glslangIntermediate->getStage()) {
+        case EShLangVertex:
+            builder.addCapability(spv::CapabilityShader);
+            break;
+
+        case EShLangTessControl:
+            builder.addCapability(spv::CapabilityTessellation);
+            builder.addExecutionMode(shaderEntry, spv::ExecutionModeOutputVertices, glslangIntermediate->getVertices());
+            break;
+
+        case EShLangTessEvaluation:
+            builder.addCapability(spv::CapabilityTessellation);
+            switch (glslangIntermediate->getInputPrimitive()) {
+            case glslang::ElgTriangles:           mode = spv::ExecutionModeTriangles;     break;
+            case glslang::ElgQuads:               mode = spv::ExecutionModeQuads;         break;
+            case glslang::ElgIsolines:            mode = spv::ExecutionModeIsolines;      break;
+            default:                              mode = spv::ExecutionModeMax;           break;
+            }
+            if (mode != spv::ExecutionModeMax)
+                builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
+
+            switch (glslangIntermediate->getVertexSpacing()) {
+            case glslang::EvsEqual:            mode = spv::ExecutionModeSpacingEqual;          break;
+            case glslang::EvsFractionalEven:   mode = spv::ExecutionModeSpacingFractionalEven; break;
+            case glslang::EvsFractionalOdd:    mode = spv::ExecutionModeSpacingFractionalOdd;  break;
+            default:                           mode = spv::ExecutionModeMax;                   break;
+            }
+            if (mode != spv::ExecutionModeMax)
+                builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
+
+            switch (glslangIntermediate->getVertexOrder()) {
+            case glslang::EvoCw:     mode = spv::ExecutionModeVertexOrderCw;  break;
+            case glslang::EvoCcw:    mode = spv::ExecutionModeVertexOrderCcw; break;
+            default:                 mode = spv::ExecutionModeMax;            break;
+            }
+            if (mode != spv::ExecutionModeMax)
+                builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
+
+            if (glslangIntermediate->getPointMode())
+                builder.addExecutionMode(shaderEntry, spv::ExecutionModePointMode);
+            break;
+
+        case EShLangGeometry:
+            builder.addCapability(spv::CapabilityGeometry);
+            switch (glslangIntermediate->getInputPrimitive()) {
+            case glslang::ElgPoints:             mode = spv::ExecutionModeInputPoints;             break;
+            case glslang::ElgLines:              mode = spv::ExecutionModeInputLines;              break;
+            case glslang::ElgLinesAdjacency:     mode = spv::ExecutionModeInputLinesAdjacency;     break;
+            case glslang::ElgTriangles:          mode = spv::ExecutionModeTriangles;               break;
+            case glslang::ElgTrianglesAdjacency: mode = spv::ExecutionModeInputTrianglesAdjacency; break;
+            default:                             mode = spv::ExecutionModeMax;                     break;
+            }
+            if (mode != spv::ExecutionModeMax)
+                builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
+
+            builder.addExecutionMode(shaderEntry, spv::ExecutionModeInvocations, glslangIntermediate->getInvocations());
+
+            switch (glslangIntermediate->getOutputPrimitive()) {
+            case glslang::ElgPoints:        mode = spv::ExecutionModeOutputPoints;                 break;
+            case glslang::ElgLineStrip:     mode = spv::ExecutionModeOutputLineStrip;              break;
+            case glslang::ElgTriangleStrip: mode = spv::ExecutionModeOutputTriangleStrip;          break;
+            default:                        mode = spv::ExecutionModeMax;                          break;
+            }
+            if (mode != spv::ExecutionModeMax)
+                builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
+            builder.addExecutionMode(shaderEntry, spv::ExecutionModeOutputVertices, glslangIntermediate->getVertices());
+            break;
+
+        case EShLangFragment:
+            builder.addCapability(spv::CapabilityShader);
+            if (glslangIntermediate->getPixelCenterInteger())
+                builder.addExecutionMode(shaderEntry, spv::ExecutionModePixelCenterInteger);
+
+            if (glslangIntermediate->getOriginUpperLeft())
+                builder.addExecutionMode(shaderEntry, spv::ExecutionModeOriginUpperLeft);
+            else
+                builder.addExecutionMode(shaderEntry, spv::ExecutionModeOriginLowerLeft);
+
+            if (glslangIntermediate->getEarlyFragmentTests())
+                builder.addExecutionMode(shaderEntry, spv::ExecutionModeEarlyFragmentTests);
+
+            switch(glslangIntermediate->getDepth()) {
+            case glslang::EldGreater:  mode = spv::ExecutionModeDepthGreater; break;
+            case glslang::EldLess:     mode = spv::ExecutionModeDepthLess;    break;
+            default:                   mode = spv::ExecutionModeMax;          break;
+            }
+            if (mode != spv::ExecutionModeMax)
+                builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
+
+            if (glslangIntermediate->getDepth() != glslang::EldUnchanged && glslangIntermediate->isDepthReplacing())
+                builder.addExecutionMode(shaderEntry, spv::ExecutionModeDepthReplacing);
+            break;
+
+        case EShLangCompute:
+            builder.addCapability(spv::CapabilityShader);
+            builder.addExecutionMode(shaderEntry, spv::ExecutionModeLocalSize, glslangIntermediate->getLocalSize(0),
+                                                                               glslangIntermediate->getLocalSize(1),
+                                                                               glslangIntermediate->getLocalSize(2));
+            break;
+
+        default:
+            break;
+        }
+
     }
-
-    unsigned int mode;
-    switch (glslangIntermediate->getStage()) {
-    case EShLangVertex:
-        builder.addCapability(spv::CapabilityShader);
-        break;
-
-    case EShLangTessControl:
-        builder.addCapability(spv::CapabilityTessellation);
-        builder.addExecutionMode(shaderEntry, spv::ExecutionModeOutputVertices, glslangIntermediate->getVertices());
-        break;
-
-    case EShLangTessEvaluation:
-        builder.addCapability(spv::CapabilityTessellation);
-        switch (glslangIntermediate->getInputPrimitive()) {
-        case glslang::ElgTriangles:           mode = spv::ExecutionModeTriangles;     break;
-        case glslang::ElgQuads:               mode = spv::ExecutionModeQuads;         break;
-        case glslang::ElgIsolines:            mode = spv::ExecutionModeIsolines;      break;
-        default:                              mode = spv::ExecutionModeMax;           break;
-        }
-        if (mode != spv::ExecutionModeMax)
-            builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
-
-        switch (glslangIntermediate->getVertexSpacing()) {
-        case glslang::EvsEqual:            mode = spv::ExecutionModeSpacingEqual;          break;
-        case glslang::EvsFractionalEven:   mode = spv::ExecutionModeSpacingFractionalEven; break;
-        case glslang::EvsFractionalOdd:    mode = spv::ExecutionModeSpacingFractionalOdd;  break;
-        default:                           mode = spv::ExecutionModeMax;                   break;
-        }
-        if (mode != spv::ExecutionModeMax)
-            builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
-
-        switch (glslangIntermediate->getVertexOrder()) {
-        case glslang::EvoCw:     mode = spv::ExecutionModeVertexOrderCw;  break;
-        case glslang::EvoCcw:    mode = spv::ExecutionModeVertexOrderCcw; break;
-        default:                 mode = spv::ExecutionModeMax;            break;
-        }
-        if (mode != spv::ExecutionModeMax)
-            builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
-
-        if (glslangIntermediate->getPointMode())
-            builder.addExecutionMode(shaderEntry, spv::ExecutionModePointMode);
-        break;
-
-    case EShLangGeometry:
-        builder.addCapability(spv::CapabilityGeometry);
-        switch (glslangIntermediate->getInputPrimitive()) {
-        case glslang::ElgPoints:             mode = spv::ExecutionModeInputPoints;             break;
-        case glslang::ElgLines:              mode = spv::ExecutionModeInputLines;              break;
-        case glslang::ElgLinesAdjacency:     mode = spv::ExecutionModeInputLinesAdjacency;     break;
-        case glslang::ElgTriangles:          mode = spv::ExecutionModeTriangles;               break;
-        case glslang::ElgTrianglesAdjacency: mode = spv::ExecutionModeInputTrianglesAdjacency; break;
-        default:                             mode = spv::ExecutionModeMax;                     break;
-        }
-        if (mode != spv::ExecutionModeMax)
-            builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
-
-        builder.addExecutionMode(shaderEntry, spv::ExecutionModeInvocations, glslangIntermediate->getInvocations());
-
-        switch (glslangIntermediate->getOutputPrimitive()) {
-        case glslang::ElgPoints:        mode = spv::ExecutionModeOutputPoints;                 break;
-        case glslang::ElgLineStrip:     mode = spv::ExecutionModeOutputLineStrip;              break;
-        case glslang::ElgTriangleStrip: mode = spv::ExecutionModeOutputTriangleStrip;          break;
-        default:                        mode = spv::ExecutionModeMax;                          break;
-        }
-        if (mode != spv::ExecutionModeMax)
-            builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
-        builder.addExecutionMode(shaderEntry, spv::ExecutionModeOutputVertices, glslangIntermediate->getVertices());
-        break;
-
-    case EShLangFragment:
-        builder.addCapability(spv::CapabilityShader);
-        if (glslangIntermediate->getPixelCenterInteger())
-            builder.addExecutionMode(shaderEntry, spv::ExecutionModePixelCenterInteger);
-
-        if (glslangIntermediate->getOriginUpperLeft())
-            builder.addExecutionMode(shaderEntry, spv::ExecutionModeOriginUpperLeft);
-        else
-            builder.addExecutionMode(shaderEntry, spv::ExecutionModeOriginLowerLeft);
-
-        if (glslangIntermediate->getEarlyFragmentTests())
-            builder.addExecutionMode(shaderEntry, spv::ExecutionModeEarlyFragmentTests);
-
-        switch(glslangIntermediate->getDepth()) {
-        case glslang::EldGreater:  mode = spv::ExecutionModeDepthGreater; break;
-        case glslang::EldLess:     mode = spv::ExecutionModeDepthLess;    break;
-        default:                   mode = spv::ExecutionModeMax;          break;
-        }
-        if (mode != spv::ExecutionModeMax)
-            builder.addExecutionMode(shaderEntry, (spv::ExecutionMode)mode);
-
-        if (glslangIntermediate->getDepth() != glslang::EldUnchanged && glslangIntermediate->isDepthReplacing())
-            builder.addExecutionMode(shaderEntry, spv::ExecutionModeDepthReplacing);
-        break;
-
-    case EShLangCompute:
-        builder.addCapability(spv::CapabilityShader);
-        builder.addExecutionMode(shaderEntry, spv::ExecutionModeLocalSize, glslangIntermediate->getLocalSize(0),
-                                                                           glslangIntermediate->getLocalSize(1),
-                                                                           glslangIntermediate->getLocalSize(2));
-        break;
-
-    default:
-        break;
-    }
-
 }
 
 // Finish everything and dump
 void TGlslangToSpvTraverser::dumpSpv(std::vector<unsigned int>& out)
 {
     // finish off the entry-point SPV instruction by adding the Input/Output <id>
-    for (auto it = iOSet.cbegin(); it != iOSet.cend(); ++it)
-        entryPoint->addIdOperand(*it);
+    for (auto& entryData : entryDatas)
+    {
+        auto& ids = entryData.second.ids;
+        for (auto it = ids.cbegin(); it != ids.cend(); ++it)
+        {
+            entryData.second.entryPoint->addIdOperand(*it);
+        }
+    }
 
     builder.eliminateDeadDecorations();
     builder.dump(out);
@@ -913,7 +935,7 @@ void TGlslangToSpvTraverser::dumpSpv(std::vector<unsigned int>& out)
 TGlslangToSpvTraverser::~TGlslangToSpvTraverser()
 {
     if (! mainTerminated) {
-        spv::Block* lastMainBlock = shaderEntry->getLastBlock();
+        spv::Block* lastMainBlock = entryDatas.begin()->second.shaderEntry->getLastBlock();
         builder.setBuildPoint(lastMainBlock);
         builder.leaveFunction();
     }
@@ -948,7 +970,12 @@ void TGlslangToSpvTraverser::visitSymbol(glslang::TIntermSymbol* symbol)
     if (builder.isPointer(id)) {
         spv::StorageClass sc = builder.getStorageClass(id);
         if (sc == spv::StorageClassInput || sc == spv::StorageClassOutput)
-            iOSet.insert(id);
+        {
+            if (currentEntryData)
+            {
+                currentEntryData->ids.insert(id);
+            }
+        }
     }
 
     // Only process non-linkage-only nodes for generating actual static uses
@@ -1382,6 +1409,7 @@ bool TGlslangToSpvTraverser::visitAggregate(glslang::TVisit visit, glslang::TInt
     case glslang::EOpFunction:
         if (visit == glslang::EvPreVisit) {
             if (isShaderEntryPoint(node)) {
+                auto shaderEntry = entryDatas[node->getName().c_str()].shaderEntry;
                 inMain = true;
                 builder.setBuildPoint(shaderEntry->getLastBlock());
                 currentFunction = shaderEntry;
@@ -2554,7 +2582,7 @@ void TGlslangToSpvTraverser::declareUseOfStructMember(const glslang::TTypeList& 
 
 bool TGlslangToSpvTraverser::isShaderEntryPoint(const glslang::TIntermAggregate* node)
 {
-    return node->getName().compare(glslangIntermediate->getEntryPointMangledName().c_str()) == 0;
+    return glslangIntermediate->isEntryPointMangledName(node->getName().c_str());
 }
 
 // Make all the functions, skeletally, without actually visiting their bodies.
@@ -2616,7 +2644,7 @@ void TGlslangToSpvTraverser::makeFunctions(const glslang::TIntermSequence& glslF
 // Process all the initializers, while skipping the functions and link objects
 void TGlslangToSpvTraverser::makeGlobalInitializers(const glslang::TIntermSequence& initializers)
 {
-    builder.setBuildPoint(shaderEntry->getLastBlock());
+    builder.setBuildPoint(entryDatas.begin()->second.shaderEntry->getLastBlock());
     for (int i = 0; i < (int)initializers.size(); ++i) {
         glslang::TIntermAggregate* initializer = initializers[i]->getAsAggregate();
         if (initializer && initializer->getOp() != glslang::EOpFunction && initializer->getOp() != glslang::EOpLinkerObjects) {
@@ -2633,6 +2661,18 @@ void TGlslangToSpvTraverser::visitFunctions(const glslang::TIntermSequence& glsl
 {
     for (int f = 0; f < (int)glslFunctions.size(); ++f) {
         glslang::TIntermAggregate* node = glslFunctions[f]->getAsAggregate();
+
+        auto it = entryDatas.find(node->getName().c_str());
+        if (it != std::end(entryDatas))
+        {
+            currentEntryData = &it->second;
+        }
+        else
+        {
+            currentEntryData = nullptr;
+        }
+
+
         if (node && (node->getOp() == glslang::EOpFunction || node->getOp() == glslang ::EOpLinkerObjects))
             node->traverse(this);
     }

@@ -1,3 +1,4 @@
+
 //*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
@@ -11,7 +12,7 @@
 
 cbuffer ConstantBuffer : register(b0)
 {
-	float4x4 MVP;
+	float4x4 MVP; 
 };
 
 struct PSInput

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "IRenderer.h"
-#include "RendererResource.h"
+#include "RenderResource.h"
 
 template <RendererType RendererT>
 class Renderer : public IRenderer
@@ -15,6 +15,7 @@ public:
     virtual void createImpl(VertexBuffer* resource) override { helper(resource); }
     virtual void createImpl(ConstantBuffer* resource) override { helper(resource); }
     virtual void createImpl(IndexBuffer* resource) override { helper(resource); }
+    virtual void createImpl(PipelineState* resource) override { helper(resource); }
 
     template <typename ResourceT>
     inline Impl<ResourceT, RendererT>* getImpl(ResourceT* const resource)

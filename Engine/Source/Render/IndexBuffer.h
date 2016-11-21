@@ -2,9 +2,9 @@
 #pragma once
 
 #include <vector>
-#include "RendererResource.h"
+#include "RenderResource.h"
 
-class IndexBuffer : public RendererResource<IndexBuffer>
+class IndexBuffer : public RenderResource<IndexBuffer>
 {
 public:
     IndexBuffer();

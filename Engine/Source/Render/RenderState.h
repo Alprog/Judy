@@ -4,20 +4,24 @@
 class Shader;
 class Texture;
 class ConstantBuffer;
+class PipelineState;
 
-#include "GL/gl.h"
+#include <PipelineSettings.h>
 
 class RenderState
 {
 public:
     RenderState();
 
-    Shader* vertexShader;
-    Shader* pixelShader;
+    void setVertexShader(Shader* shader);
+    void setPixelShader(Shader* shader);
+
     Texture* texture;
     ConstantBuffer* constantBuffer;
 
-    void link();
+    PipelineState* getPipelineState();
 
-    GLuint programId;
+private:
+    PipelineSettings pipelineSettings;
+    PipelineState* pipelineState;
 };

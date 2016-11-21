@@ -2,8 +2,6 @@
 #pragma once
 
 #include "AnyData.h"
-#include "Sfinae.h"
-#include <exception>
 
 class ITypeMeta;
 

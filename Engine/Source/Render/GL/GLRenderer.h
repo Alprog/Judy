@@ -11,6 +11,7 @@
 #include "GLIndexBufferImpl.h"
 #include "GLVertexBufferImpl.h"
 #include "GLConstantBufferImpl.h"
+#include "GLPipelineStateImpl.h"
 #include "../Renderer.h"
 
 class Shader;

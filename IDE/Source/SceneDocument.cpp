@@ -7,8 +7,7 @@
 #endif
 #include "Render/IRenderer.h"
 
-SceneDocument::SceneDocument(Path path)
-    : IDocument{path}
+SceneDocument::SceneDocument()
 {
     auto canvas = new QWidget(nullptr);
 
@@ -18,20 +17,21 @@ SceneDocument::SceneDocument(Path path)
     layout->addWidget(canvas);
     this->setLayout(layout);
 
-
 #if WINDOWS
     auto hInstance = GetModuleHandle(nullptr);
     auto hWnd = (HWND)canvas->winId();
     renderTarget = new WinRenderTarget(hInstance, hWnd);
 #endif
-    reload();
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(render()));
+    timer.start(20);
+}
 
+void SceneDocument::reload()
+{
+    IDocument::reload();
     IDE::getInstance()->selectScene(scene);
     IDE::getInstance()->selectNode(scene);
-
-    timer.start(20);
 }
 
 DocumentType SceneDocument::getType() const
@@ -46,7 +46,7 @@ void SceneDocument::setBinaryData(QByteArray data)
     scene = serializer.deserialize<Node*>(text);
 }
 
-QByteArray SceneDocument::getBinaryData()
+QByteArray SceneDocument::getBinaryData() const
 {
     auto& serializer = IDE::getInstance()->serializer;
     auto text = serializer.serialize(scene);

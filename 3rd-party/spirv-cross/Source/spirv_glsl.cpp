@@ -281,7 +281,11 @@ string CompilerGLSL::compile()
 		emit_header();
 		emit_resources();
 
-		emit_function(get<SPIRFunction>(entry_point), 0);
+        for (auto& pair : entry_points)
+        {
+            SPIREntryPoint& entryPoint = pair.second;
+            emit_function(get<SPIRFunction>(entryPoint.self), 0);
+        }
 
 		pass_count++;
 	} while (force_recompile);
@@ -5048,7 +5052,7 @@ void CompilerGLSL::emit_function_prototype(SPIRFunction &func, uint64_t return_f
 
 	if (func.self == entry_point)
 	{
-		decl += "main";
+        decl += to_name(func.self);
 		processing_entry_point = true;
 	}
 	else
@@ -5631,9 +5635,6 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 	}
 
 	case SPIRBlock::Return:
-		if (processing_entry_point)
-			emit_fixup();
-
 		if (block.return_value)
 		{
 			// OpReturnValue can return Undef, so don't emit anything for this case.

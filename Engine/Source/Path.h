@@ -5,6 +5,8 @@
 
 class Path
 {
+    friend class std::hash<Path>;
+
 public:
     Path();
 
@@ -15,16 +17,19 @@ public:
     static bool isAbsolute(const std::string& pathString);
 
     static Path combine(const std::string lhs, const std::string rhs);
-    void append(const std::string pathString);
 
+    void append(const std::string pathString);
     void cd(const Path pathString);
     void cdUp();
 
     friend Path operator+(const Path& lhs, const Path& rhs);
     Path& operator+=(const Path& rhs);
 
+    Path getParentPath() const;
+
     std::string getName() const;
     std::string getExtension() const;
+    std::string getNameWithoutExtension() const;
 
     bool isEmpty() const;
     bool isAbsolute() const;
@@ -67,4 +72,13 @@ private:
     static void applyDots(std::string& pathString);
 
     std::string canonicalPath;
+};
+
+template<>
+struct std::hash<Path>
+{
+    size_t operator()(const Path& path) const
+    {
+        return std::hash<std::string>()(path.canonicalPath);
+    }
 };
