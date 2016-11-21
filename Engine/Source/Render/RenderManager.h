@@ -4,8 +4,7 @@
 #include "Singleton.h"
 #include "RenderResource.h"
 #include <queue>
-
-class IRenderer;
+#include <IRenderer.h>
 
 class RenderManager : public Singleton<RenderManager>
 {

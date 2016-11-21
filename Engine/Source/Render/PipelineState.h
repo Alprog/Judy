@@ -6,10 +6,11 @@
 
 class Shader;
 
-class PipelineState
+class PipelineState : public RenderResource<PipelineState>
 {
 public:
     PipelineState(PipelineSettings& pipelineSettings);
+    void load();
 
     PipelineSettings settings;
 };

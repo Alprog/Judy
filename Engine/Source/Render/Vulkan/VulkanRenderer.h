@@ -10,6 +10,7 @@
 #include "VulkanIndexBufferImpl.h"
 #include "VulkanVertexBufferImpl.h"
 #include "VulkanConstantBufferImpl.h"
+#include "VulkanPipelineStateImpl.h"
 #include "../Renderer.h"
 
 struct VulkanTestVertex

@@ -15,6 +15,7 @@
 #include "DXIndexBufferImpl.h"
 #include "DXTextureImpl.h"
 #include "DXConstantBufferImpl.h"
+#include "DXPipelineStateImpl.h"
 #include "../Renderer.h"
 
 class Texture;
