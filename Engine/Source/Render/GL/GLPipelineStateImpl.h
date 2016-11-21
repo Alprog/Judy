@@ -13,5 +13,5 @@ class Impl<PipelineState, RendererType::GL>
 public:
     Impl(GLRenderer* renderer, PipelineState* pipelineState);
 
-
+    GLuint programId;
 };

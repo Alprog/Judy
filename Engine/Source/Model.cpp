@@ -19,8 +19,6 @@ Model::Model()
     renderState->texture = TextureManager::getInstance()->getTexture("skullbox.png");
 
     renderState->constantBuffer = new ConstantBuffer();
-
-    renderState->link();
 }
 
 void Model::render(Matrix matrix, RendererFrontend* renderer)
