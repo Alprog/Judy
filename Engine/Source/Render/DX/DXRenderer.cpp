@@ -3,7 +3,6 @@
 #include <PlatformRenderTarget.h>
 #include <ShaderManager.h>
 
-#include "DXPipelineState.h"
 #include "DXShaderImpl.h"
 #include "DXTextureImpl.h"
 #include "Images.h"
@@ -25,7 +24,6 @@ DXRenderer::~DXRenderer()
 {
 }
 
-DXPipelineState* state = nullptr;
 D3D12_VIEWPORT viewport;
 D3D12_RECT scissorRect;
 
@@ -245,17 +243,14 @@ void DXRenderer::populateCommandList(std::vector<RenderCommand> commands)
     auto result = commandAllocator->Reset();
     if (FAILED(result)) throw;
 
-    if (state == nullptr)
-    {
-        auto vertexShader = ShaderManager::getInstance()->getShader("Shaders/test", "vsmain");
-        auto pixelShader = ShaderManager::getInstance()->getShader("Shaders/test", "psmain");
-        state = new DXPipelineState(vertexShader, pixelShader, this);
-    }
+    auto& firstCommand = commands[0];
 
-    result = commandList->Reset(commandAllocator.Get(), state->pipelineState.Get());
+    auto pso = getImpl(firstCommand.state->getPipelineState());
+
+    result = commandList->Reset(commandAllocator.Get(), pso->pipelineState.Get());
     if (FAILED(result)) throw;
 
-    commandList->SetGraphicsRootSignature(state->rootSignature.Get());
+    commandList->SetGraphicsRootSignature(pso->rootSignature.Get());
 
     ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);

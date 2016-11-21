@@ -13,5 +13,6 @@ class Impl<PipelineState, RendererType::DX>
 public:
     Impl(DXRenderer* renderer, PipelineState* pipelineState);
 
-
+    ComPtr<ID3D12PipelineState> pipelineState;
+    ComPtr<ID3D12RootSignature> rootSignature;
 };
