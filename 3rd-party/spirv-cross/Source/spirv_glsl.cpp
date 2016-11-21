@@ -5635,9 +5635,6 @@ void CompilerGLSL::emit_block_chain(SPIRBlock &block)
 	}
 
 	case SPIRBlock::Return:
-		if (processing_entry_point)
-			emit_fixup();
-
 		if (block.return_value)
 		{
 			// OpReturnValue can return Undef, so don't emit anything for this case.

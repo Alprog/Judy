@@ -1,37 +1,4 @@
 
-
-math.randomseed(3)
-
-local a = math.random(1, 100)
-local b = math.random(1, 100)
-local c = math.random(1, 100)
-
-print(a, b, c)
-
-math.randomseed(2)
-
-a = math.random(1, 100)
-b = math.random(1, 100)
-c = math.random(1, 100)
-
-print(a, b, c)
-
-math.randomseed(3)
-
-a = math.random(1, 100)
-b = math.random(1, 100)
-c = math.random(1, 100)
-
-print(a, b, c)
-
-math.randomseed(2)
-
-a = math.random(1, 100)
-b = math.random(1, 100)
-c = math.random(1, 100)
-
-print(a, b, c)
-
 require 'Class'
 require 'ModelDerived'
 --require 'Serializer'

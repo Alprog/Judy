@@ -17,13 +17,12 @@ PSInput vsmain(float3 _position : POSITION, float4 _uv : TEXCOORD)
 {
 	PSInput result;
    
-	result.position = float4(_position, 1) + float4(0, 0.1, 0, 0); 
+	result.position = float4(_position, 1) + float4(0, 0.3, 0, 0); 
 	result.uv = _uv;
-    
 	return result;
 }
 
 float4 psmain(PSInput input) : SV_TARGET 
 {   
-	return float4(1, 0, 0, 0); 
+	return float4(1, 0, 0, 1); 
 }

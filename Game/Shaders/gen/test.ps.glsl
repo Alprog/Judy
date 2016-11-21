@@ -16,6 +16,6 @@ layout(location = 0) in vec2 uv;
 
 void psmain()
 {
-    _entryPointOutput = vec4(1.0, 0.0, 0.0, 0.0);
+    _entryPointOutput = vec4(1.0, 0.0, 0.0, 1.0);
 }
 

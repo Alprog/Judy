@@ -14,7 +14,8 @@
 
 struct VulkanTestVertex
 {
-    float x, y, z, w;
+    float x, y, z;
+    float u, v;
 };
 
 struct RenderTargetContext
@@ -52,6 +53,10 @@ public:
     virtual void draw(RenderCommand renderCommand) override;
     virtual void clear(Color color) override;
 
+    VkDevice& getDevice() { return device; };
+
+    uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
+
 protected:
     void init();
     void destroy();
@@ -59,7 +64,6 @@ protected:
     void initInstance();
     void initDevice();
     void initCommandBuffers();
-    void initVertexBuffer();
     void initShaders();
 
     void checkLayers(std::vector<const char*>& names);
@@ -74,11 +78,12 @@ protected:
     void initFrameBuffers(RenderTargetContext& context);
     void initPipeline(RenderTargetContext& context);
 
-    void drawHelper(RenderTargetContext& context);
+    void drawHelper(RenderTargetContext& context, std::vector<RenderCommand>& commands);
     VkShaderModule getShaderModule(std::string fileName);
 
     VkInstance vulkanInstance;
     VkDevice device;
+    VkDescriptorSetLayout descSetLayout;
     VkPhysicalDevice gpu;
     VkPhysicalDeviceMemoryProperties gpuMemoryProperties;
     VkQueue queue;
@@ -96,8 +101,6 @@ protected:
                          VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
 
     std::unordered_map<RenderTarget*, RenderTargetContext> contexts;
-
-    uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
 
     template <typename T>
     void getInstanceProcAddr(T& funcPointer, const char* funcName);

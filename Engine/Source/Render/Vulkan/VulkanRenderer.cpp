@@ -30,7 +30,6 @@ void VulkanRenderer::init()
     initInstance();
     initDevice();
     initCommandBuffers();
-    initVertexBuffer();
     initShaders();
 }
 
@@ -199,44 +198,6 @@ uint32_t VulkanRenderer::getMemoryTypeIndex(VkMemoryRequirements& requirements, 
     return 0;
 }
 
-void VulkanRenderer::initVertexBuffer()
-{
-    VkBufferCreateInfo vbInfo = {};
-    vbInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vbInfo.size = sizeof(VulkanTestVertex) * 3;
-    vbInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    vbInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-    auto err = vkCreateBuffer(device, &vbInfo, nullptr, &vertexBuffer);
-    assert(!err);
-
-    VkMemoryRequirements memoryRequirements = {};
-    vkGetBufferMemoryRequirements(device, vertexBuffer, &memoryRequirements);
-
-    VkMemoryAllocateInfo allocateInfo = {};
-    allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocateInfo.allocationSize = memoryRequirements.size;
-    allocateInfo.memoryTypeIndex = getMemoryTypeIndex(memoryRequirements, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-
-    VkDeviceMemory vertexBufferMemory;
-    err = vkAllocateMemory(device, &allocateInfo, nullptr, &vertexBufferMemory);
-    assert(!err);
-
-    void* mapped;
-    err = vkMapMemory(device, vertexBufferMemory, 0, VK_WHOLE_SIZE, 0, &mapped);
-    assert(!err);
-
-    VulkanTestVertex* triangle = (VulkanTestVertex*)mapped;
-    triangle[0] = { -1.0f, -1.0f, 0, 1.0f };
-    triangle[1] = {  1.0f, -1.0f, 0, 1.0f };
-    triangle[2] = {  0.0f,  1.0f, 0, 1.0f };
-
-    vkUnmapMemory(device, vertexBufferMemory);
-
-    err = vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
-    assert(!err);
-}
-
 void* readBinary(std::string filename, size_t *psize)
 {
     long int size;
@@ -291,6 +252,35 @@ void VulkanRenderer::initShaders()
 
 void VulkanRenderer::initPipeline(RenderTargetContext& context)
 {
+    VkDescriptorSetLayoutBinding layoutBindings[2] = {};
+
+    // t(0)
+    layoutBindings[0].binding = 0;
+    layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    layoutBindings[0].descriptorCount = 1;
+    layoutBindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    layoutBindings[0].pImmutableSamplers = NULL;
+
+    // b(0)
+    layoutBindings[1].binding = 1;
+    layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    layoutBindings[1].descriptorCount = 1;
+    layoutBindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    layoutBindings[1].pImmutableSamplers = NULL;
+
+    VkDescriptorSetLayoutCreateInfo descSetLayoutInfo = {};
+    descSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    descSetLayoutInfo.bindingCount = 2;
+    descSetLayoutInfo.pBindings = layoutBindings;
+
+    auto err = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, NULL, &descSetLayout);
+    assert(!err);
+
+    VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
+    pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts = &descSetLayout;
+
     VkPipelineLayoutCreateInfo layoutInfo = {};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layoutInfo.setLayoutCount = 0;
@@ -298,7 +288,7 @@ void VulkanRenderer::initPipeline(RenderTargetContext& context)
     layoutInfo.pushConstantRangeCount = 0;
     layoutInfo.pPushConstantRanges = nullptr;
 
-    auto err = vkCreatePipelineLayout(device, &layoutInfo, nullptr, &context.pipelineLayout);
+    err = vkCreatePipelineLayout(device, &layoutInfo, nullptr, &context.pipelineLayout);
     assert(!err);
 
     VkVertexInputBindingDescription bindingDesc = {};
@@ -464,7 +454,7 @@ VkSwapchainKHR VulkanRenderer::createSwapChain(RenderTarget* renderTarget)
     VkColorSpaceKHR colorSpace = formats[0].colorSpace;
     if (colorFormat == VK_FORMAT_UNDEFINED)
     {
-        colorFormat = VK_FORMAT_B8G8R8A8_UNORM;
+        colorFormat = VK_FORMAT_R8G8B8A8_UNORM;
     }
 
     VkSurfaceCapabilitiesKHR capabilities;
@@ -671,7 +661,7 @@ void VulkanRenderer::initDepthBuffer(RenderTargetContext& context)
     assert(!err);
 }
 
-void VulkanRenderer::drawHelper(RenderTargetContext& context)
+void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<RenderCommand>& commands)
 {
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -716,10 +706,14 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context)
     scissor.offset.y = 0;
     vkCmdSetScissor(drawCommandBuffer, 0, 1, &scissor);
 
-    VkDeviceSize offsets = {};
-    vkCmdBindVertexBuffers(drawCommandBuffer, 0, 1, &vertexBuffer, &offsets);
-    vkCmdDraw(drawCommandBuffer, 3, 1, 0, 0);
+    for (auto command : commands)
+    {
+        auto& vb = getImpl(command.mesh->vertexBuffer)->buffer;
 
+        VkDeviceSize offsets = {};
+        vkCmdBindVertexBuffers(drawCommandBuffer, 0, 1, &vb, &offsets);
+        vkCmdDraw(drawCommandBuffer, 3, 1, 0, 0);
+    }
 
     vkCmdEndRenderPass(drawCommandBuffer);
 
@@ -837,7 +831,7 @@ void VulkanRenderer::render(std::vector<RenderCommand> commands, RenderTarget* t
     err = vkAcquireNextImageKHR(device, context.swapChain, UINT64_MAX, semaphore, VK_NULL_HANDLE, &context.bufferIndex);
     assert(!err);
 
-    drawHelper(context);
+    drawHelper(context, commands);
     sumbitCommamdsToQueue(drawCommandBuffer, queue, semaphore);
 
     VkPresentInfoKHR presentInfo = {};
@@ -871,7 +865,7 @@ RenderTargetContext& VulkanRenderer::getContext(RenderTarget* renderTarget)
         auto size = renderTarget->getSize();
         context.width = size.x;
         context.height = size.y;
-        context.colorFormat = VK_FORMAT_B8G8R8A8_UNORM;
+        context.colorFormat = VK_FORMAT_R8G8B8A8_UNORM;
         context.depthFormat = VK_FORMAT_D16_UNORM;
 
         context.swapChain = createSwapChain(renderTarget);

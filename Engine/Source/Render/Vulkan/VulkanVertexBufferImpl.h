@@ -12,4 +12,6 @@ class Impl<VertexBuffer, RendererType::Vulkan>
 {
 public:
     Impl(VulkanRenderer* renderer, VertexBuffer* resource);
+
+    VkBuffer buffer;
 };
