@@ -14,8 +14,8 @@ Model::Model()
     mesh = createCubeMesh();
     renderState = new RenderState();
 
-    renderState->vertexShader = ShaderManager::getInstance()->getShader("Shaders/test", "vsmain");
-    renderState->pixelShader = ShaderManager::getInstance()->getShader("Shaders/test", "psmain");
+    renderState->setVertexShader(ShaderManager::getInstance()->getShader("Shaders/test", "vsmain"));
+    renderState->setPixelShader(ShaderManager::getInstance()->getShader("Shaders/test", "psmain"));
     renderState->texture = TextureManager::getInstance()->getTexture("skullbox.png");
 
     renderState->constantBuffer = new ConstantBuffer();

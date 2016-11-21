@@ -32,10 +32,9 @@ Impl<Shader, RendererType::GL>::Impl(GLRenderer* renderer, Shader* shader)
         glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
 
         auto a = (char*)glGetString(GL_VERSION);
-
-        // --
-
         glDeleteShader(id);
         id = 0;
+
+        throw;
     }
 }
