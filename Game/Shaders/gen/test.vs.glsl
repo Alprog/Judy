@@ -20,7 +20,7 @@ layout(location = 0) out vec2 uv;
 void vsmain()
 {
     PSInput result;
-    result.position = (MVP * vec4(_position, 1.0));
+    result.position = (_21.MVP * vec4(_position, 1.0));
     result.uv = vec2(_uv.xy);
     gl_Position = result.position;
     uv = result.uv;

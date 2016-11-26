@@ -26,4 +26,7 @@ Impl<PipelineState, RendererType::GL>::Impl(GLRenderer* renderer, PipelineState*
         glDeleteProgram(programId);
         programId = 0;
     }
+
+    auto location = glGetUniformBlockIndex(programId, "ConstantBuffer");
+    glUniformBlockBinding(programId, location, 0);
 }

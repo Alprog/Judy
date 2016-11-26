@@ -4,10 +4,9 @@
 #include "DXDescriptorHeap.h"
 
 Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffer* cb)
-    : version{0}
+    : resource{cb}
+    , version{0}
 {
-    this->resource = cb;
-
     auto device = renderer->getDevice();
 
     auto result = device->CreateCommittedResource(
