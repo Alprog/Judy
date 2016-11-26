@@ -225,10 +225,11 @@ void DXRenderer::draw(RenderCommand renderCommand)
 {
     auto mesh = renderCommand.mesh;
     auto texture = renderCommand.state->texture;
-    auto constantBuffer = renderCommand.state->constantBuffer;
+    auto cbImpl = getImpl(renderCommand.state->constantBuffer);
+    cbImpl->update();
 
     commandList->SetGraphicsRootDescriptorTable(0, getImpl(texture)->descriptorHandle.getGPU());
-    commandList->SetGraphicsRootDescriptorTable(1, getImpl(constantBuffer)->descriptorHandle.getGPU());
+    commandList->SetGraphicsRootDescriptorTable(1, cbImpl->descriptorHandle.getGPU());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

@@ -27,12 +27,9 @@ void RendererFrontend::draw(Mesh* mesh, Matrix matrix, RenderState* renderState)
     command.mesh = mesh;
     command.state = renderState;
 
-    command.state->constantBuffer->data.MVP = matrix * contexts.back().ViewProjection;
-
-#if WIN
-    DXRenderer* renderer = (DXRenderer*)RenderManager::getInstance()->getRenderer(RendererType::DX);
-    renderer->getImpl(command.state->constantBuffer)->update();
-#endif
+    auto cb = command.state->constantBuffer;
+    cb->data.MVP = matrix * contexts.back().ViewProjection;
+    cb->update();
 
     commands.push_back(command);
 }

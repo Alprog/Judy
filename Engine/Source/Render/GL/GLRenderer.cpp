@@ -56,7 +56,6 @@ void GLRenderer::draw(RenderCommand command)
     auto renderState = command.state;
 
     auto mvp = renderState->constantBuffer->data.MVP;
-
     auto programId = getImpl(renderState->getPipelineState())->programId;
 
     GLuint location = glGetUniformLocation(programId, "MVP");

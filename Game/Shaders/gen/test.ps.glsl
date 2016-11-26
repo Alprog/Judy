@@ -9,7 +9,7 @@ struct PSInput
 layout(binding = 0, std140) uniform ConstantBuffer
 {
     mat4 MVP;
-} _50;
+} _25;
 
 layout(location = 0) out vec4 _entryPointOutput;
 layout(location = 0) in vec2 uv;

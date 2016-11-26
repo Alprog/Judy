@@ -17,7 +17,7 @@ PSInput vsmain(float3 _position : POSITION, float4 _uv : TEXCOORD)
 {
 	PSInput result;
    
-	result.position = float4(_position, 1) + float4(0, 0.3, 0, 0); 
+	result.position = mul(float4(_position, 1), MVP); 
 	result.uv = _uv;
 	return result;
 }
