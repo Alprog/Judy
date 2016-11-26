@@ -515,10 +515,14 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<Render
     for (auto command : commands)
     {
         auto& vb = getImpl(command.mesh->vertexBuffer)->buffer;
+        auto& ib = getImpl(command.mesh->indexBuffer)->buffer;
 
         VkDeviceSize offsets = {};
         vkCmdBindVertexBuffers(drawCommandBuffer, 0, 1, &vb, &offsets);
-        vkCmdDraw(drawCommandBuffer, 3, 1, 0, 0);
+        vkCmdBindIndexBuffer(drawCommandBuffer, ib, 0, VkIndexType::VK_INDEX_TYPE_UINT32);
+
+        auto count = command.mesh->indices.size();
+        vkCmdDrawIndexed(drawCommandBuffer, count, 1, 0, 0, 0);
     }
 
     vkCmdEndRenderPass(drawCommandBuffer);

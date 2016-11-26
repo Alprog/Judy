@@ -13,12 +13,6 @@
 #include "VulkanPipelineStateImpl.h"
 #include "../Renderer.h"
 
-struct VulkanTestVertex
-{
-    float x, y, z;
-    float u, v;
-};
-
 struct RenderTargetContext
 {
     uint32_t width;
