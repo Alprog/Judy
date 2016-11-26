@@ -12,4 +12,7 @@ class Impl<Shader, RendererType::Vulkan>
 {
 public:
     Impl(VulkanRenderer* renderer, Shader* resource);
+
+    VkShaderModule shaderModule;
+    VkPipelineShaderStageCreateInfo shaderStageInfo;
 };

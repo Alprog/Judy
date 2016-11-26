@@ -37,10 +37,6 @@ struct RenderTargetContext
 
     VkRenderPass renderPass;
     VkFramebuffer* frameBuffers;
-
-    VkPipeline pipeline;
-    VkPipelineLayout pipelineLayout;
-    VkDescriptorSet descriptorSet;
 };
 
 class VulkanRenderer : public Renderer<RendererType::Vulkan>
@@ -65,7 +61,6 @@ protected:
     void initInstance();
     void initDevice();
     void initCommandBuffers();
-    void initShaders();
 
     void checkLayers(std::vector<const char*>& names);
     void checkExtensions(std::vector<const char*>& names);
@@ -77,14 +72,12 @@ protected:
     void initDepthBuffer(RenderTargetContext& context);
     void initRenderPass(RenderTargetContext& context);
     void initFrameBuffers(RenderTargetContext& context);
-    void initPipeline(RenderTargetContext& context);
 
     void drawHelper(RenderTargetContext& context, std::vector<RenderCommand>& commands);
     VkShaderModule getShaderModule(std::string fileName);
 
     VkInstance vulkanInstance;
     VkDevice device;
-    VkDescriptorSetLayout descSetLayout;
     VkPhysicalDevice gpu;
     VkPhysicalDeviceMemoryProperties gpuMemoryProperties;
     VkQueue queue;
