@@ -12,4 +12,15 @@ class Impl<ConstantBuffer, RendererType::Vulkan>
 {
 public:
     Impl(VulkanRenderer* renderer, ConstantBuffer* resource);
+    void update();
+
+    VkDescriptorSet descSet;
+
+private:
+    VulkanRenderer* renderer;
+    VkDeviceMemory constantBufferMemory;
+    ConstantBuffer* resource;
+    int version;
+
+    VkBuffer buffer;
 };

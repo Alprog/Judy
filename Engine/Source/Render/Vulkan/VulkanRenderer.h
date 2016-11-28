@@ -11,6 +11,7 @@
 #include "VulkanVertexBufferImpl.h"
 #include "VulkanConstantBufferImpl.h"
 #include "VulkanPipelineStateImpl.h"
+#include "VulkanDescriptorPool.h"
 #include "../Renderer.h"
 
 struct RenderTargetContext
@@ -45,6 +46,8 @@ public:
     virtual void clear(Color color) override;
 
     VkDevice& getDevice() { return device; };
+    VulkanDescriptorPool& getPool() { return *descriptorPool; }
+    VkDescriptorSetLayout& getDescSetLayout() { return descSetLayout; }
 
     uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
 
@@ -66,6 +69,8 @@ protected:
     void initDepthBuffer(RenderTargetContext& context);
     void initRenderPass(RenderTargetContext& context);
     void initFrameBuffers(RenderTargetContext& context);
+    void initDescSetLayout();
+    void initPool();
 
     void drawHelper(RenderTargetContext& context, std::vector<RenderCommand>& commands);
     VkShaderModule getShaderModule(std::string fileName);
@@ -78,10 +83,12 @@ protected:
     uint32_t queueFamilyIndex;
     VkCommandBuffer setupCommandBuffer;
     VkCommandBuffer drawCommandBuffer;
+    VkDescriptorSetLayout descSetLayout;
 
     VkShaderModule vertexShader;
     VkShaderModule fragmentShader;
     VkBuffer vertexBuffer;
+    VulkanDescriptorPool* descriptorPool;
 
     void sumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
 

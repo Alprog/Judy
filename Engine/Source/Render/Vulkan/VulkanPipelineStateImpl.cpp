@@ -1,45 +1,17 @@
 
 #include "VulkanPipelineStateImpl.h"
 #include <VulkanRenderer.h>
-#include <cassert>
 
 Impl<PipelineState, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, PipelineState* pipelineState)
 {
     auto device = renderer->getDevice();
 
-    // create descriptor set layout
-    {
-        VkDescriptorSetLayoutBinding layoutBindings[2] = {};
-
-        // t(0)
-        layoutBindings[0].binding = 0;
-        layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        layoutBindings[0].descriptorCount = 1;
-        layoutBindings[0].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        layoutBindings[0].pImmutableSamplers = NULL;
-
-        // b(0)
-        layoutBindings[1].binding = 1;
-        layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        layoutBindings[1].descriptorCount = 1;
-        layoutBindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-        layoutBindings[1].pImmutableSamplers = NULL;
-
-        VkDescriptorSetLayoutCreateInfo descSetLayoutInfo = {};
-        descSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        descSetLayoutInfo.bindingCount = 2;
-        descSetLayoutInfo.pBindings = layoutBindings;
-
-        auto err = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, NULL, &descSetLayout);
-        assert(!err);
-    }
-
     // create pipeline layout
     {
         VkPipelineLayoutCreateInfo layoutInfo = {};
         layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        layoutInfo.setLayoutCount = 0; //1
-        layoutInfo.pSetLayouts = nullptr; //&descSetLayout
+        layoutInfo.setLayoutCount = 1;
+        layoutInfo.pSetLayouts = &renderer->getDescSetLayout();
         layoutInfo.pushConstantRangeCount = 0;
         layoutInfo.pPushConstantRanges = nullptr;
 
@@ -49,7 +21,7 @@ Impl<PipelineState, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Pipeli
 
     VkVertexInputBindingDescription bindingDesc = {};
     bindingDesc.binding = 0;
-    bindingDesc.stride = sizeof(VulkanTestVertex);
+    bindingDesc.stride = sizeof(Vertex);
     bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     VkVertexInputAttributeDescription attributeDesc = {};
@@ -84,8 +56,8 @@ Impl<PipelineState, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Pipeli
     rasterizationState.depthClampEnable = VK_FALSE;
     rasterizationState.rasterizerDiscardEnable = VK_FALSE;
     rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
-    rasterizationState.cullMode = VK_CULL_MODE_NONE;
-    rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    rasterizationState.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizationState.depthBiasEnable = VK_FALSE;
     rasterizationState.depthBiasConstantFactor = 0;
     rasterizationState.depthBiasClamp = 0;

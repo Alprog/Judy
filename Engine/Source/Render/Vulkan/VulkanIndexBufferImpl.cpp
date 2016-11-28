@@ -1,20 +1,19 @@
 
 #include "VulkanIndexBufferImpl.h"
 #include <VulkanRenderer.h>
-#include <cassert>
 
 Impl<IndexBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, IndexBuffer* ib)
 {
     const UINT indexBufferSize = ib->indices.size() * sizeof(uint32_t);
 
-    VkBufferCreateInfo vbInfo = {};
-    vbInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vbInfo.size = indexBufferSize;
-    vbInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    VkBufferCreateInfo ibInfo = {};
+    ibInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    ibInfo.size = indexBufferSize;
+    ibInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 
     auto device = renderer->getDevice();
 
-    auto err = vkCreateBuffer(device, &vbInfo, nullptr, &buffer);
+    auto err = vkCreateBuffer(device, &ibInfo, nullptr, &buffer);
     assert(!err);
 
     VkMemoryRequirements memoryRequirements = {};

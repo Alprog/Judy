@@ -2,7 +2,6 @@
 #include "VulkanVertexBufferImpl.h"
 
 #include <VulkanRenderer.h>
-#include <cassert>
 
 Impl<VertexBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, VertexBuffer* vb)
 {

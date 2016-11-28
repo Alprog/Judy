@@ -1,6 +1,5 @@
 
 #include "VulkanRenderer.h"
-#include <cassert>
 #include <PlatformRenderTarget.h>
 
 VulkanRenderer::VulkanRenderer()
@@ -29,7 +28,9 @@ void VulkanRenderer::init()
 {
     initInstance();
     initDevice();
+    initDescSetLayout();
     initCommandBuffers();
+    initPool();
 }
 
 template <typename T>
@@ -153,6 +154,38 @@ void VulkanRenderer::initDevice()
     vkGetPhysicalDeviceMemoryProperties(gpu, &gpuMemoryProperties);
 
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
+}
+
+void VulkanRenderer::initDescSetLayout()
+{
+    VkDescriptorSetLayoutBinding layoutBindings[2] = {};
+
+    // t(0)
+    layoutBindings[1].binding = 1;
+    layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    layoutBindings[1].descriptorCount = 1;
+    layoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    layoutBindings[1].pImmutableSamplers = NULL;
+
+    // b(0)
+    layoutBindings[0].binding = 0;
+    layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    layoutBindings[0].descriptorCount = 1;
+    layoutBindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    layoutBindings[0].pImmutableSamplers = NULL;
+
+    VkDescriptorSetLayoutCreateInfo descSetLayoutInfo = {};
+    descSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    descSetLayoutInfo.bindingCount = 2;
+    descSetLayoutInfo.pBindings = layoutBindings;
+
+    auto err = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, NULL, &descSetLayout);
+    assert(!err);
+}
+
+void VulkanRenderer::initPool()
+{
+    descriptorPool = new VulkanDescriptorPool(device);
 }
 
 void VulkanRenderer::initCommandBuffers()
@@ -477,7 +510,7 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<Render
     VkClearValue clear_values[2] = {};
 
     clear_values[0].color = {0.2f, 1.0f, 0.2f, 1.0f};
-    clear_values[1].depthStencil = {0, 0};
+    clear_values[1].depthStencil = {1, 0};
 
     auto PSO = getImpl(commands[0].state->getPipelineState());
 
@@ -496,7 +529,6 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<Render
     vkCmdBeginRenderPass(drawCommandBuffer, &rpBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     vkCmdBindPipeline(drawCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PSO->pipeline);
-    //vkCmdBindDescriptorSets(drawCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descreptionSet, 0, nullptr);
 
     VkViewport viewport = {};
     viewport.height = (float)context.height;
@@ -514,8 +546,13 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<Render
 
     for (auto command : commands)
     {
+        auto cb = getImpl(command.state->constantBuffer);
+        cb->update();
+
         auto& vb = getImpl(command.mesh->vertexBuffer)->buffer;
         auto& ib = getImpl(command.mesh->indexBuffer)->buffer;
+
+        vkCmdBindDescriptorSets(drawCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PSO->pipelineLayout, 0, 1, &cb->descSet, 0, nullptr);
 
         VkDeviceSize offsets = {};
         vkCmdBindVertexBuffers(drawCommandBuffer, 0, 1, &vb, &offsets);

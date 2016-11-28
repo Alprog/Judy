@@ -17,7 +17,6 @@ public:
     VkPipelineLayout pipelineLayout;
 
     VkRenderPass renderPass;
-    VkDescriptorSetLayout descSetLayout;
 
 private:
     void initRenderPass(VulkanRenderer* renderer, VkFormat colorFormat, VkFormat depthFormat);

@@ -11,8 +11,6 @@ layout(binding = 0, std140) uniform ConstantBuffer
     mat4 MVP;
 } _21;
 
-uniform mat4 MVP;
-
 layout(location = 0) in vec3 _position;
 layout(location = 1) in vec4 _uv;
 layout(location = 0) out vec2 uv;

@@ -2,7 +2,6 @@
 #include "VulkanShaderImpl.h"
 #include <ShaderBunch.h>
 #include <VulkanRenderer.h>
-#include <cassert>
 
 Impl<Shader, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Shader* resource)
 {
