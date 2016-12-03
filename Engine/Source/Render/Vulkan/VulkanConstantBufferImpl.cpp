@@ -54,14 +54,15 @@ Impl<ConstantBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Const
     descSetInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     descSetInfo.descriptorPool = renderer->getPool().getPool();
     descSetInfo.descriptorSetCount = 1;
-    descSetInfo.pSetLayouts = &renderer->getDescSetLayout();
+    descSetInfo.pSetLayouts = renderer->getDescSetLayouts();
 
-    err = vkAllocateDescriptorSets(device, &descSetInfo, &descSet);
+    err = vkAllocateDescriptorSets(device, &descSetInfo, &descriptorSet);
     assert(!err);
 
     VkWriteDescriptorSet writeSetInfo = {};
     writeSetInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeSetInfo.dstSet = descSet;
+    writeSetInfo.dstSet = descriptorSet;
+    writeSetInfo.dstBinding = 0;
     writeSetInfo.descriptorCount = 1;
     writeSetInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     writeSetInfo.pBufferInfo = &descriptorBufferInfo;

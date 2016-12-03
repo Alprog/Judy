@@ -16,8 +16,10 @@ public:
     void initImage(VulkanRenderer* renderer, Texture* texture);
     void initImageView(VulkanRenderer* renderer);
     void initSampler(VulkanRenderer* renderer);
+    void initDescriptorSet(VulkanRenderer* renderer);
 
     VkImage image;
     VkImageView imageView;
     VkSampler sampler;
+    VkDescriptorSet descriptorSet;
 };

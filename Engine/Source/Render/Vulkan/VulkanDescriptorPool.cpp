@@ -11,7 +11,7 @@ VulkanDescriptorPool::VulkanDescriptorPool(VkDevice& device)
 
     VkDescriptorPoolCreateInfo poolInfo = {};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    poolInfo.maxSets = 1;
+    poolInfo.maxSets = 2;
     poolInfo.poolSizeCount = 2;
     poolInfo.pPoolSizes = poolSizes;
 

@@ -10,8 +10,8 @@ Impl<PipelineState, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Pipeli
     {
         VkPipelineLayoutCreateInfo layoutInfo = {};
         layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        layoutInfo.setLayoutCount = 1;
-        layoutInfo.pSetLayouts = &renderer->getDescSetLayout();
+        layoutInfo.setLayoutCount = 2;
+        layoutInfo.pSetLayouts = renderer->getDescSetLayouts();
         layoutInfo.pushConstantRangeCount = 0;
         layoutInfo.pPushConstantRanges = nullptr;
 

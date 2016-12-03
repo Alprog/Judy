@@ -14,7 +14,7 @@ public:
     Impl(VulkanRenderer* renderer, ConstantBuffer* resource);
     void update();
 
-    VkDescriptorSet descSet;
+    VkDescriptorSet descriptorSet;
 
 private:
     VulkanRenderer* renderer;

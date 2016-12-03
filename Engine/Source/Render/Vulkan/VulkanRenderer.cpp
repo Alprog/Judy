@@ -160,13 +160,6 @@ void VulkanRenderer::initDescSetLayout()
 {
     VkDescriptorSetLayoutBinding layoutBindings[2] = {};
 
-    // t(0)
-    layoutBindings[1].binding = 1;
-    layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    layoutBindings[1].descriptorCount = 1;
-    layoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-    layoutBindings[1].pImmutableSamplers = NULL;
-
     // b(0)
     layoutBindings[0].binding = 0;
     layoutBindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -174,13 +167,23 @@ void VulkanRenderer::initDescSetLayout()
     layoutBindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     layoutBindings[0].pImmutableSamplers = NULL;
 
-    VkDescriptorSetLayoutCreateInfo descSetLayoutInfo = {};
-    descSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    descSetLayoutInfo.bindingCount = 2;
-    descSetLayoutInfo.pBindings = layoutBindings;
+    // t(0)
+    layoutBindings[1].binding = 0;
+    layoutBindings[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    layoutBindings[1].descriptorCount = 1;
+    layoutBindings[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    layoutBindings[1].pImmutableSamplers = NULL;
 
-    auto err = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, NULL, &descSetLayout);
-    assert(!err);
+    for (int i = 0; i < 2; i++)
+    {
+        VkDescriptorSetLayoutCreateInfo descSetLayoutInfo = {};
+        descSetLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        descSetLayoutInfo.bindingCount = 1;
+        descSetLayoutInfo.pBindings = &layoutBindings[i];
+
+        auto err = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, nullptr, &descSetLayouts[i]);
+        assert(!err);
+    }
 }
 
 void VulkanRenderer::initPool()
@@ -549,10 +552,12 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<Render
         auto cb = getImpl(command.state->constantBuffer);
         cb->update();
 
-        auto& vb = getImpl(command.mesh->vertexBuffer)->buffer;
-        auto& ib = getImpl(command.mesh->indexBuffer)->buffer;
+        auto vb = getImpl(command.mesh->vertexBuffer)->buffer;
+        auto ib = getImpl(command.mesh->indexBuffer)->buffer;
+        auto texture = getImpl(command.state->texture);
 
-        vkCmdBindDescriptorSets(drawCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PSO->pipelineLayout, 0, 1, &cb->descSet, 0, nullptr);
+        vkCmdBindDescriptorSets(drawCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PSO->pipelineLayout, 0, 1, &cb->descriptorSet, 0, nullptr);
+        vkCmdBindDescriptorSets(drawCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PSO->pipelineLayout, 1, 1, &texture->descriptorSet, 0, nullptr);
 
         VkDeviceSize offsets = {};
         vkCmdBindVertexBuffers(drawCommandBuffer, 0, 1, &vb, &offsets);

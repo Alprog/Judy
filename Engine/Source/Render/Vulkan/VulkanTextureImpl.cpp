@@ -10,6 +10,7 @@ VulkanTexImpl::Impl(VulkanRenderer* renderer, Texture* texture)
     initImage(renderer, texture);
     initImageView(renderer);
     initSampler(renderer);
+    initDescriptorSet(renderer);
 }
 
 void VulkanTexImpl::initImage(VulkanRenderer* renderer, Texture* texture)
@@ -77,6 +78,7 @@ void VulkanTexImpl::initImageView(VulkanRenderer* renderer)
 {
     VkImageViewCreateInfo imageViewInfo = {};
     imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageViewInfo.image = image;
     imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
     imageViewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
     imageViewInfo.components = {VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A};
@@ -107,4 +109,31 @@ void VulkanTexImpl::initSampler(VulkanRenderer* renderer)
 
     auto err = vkCreateSampler(renderer->getDevice(), &samplerInfo, nullptr, &sampler);
     assert(!err);
+}
+
+void VulkanTexImpl::initDescriptorSet(VulkanRenderer* renderer)
+{
+    VkDescriptorSetAllocateInfo allocInfo = {};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = renderer->getPool().getPool();
+    allocInfo.descriptorSetCount = 1;
+    allocInfo.pSetLayouts = &renderer->getDescSetLayouts()[1];
+
+    auto err = vkAllocateDescriptorSets(renderer->getDevice(), &allocInfo, &descriptorSet);
+    assert(!err);
+
+    VkDescriptorImageInfo descriptorImageInfo = {};
+    descriptorImageInfo.imageView = imageView;
+    descriptorImageInfo.sampler = sampler;
+    descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+
+    VkWriteDescriptorSet write = {};
+    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    write.dstSet = descriptorSet;
+    write.dstBinding = 0;
+    write.descriptorCount = 1;
+    write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    write.pImageInfo = &descriptorImageInfo;
+
+    vkUpdateDescriptorSets(renderer->getDevice(), 1, &write, 0, nullptr);
 }

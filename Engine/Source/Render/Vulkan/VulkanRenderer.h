@@ -47,7 +47,7 @@ public:
 
     VkDevice& getDevice() { return device; };
     VulkanDescriptorPool& getPool() { return *descriptorPool; }
-    VkDescriptorSetLayout& getDescSetLayout() { return descSetLayout; }
+    VkDescriptorSetLayout* getDescSetLayouts() { return descSetLayouts; }
 
     uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
     void resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
@@ -85,7 +85,7 @@ protected:
     uint32_t queueFamilyIndex;
     VkCommandBuffer setupCommandBuffer;
     VkCommandBuffer drawCommandBuffer;
-    VkDescriptorSetLayout descSetLayout;
+    VkDescriptorSetLayout descSetLayouts[2];
 
     VkShaderModule vertexShader;
     VkShaderModule fragmentShader;
