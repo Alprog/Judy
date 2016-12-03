@@ -13,5 +13,9 @@ class Impl<Texture, RendererType::Vulkan>
 public:
     Impl(VulkanRenderer* renderer, Texture* resource);
 
+    void initImage(VulkanRenderer* renderer, Texture* texture);
+    void initSampler(VulkanRenderer* renderer);
+
     VkImage image;
+    VkSampler sampler;
 };

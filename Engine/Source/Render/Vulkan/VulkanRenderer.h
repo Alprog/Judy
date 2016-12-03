@@ -50,6 +50,8 @@ public:
     VkDescriptorSetLayout& getDescSetLayout() { return descSetLayout; }
 
     uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
+    void resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
+                         VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
 
 protected:
     void init();
@@ -91,9 +93,6 @@ protected:
     VulkanDescriptorPool* descriptorPool;
 
     void sumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
-
-    void resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
-                         VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
 
     std::unordered_map<RenderTarget*, RenderTargetContext> contexts;
 

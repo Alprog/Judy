@@ -3,7 +3,15 @@
 #include <Images.h>
 #include <VulkanRenderer.h>
 
-Impl<Texture, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Texture* texture)
+using VulkanTexImpl = Impl<Texture, RendererType::Vulkan>;
+
+VulkanTexImpl::Impl(VulkanRenderer* renderer, Texture* texture)
+{
+    initImage(renderer, texture);
+    initSampler(renderer);
+}
+
+void VulkanTexImpl::initImage(VulkanRenderer* renderer, Texture* texture)
 {
     auto sourceImage = Images::loadPng(texture->filePath);
 
@@ -40,8 +48,6 @@ Impl<Texture, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Texture* tex
     err = vkBindImageMemory(device, image, imageMemory, 0);
     assert(!err);
 
-    //set_image_layout(info, mappableImage, VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_GENERAL);
-
     VkImageSubresource imageSubResource = {};
     imageSubResource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     imageSubResource.mipLevel = 0;
@@ -57,5 +63,44 @@ Impl<Texture, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Texture* tex
     memcpy(data, sourceImage->data, size);
     vkUnmapMemory(device, imageMemory);
 
+    auto oldStage = VK_IMAGE_LAYOUT_PREINITIALIZED;
+    auto newStage = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    auto srcAccess = VK_ACCESS_HOST_WRITE_BIT;
+    auto dstAccess = (VkAccessFlagBits)(VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_INPUT_ATTACHMENT_READ_BIT);
+    renderer->resourceBarrier(image, oldStage, newStage, srcAccess, dstAccess);
+
     delete sourceImage;
+}
+
+void VulkanTexImpl::initSampler(VulkanRenderer* renderer)
+{
+    auto& device = renderer->getDevice();
+
+    VkSamplerCreateInfo samplerInfo = {};
+    samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    samplerInfo.magFilter = VK_FILTER_NEAREST;
+    samplerInfo.minFilter = VK_FILTER_NEAREST;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.mipLodBias = 0.0f;
+    samplerInfo.anisotropyEnable = VK_FALSE;
+    samplerInfo.maxAnisotropy = 1;
+    samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
+    samplerInfo.minLod = 0.0f;
+    samplerInfo.maxLod = 0.0f;
+    samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+    samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
+    VkImageViewCreateInfo imageViewInfo = {};
+    imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageViewInfo.image = VK_NULL_HANDLE;
+    imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageViewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    imageViewInfo.components = {VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A};
+    imageViewInfo.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+    auto err = vkCreateSampler(device, &samplerInfo, nullptr, &sampler);
+    assert(!err);
 }
