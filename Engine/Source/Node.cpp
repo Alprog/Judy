@@ -7,13 +7,13 @@
 Node::Node()
     : parent {nullptr}
 {
-    transform.retain();
+    transform = new Transform();
 }
 
 Node::Node(int /*i*/)
     : parent {nullptr}
 {
-    transform.retain();
+    transform = new Transform();
 }
 
 Node::~Node()
@@ -107,7 +107,7 @@ void Node::render(Matrix matrix, RendererFrontend* renderer)
 {
     for (auto& child : childs)
     {
-        auto const& childMatrix = child->transform.getMatrix();
+        auto const& childMatrix = child->transform->getMatrix();
         child->render(childMatrix * matrix, renderer);
     }
 }

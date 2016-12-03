@@ -6,7 +6,7 @@ CONFIG += staticlib
 
 INCLUDEPATH += ../3rd-party/lua/Source
 
-subdirs = Source Source/Input Source/Meta Source/Math \
+subdirs = Source Source/Input Source/Meta Source/Meta/TypeTraits Source/Math \
           Source/Net Source/LuaMachine Source/Containers Source/Render \
           Source/Render/GL
 

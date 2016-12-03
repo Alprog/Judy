@@ -58,10 +58,10 @@ void Path::applyDots(std::string& pathString)
     bool changed = false;
 
     bool isAbsolute = Path::isAbsolute(pathString);
-    size_t lastIndex = isAbsolute ? 1 : 0;
+    int lastIndex = isAbsolute ? 1 : 0;
 
     auto upCount = 0;
-    for (size_t i = components.size() - 1; i >= lastIndex; i--)
+    for (int i = components.size() - 1; i >= lastIndex; i--)
     {
         auto component = components[i];
         if (component == ".")
@@ -160,6 +160,19 @@ Path& Path::operator+=(const Path& rhs)
     return *this;
 }
 
+Path Path::getParentPath() const
+{
+    auto index = canonicalPath.find_last_of("/");
+    if (index == std::string::npos)
+    {
+        return "";
+    }
+    else
+    {
+        return canonicalPath.substr(0, index);
+    }
+}
+
 std::string Path::getName() const
 {
     auto index = canonicalPath.find_last_of("/");
@@ -173,13 +186,27 @@ std::string Path::getName() const
     }
 }
 
-std::string Path::getExtension() const
+std::string Path::getNameWithoutExtension() const
 {
     auto name = getName();
     auto index = name.find_last_of(".");
     if (index == std::string::npos)
     {
         return name;
+    }
+    else
+    {
+        return name.substr(0, index);
+    }
+}
+
+std::string Path::getExtension() const
+{
+    auto name = getName();
+    auto index = name.find_last_of(".");
+    if (index == std::string::npos)
+    {
+        return "";
     }
     else
     {

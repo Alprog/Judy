@@ -954,8 +954,9 @@ TIntermAggregate* TParseContext::handleFunctionDefinition(const TSourceLoc& loc,
     functionReturnsValue = false;
 
     // Check for entry point
-    if (function.getName().compare(intermediate.getEntryPointName().c_str()) == 0) {
-        intermediate.setEntryPointMangledName(function.getMangledName().c_str());
+    auto entryPoint = intermediate.getEntryPoint(function.getName().c_str());
+    if (entryPoint) {
+        entryPoint->mangledName = function.getMangledName().c_str();
         intermediate.incrementEntryPointCount();
         inMain = true;
     } else

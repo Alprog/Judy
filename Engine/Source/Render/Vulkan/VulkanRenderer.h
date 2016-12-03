@@ -10,12 +10,9 @@
 #include "VulkanIndexBufferImpl.h"
 #include "VulkanVertexBufferImpl.h"
 #include "VulkanConstantBufferImpl.h"
+#include "VulkanPipelineStateImpl.h"
+#include "VulkanDescriptorPool.h"
 #include "../Renderer.h"
-
-struct VulkanTestVertex
-{
-    float x, y, z, w;
-};
 
 struct RenderTargetContext
 {
@@ -35,10 +32,6 @@ struct RenderTargetContext
 
     VkRenderPass renderPass;
     VkFramebuffer* frameBuffers;
-
-    VkPipeline pipeline;
-    VkPipelineLayout pipelineLayout;
-    VkDescriptorSet descriptorSet;
 };
 
 class VulkanRenderer : public Renderer<RendererType::Vulkan>
@@ -52,6 +45,14 @@ public:
     virtual void draw(RenderCommand renderCommand) override;
     virtual void clear(Color color) override;
 
+    VkDevice& getDevice() { return device; };
+    VulkanDescriptorPool& getPool() { return *descriptorPool; }
+    VkDescriptorSetLayout* getDescSetLayouts() { return descSetLayouts; }
+
+    uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
+    void resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
+                         VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
+
 protected:
     void init();
     void destroy();
@@ -59,8 +60,6 @@ protected:
     void initInstance();
     void initDevice();
     void initCommandBuffers();
-    void initVertexBuffer();
-    void initShaders();
 
     void checkLayers(std::vector<const char*>& names);
     void checkExtensions(std::vector<const char*>& names);
@@ -72,9 +71,10 @@ protected:
     void initDepthBuffer(RenderTargetContext& context);
     void initRenderPass(RenderTargetContext& context);
     void initFrameBuffers(RenderTargetContext& context);
-    void initPipeline(RenderTargetContext& context);
+    void initDescSetLayout();
+    void initPool();
 
-    void drawHelper(RenderTargetContext& context);
+    void drawHelper(RenderTargetContext& context, std::vector<RenderCommand>& commands);
     VkShaderModule getShaderModule(std::string fileName);
 
     VkInstance vulkanInstance;
@@ -85,19 +85,16 @@ protected:
     uint32_t queueFamilyIndex;
     VkCommandBuffer setupCommandBuffer;
     VkCommandBuffer drawCommandBuffer;
+    VkDescriptorSetLayout descSetLayouts[2];
 
     VkShaderModule vertexShader;
     VkShaderModule fragmentShader;
     VkBuffer vertexBuffer;
+    VulkanDescriptorPool* descriptorPool;
 
     void sumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQueue& queue, VkSemaphore& semaphore);
 
-    void resourceBarrier(VkImage& image, VkImageLayout oldStage, VkImageLayout newStage,
-                         VkAccessFlagBits srcAccess, VkAccessFlagBits dstAccess);
-
     std::unordered_map<RenderTarget*, RenderTargetContext> contexts;
-
-    uint32_t getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags);
 
     template <typename T>
     void getInstanceProcAddr(T& funcPointer, const char* funcName);

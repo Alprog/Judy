@@ -12,8 +12,11 @@ class IDocument : public QWidget
     Q_OBJECT
 
 public:
-    IDocument(Path documentPath);
     virtual DocumentType getType() const = 0;
+
+    void open(Path documentPath);
+    virtual void save();
+    virtual void reload();
 
     Path getPath() { return documentPath; }
     std::string getName() { return documentPath.getName(); }
@@ -22,15 +25,12 @@ public:
     bool isModifiedOutside();
     void ignoreOutsideModification();
 
-    virtual void save();
     virtual bool changed() const = 0;
 
-    void reload();
-
-private:
+protected:
     QDateTime getLastModifiedTime();
     virtual void setBinaryData(QByteArray data) = 0;
-    virtual QByteArray getBinaryData() = 0;
+    virtual QByteArray getBinaryData() const = 0;
 
 private slots:
     void onModified();

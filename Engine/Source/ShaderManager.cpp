@@ -1,18 +1,21 @@
 
 #include "ShaderManager.h"
-#include "Render/Shader.h"
+#include <Shader.h>
+#include <ShaderBunch.h>
 
-Shader* ShaderManager::getShader(std::string name, Shader::Type type)
+ShaderBunch* ShaderManager::getShaderBunch(Path path)
 {
-    auto& shaders = type == Shader::Type::Vertex ? vertexShaders : pixelShaders;
+    auto it = bunches.find(path);
+    if (it != bunches.end())
+        return it->second.get();
 
-    auto it = shaders.find(name);
-    if (it != std::end(shaders))
-    {
-        return it->second;
-    }
+    auto bunch = new ShaderBunch(path);
+    bunches[path] = std::unique_ptr<ShaderBunch>(bunch);
+    return bunch;
+}
 
-    auto shader = new Shader(name, type);
-    shaders[name] = shader;
-    return shader;
+
+Shader* ShaderManager::getShader(Path bunchPath, std::string entryPoint)
+{
+    return getShaderBunch(bunchPath)->getShader(entryPoint);
 }

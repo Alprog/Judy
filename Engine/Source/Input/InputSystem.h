@@ -4,6 +4,7 @@
 #include "SingletonObject.h"
 #include "InputDevice.h"
 #include "Platform.h"
+#include <vector>
 
 PLATFORM_FORWARD_DECLARE(InputSystem)
 

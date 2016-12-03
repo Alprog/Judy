@@ -2,18 +2,21 @@
 #pragma once
 
 #include "Math/Matrix.h"
-#include "RendererResource.h"
+#include "RenderResource.h"
 
-class ConstantBuffer : public RendererResource<ConstantBuffer>
+class ConstantBuffer : public RenderResource<ConstantBuffer>
 {
 public:
     ConstantBuffer();
 
     void load();
+    void update();
 
     struct
     {
         Matrix MVP;
     }
     data;
+
+    int version;
 };

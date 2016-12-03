@@ -3,42 +3,53 @@
 
 #include "Shader.h"
 #include "GL/GLShaderImpl.h"
-#include <vector>
 #include "RenderManager.h"
 #include "GL/GLRenderer.h"
+#include <vector>
+#include <unordered_map>
+#include "PipelineState.h"
+
+std::unordered_map<PipelineSettings, PipelineState*> states;
 
 RenderState::RenderState()
-    : vertexShader {nullptr}
-    , pixelShader {nullptr}
-    , texture {nullptr}
+    : texture {nullptr}
     , constantBuffer {nullptr}
 {
 }
 
-void RenderState::link()
+void RenderState::setVertexShader(Shader* shader)
 {
-    programId = glCreateProgram();
-
-    GLRenderer* renderer = (GLRenderer*)RenderManager::getInstance()->getRenderer(RendererType::GL);
-
-    auto vid = renderer->getImpl(vertexShader)->id;
-    auto pid = renderer->getImpl(pixelShader)->id;
-
-    glAttachShader(programId, vid);
-    glAttachShader(programId, pid);
-    glLinkProgram(programId);
-
-    GLint isLinked;
-    glGetProgramiv(programId, GL_LINK_STATUS, &isLinked);
-    if(isLinked == GL_FALSE)
+    if (pipelineSettings.vertexShader != shader)
     {
-        GLint maxLength = 0;
-        glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &maxLength);
-
-        std::vector<GLchar> errorLog(maxLength);
-        glGetProgramInfoLog(programId, maxLength, &maxLength, &errorLog[0]);
-
-        glDeleteProgram(programId);
-        programId = 0;
+        pipelineSettings.vertexShader = shader;
+        pipelineState = nullptr;
     }
+}
+
+void RenderState::setPixelShader(Shader* shader)
+{
+    if (pipelineSettings.pixelShader != shader)
+    {
+        pipelineSettings.pixelShader = shader;
+        pipelineState = nullptr;
+    }
+}
+
+PipelineState* RenderState::getPipelineState()
+{
+    if (pipelineState == nullptr)
+    {
+        auto it = states.find(pipelineSettings);
+        if (it != states.end())
+        {
+            pipelineState = it->second;
+        }
+        else
+        {
+            pipelineState = new PipelineState(pipelineSettings);
+            states[pipelineSettings] = pipelineState;
+        }
+    }
+
+    return pipelineState;
 }

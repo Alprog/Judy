@@ -18,6 +18,7 @@ class Shader;
 class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
+class PipelineState;
 struct RenderCommand;
 
 class IRenderer
@@ -36,6 +37,7 @@ public:
     virtual void createImpl(IndexBuffer* resource) = 0;
     virtual void createImpl(Shader* resource) = 0;
     virtual void createImpl(ConstantBuffer* resource) = 0;
+    virtual void createImpl(PipelineState* resource) = 0;
 
     virtual RendererType getType() = 0;
 };

@@ -20,5 +20,6 @@ public:
     DXDescriptorHandle descriptorHandle;
 
     ConstantBuffer* resource;
+    int version;
     UINT8* gpuDataBegin;
 };

@@ -4,9 +4,9 @@
 #include <vector>
 #include "Vertex.h"
 
-#include "RendererResource.h"
+#include "RenderResource.h"
 
-class VertexBuffer : public RendererResource<VertexBuffer>
+class VertexBuffer : public RenderResource<VertexBuffer>
 {
 public:
     VertexBuffer();

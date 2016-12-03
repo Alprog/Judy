@@ -6,7 +6,7 @@
 Impl<Texture, RendererType::GL>::Impl(GLRenderer* renderer, Texture* texture)
     : id {0}
 {
-    auto image = Images::loadPng(texture->name);
+    auto image = Images::loadPng(texture->filePath);
 
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);

@@ -1,13 +1,13 @@
 
-#include "RendererResource.h"
+#include "RenderResource.h"
 #include "RenderManager.h"
 
-RenderResource::RenderResource()
+IRenderResource::IRenderResource()
 {
     this->id = RenderManager::getInstance()->registerResource(this);
 }
 
-RenderResource::~RenderResource()
+IRenderResource::~IRenderResource()
 {
     RenderManager::getInstance()->unregisterResource(this);
 }

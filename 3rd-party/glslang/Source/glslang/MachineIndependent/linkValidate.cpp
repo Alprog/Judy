@@ -69,6 +69,11 @@ void TIntermediate::error(TInfoSink& infoSink, const char* message)
 //
 void TIntermediate::merge(TInfoSink& infoSink, TIntermediate& unit)
 {
+    for (auto entryPoint : unit.entryPoints)
+    {
+        entryPoints.push_back(entryPoint);
+    }
+
     if (source == EShSourceNone)
         source = unit.source;
 
@@ -76,9 +81,9 @@ void TIntermediate::merge(TInfoSink& infoSink, TIntermediate& unit)
         error(infoSink, "can't link compilation units from different source languages");
 
     if (source == EShSourceHlsl && unit.getNumEntryPoints() > 0) {
-        if (getNumEntryPoints() > 0)
-            error(infoSink, "can't handle multiple entry points per stage");
-        else
+        //if (getNumEntryPoints() > 0)
+        //    error(infoSink, "can't handle multiple entry points per stage");
+        //else
             entryPointName = unit.entryPointName;
     }
     numEntryPoints += unit.numEntryPoints;
@@ -181,7 +186,7 @@ void TIntermediate::merge(TInfoSink& infoSink, TIntermediate& unit)
     TIntermSequence& linkerObjects = findLinkerObjects();
     TIntermSequence& unitLinkerObjects = unit.findLinkerObjects();
 
-    mergeBodies(infoSink, globals, unitGlobals);
+    mergeBodies(infoSink, globals, unitGlobals, &unit);
     mergeLinkerObjects(infoSink, linkerObjects, unitLinkerObjects);
 
     ioAccessed.insert(unit.ioAccessed.begin(), unit.ioAccessed.end());
@@ -191,24 +196,56 @@ void TIntermediate::merge(TInfoSink& infoSink, TIntermediate& unit)
 // Merge the function bodies and global-level initializers from unitGlobals into globals.
 // Will error check duplication of function bodies for the same signature.
 //
-void TIntermediate::mergeBodies(TInfoSink& infoSink, TIntermSequence& globals, const TIntermSequence& unitGlobals)
+void TIntermediate::mergeBodies(TInfoSink& infoSink, TIntermSequence& globals, const TIntermSequence& unitGlobals, TIntermediate* unit)
 {
-    // TODO: link-time performance: Processing in alphabetical order will be faster
+    for (unsigned int unitChild = 0; unitChild < unitGlobals.size() - 1; ++unitChild)
+    {
+        TIntermAggregate* unitBody = unitGlobals[unitChild]->getAsAggregate();
 
-    // Error check the global objects, not including the linker objects
-    for (unsigned int child = 0; child < globals.size() - 1; ++child) {
-        for (unsigned int unitChild = 0; unitChild < unitGlobals.size() - 1; ++unitChild) {
+        bool conflict = false;
+        for (unsigned int child = 0; child < globals.size() - 1; ++child)
+        {
             TIntermAggregate* body = globals[child]->getAsAggregate();
-            TIntermAggregate* unitBody = unitGlobals[unitChild]->getAsAggregate();
-            if (body && unitBody && body->getOp() == EOpFunction && unitBody->getOp() == EOpFunction && body->getName() == unitBody->getName()) {
-                error(infoSink, "Multiple function bodies in multiple compilation units for the same signature in the same stage:");
-                infoSink.info << "    " << globals[child]->getAsAggregate()->getName() << "\n";
+            if (body && unitBody && body->getOp() == EOpFunction && unitBody->getOp() == EOpFunction && body->getName() == unitBody->getName())
+            {
+                bool isEntryPoint = unit->isEntryPointMangledName(unitBody->getName().c_str());
+                if (isEntryPoint)
+                {
+                    globals[child] = unitBody;
+                }
+
+                conflict = true;
+                break;
             }
+        }
+
+        if (!conflict)
+        {
+            globals.insert(globals.end() - 1, unitBody);
         }
     }
 
+    // TODO: link-time performance: Processing in alphabetical order will be faster
+
+    // Error check the global objects, not including the linker objects
+//    for (unsigned int child = 0; child < globals.size() - 1; ++child) {
+//        for (unsigned int unitChild = 0; unitChild < unitGlobals.size() - 1; ++unitChild) {
+//            TIntermAggregate* body = globals[child]->getAsAggregate();
+//            TIntermAggregate* unitBody = unitGlobals[unitChild]->getAsAggregate();
+
+//            auto bodyName = body->getName().c_str();
+//            auto unitName = unitBody->getName().c_str();
+
+//            if (body && unitBody && body->getOp() == EOpFunction && unitBody->getOp() == EOpFunction && body->getName() == unitBody->getName()) {
+//                //error(infoSink, "Multiple function bodies in multiple compilation units for the same signature in the same stage:");
+//                infoSink.info << "    " << globals[child]->getAsAggregate()->getName() << "\n";
+//                //return;
+//            }
+//        }
+//    }
+
     // Merge the global objects, just in front of the linker objects
-    globals.insert(globals.end() - 1, unitGlobals.begin(), unitGlobals.end() - 1);
+    //globals.insert(globals.end() - 1, unitGlobals.begin(), unitGlobals.end() - 1);
 }
 
 //
@@ -221,9 +258,16 @@ void TIntermediate::mergeLinkerObjects(TInfoSink& infoSink, TIntermSequence& lin
     std::size_t initialNumLinkerObjects = linkerObjects.size();
     for (unsigned int unitLinkObj = 0; unitLinkObj < unitLinkerObjects.size(); ++unitLinkObj) {
         bool merge = true;
+
+        TIntermSymbol* unitSymbol = unitLinkerObjects[unitLinkObj]->getAsSymbolNode();
+
+        printf(">unit> %s\n", unitSymbol->getName().c_str());
+
         for (std::size_t linkObj = 0; linkObj < initialNumLinkerObjects; ++linkObj) {
             TIntermSymbol* symbol = linkerObjects[linkObj]->getAsSymbolNode();
-            TIntermSymbol* unitSymbol = unitLinkerObjects[unitLinkObj]->getAsSymbolNode();
+
+            printf(">> %s\n", symbol->getName().c_str());
+
             assert(symbol && unitSymbol);
             if (symbol->getName() == unitSymbol->getName()) {
                 // filter out copy
@@ -281,21 +325,21 @@ void TIntermediate::mergeErrorCheck(TInfoSink& infoSink, const TIntermSymbol& sy
 
     // Types have to match
     if (symbol.getType() != unitSymbol.getType()) {
-        error(infoSink, "Types must match:");
-        writeTypeComparison = true;
+        //error(infoSink, "Types must match:");
+        //writeTypeComparison = true;
     }
 
     // Qualifiers have to (almost) match
 
     // Storage...
     if (symbol.getQualifier().storage != unitSymbol.getQualifier().storage) {
-        error(infoSink, "Storage qualifiers must match:");
-        writeTypeComparison = true;
+        //error(infoSink, "Storage qualifiers must match:");
+        //writeTypeComparison = true;
     }
 
     // Precision...
     if (symbol.getQualifier().precision != unitSymbol.getQualifier().precision) {
-        error(infoSink, "Precision qualifiers must match:");
+        //error(infoSink, "Precision qualifiers must match:");
         writeTypeComparison = true;
     }
 

@@ -1,20 +1,19 @@
 
 #include "DXShaderImpl.h"
-#include "d3dcompiler.h"
+#include <ShaderBunch.h>
+#include <Utils.h>
+#include <d3dcompiler.h>
 #include <codecvt>
 
 Impl<Shader, RendererType::DX>::Impl(DXRenderer* renderer, Shader* shader)
 {
-    auto filename = shader->source + ".hlsl";
+    auto& source = shader->bunch->getSourceText(ShaderBunch::BlobType::Hlsl);
 
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    auto wfilename = converter.from_bytes(filename);
-
+    auto entryPoint = shader->entryPoint.c_str();
+    auto target = shader->type == ShaderType::Vertex ? "vs_5_0" : "ps_5_0";
     UINT compileFlags = 0;
 
-    auto entryPoint = shader->type == Shader::Type::Vertex ? "VSMain" : "PSMain";
-    auto target = shader->type == Shader::Type::Vertex ? "vs_5_0" : "ps_5_0";
+    auto result = D3DCompile(source.data(), source.size(), entryPoint, nullptr, nullptr, entryPoint, target, compileFlags, 0, &blob, nullptr);
 
-    auto result = D3DCompileFromFile(wfilename.c_str(), nullptr, nullptr, entryPoint, target, compileFlags, 0, &blob, nullptr);
     if (FAILED(result)) throw;
 }

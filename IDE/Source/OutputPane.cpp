@@ -39,8 +39,8 @@ OutputPane::OutputPane()
 
         edit = new QTextEdit(nullptr);
         edit->setReadOnly(true);
+        layout->addWidget(edit);
     }
-    layout->addWidget(edit);
 
     auto widget = new QWidget();
     widget->setLayout(layout);

@@ -12,7 +12,11 @@ DEFINES += SCI_NAMESPACE
 HEADERS += $$files(Source/*.h, true)
 SOURCES += $$files(Source/*.cpp, true)
 
+LIBS += -L"../3rd-Party" -lglslang -lspirv-cross
+
 INCLUDEPATH += "../3rd-party/scintilla/include"
+INCLUDEPATH += "../3rd-party/glslang/Source"
+INCLUDEPATH += "../3rd-party/spirv-cross/Source"
 
 win: LIBS += -L"../3rd-party" -lscintillaedit3
 

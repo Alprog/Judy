@@ -5,6 +5,7 @@
 #include <vector>
 #include "Any.h"
 #include "IndexSequence.h"
+#include <TypeTraits.h>
 
 template <typename ClassType, typename ReturnType, typename... ArgTypes>
 class MethodMeta : public FunctionMeta<ReturnType, ClassType*, ArgTypes...>
@@ -33,7 +34,7 @@ public:
         }
         else
         {
-            throw new std::exception();
+            throw std::exception();
         }
     }
 

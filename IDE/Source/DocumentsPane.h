@@ -25,7 +25,7 @@ public:
     void checkOutsideModification();
 
 private:
-    static IDocument* createDocument(Path absolutePath);
+    static IDocument* createDocumentByExtension(std::string extension);
     int reloadDocumentMessageBox(IDocument* document);
 
 private slots:

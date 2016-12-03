@@ -55,12 +55,9 @@ void GLRenderer::draw(RenderCommand command)
 
     auto renderState = command.state;
 
-    auto mvp = renderState->constantBuffer->data.MVP;
+    auto programId = getImpl(renderState->getPipelineState())->programId;
 
-    GLuint location = glGetUniformLocation(renderState->programId, "MVP");
-    glUniformMatrix4fv(location, 1, GL_FALSE, &mvp.m11);
-
-    location = glGetUniformLocation(renderState->programId, "mainTexture");
+    auto location = glGetUniformLocation(programId, "mainTexture");
     glUniform1i(location, 0);
     glActiveTexture(GL_TEXTURE0);
     GLuint id = getImpl(renderState->texture)->id;
@@ -68,9 +65,12 @@ void GLRenderer::draw(RenderCommand command)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+    getImpl(command.state->constantBuffer)->update();
+
+    getImpl(command.state->constantBuffer)->bind();
     getImpl(command.mesh->vertexBuffer)->bind();
     getImpl(command.mesh->indexBuffer)->bind();
-    glUseProgram(renderState->programId);
+    glUseProgram(programId);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);

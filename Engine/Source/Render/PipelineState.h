@@ -1,29 +1,16 @@
 
 #pragma once
 
-#include "RendererResource.h"
-
-enum class CullMode : char
-{
-    None,
-    Front,
-    Back
-};
+#include <RenderResource.h>
+#include <PipelineSettings.h>
 
 class Shader;
 
-class PipelineState
+class PipelineState : public RenderResource<PipelineState>
 {
 public:
-    Shader* vertexShader;
-    Shader* pixelShader;
+    PipelineState(PipelineSettings& pipelineSettings);
+    void load();
 
-    union
-    {
-        struct
-        {
-            CullMode cullMode : 2;
-        };
-        unsigned int flags;
-    };
+    PipelineSettings settings;
 };

@@ -15,4 +15,5 @@ private slots:
     void openFile();
     void saveFile();
     void saveAsFile();
+    void compile();
 };

@@ -34,9 +34,9 @@ public:
 
     virtual void render(Matrix matrix, RendererFrontend* renderer);
 
-    [[Serialize, Inspect]] Transform transform;
+    [[Serialize, Inspect]] Ref<Transform> transform;
 
-    Transform* getTransform() { return &transform; }
+    Transform* getTransform() { return transform.get(); }
 
 private:
     Node* parent;

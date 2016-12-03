@@ -9,8 +9,8 @@ print(3)
 local app = App.getInstance()
 local window = Window.create()
 local scene = window.scene
-
-app.window = window
+
+app.window = window
 
 local inputSystem = InputSystem.getInstance()
 

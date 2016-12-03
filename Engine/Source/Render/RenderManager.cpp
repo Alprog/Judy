@@ -29,7 +29,7 @@ IRenderer* RenderManager::getRenderer(RendererType type)
     return nullptr;
 }
 
-unsigned int RenderManager::registerResource(RenderResource* resource)
+unsigned int RenderManager::registerResource(IRenderResource* resource)
 {
     unsigned int id;
     if (freeIds.empty())
@@ -46,7 +46,7 @@ unsigned int RenderManager::registerResource(RenderResource* resource)
     return id;
 }
 
-void RenderManager::unregisterResource(RenderResource* resource)
+void RenderManager::unregisterResource(IRenderResource* resource)
 {
     auto id = resource->id;
     resources[id] = nullptr;

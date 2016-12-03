@@ -1,8 +1,8 @@
 
 #include "DXRenderer.h"
 #include <PlatformRenderTarget.h>
+#include <ShaderManager.h>
 
-#include "DXPipelineState.h"
 #include "DXShaderImpl.h"
 #include "DXTextureImpl.h"
 #include "Images.h"
@@ -24,7 +24,6 @@ DXRenderer::~DXRenderer()
 {
 }
 
-DXPipelineState* state = nullptr;
 D3D12_VIEWPORT viewport;
 D3D12_RECT scissorRect;
 
@@ -226,10 +225,11 @@ void DXRenderer::draw(RenderCommand renderCommand)
 {
     auto mesh = renderCommand.mesh;
     auto texture = renderCommand.state->texture;
-    auto constantBuffer = renderCommand.state->constantBuffer;
+    auto cbImpl = getImpl(renderCommand.state->constantBuffer);
+    cbImpl->update();
 
     commandList->SetGraphicsRootDescriptorTable(0, getImpl(texture)->descriptorHandle.getGPU());
-    commandList->SetGraphicsRootDescriptorTable(1, getImpl(constantBuffer)->descriptorHandle.getGPU());
+    commandList->SetGraphicsRootDescriptorTable(1, cbImpl->descriptorHandle.getGPU());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -244,17 +244,14 @@ void DXRenderer::populateCommandList(std::vector<RenderCommand> commands)
     auto result = commandAllocator->Reset();
     if (FAILED(result)) throw;
 
-    if (state == nullptr)
-    {
-        auto vertexShader = new Shader("shadersTextured", Shader::Type::Vertex);
-        auto pixelShader = new Shader("shadersTextured", Shader::Type::Pixel);
-        state = new DXPipelineState(vertexShader, pixelShader, this);
-    }
+    auto& firstCommand = commands[0];
 
-    result = commandList->Reset(commandAllocator.Get(), state->pipelineState.Get());
+    auto pso = getImpl(firstCommand.state->getPipelineState());
+
+    result = commandList->Reset(commandAllocator.Get(), pso->pipelineState.Get());
     if (FAILED(result)) throw;
 
-    commandList->SetGraphicsRootSignature(state->rootSignature.Get());
+    commandList->SetGraphicsRootSignature(pso->rootSignature.Get());
 
     ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->get() };
     commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);

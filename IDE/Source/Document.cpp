@@ -5,21 +5,34 @@
 #include <QFileInfo>
 #include <QDir>
 
-IDocument::IDocument(Path documentPath)
+void IDocument::open(Path documentPath)
 {
     this->documentPath = documentPath;
+    reload();
+}
+
+void IDocument::save()
+{
+    QFile file(documentPath.c_str());
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        auto data = getBinaryData();
+        file.write(data);
+        file.close();
+        modifiedTime = getLastModifiedTime();
+    }
+
+    this->onModified();
 }
 
 void IDocument::reload()
 {
     QFile file(documentPath.c_str());
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (file.open(QIODevice::ReadOnly))
     {
-        QTextStream stream(&file);
-        QByteArray data = stream.readAll().toUtf8();
+        QByteArray data = file.readAll();
         setBinaryData(data);
         file.close();
-
         modifiedTime = getLastModifiedTime();
     }
 }
@@ -43,20 +56,6 @@ QDateTime IDocument::getLastModifiedTime()
 std::string IDocument::getTabName()
 {
     return changed() ? getName() + "*" : getName();
-}
-
-void IDocument::save()
-{
-    QFile file(documentPath.c_str());
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
-    {
-        QTextStream stream(&file);
-        stream << getBinaryData();
-        file.close();
-        modifiedTime = getLastModifiedTime();
-    }
-
-    this->onModified();
 }
 
 void IDocument::onModified()

@@ -1,11 +1,14 @@
 
+INCLUDEPATH += "..\Engine\Source"
+INCLUDEPATH += "..\Engine\Source\Render"
+INCLUDEPATH += "..\Engine\Source\Meta\TypeTraits"
+INCLUDEPATH += "../3rd-party/lua/Source"
+
 win {
-    INCLUDEPATH += "..\Engine\Source"
     INCLUDEPATH += "..\Engine\Source\Win"
-    INCLUDEPATH += "..\3rd-party\lua\Source"
 
     LIBS += -L"..\Engine" -lEngine
-    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua -lglslang -lspirv-cross
+    LIBS += -L"..\3rd-Party" -lzlib -llibpng -llua
     PRE_TARGETDEPS += "..\Engine\Engine.lib"
     PRE_TARGETDEPS += "..\3rd-party\zlib.lib"
     PRE_TARGETDEPS += "..\3rd-party\libpng.lib"
@@ -18,13 +21,10 @@ win {
 }
 
 linux {
-    INCLUDEPATH += "../Engine/Source"
     INCLUDEPATH += "../Engine/Source/Linux"
-    INCLUDEPATH += "../3rd-party/lua/Source"
 
     LIBS += -L"../Engine" -lEngine
-
-    LIBS += -L"../3rd-party" -llibpng -llua -lzlib
+    LIBS += -L"../3rd-party" -lzlib -llibpng -llua
     PRE_TARGETDEPS += "../Engine/libEngine.a"
     PRE_TARGETDEPS += "../3rd-party/libzlib.a"
     PRE_TARGETDEPS += "../3rd-party/liblibpng.a"
@@ -34,9 +34,7 @@ linux {
 }
 
 mac {
-    INCLUDEPATH += "../Engine/Source"
     INCLUDEPATH += "../Engine/Source/Mac"
-    INCLUDEPATH += "../3rd-party/lua/Source"
 
     LIBS += -L"../Engine" -lEngine
     LIBS += -L"../3rd-party" -lzlib -llibpng -llua
