@@ -12,4 +12,6 @@ class Impl<Texture, RendererType::Vulkan>
 {
 public:
     Impl(VulkanRenderer* renderer, Texture* resource);
+
+    VkImage image;
 };

@@ -9,7 +9,7 @@ static const UINT TexturePixelSize = 4;
 
 Impl<Texture, RendererType::DX>::Impl(DXRenderer* renderer, Texture* resource)
 {
-    auto image = Images::loadPng(resource->name);
+    auto image = Images::loadPng(resource->filePath);
 
     auto device = renderer->getDevice();
     auto commandList = renderer->getCommandList();
