@@ -8,6 +8,7 @@ using VulkanTexImpl = Impl<Texture, RendererType::Vulkan>;
 VulkanTexImpl::Impl(VulkanRenderer* renderer, Texture* texture)
 {
     initImage(renderer, texture);
+    initImageView(renderer);
     initSampler(renderer);
 }
 
@@ -72,10 +73,21 @@ void VulkanTexImpl::initImage(VulkanRenderer* renderer, Texture* texture)
     delete sourceImage;
 }
 
+void VulkanTexImpl::initImageView(VulkanRenderer* renderer)
+{
+    VkImageViewCreateInfo imageViewInfo = {};
+    imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageViewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    imageViewInfo.components = {VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A};
+    imageViewInfo.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+    auto err = vkCreateImageView(renderer->getDevice(), &imageViewInfo, nullptr, &imageView);
+    assert(!err);
+}
+
 void VulkanTexImpl::initSampler(VulkanRenderer* renderer)
 {
-    auto& device = renderer->getDevice();
-
     VkSamplerCreateInfo samplerInfo = {};
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerInfo.magFilter = VK_FILTER_NEAREST;
@@ -93,14 +105,6 @@ void VulkanTexImpl::initSampler(VulkanRenderer* renderer)
     samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    VkImageViewCreateInfo imageViewInfo = {};
-    imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    imageViewInfo.image = VK_NULL_HANDLE;
-    imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    imageViewInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-    imageViewInfo.components = {VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A};
-    imageViewInfo.subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
-
-    auto err = vkCreateSampler(device, &samplerInfo, nullptr, &sampler);
+    auto err = vkCreateSampler(renderer->getDevice(), &samplerInfo, nullptr, &sampler);
     assert(!err);
 }

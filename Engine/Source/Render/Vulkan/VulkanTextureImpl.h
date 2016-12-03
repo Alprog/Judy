@@ -14,8 +14,10 @@ public:
     Impl(VulkanRenderer* renderer, Texture* resource);
 
     void initImage(VulkanRenderer* renderer, Texture* texture);
+    void initImageView(VulkanRenderer* renderer);
     void initSampler(VulkanRenderer* renderer);
 
     VkImage image;
+    VkImageView imageView;
     VkSampler sampler;
 };
