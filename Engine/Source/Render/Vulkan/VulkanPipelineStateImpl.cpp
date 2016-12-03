@@ -24,18 +24,23 @@ Impl<PipelineState, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Pipeli
     bindingDesc.stride = sizeof(Vertex);
     bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-    VkVertexInputAttributeDescription attributeDesc = {};
-    attributeDesc.location = 0;
-    attributeDesc.binding = 0;
-    attributeDesc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
-    attributeDesc.offset = 0;
+    VkVertexInputAttributeDescription attributeDescs[2] = {};
+    attributeDescs[0].location = 0;
+    attributeDescs[0].binding = 0;
+    attributeDescs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+    attributeDescs[0].offset = 0;
+
+    attributeDescs[1].location = 1;
+    attributeDescs[1].binding = 0;
+    attributeDescs[1].format = VK_FORMAT_R32G32_SFLOAT;
+    attributeDescs[1].offset = sizeof(float) * 3;
 
     VkPipelineVertexInputStateCreateInfo vertexInputStateInfo = {};
     vertexInputStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputStateInfo.vertexBindingDescriptionCount = 1;
     vertexInputStateInfo.pVertexBindingDescriptions = &bindingDesc;
-    vertexInputStateInfo.vertexAttributeDescriptionCount = 1;
-    vertexInputStateInfo.pVertexAttributeDescriptions = &attributeDesc;
+    vertexInputStateInfo.vertexAttributeDescriptionCount = 2;
+    vertexInputStateInfo.pVertexAttributeDescriptions = attributeDescs;
 
     VkPipelineInputAssemblyStateCreateInfo assemblyStateInfo = {};
     assemblyStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

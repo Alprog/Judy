@@ -11,11 +11,13 @@ layout(binding = 0, std140) uniform ConstantBuffer
     mat4 MVP;
 } _25;
 
+uniform sampler2D _67;
+
 layout(location = 0) out vec4 _entryPointOutput;
 layout(location = 0) in vec2 uv;
 
 void psmain()
 {
-    _entryPointOutput = vec4(uv.x, uv.y, 0.0, 1.0);
+    _entryPointOutput = texture(_67, uv);
 }
 
