@@ -3,10 +3,10 @@
 #include "DXRenderer.h"
 #include "DXDescriptorHeap.h"
 
-Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffer* resource)
+Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffer* cb)
+    : resource{cb}
+    , version{0}
 {
-    this->resource = resource;
-
     auto device = renderer->getDevice();
 
     auto result = device->CreateCommittedResource(
@@ -35,6 +35,10 @@ Impl<ConstantBuffer, RendererType::DX>::Impl(DXRenderer* renderer, ConstantBuffe
 
 void Impl<ConstantBuffer, RendererType::DX>::update()
 {
-    memcpy(gpuDataBegin, &resource->data, sizeof(resource->data));
+    if (version != resource->version)
+    {
+        memcpy(gpuDataBegin, &resource->data, sizeof(resource->data));
+        version = resource->version;
+    }
 }
 

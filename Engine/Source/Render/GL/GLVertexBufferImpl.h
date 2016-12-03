@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "gl.h"
-
-#include "../Impl.h"
-#include "../VertexBuffer.h"
+#include <Impl.h>
+#include <VertexBuffer.h>
+#include <gl.h>
 
 class GLRenderer;
 
@@ -16,5 +15,6 @@ public:
 
     inline void bind() { glBindBuffer(GL_ARRAY_BUFFER, id); }
 
+private:
     GLuint id;
 };

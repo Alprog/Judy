@@ -10,10 +10,13 @@ public:
     ConstantBuffer();
 
     void load();
+    void update();
 
     struct
     {
         Matrix MVP;
     }
     data;
+
+    int version;
 };

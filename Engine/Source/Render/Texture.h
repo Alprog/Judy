@@ -2,14 +2,15 @@
 #pragma once
 
 #include "RenderResource.h"
+#include <Path.h>
 #include <string>
 
 class Texture : public RenderResource<Texture>
 {
 public:
-    Texture(std::string name);
+    Texture(Path filePath);
     void load();
 
 public:
-    std::string name;
+    Path filePath;
 };

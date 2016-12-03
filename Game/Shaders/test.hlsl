@@ -7,6 +7,9 @@ cbuffer ConstantBuffer : register(b0)
 	row_major float4x4 MVP;
 };
 
+Texture2D g_texture : register(t0);
+SamplerState g_sampler : register(s0);
+
 struct PSInput
 {
 	float4 position : SV_POSITION;
@@ -17,12 +20,12 @@ PSInput vsmain(float3 _position : POSITION, float4 _uv : TEXCOORD)
 {
 	PSInput result;
    
-	result.position = float4(_position, 1) + float4(0, 0.3, 0, 0); 
+	result.position = mul(float4(_position, 1), MVP); 
 	result.uv = _uv;
 	return result;
 }
 
 float4 psmain(PSInput input) : SV_TARGET 
 {   
-	return float4(1, 0, 0, 1); 
+	return g_texture.Sample(g_sampler, input.uv);
 }

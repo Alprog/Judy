@@ -5,6 +5,7 @@
 #include "IRenderer.h"
 
 ConstantBuffer::ConstantBuffer()
+    : version{1}
 {
     load();
 }
@@ -16,4 +17,9 @@ void ConstantBuffer::load()
     {
         renderers[i]->createImpl(this);
     }
+}
+
+void ConstantBuffer::update()
+{
+    version++;
 }

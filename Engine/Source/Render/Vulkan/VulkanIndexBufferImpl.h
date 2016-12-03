@@ -12,4 +12,6 @@ class Impl<IndexBuffer, RendererType::Vulkan>
 {
 public:
     Impl(VulkanRenderer* renderer, IndexBuffer* resource);
+
+    VkBuffer buffer;
 };

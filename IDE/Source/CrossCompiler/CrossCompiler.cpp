@@ -107,6 +107,7 @@ std::string CrossCompiler::spirvToGlsl(QByteArray spirvBinary)
     auto options = compiler.get_options();
     options.version = 440;
     compiler.set_options(options);
+    compiler.build_combined_image_samplers();
 
     auto glslText = compiler.compile();
     return glslText;

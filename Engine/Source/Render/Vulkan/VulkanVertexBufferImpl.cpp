@@ -2,13 +2,14 @@
 #include "VulkanVertexBufferImpl.h"
 
 #include <VulkanRenderer.h>
-#include <cassert>
 
-Impl<VertexBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, VertexBuffer* resource)
+Impl<VertexBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, VertexBuffer* vb)
 {
+    const UINT vertexBufferSize = sizeof(Vertex) * vb->vertices.size();
+
     VkBufferCreateInfo vbInfo = {};
     vbInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    vbInfo.size = sizeof(VulkanTestVertex) * 3;
+    vbInfo.size = vertexBufferSize;
     vbInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     vbInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -29,15 +30,10 @@ Impl<VertexBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, VertexB
     err = vkAllocateMemory(device, &allocateInfo, nullptr, &vertexBufferMemory);
     assert(!err);
 
-    void* mapped;
-    err = vkMapMemory(device, vertexBufferMemory, 0, VK_WHOLE_SIZE, 0, &mapped);
+    void* data;
+    err = vkMapMemory(device, vertexBufferMemory, 0, VK_WHOLE_SIZE, 0, &data);
     assert(!err);
-
-    VulkanTestVertex* triangle = (VulkanTestVertex*)mapped;
-    triangle[0] = { -1.0f, -1.0f, 0, 0.0f, 0.0f };
-    triangle[1] = {  1.0f, -1.0f, 0, 0.0f, 0.0f };
-    triangle[2] = {  0.0f,  1.0f, 0, 0.0f, 0.0f };
-
+    memcpy(data, &vb->vertices[0], vertexBufferSize);
     vkUnmapMemory(device, vertexBufferMemory);
 
     err = vkBindBufferMemory(device, buffer, vertexBufferMemory, 0);

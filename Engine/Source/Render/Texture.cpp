@@ -5,8 +5,8 @@
 #include "IRenderer.h"
 #include "Impl.h"
 
-Texture::Texture(std::string name)
-    : name { name }
+Texture::Texture(Path filePath)
+    : filePath { filePath }
 {
     load();
 }

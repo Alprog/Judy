@@ -32,7 +32,7 @@ void readData(png_structp pngPtr, png_bytep data, png_size_t length)
     stream->read((char*)data, length);
 }
 
-Image* Images::loadPng(std::string path)
+Image* Images::loadPng(Path path)
 {
     std::ifstream fstream { path, std::ios::binary };
     if (fstream.is_open())
