@@ -86,7 +86,7 @@ void ClassInfo::processTemplateTokens(TokenGroup& tokens)
         for (TokenGroup& group : groups)
         {
             int index = group.indexOf("=");
-            auto token = index >= 0 ? group.extractAt(index) : group.extractLast();
+            auto token = index >= 0 ? group.extractAt(index - 1) : group.extractLast();
             auto name = token->getName();
             templateParameters.push_back(name);
         }
