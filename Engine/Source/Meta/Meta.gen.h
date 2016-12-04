@@ -8,6 +8,3 @@
     template <typename T>
     void defineSet();
 
-    template <typename T, typename RealT>
-    void defineSingleton();
-

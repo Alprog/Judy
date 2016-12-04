@@ -284,9 +284,17 @@ std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool is
     // base classes
     for (auto& inheritanceInfo : classInfo.inheritances)
     {
-        stream << tab<2>;
-        stream << (isTemplate ? ".template base" : ".base");
-        stream << "<" << inheritanceInfo.type.fullName << ">()" << std::endl;
+        if (inheritanceInfo.type.name == "Singleton")
+        {
+            stream << tab<2>;
+            stream << ".function(\"getInstance\", &" << className << "::getInstance)" << std::endl;
+        }
+        else
+        {
+            stream << tab<2>;
+            stream << (isTemplate ? ".template base" : ".base");
+            stream << "<" << inheritanceInfo.type.fullName << ">()" << std::endl;
+        }
     }
 
     // constructors

@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "SingletonObject.h"
+#include "Singleton.h"
 #include "InputDevice.h"
 #include "Platform.h"
 #include <vector>
 
 PLATFORM_FORWARD_DECLARE(InputSystem)
 
-class [[Meta]] InputSystem : public SingletonObject<InputSystem, PlatformInputSystem>
+class [[Meta]] InputSystem : public Singleton<InputSystem, PlatformInputSystem>
 {
     friend class Meta;
 

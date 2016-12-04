@@ -241,14 +241,13 @@ inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
         }
         else
         {
-            pushPointer(L, result.as<void*>(), type);
+            pushPointer(L, result.as<void*>(), type->getPointeeType());
         }
     }
     else
     {
         pushValue(L, result.getAddress(), type);
     }
-
 }
 
 int getterInvoker(lua_State* L)

@@ -3,12 +3,12 @@
 
 #include "Meta/Meta.h"
 #include "Meta/TypeMeta.h"
-#include "SingletonObject.h"
+#include "Singleton.h"
 #include "Window.h"
 #include "Containers/Set.h"
 #include "Attributes.h"
 
-class [[Meta]] App : public SingletonObject<App>
+class [[Meta]] App : public Singleton<App>
 {
     friend class Meta;
 

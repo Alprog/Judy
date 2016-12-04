@@ -24,7 +24,6 @@
 #include <Node.h>
 #include <Object.h>
 #include <Quad.h>
-#include <Singleton.h>
 #include <Window.h>
 
 template <typename T>
@@ -71,17 +70,6 @@ void Meta::defineSet()
     ;
 }
 
-template <typename T, typename RealT>
-void Meta::defineSingleton()
-{
-    using type = Singleton<T, RealT>;
-    ClassDefiner<type>(this, "Singleton<T, RealT>")
-        .template templateArgument<T>()
-        .template templateArgument<RealT>()
-        .function("getInstance", &type::getInstance)
-    ;
-}
-
 void Meta::defineClasses()
 {
     defineList<CallInfo>();
@@ -106,7 +94,7 @@ void Meta::defineClasses()
     ;
 
     ClassDefiner<InputSystem>(this, "InputSystem")
-        .base<SingletonObject<InputSystem, PlatformInputSystem>>()
+        .function("getInstance", &InputSystem::getInstance)
         .method("updateState", &InputSystem::updateState)
         .method("isPressed", &InputSystem::isPressed)
         .method("onPressed", &InputSystem::onPressed)
@@ -226,7 +214,7 @@ void Meta::defineClasses()
     ;
 
     ClassDefiner<App>(this, "App")
-        .base<SingletonObject<App>>()
+        .function("getInstance", &App::getInstance)
         .method("startMainLoop", &App::startMainLoop)
         .method("addWindow", &App::addWindow)
         .method("removeWindow", &App::removeWindow)
