@@ -98,7 +98,7 @@ std::string CodeGenerator::generateTemplateFunctions(std::vector<ClassInfo>& tem
         if (!first) { stream << std::endl; }
         auto list = generateParametersList(classInfo, true);
         stream << "template <" << list << ">" << std::endl;
-        stream << "void Meta::Define" << classInfo.name << "()" << std::endl;
+        stream << "void Meta::define" << classInfo.name << "()" << std::endl;
         stream << "{" << std::endl;
         stream << generateClassDefinition(classInfo, true);
         stream << "}" << std::endl;
@@ -110,7 +110,7 @@ std::string CodeGenerator::generateTemplateFunctions(std::vector<ClassInfo>& tem
 std::string CodeGenerator::generateMainFunction(std::vector<ClassInfo>& realClasses, std::vector<ClassInfo>& classTemplates)
 {
     std::stringstream stream;
-    stream << "void Meta::DefineClasses()" << std::endl;
+    stream << "void Meta::defineClasses()" << std::endl;
     stream << "{" << std::endl;
 
     stream << generateDefineTemplatesSection(realClasses, classTemplates);
