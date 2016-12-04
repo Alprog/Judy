@@ -10,4 +10,5 @@ struct AttributeInfo
 public:
     AttributeInfo(TokenGroup& tokens);
     std::string name;
+    std::string value;
 };

@@ -21,4 +21,5 @@ struct MemberInfo
     std::vector<std::string> templateParameters;
 
     bool containsAttribute(std::string name);
+    AttributeInfo* getAttribute(std::string name);
 };

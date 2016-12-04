@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include "../Info/TypeInfo.h"
+#include <regex>
 
 #if WIN
     #define snprintf _snprintf
@@ -332,7 +333,7 @@ std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool is
     // methods
     for (auto& method : classInfo.methods)
     {
-        if (!method.isOperator && !method.isFriend)
+        if (!method.isOperator && !method.isFriend && !method.containsAttribute("Ignore"))
         {
             auto type = method.isStatic ? "function" : "method";
             stream << tab<2> << generateMethod(type, method, className);
@@ -374,7 +375,16 @@ std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool is
 std::string CodeGenerator::generateMethod(std::string type, MethodInfo& method, std::string className)
 {
     std::stringstream stream;
-    stream << "." << type << "(\"" << method.name << "\", &" << className << "::" << method.name << ")";
+
+    auto methodName = method.name;
+
+    auto bindAttribute = method.getAttribute("Bind");
+    if (bindAttribute != nullptr && !bindAttribute->value.empty())
+    {
+        methodName = std::regex_replace(bindAttribute->value, std::regex("\""), "");
+    }
+
+    stream << "." << type << "(\"" << methodName << "\", &" << className << "::" << method.name << ")";
     stream << generateAttributes(method) << std::endl;
     return stream.str();
 }
@@ -384,7 +394,10 @@ std::string CodeGenerator::generateAttributes(MemberInfo& memberInfo)
     std::stringstream stream;
     for (auto& attributeInfo : memberInfo.attributes)
     {
-        stream << ".attr(\"" << attributeInfo.name << "\")";
+        if (attributeInfo.name != "Bind")
+        {
+            stream << ".attr(\"" << attributeInfo.name << "\")";
+        }
     }
     return stream.str();
 }
