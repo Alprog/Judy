@@ -5,7 +5,6 @@
 #include <unordered_set>
 #include <unordered_map>
 #include "../Info/TypeInfo.h"
-#include <regex>
 
 #if WIN
     #define snprintf _snprintf
@@ -381,7 +380,7 @@ std::string CodeGenerator::generateMethod(std::string type, MethodInfo& method, 
     auto bindAttribute = method.getAttribute("Bind");
     if (bindAttribute != nullptr && !bindAttribute->value.empty())
     {
-        methodName = std::regex_replace(bindAttribute->value, std::regex("\""), "");
+        methodName = bindAttribute->value;
     }
 
     stream << "." << type << "(\"" << methodName << "\", &" << className << "::" << method.name << ")";

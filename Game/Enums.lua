@@ -1,11 +1,20 @@
 
 function Enum(table)
-	local enum = {}
-	for i, value in ipairs(table) do
-		enum[value] = i
-	end
-	return enum
+    local enum = {}
+    for i, value in ipairs(table) do
+        enum[value] = i
+    end
+    return enum
 end
+
+RendererType = Enum
+({
+    [0] = "DX",
+    "GL",
+    "Vulkan",
+    
+    "COUNT"
+})
 
 Keys = Enum
 ({

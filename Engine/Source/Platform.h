@@ -6,7 +6,7 @@ enum class Platform
 {
     Windows,
     Linux,
-    OSX,
+    MacOS,
     Unknown
 };
 

@@ -23,6 +23,7 @@ public:
     void update(float delta);
     void render();
 
+    virtual void setRenderer(IRenderer* renderer) = 0;
     virtual void switchRenderType() = 0;
 
 protected:

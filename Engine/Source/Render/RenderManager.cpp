@@ -10,11 +10,40 @@
 
 RenderManager::RenderManager()
 {
-#if !LINUX
-    renderers.push_back(new DXRenderer());
-    renderers.push_back(new VulkanRenderer());
+}
+
+bool RenderManager::addRenderer(RendererType type)
+{
+    auto renderer = getRenderer(type);
+    if (renderer != nullptr)
+    {
+        return true;
+    }
+
+    switch (type)
+    {
+#if WIN
+        case RendererType::DX:
+            renderer = new DXRenderer();
+            break;
 #endif
-    renderers.push_back(new GLRenderer());
+
+#if WIN || LINUX
+        case RendererType::Vulkan:
+            renderer = new VulkanRenderer();
+            break;
+#endif
+
+        case RendererType::GL:
+            renderer = new GLRenderer();
+            break;
+
+        default:
+            return false;
+    }
+
+    renderers.push_back(renderer);
+    return true;
 }
 
 IRenderer* RenderManager::getRenderer(RendererType type)

@@ -30,7 +30,7 @@ public:
     void reparent(Node* parent);
 
     [[Ignore]] void update(float delta);
-    [[Bind("update")]] virtual void updateInternal(float delta);
+    [[Bind(update)]] virtual void updateInternal(float delta);
 
     virtual void render(Matrix matrix, RendererFrontend* renderer);
 

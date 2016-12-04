@@ -8,7 +8,7 @@ Platform currentPlatform()
 #elif LINUX
     return Platform::Linux;
 #elif MAC
-    return Platform::OSX;
+    return Platform::MacOS;
 #else
     return Platform::Unknown;
 #endif
@@ -17,11 +17,11 @@ Platform currentPlatform()
 std::string getPlatformName()
 {
 #if WIN
-    return "windows";
+    return "Windows";
 #elif LINUX
-    return "linux";
+    return "Linux";
 #elif MAC
-    return "osx";
+    return "MacOS";
 #else
     return "";
 #endif

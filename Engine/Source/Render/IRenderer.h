@@ -11,6 +11,7 @@
 #include "Math/Matrix.h"
 #include <unordered_map>
 #include "RenderCommand.h"
+#include "Renderer.h"
 
 class Node;
 class Texture;
@@ -21,23 +22,23 @@ class ConstantBuffer;
 class PipelineState;
 struct RenderCommand;
 
-class IRenderer
+class [[Meta]] IRenderer : public Object
 {
 public:
     virtual ~IRenderer() {}
 
-    void render(Node* scene, RenderTarget* target);
-    virtual void render(std::vector<RenderCommand> commands, RenderTarget* target) = 0;
-    virtual void draw(RenderCommand renderCommand) = 0;
+    [[Ignore]] void render(Node* scene, RenderTarget* target);
+    [[Ignore]] virtual void render(std::vector<RenderCommand> commands, RenderTarget* target) = 0;
+    [[Ignore]] virtual void draw(RenderCommand renderCommand) = 0;
 
-    virtual void clear(Color color) = 0;
+    [[Ignore]] virtual void clear(Color color) = 0;
 
-    virtual void createImpl(Texture* resource) = 0;
-    virtual void createImpl(VertexBuffer* resource) = 0;
-    virtual void createImpl(IndexBuffer* resource) = 0;
-    virtual void createImpl(Shader* resource) = 0;
-    virtual void createImpl(ConstantBuffer* resource) = 0;
-    virtual void createImpl(PipelineState* resource) = 0;
+    [[Ignore]] virtual void createImpl(Texture* resource) = 0;
+    [[Ignore]] virtual void createImpl(VertexBuffer* resource) = 0;
+    [[Ignore]] virtual void createImpl(IndexBuffer* resource) = 0;
+    [[Ignore]] virtual void createImpl(Shader* resource) = 0;
+    [[Ignore]] virtual void createImpl(ConstantBuffer* resource) = 0;
+    [[Ignore]] virtual void createImpl(PipelineState* resource) = 0;
 
     virtual RendererType getType() = 0;
 };

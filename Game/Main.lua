@@ -2,7 +2,7 @@
 require 'Class'
 require 'ModelDerived'
 --require 'Serializer'
-require 'Keys'
+require 'Enums'
 
 print(3)
 

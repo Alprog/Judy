@@ -15,6 +15,7 @@ public:
 
     HWND hWnd;
 
+    virtual void setRenderer(IRenderer* renderer) override;
     virtual void switchRenderType() override;
 
 private:

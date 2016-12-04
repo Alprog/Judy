@@ -88,6 +88,11 @@ WinWindow::~WinWindow()
 
 #include <DXRenderer.h>
 
+void WinWindow::setRenderer(IRenderer* renderer)
+{
+    this->renderer = renderer;
+}
+
 void WinWindow::switchRenderType()
 {
     static int type = 0;
