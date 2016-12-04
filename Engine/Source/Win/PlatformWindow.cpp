@@ -79,7 +79,6 @@ WinWindow::WinWindow()
     currentEventWindow = nullptr;
 
     renderTarget = new WinRenderTarget(hInstance, hWnd);
-    renderer = RenderManager::getInstance()->getRenderer(RendererType::DX);
 }
 
 WinWindow::~WinWindow()

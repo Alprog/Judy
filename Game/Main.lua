@@ -7,10 +7,15 @@ require 'Enums'
 print(3)
 
 local app = App.getInstance()
-local window = Window.create()
-local scene = window.scene
 
-app.window = window
+local window = Window.create()
+local renderManager = RenderManager.getInstance()
+renderManager:addRenderer(RendererType.GL)
+local renderer = renderManager:getRenderer(RendererType.GL)
+window:setRenderer(renderer)
+
+local scene = window.scene
+mainWindow = window
 
 local inputSystem = InputSystem.getInstance()
 

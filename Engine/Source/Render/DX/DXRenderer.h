@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "../IRenderer.h"
-
 #include <windows.h>
 
 #include "dx.h"
@@ -10,13 +8,13 @@
 #include <dxgi1_4.h>
 #include <unordered_map>
 
+#include <Renderer.h>
 #include "DXVertexBufferImpl.h"
 #include "DXShaderImpl.h"
 #include "DXIndexBufferImpl.h"
 #include "DXTextureImpl.h"
 #include "DXConstantBufferImpl.h"
 #include "DXPipelineStateImpl.h"
-#include "../Renderer.h"
 
 class Texture;
 class Shader;

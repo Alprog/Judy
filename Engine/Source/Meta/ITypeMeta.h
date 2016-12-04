@@ -19,7 +19,8 @@ public:
         IsPointerToObject = 1 << 4,
         IsPointerToPolymorhic = 1 << 5,
         IsRef = 1 << 6,
-        IsCustomSerializing = 1 << 7
+        IsCustomSerializing = 1 << 7,
+        IsEnum = 1 << 8
     };
 
     std::string name;
@@ -31,6 +32,7 @@ public:
     inline bool isRef() const { return getFlags() & Flags::IsRef; }
     inline bool isCustomSerializing() const { return getFlags() & Flags::IsCustomSerializing; }
     inline bool isObject() const { return getFlags() & Flags::IsObject; }
+    inline bool isEnum() const { return getFlags() & Flags::IsEnum; }
 
     virtual Any create() = 0;
 

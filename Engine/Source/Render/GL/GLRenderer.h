@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "../IRenderer.h"
-
 #include "GLContext.h"
 
+#include <Renderer.h>
 #include "../RendererType.h"
 #include "GLShaderImpl.h"
 #include "GLTextureImpl.h"
@@ -12,7 +11,6 @@
 #include "GLVertexBufferImpl.h"
 #include "GLConstantBufferImpl.h"
 #include "GLPipelineStateImpl.h"
-#include "../Renderer.h"
 
 class Shader;
 class Texture;

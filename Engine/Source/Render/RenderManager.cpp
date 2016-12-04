@@ -43,6 +43,13 @@ bool RenderManager::addRenderer(RendererType type)
     }
 
     renderers.push_back(renderer);
+    renderer->retain();
+
+    for (auto resource : resources)
+    {
+        resource->initForRenderer(renderer);
+    }
+
     return true;
 }
 

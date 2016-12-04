@@ -42,6 +42,7 @@ public:
             (~is<ClassType>::PointerToObject + 1) & ITypeMeta::Flags::IsPointerToObject |
             (~is<ClassType>::PointerToPolymorhic + 1) & ITypeMeta::Flags::IsPointerToPolymorhic |
             (~is<ClassType>::Ref + 1) & ITypeMeta::Flags::IsRef |
+            (~is<ClassType>::Enum + 1) & ITypeMeta::Flags::IsEnum |
             (~is<ClassType>::CustomSerializing + 1) & ITypeMeta::Flags::IsCustomSerializing
         ;
         return (ITypeMeta::Flags)flags;

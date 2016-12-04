@@ -40,10 +40,27 @@ function ModelDerived:update(dt)
 		self:switchRenderType()
 	end
 
+	if inputSystem:onPressed(Keys.Key_1) then
+		self:setRenderer(RendererType.GL)
+	end
+	if inputSystem:onPressed(Keys.Key_2) then
+		self:setRenderer(RendererType.DX)
+	end
+	if inputSystem:onPressed(Keys.Key_3) then
+		self:setRenderer(RendererType.Vulkan)
+	end
+
 	self:getTransform().rotation = Quaternion.yawPitchRoll(yaw, pitch, roll)
 end
 
 function ModelDerived:switchRenderType()
-	local app = App.getInstance()
-	app.window:switchRenderType()
+	mainWindow:switchRenderType()
+end
+
+function ModelDerived:setRenderer(type)
+	local mgr = RenderManager.getInstance()
+	if mgr:addRenderer(type) then
+		local renderer = mgr:getRenderer(type)
+		mainWindow:setRenderer(renderer)
+	end
 end

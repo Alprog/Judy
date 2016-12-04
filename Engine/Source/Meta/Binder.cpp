@@ -126,6 +126,10 @@ inline Any getArgument(lua_State* L, int index, ITypeMeta* typeMeta)
             return p;
         }
     }
+    else if (typeMeta->isEnum())
+    {
+        return lua_tointeger(L, index);
+    }
     else
     {
         Any p = *(void**)lua_touserdata(L, index);

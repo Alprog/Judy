@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "Object.h"
-#include "Ref.h"
-#include "Node.h"
-#include "Render/RenderTarget.h"
-#include "Render/IRenderer.h"
-#include "Attributes.h"
+#include <Object.h>
+#include <Ref.h>
+#include <IRenderer.h>
+#include <Node.h>
+#include <RenderTarget.h>
+#include <Attributes.h>
 
 class [[Meta]] Window : public Object
 {

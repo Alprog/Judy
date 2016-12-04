@@ -20,6 +20,8 @@ public:
     std::vector<IRenderer*> renderers;
 
 private:
+    bool createImpl(IRenderer* renderer, IRenderResource* resource);
+
     std::vector<IRenderResource*> resources;
     std::queue<unsigned int> freeIds;
 };

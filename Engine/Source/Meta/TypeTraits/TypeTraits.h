@@ -18,6 +18,7 @@ struct is
     enum { RealPointer = std::is_pointer<T>::value };
     enum { DeepPointer = is_deep_pointer<T>::value };
     enum { Ref = is_ref<T>::value };
+    enum { Enum = std::is_enum<T>::value };
     enum { RealClass = std::is_class<T>::value };
     enum { Abstract = std::is_abstract<T>::value };
     enum { Void = std::is_same<T, void>::value };

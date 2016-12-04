@@ -17,6 +17,7 @@ Window* Window::create()
 }
 
 Window::Window()
+    : renderer {nullptr}
 {
     auto node = new Node();
 
@@ -71,7 +72,10 @@ void Window::update(float delta)
 
 void Window::render()
 {
-    renderer->render(scene, renderTarget);
+    if (renderer != nullptr)
+    {
+        renderer->render(scene, renderTarget);
+    }
 }
 
 void Window::show()

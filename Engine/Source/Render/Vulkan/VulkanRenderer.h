@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "../IRenderer.h"
-
 #include <vulkaninc.h>
 
+#include <Renderer.h>
 #include "VulkanShaderImpl.h"
 #include "VulkanTextureImpl.h"
 #include "VulkanIndexBufferImpl.h"
@@ -12,7 +11,6 @@
 #include "VulkanConstantBufferImpl.h"
 #include "VulkanPipelineStateImpl.h"
 #include "VulkanDescriptorPool.h"
-#include "../Renderer.h"
 
 struct RenderTargetContext
 {

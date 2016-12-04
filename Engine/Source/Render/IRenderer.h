@@ -11,7 +11,6 @@
 #include "Math/Matrix.h"
 #include <unordered_map>
 #include "RenderCommand.h"
-#include "Renderer.h"
 
 class Node;
 class Texture;
