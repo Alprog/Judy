@@ -35,7 +35,7 @@ Impl<ConstantBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Const
     void* data;
     err = vkMapMemory(device, constantBufferMemory, 0, VK_WHOLE_SIZE, 0, &data);
     assert(!err);
-    memcpy(data, &cb->data, sizeof(cb->data));
+    memcpy(data, &cb->data, constantBufferSize);
     vkUnmapMemory(device, constantBufferMemory);
 
     err = vkBindBufferMemory(device, buffer, constantBufferMemory, 0);
@@ -43,7 +43,7 @@ Impl<ConstantBuffer, RendererType::Vulkan>::Impl(VulkanRenderer* renderer, Const
 
     //-----------
 
-    VkDescriptorBufferInfo descriptorBufferInfo;
+    VkDescriptorBufferInfo descriptorBufferInfo = {};
     descriptorBufferInfo.buffer = buffer;
     descriptorBufferInfo.offset = 0;
     descriptorBufferInfo.range = constantBufferSize;

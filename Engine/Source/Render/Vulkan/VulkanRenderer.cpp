@@ -111,7 +111,7 @@ VkSurfaceKHR VulkanRenderer::createSurface(RenderTarget* renderTarget)
 void VulkanRenderer::initDevice()
 {
     uint32_t count = 0;
-    vkEnumeratePhysicalDevices(vulkanInstance, &count, NULL);
+    vkEnumeratePhysicalDevices(vulkanInstance, &count, nullptr);
 
     if (count > 0)
     {

@@ -14,11 +14,11 @@ Model::Model()
     mesh = createCubeMesh();
     renderState = new RenderState();
 
+    renderState->constantBuffer = new ConstantBuffer();
+
     renderState->setVertexShader(ShaderManager::getInstance()->getShader("Shaders/test", "vsmain"));
     renderState->setPixelShader(ShaderManager::getInstance()->getShader("Shaders/test", "psmain"));
     renderState->texture = TextureManager::getInstance()->getTexture("skullbox.png");
-
-    renderState->constantBuffer = new ConstantBuffer();
 }
 
 void Model::render(Matrix matrix, RendererFrontend* renderer)

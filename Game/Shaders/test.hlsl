@@ -19,7 +19,6 @@ struct PSInput
 PSInput vsmain(float3 _position : POSITION, float4 _uv : TEXCOORD)
 {
 	PSInput result;
-   
 	result.position = mul(float4(_position, 1), MVP); 
 	result.uv = _uv;
 	return result;
