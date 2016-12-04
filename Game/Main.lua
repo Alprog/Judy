@@ -16,6 +16,11 @@ local inputSystem = InputSystem.getInstance()
 
 function add()
 	local model = ModelDerived.new()
+	local scaling = model:getTransform().scaling
+	scaling.x = 0.5
+	scaling.y = 0.5
+	scaling.z = 0.5
+	model:getTransform().scaling = scaling
 	print(model)
 	--model.foo = 'abr'
 	print(model.foo)
