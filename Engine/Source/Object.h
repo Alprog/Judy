@@ -18,7 +18,7 @@ public:
     void release();
 
 private:
-    static int GC(lua_State* L);
+    [[Ignore]] static int GC(lua_State* L);
 
 public:
     int referenceCount;

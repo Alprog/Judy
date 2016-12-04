@@ -83,9 +83,11 @@ void ClassInfo::processTemplateTokens(TokenGroup& tokens)
     if (index >= 0 || index < tokens.size() - 1 && tokens[index + 1]->getName() == "<>")
     {
         auto groups = tokens[index + 1]->cast<TokenGroup*>()->getContent().split(",");
-        for (auto& group : groups)
+        for (TokenGroup& group : groups)
         {
-            auto name = group.extractLast()->getName();
+            int index = group.indexOf("=");
+            auto token = index >= 0 ? group.extractAt(index) : group.extractLast();
+            auto name = token->getName();
             templateParameters.push_back(name);
         }
 

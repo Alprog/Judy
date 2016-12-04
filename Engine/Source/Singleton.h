@@ -2,7 +2,7 @@
 #pragma once
 
 template <typename T, typename RealT = T>
-class Singleton
+class [[Meta]] Singleton
 {
 public:
     using SingletonType = Singleton<T, RealT>;

@@ -71,9 +71,10 @@ std::string CodeGenerator::generateSource(std::vector<ClassInfo>& classes)
 std::string CodeGenerator::generateIncludes(std::vector<ClassInfo>& classes)
 {
     std::stringstream stream;
-    stream << "#include \"Meta.h\"" << std::endl;
-    stream << "#include \"TypeMeta.h\"" << std::endl;
-    stream << "#include \"ClassDefiner.h\"" << std::endl;
+    stream << "#include <Meta.h>" << std::endl;
+    stream << "#include <TypeMeta.h>" << std::endl;
+    stream << "#include <ClassDefiner.h>" << std::endl;
+    stream << "#include <RendererFrontend.h>" << std::endl;
 
     std::unordered_set<std::string> set;
     for (auto& classInfo : classes)
@@ -81,7 +82,7 @@ std::string CodeGenerator::generateIncludes(std::vector<ClassInfo>& classes)
         auto name = classInfo.headerName;
         if (set.find(name) == set.end())
         {
-            stream << "#include \"" << name << "\"" << std::endl;
+            stream << "#include <" << name << ">" << std::endl;
             set.insert(name);
         }
     }

@@ -1,30 +1,31 @@
 
-#include "Meta.h"
-#include "TypeMeta.h"
-#include "ClassDefiner.h"
-#include "List.h"
-#include "Map.h"
-#include "Set.h"
-#include "InputDevice.h"
-#include "InputSystem.h"
-#include "VirtualDevice.h"
-#include "CallInfo.h"
-#include "CallStack.h"
-#include "DebugCommand.h"
-#include "FileBreakpoints.h"
-#include "LogMessage.h"
-#include "Quaternion.h"
-#include "Transform.h"
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "App.h"
-#include "Model.h"
-#include "Node.h"
-#include "Object.h"
-#include "Quad.h"
-#include "Window.h"
+#include <Meta.h>
+#include <TypeMeta.h>
+#include <ClassDefiner.h>
 #include <RendererFrontend.h>
+#include <List.h>
+#include <Map.h>
+#include <Set.h>
+#include <InputDevice.h>
+#include <InputSystem.h>
+#include <VirtualDevice.h>
+#include <CallInfo.h>
+#include <CallStack.h>
+#include <DebugCommand.h>
+#include <FileBreakpoints.h>
+#include <LogMessage.h>
+#include <Quaternion.h>
+#include <Transform.h>
+#include <Vector2.h>
+#include <Vector3.h>
+#include <Vector4.h>
+#include <App.h>
+#include <Model.h>
+#include <Node.h>
+#include <Object.h>
+#include <Quad.h>
+#include <Singleton.h>
+#include <Window.h>
 
 template <typename T>
 void Meta::defineList()
@@ -67,6 +68,17 @@ void Meta::defineSet()
         .constructor()
         .template constructor<List<T>>().attr("Serialize")
         .method("toList", &type::toList).attr("Serialize")
+    ;
+}
+
+template <typename T, typename RealT>
+void Meta::defineSingleton()
+{
+    using type = Singleton<T, RealT>;
+    ClassDefiner<type>(this, "Singleton<T, RealT>")
+        .template templateArgument<T>()
+        .template templateArgument<RealT>()
+        .function("getInstance", &type::getInstance)
     ;
 }
 
@@ -245,7 +257,6 @@ void Meta::defineClasses()
         .method("removeChild", &Node::removeChild)
         .method("unparent", &Node::unparent)
         .method("reparent", &Node::reparent)
-        .method("update", &Node::update).attr("Ignore")
         .method("updateInternal", &Node::updateInternal).attr("Bind")
         .method("render", &Node::render)
         .method("getTransform", &Node::getTransform)
@@ -254,16 +265,15 @@ void Meta::defineClasses()
         .field("childs", &Node::childs).attr("Serialize")
     ;
 
-    /*ClassDefiner<Object>(this, "Object")
+    ClassDefiner<Object>(this, "Object")
         .constructor()
         .constructor()
         .method("retain", &Object::retain)
         .method("release", &Object::release)
-        .function("GC", &Object::GC)
         .field("referenceCount", &Object::referenceCount)
         .field("luaObject", &Object::luaObject)
         .field("luaClass", &Object::luaClass).attr("Serialize")
-    ;*/
+    ;
 
     ClassDefiner<Quad>(this, "Quad")
         .base<Node>()

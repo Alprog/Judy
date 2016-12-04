@@ -95,13 +95,16 @@ void CodeParser::parseClassMembers(ClassInfo& classInfo, Snippet* definitionSnip
         if (statement.isFunction())
         {
             MethodInfo methodInfo(statementTokens);
-            if (methodInfo.name == classInfo.name)
+            if (!methodInfo.containsAttribute("Ignore"))
             {
-                classInfo.constructors.push_back(methodInfo);
-            }
-            else
-            {
-                classInfo.methods.push_back(methodInfo);
+                if (methodInfo.name == classInfo.name)
+                {
+                    classInfo.constructors.push_back(methodInfo);
+                }
+                else
+                {
+                    classInfo.methods.push_back(methodInfo);
+                }
             }
         }
         else if (statement.isProperty())
