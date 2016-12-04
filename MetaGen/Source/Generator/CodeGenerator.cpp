@@ -297,12 +297,20 @@ std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool is
         }
     }
 
+    auto metaAttribute = classInfo.getAttribute("Meta");
+    bool isAutoBind = metaAttribute->value != "Ignore";
+
     // constructors
     bool isAbstract = classInfo.isAbstract();
     if (!isAbstract)
     {
         for (auto& constructor : classInfo.constructors)
         {
+            if (!isBindEnabled(constructor, isAutoBind))
+            {
+                continue;
+            }
+
             stream << tab<2>;
             if (constructor.arguments.size() == 0)
             {
@@ -332,31 +340,37 @@ std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool is
     // methods
     for (auto& method : classInfo.methods)
     {
-        if (!method.isOperator && !method.isFriend && !method.containsAttribute("Ignore"))
+        if (isBindEnabled(method, isAutoBind))
         {
-            auto type = method.isStatic ? "function" : "method";
-            stream << tab<2> << generateMethod(type, method, className);
+            if (!method.isOperator && !method.isFriend)
+            {
+                auto type = method.isStatic ? "function" : "method";
+                stream << tab<2> << generateMethod(type, method, className);
+            }
         }
     }
 
     // properties
     for (auto& property : classInfo.properties)
     {
-        stream << tab<2> << ".property(\"" << property.name << "\")" << generateAttributes(property) << std::endl;
-        if (property.hasGetter())
+        if (isBindEnabled(property, isAutoBind))
         {
-            stream << tab<3> << generateMethod("getter", property.getter, className);
-        }
-        if (property.hasSetter())
-        {
-            stream << tab<3> << generateMethod("setter", property.setter, className);
+            stream << tab<2> << ".property(\"" << property.name << "\")" << generateAttributes(property) << std::endl;
+            if (property.hasGetter())
+            {
+                stream << tab<3> << generateMethod("getter", property.getter, className);
+            }
+            if (property.hasSetter())
+            {
+                stream << tab<3> << generateMethod("setter", property.setter, className);
+            }
         }
     }
 
     // fields
-    //if (!isAbstract)
+    for (auto& field : classInfo.fields)
     {
-        for (auto& field : classInfo.fields)
+        if (isBindEnabled(field, isAutoBind))
         {
             if (!field.isStatic)
             {
@@ -369,6 +383,18 @@ std::string CodeGenerator::generateClassDefinition(ClassInfo& classInfo, bool is
     stream << tab<1> << ";" << std::endl;
 
     return stream.str();
+}
+
+bool CodeGenerator::isBindEnabled(MemberInfo& memberInfo, bool autoBind)
+{
+    if (autoBind)
+    {
+        return !memberInfo.containsAttribute("Ignore");
+    }
+    else
+    {
+        return memberInfo.containsAttribute("Bind");
+    }
 }
 
 std::string CodeGenerator::generateMethod(std::string type, MethodInfo& method, std::string className)

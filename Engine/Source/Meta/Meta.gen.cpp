@@ -19,6 +19,8 @@
 #include <Vector2.h>
 #include <Vector3.h>
 #include <Vector4.h>
+#include <IRenderer.h>
+#include <RenderManager.h>
 #include <App.h>
 #include <Model.h>
 #include <Node.h>
@@ -213,6 +215,17 @@ void Meta::defineClasses()
         .field("w", &Vector4::w).attr("Inspect")
     ;
 
+    ClassDefiner<IRenderer>(this, "IRenderer")
+        .base<Object>()
+        .method("getType", &IRenderer::getType)
+    ;
+
+    ClassDefiner<RenderManager>(this, "RenderManager")
+        .function("getInstance", &RenderManager::getInstance)
+        .method("addRenderer", &RenderManager::addRenderer)
+        .method("getRenderer", &RenderManager::getRenderer)
+    ;
+
     ClassDefiner<App>(this, "App")
         .function("getInstance", &App::getInstance)
         .method("startMainLoop", &App::startMainLoop)
@@ -279,6 +292,7 @@ void Meta::defineClasses()
         .method("processEvents", &Window::processEvents)
         .method("update", &Window::update)
         .method("render", &Window::render)
+        .method("setRenderer", &Window::setRenderer)
         .method("switchRenderType", &Window::switchRenderType)
         .field("scene", &Window::scene)
         .field("renderTarget", &Window::renderTarget)

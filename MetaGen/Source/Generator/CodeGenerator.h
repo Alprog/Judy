@@ -22,4 +22,5 @@ private:
     std::string generateParametersList(ClassInfo& classInfo, bool typenames);
 
     std::vector<TypeInfo> getTemplateTypes(std::vector<ClassInfo>& classes);
+    bool isBindEnabled(MemberInfo& memberInfo, bool autoBind);
 };

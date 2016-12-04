@@ -6,16 +6,16 @@
 #include <queue>
 #include <IRenderer.h>
 
-class [[Meta]] RenderManager : public Singleton<RenderManager>
+class [[Meta(Ignore)]] RenderManager : public Singleton<RenderManager>
 {
 public:
     RenderManager();
 
-    bool addRenderer(RendererType type);
-    IRenderer* getRenderer(RendererType type);
+    [[Bind]] bool addRenderer(RendererType type);
+    [[Bind]] IRenderer* getRenderer(RendererType type);
 
-    [[Ignore]] unsigned int registerResource(IRenderResource* resource);
-    [[Ignore]] void unregisterResource(IRenderResource* resource);
+    unsigned int registerResource(IRenderResource* resource);
+    void unregisterResource(IRenderResource* resource);
 
     std::vector<IRenderer*> renderers;
 
