@@ -5,7 +5,7 @@
 
 class Path
 {
-    friend class std::hash<Path>;
+    friend struct std::hash<Path>;
 
 public:
     Path();
