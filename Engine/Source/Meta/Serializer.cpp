@@ -278,8 +278,11 @@ void Serializer::deserializeClassFields(Any& pointer, IClassMeta* classMeta)
     for (auto fieldMeta : fields)
     {
         lua_getfield(L, -1, fieldMeta->name.c_str());
-        Any value = deserialize(fieldMeta->getType());
-        fieldMeta->set(pointer, value);
+        if (!lua_isnil(L, -1))
+        {
+            Any value = deserialize(fieldMeta->getType());
+            fieldMeta->set(pointer, value);
+        }
         lua_pop(L, 1);
     }
     for (auto& baseType : classMeta->baseTypes)

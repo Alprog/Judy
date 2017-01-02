@@ -1,71 +1,7 @@
-{{
-    class = 'Model',
-    transform = {
-        class = 'Transform',
-        rotation = {
-            0.0,
-            0.0,
-            0.0,
-            1.0
-        },
-        scaling = {
-            0.30000001192093,
-            0.30000001192093,
-            0.30000001192093
-        },
-        translation = {
-            0.0,
-            0.0,
-            0.0
-        }
-    },
-    childs = {
-        {{
-            class = 'Model',
-            transform = {
-                class = 'Transform',
-                rotation = {
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                },
-                scaling = {
-                    0.30000001192093,
-                    0.30000001192093,
-                    0.30000001192093
-                },
-                translation = {
-                    2.0,
-                    0.0,
+{{    class = 'Model',    transform = {{        class = 'Transform',        rotation = {            0.0,            0.0,            0.0,            1.0        },        scaling = {            0.30000001192093,            0.30000001192093,            0.30000001192093        },        translation = {            0.0,            0.0,            0.0        }    }},    childs = {        {{            class = 'Model',            transform = {{                class = 'Transform',                rotation = {                    0.0,                    0.0,                    0.0,                    1.0                },                scaling = {                    0.30000001192093,                    0.30000001192093,                    0.30000001192093                },                translation = {                    2.0,                    0.0,                    0.0                }            }},            childs = {},            name = 'child1',            luaClass = ''        }},        {{            class = 'Model',            transform = {{                class = 'Transform',                rotation = {                    0.0,                    0.0,                    0.0,                    1.0                },                scaling = {                    0.60000002384186,                    0.40000000596046,                    0.40000000596046                },                translation = {                    -4.0,                    0.0,
                     0.0
                 }
-            },
-            childs = {},
-            name = 'child1',
-            luaClass = ''
-        }},
-        {{
-            class = 'Model',
-            transform = {
-                class = 'Transform',
-                rotation = {
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                },
-                scaling = {
-                    0.60000002384186,
-                    0.40000000596046,
-                    0.40000000596046
-                },
-                translation = {
-                    -4.0,
-                    0.0,
-                    0.0
-                }
-            },
+            }},
             childs = {},
             name = 'child2',
             luaClass = ''

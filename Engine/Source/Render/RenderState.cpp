@@ -14,6 +14,7 @@ std::unordered_map<PipelineSettings, PipelineState*> states;
 RenderState::RenderState()
     : texture {nullptr}
     , constantBuffer {nullptr}
+    , pipelineState {nullptr}
 {
 }
 

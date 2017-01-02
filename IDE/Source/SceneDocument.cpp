@@ -2,9 +2,9 @@
 #include "SceneDocument.h"
 #include <qlayout.h>
 #include "IDE.h"
-#if WINDOWS
-#include "WinRenderTarget.h"
-#endif
+
+#include <PlatformRenderTarget.h>
+
 #include "Render/IRenderer.h"
 
 SceneDocument::SceneDocument()
@@ -17,10 +17,10 @@ SceneDocument::SceneDocument()
     layout->addWidget(canvas);
     this->setLayout(layout);
 
-#if WINDOWS
+#if WIN
     auto hInstance = GetModuleHandle(nullptr);
     auto hWnd = (HWND)canvas->winId();
-    renderTarget = new WinRenderTarget(hInstance, hWnd);
+    renderTarget = new PlatformRenderTarget(hInstance, hWnd);
 #endif
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(render()));
@@ -64,8 +64,14 @@ bool SceneDocument::changed() const
 void SceneDocument::render()
 {
 #if WIN
-    auto renderer = RenderManager::getInstance()->getRenderer(RendererType::DX);
-    renderer->render(scene, renderTarget);
+    auto manager = RenderManager::getInstance();
+    manager->addRenderer(RendererType::DX);
+
+    auto renderer = manager->getRenderer(RendererType::DX);
+    if (renderer)
+    {
+        renderer->render(scene, renderTarget);
+    }
 #endif
 }
 
