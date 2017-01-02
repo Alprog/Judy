@@ -127,7 +127,7 @@ void DXRenderer::createCommandListAndFence()
     fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 }
 
-ComPtr<IDXGISwapChain3> DXRenderer::getSwapChain(RenderTarget* renderTarget)
+DXSwapChain* DXRenderer::getSwapChain(RenderTarget* renderTarget)
 {
     auto it = swapChains.find(renderTarget);
     if (it != std::end(swapChains))
@@ -136,78 +136,10 @@ ComPtr<IDXGISwapChain3> DXRenderer::getSwapChain(RenderTarget* renderTarget)
     }
     else
     {
-        auto size = renderTarget->getSize();
-        auto hwnd = static_cast<WinRenderTarget*>(renderTarget)->hWndEx;
-
-        auto swapChain = createSwapChain(hwnd, size.x, size.y);
+        auto swapChain = new DXSwapChain(this, renderTarget);
         swapChains[renderTarget] = swapChain;
         return swapChain;
     }
-}
-
-ComPtr<IDXGISwapChain3> DXRenderer::createSwapChain(HWND hwnd, int width, int height)
-{
-    ComPtr<IDXGIFactory4> factory;
-    auto result = CreateDXGIFactory1(IID_PPV_ARGS(&factory));
-    if (FAILED(result)) throw;
-
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-    swapChainDesc.BufferCount = 2;
-    swapChainDesc.Width = (unsigned int)width;
-    swapChainDesc.Height = (unsigned int)height;
-    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    swapChainDesc.SampleDesc.Count = 1;
-
-    ComPtr<IDXGISwapChain1> swapChain1;
-    result = factory->CreateSwapChainForHwnd(commandQueue.Get(), hwnd, &swapChainDesc, nullptr, nullptr, &swapChain1);
-    if (FAILED(result)) throw;
-
-    result = factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
-    if (FAILED(result)) throw;
-
-    ComPtr<IDXGISwapChain3> swapChain3;
-    swapChain1.As(&swapChain3);
-
-    frameIndex = swapChain3->GetCurrentBackBufferIndex();
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
-    for (UINT n = 0; n < 2; n++)
-    {
-        auto result = swapChain3->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n]));
-        if (FAILED(result)) throw;
-        device->CreateRenderTargetView(renderTargets[n].Get(), nullptr, rtvHandle);
-        rtvHandle.Offset(1, rtvDescriptorSize);
-    }
-
-    CD3DX12_RESOURCE_DESC resourceDesc(
-        D3D12_RESOURCE_DIMENSION_TEXTURE2D, 0,
-        static_cast<UINT>(width),
-        static_cast<UINT>(height),
-        1, 1, DXGI_FORMAT_D32_FLOAT, 1, 0,
-        D3D12_TEXTURE_LAYOUT_UNKNOWN,
-        D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE);
-
-    D3D12_CLEAR_VALUE clearValue;
-    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
-    clearValue.DepthStencil.Depth = 1.0f;
-    clearValue.DepthStencil.Stencil = 0;
-
-    result = device->CreateCommittedResource(
-        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        &clearValue,
-        IID_PPV_ARGS(&depthStencil));
-    if (FAILED(result)) throw;
-
-    depthStencil->SetName(L"DepthStencil");
-
-    device->CreateDepthStencilView(depthStencil.Get(), nullptr, dsvHeap->GetCPUDescriptorHandleForHeapStart());
-
-    return swapChain3;
 }
 
 void DXRenderer::createCommandAllocator()
@@ -239,55 +171,6 @@ void DXRenderer::draw(RenderCommand renderCommand)
     commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
-void DXRenderer::populateCommandList(std::vector<RenderCommand> commands)
-{
-    auto result = commandAllocator->Reset();
-    if (FAILED(result)) throw;
-
-    auto& firstCommand = commands[0];
-
-    auto pso = getImpl(firstCommand.state->getPipelineState());
-
-    result = commandList->Reset(commandAllocator.Get(), pso->pipelineState.Get());
-    if (FAILED(result)) throw;
-
-    commandList->SetGraphicsRootSignature(pso->rootSignature.Get());
-
-    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->get() };
-    commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-    viewport.Width = static_cast<float>(800);
-    viewport.Height = static_cast<float>(800);
-    viewport.MaxDepth = 1.0f;
-    commandList->RSSetViewports(1, &viewport);
-
-    scissorRect.right = static_cast<LONG>(800);
-    scissorRect.bottom = static_cast<LONG>(800);
-    commandList->RSSetScissorRects(1, &scissorRect);
-
-    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
-                                 D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, rtvDescriptorSize);
-    CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvHeap->GetCPUDescriptorHandleForHeapStart());
-    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-    const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-    commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-    commandList->ClearDepthStencilView(dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-    for (auto& command : commands)
-    {
-        draw(command);
-    }
-
-    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
-                                D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-
-    result = commandList->Close();
-    if (FAILED(result)) throw;
-}
-
 void DXRenderer::waitForPreviousFrame()
 {
     auto result = commandQueue->Signal(fence.Get(), fenceValue);
@@ -305,16 +188,49 @@ void DXRenderer::waitForPreviousFrame()
 
 void DXRenderer::render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)
 {
-    auto swapChain = getSwapChain(renderTarget);
+    auto result = commandAllocator->Reset();
+    if (FAILED(result)) throw;
 
-    populateCommandList(commands);
+    auto& firstCommand = commands[0];
+
+    auto pso = getImpl(firstCommand.state->getPipelineState());
+
+    result = commandList->Reset(commandAllocator.Get(), pso->pipelineState.Get());
+    if (FAILED(result)) throw;
+
+    commandList->SetGraphicsRootSignature(pso->rootSignature.Get());
+
+    ID3D12DescriptorHeap* ppHeaps[] = { srvCbvHeap->get() };
+    commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+    auto rtSize = renderTarget->getSize();
+    viewport.Width = static_cast<float>(rtSize.x);
+    viewport.Height = static_cast<float>(rtSize.y);
+    viewport.MaxDepth = 1.0f;
+    commandList->RSSetViewports(1, &viewport);
+
+    scissorRect.right = static_cast<LONG>(rtSize.x);
+    scissorRect.bottom = static_cast<LONG>(rtSize.y);
+    commandList->RSSetScissorRects(1, &scissorRect);
+
+    auto swapChain = getSwapChain(renderTarget);
+    swapChain->beginRenderFrame(commandList.Get());
+    swapChain->clear(commandList.Get());
+
+    for (auto& command : commands)
+    {
+        draw(command);
+    }
+
+    swapChain->endRenderFrame(commandList.Get());
+
+    result = commandList->Close();
+    if (FAILED(result)) throw;
 
     ID3D12CommandList* ppCommandLists[] = { commandList.Get() };
     commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
-    auto result = swapChain->Present(0, 0);
-    if (FAILED(result)) throw;
+    swapChain->present();
 
     waitForPreviousFrame();
-    frameIndex = swapChain->GetCurrentBackBufferIndex();
 }

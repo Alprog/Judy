@@ -14,7 +14,16 @@ WinRenderTarget::WinRenderTarget(HINSTANCE hInstance, HWND hWnd)
 
 void WinRenderTarget::onRendering(RendererType type)
 {
-    ShowWindow(hWndEx, type == RendererType::DX ? SW_SHOW : SW_HIDE);
+    if (type == RendererType::DX)
+    {
+        auto size = getSize();
+        SetWindowPos(hWndEx, 0, 0, 0, size.x, size.y, 0);
+        ShowWindow(hWndEx, SW_SHOW);
+    }
+    else
+    {
+        ShowWindow(hWndEx, SW_HIDE);
+    }
 }
 
 Vector2 WinRenderTarget::getSize() const

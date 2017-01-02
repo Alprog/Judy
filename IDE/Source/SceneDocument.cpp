@@ -63,7 +63,6 @@ bool SceneDocument::changed() const
 
 void SceneDocument::render()
 {
-#if WIN
     auto manager = RenderManager::getInstance();
     manager->addRenderer(RendererType::DX);
 
@@ -72,6 +71,5 @@ void SceneDocument::render()
     {
         renderer->render(scene, renderTarget);
     }
-#endif
 }
 
