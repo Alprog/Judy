@@ -85,8 +85,6 @@ WinWindow::~WinWindow()
 {
 }
 
-#include <DXRenderer.h>
-
 void WinWindow::setRenderer(IRenderer* renderer)
 {
     this->renderer = renderer;

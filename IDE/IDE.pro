@@ -7,6 +7,8 @@ TEMPLATE = app
 CONFIG += qt
 QT += widgets
 
+#requires(FALSE)
+
 DEFINES += SCI_NAMESPACE
 
 HEADERS += $$files(Source/*.h, true)

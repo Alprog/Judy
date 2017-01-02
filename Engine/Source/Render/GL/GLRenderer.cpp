@@ -18,10 +18,18 @@
 
 GLRenderer::GLRenderer()
 {
+    printf("gl initing\n");
+
     auto dummy = new PlatformGLContext();
     dummy->makeCurrent();
-    glewInit();
+    auto result = glewInit();
+    if (result != GLEW_OK)
+    {
+        printf("glew init errror %i", result);
+    }
     delete dummy;
+
+    printf("gl inited\n");
 }
 
 void GLRenderer::clear(Color color)

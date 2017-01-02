@@ -23,3 +23,7 @@ linux {
     QMAKE_CXXFLAGS += -std=c++0x -fpermissive -Wno-attribute
 }
 
+#QMAKE_CFLAGS_RELEASE -= -MD
+#QMAKE_CFLAGS_RELEASE += -MT
+#QMAKE_CXXFLAGS_RELEASE -= -MD
+#QMAKE_CXXFLAGS_RELEASE += -MT
