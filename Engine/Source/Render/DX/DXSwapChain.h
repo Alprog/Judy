@@ -21,6 +21,9 @@ public:
     void present();
 
 private:
+    void createRenderTargetViews();
+    void createDepthStencil();
+
     DXRenderer* renderer;
     ComPtr<IDXGISwapChain3> swapChain;
     ComPtr<ID3D12Resource> renderTargets[2];

@@ -214,6 +214,7 @@ void DXRenderer::render(std::vector<RenderCommand> commands, RenderTarget* rende
     commandList->RSSetScissorRects(1, &scissorRect);
 
     auto swapChain = getSwapChain(renderTarget);
+    swapChain->refreshSize();
     swapChain->beginRenderFrame(commandList.Get());
     swapChain->clear(commandList.Get());
 

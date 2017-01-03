@@ -35,18 +35,47 @@ DXSwapChain::DXSwapChain(DXRenderer* renderer, RenderTarget* renderTarget)
 
     swapChain1.As(&swapChain);
 
+    createRenderTargetViews();
+    createDepthStencil();
     frameIndex = swapChain->GetCurrentBackBufferIndex();
+}
 
+void DXSwapChain::refreshSize()
+{
+    UINT width, height;
+    swapChain->GetSourceSize(&width, &height);
+
+    auto size = renderTarget->getSize();
+    auto newWidth = static_cast<UINT>(size.x);
+    auto newHeight = static_cast<UINT>(size.y);
+    if (width != newWidth || height != newHeight)
+    {
+        renderTargets[0].Reset();
+        renderTargets[1].Reset();
+        depthStencil.Reset();
+        swapChain->ResizeBuffers(2, newWidth, newHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+        createRenderTargetViews();
+        createDepthStencil();
+        frameIndex = swapChain->GetCurrentBackBufferIndex();
+    }
+}
+
+void DXSwapChain::createRenderTargetViews()
+{
     auto rtvHeapStart = renderer->getRtvHeap()->GetCPUDescriptorHandleForHeapStart();
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeapStart);
     for (UINT n = 0; n < 2; n++)
     {
         auto result = swapChain->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n]));
         if (FAILED(result)) throw;
-        device->CreateRenderTargetView(renderTargets[n].Get(), nullptr, rtvHandle);
+        renderer->getDevice()->CreateRenderTargetView(renderTargets[n].Get(), nullptr, rtvHandle);
         rtvHandle.Offset(1, renderer->getRtvDescriptorSize());
     }
+}
 
+void DXSwapChain::createDepthStencil()
+{
+    auto size = renderTarget->getSize();
     CD3DX12_RESOURCE_DESC resourceDesc(
         D3D12_RESOURCE_DIMENSION_TEXTURE2D, 0,
         static_cast<UINT>(size.x),
@@ -60,7 +89,8 @@ DXSwapChain::DXSwapChain(DXRenderer* renderer, RenderTarget* renderTarget)
     clearValue.DepthStencil.Depth = 1.0f;
     clearValue.DepthStencil.Stencil = 0;
 
-    result = device->CreateCommittedResource(
+    auto device = renderer->getDevice();
+    auto result = device->CreateCommittedResource(
         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
@@ -73,11 +103,6 @@ DXSwapChain::DXSwapChain(DXRenderer* renderer, RenderTarget* renderTarget)
 
     auto dsvHeapStart = renderer->getDsvHeap()->GetCPUDescriptorHandleForHeapStart();
     device->CreateDepthStencilView(depthStencil.Get(), nullptr, dsvHeapStart);
-}
-
-void DXSwapChain::refreshSize()
-{
-
 }
 
 void DXSwapChain::beginRenderFrame(ID3D12GraphicsCommandList* commandList)
