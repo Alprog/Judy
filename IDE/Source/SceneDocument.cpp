@@ -8,6 +8,7 @@
 #include "Render/IRenderer.h"
 
 SceneDocument::SceneDocument()
+    : scene {nullptr}
 {
     auto canvas = new QWidget(nullptr);
 
@@ -30,8 +31,11 @@ SceneDocument::SceneDocument()
 void SceneDocument::reload()
 {
     IDocument::reload();
-    IDE::getInstance()->selectScene(scene);
-    IDE::getInstance()->selectNode(scene);
+    if (scene)
+    {
+        IDE::getInstance()->selectScene(scene);
+        IDE::getInstance()->selectNode(scene);
+    }
 }
 
 DocumentType SceneDocument::getType() const
@@ -67,7 +71,7 @@ void SceneDocument::render()
     manager->addRenderer(RendererType::DX);
 
     auto renderer = manager->getRenderer(RendererType::DX);
-    if (renderer)
+    if (renderer && scene)
     {
         renderer->render(scene, renderTarget);
     }

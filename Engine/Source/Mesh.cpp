@@ -61,3 +61,28 @@ Mesh* createCubeMesh()
 
     return mesh;
 }
+
+Mesh* createQuadMesh()
+{
+    auto mesh = new Mesh();
+
+    mesh->vertices =
+    {
+        {{0, 0, 0}, {0.0f, 0.0f}},
+        {{1, 0, 0}, {1.0f, 0.0f}},
+        {{0, 1, 0}, {0.0f, 1.0f}},
+        {{1, 1, 0}, {1.0f, 1.0f}}
+    };
+
+    mesh->vertexBuffer = new VertexBuffer();
+    mesh->vertexBuffer->vertices = mesh->vertices;
+    mesh->vertexBuffer->Load();
+
+    mesh->indices = {0, 1, 2, 0, 2, 3};
+
+    mesh->indexBuffer = new IndexBuffer();
+    mesh->indexBuffer->indices = mesh->indices;
+    mesh->indexBuffer->Load();
+
+    return mesh;
+}

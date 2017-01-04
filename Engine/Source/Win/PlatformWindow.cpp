@@ -66,7 +66,7 @@ WinWindow::WinWindow()
 
     currentEventWindow = this;
 
-    RECT rect = {0, 0, 80, 80};
+    RECT rect = {0, 0, 800, 800};
     AdjustWindowRect(&rect, dwStyle, false);
     int width = rect.right - rect.left;
     int height = rect.bottom - rect.top;

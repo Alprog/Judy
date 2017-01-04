@@ -26,6 +26,7 @@
 #include <Node.h>
 #include <Object.h>
 #include <Quad.h>
+#include <Sprite.h>
 #include <Window.h>
 
 template <typename T>
@@ -283,6 +284,17 @@ void Meta::defineClasses()
         .field("size", &Quad::size).attr("Serialize").attr("Inspect")
         .field("shader", &Quad::shader).attr("Serialize").attr("Inspect")
         .field("texture", &Quad::texture).attr("Serialize").attr("Inspect")
+    ;
+
+    ClassDefiner<Sprite>(this, "Sprite")
+        .base<Node>()
+        .constructor()
+        .method("render", &Sprite::render)
+        .property("imagePath").attr("Inspect")
+            .getter("getImagePath", &Sprite::getImagePath)
+            .setter("setImagePath", &Sprite::setImagePath)
+        .field("mesh", &Sprite::mesh)
+        .field("renderState", &Sprite::renderState)
     ;
 
     ClassDefiner<Window>(this, "Window")

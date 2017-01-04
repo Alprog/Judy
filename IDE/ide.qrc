@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/new.png</file>
         <file>images/open.png</file>
         <file>images/save.png</file>
         <file>images/icon.png</file>
@@ -16,5 +15,8 @@
         <file>images/stepout_disabled.png</file>
         <file>images/stepover_disabled.png</file>
         <file>images/stop_disabled.png</file>
+        <file>images/new_hlsl.png</file>
+        <file>images/new_lua.png</file>
+        <file>images/new_scene.png</file>
     </qresource>
 </RCC>

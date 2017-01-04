@@ -18,3 +18,4 @@ struct Mesh
 };
 
 Mesh* createCubeMesh();
+Mesh* createQuadMesh();

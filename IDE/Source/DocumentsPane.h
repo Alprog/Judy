@@ -21,6 +21,7 @@ public:
     IDocument* getDocument(Path path);
     IDocument* getDocument(int index);
 
+    void createNewScene();
     void saveCurrentDocument();
     void checkOutsideModification();
 

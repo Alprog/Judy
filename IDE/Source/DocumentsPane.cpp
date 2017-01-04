@@ -112,6 +112,11 @@ IDocument* DocumentsPane::getCurrentDocument()
     return (IDocument*)widget(currentIndex());
 }
 
+void DocumentsPane::createNewScene()
+{
+    open("newDocument.scene");
+}
+
 void DocumentsPane::saveCurrentDocument()
 {
     if (count() > 0)
