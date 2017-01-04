@@ -10,10 +10,8 @@ class NewMenu : public BaseMenu
 public:
     NewMenu(MainWindow* window);
 
-/*private slots:
-    void newFile();
-    void openFile();
-    void saveFile();
-    void saveAsFile();
-    void compile();*/
+private slots:
+    void newSceneFile();
+    void newLuaFile();
+    void newHlslFile();
 };

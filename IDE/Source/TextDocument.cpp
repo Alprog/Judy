@@ -59,10 +59,10 @@ bool TextDocument::changed() const
     return editor->modify();
 }
 
-void TextDocument::save()
+void TextDocument::resave()
 {
     editor->setSavePoint();
-    IDocument::save();
+    IDocument::resave();
 }
 
 void TextDocument::goToLine(int line)

@@ -12,11 +12,17 @@ class IDocument : public QWidget
     Q_OBJECT
 
 public:
+    IDocument();
+
     virtual DocumentType getType() const = 0;
 
     void open(Path documentPath);
-    virtual void save();
+    void save();
+    void saveAs();
+
+    virtual void resave();
     virtual void reload();
+
 
     Path getPath() { return documentPath; }
     std::string getName() { return documentPath.getName(); }
@@ -39,6 +45,7 @@ signals:
     void modified();
 
 protected:
+    bool isNewFile;
     Path documentPath;
     QDateTime modifiedTime;
 };

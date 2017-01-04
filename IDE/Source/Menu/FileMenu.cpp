@@ -14,9 +14,9 @@ FileMenu::FileMenu(MainWindow* window)
 
     QList<QAction*> actions
     {
-        createAction("Open", "open", SLOT(openFile()), QKeySequence::Open),
+        createAction("Open…", "open", SLOT(openFile()), QKeySequence::Open),
         createAction("Save", "save", SLOT(saveFile()), QKeySequence::Save),
-        createAction("Save As", "", SLOT(saveAsFile()), QKeySequence::SaveAs),
+        createAction("Save As…", "", SLOT(saveFileAs()), QKeySequence::SaveAs),
         createAction("Compile", "", SLOT(compile()), Qt::Key_F3)
     };
     addActions(actions);
@@ -37,8 +37,9 @@ void FileMenu::saveFile()
     window->documents->saveCurrentDocument();
 }
 
-void FileMenu::saveAsFile()
+void FileMenu::saveFileAs()
 {
+    window->documents->saveCurrentDocumentAs();
 }
 
 void FileMenu::compile()

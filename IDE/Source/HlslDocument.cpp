@@ -34,9 +34,9 @@ DocumentType HlslDocument::getType() const
     return DocumentType::Hlsl;
 }
 
-void HlslDocument::save()
+void HlslDocument::resave()
 {
-    TextDocument::save();
+    TextDocument::resave();
 
     auto compiler = CrossCompiler::getInstance();
 

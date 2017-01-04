@@ -4,6 +4,12 @@
 #include <QTextStream>
 #include <QFileInfo>
 #include <QDir>
+#include <QFileDialog>
+
+IDocument::IDocument()
+    : isNewFile {true}
+{
+}
 
 void IDocument::open(Path documentPath)
 {
@@ -13,6 +19,30 @@ void IDocument::open(Path documentPath)
 
 void IDocument::save()
 {
+    if (isNewFile)
+    {
+        saveAs();
+    }
+    else
+    {
+        resave();
+    }
+}
+
+void IDocument::saveAs()
+{
+    auto extension = documentPath.getExtension();
+    auto filter = QString("File (*.%1)").arg(extension.c_str());
+    auto fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", filter);
+    if (!fileName.isEmpty())
+    {
+        documentPath = fileName.toStdString();
+        resave();
+    }
+}
+
+void IDocument::resave()
+{
     QFile file(documentPath.c_str());
     if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
@@ -20,6 +50,7 @@ void IDocument::save()
         file.write(data);
         file.close();
         modifiedTime = getLastModifiedTime();
+        isNewFile = false;
     }
 
     this->onModified();
@@ -34,6 +65,7 @@ void IDocument::reload()
         setBinaryData(data);
         file.close();
         modifiedTime = getLastModifiedTime();
+        isNewFile = false;
     }
 }
 
@@ -55,7 +87,7 @@ QDateTime IDocument::getLastModifiedTime()
 
 std::string IDocument::getTabName()
 {
-    return changed() ? getName() + "*" : getName();
+    return isNewFile || changed() ? getName() + "*" : getName();
 }
 
 void IDocument::onModified()

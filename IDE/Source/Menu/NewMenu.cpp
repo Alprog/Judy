@@ -12,3 +12,18 @@ NewMenu::NewMenu(MainWindow* window)
     };
     addActions(actions);
 }
+
+void NewMenu::newSceneFile()
+{
+    window->documents->createNewDocument("New Scene.scene");
+}
+
+void NewMenu::newLuaFile()
+{
+    window->documents->createNewDocument("New Script.lua");
+}
+
+void NewMenu::newHlslFile()
+{
+    window->documents->createNewDocument("New Shader.hlsl");
+}

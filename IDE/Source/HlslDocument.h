@@ -11,7 +11,7 @@ public:
 
     virtual DocumentType getType() const override;
 
-    virtual void save() override;
+    virtual void resave() override;
     virtual void reload() override;
 
 private:

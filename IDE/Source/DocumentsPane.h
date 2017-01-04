@@ -21,13 +21,15 @@ public:
     IDocument* getDocument(Path path);
     IDocument* getDocument(int index);
 
-    void createNewScene();
+    void createNewDocument(Path extension);
     void saveCurrentDocument();
+    void saveCurrentDocumentAs();
     void checkOutsideModification();
 
 private:
     static IDocument* createDocumentByExtension(std::string extension);
     int reloadDocumentMessageBox(IDocument* document);
+    void addTabForDocument(IDocument* document);
 
 private slots:
     void closeTab(int index);

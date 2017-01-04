@@ -13,6 +13,6 @@ public:
 private slots:
     void openFile();
     void saveFile();
-    void saveAsFile();
+    void saveFileAs();
     void compile();
 };

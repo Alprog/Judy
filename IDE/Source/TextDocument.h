@@ -10,7 +10,7 @@ public:
     TextDocument(CodeEditor::HighlightType highlightType = CodeEditor::HighlightType::None);
 
     virtual DocumentType getType() const override;
-    virtual void save() override;
+    virtual void resave() override;
     virtual bool changed() const override;
 
     std::string getText() const;

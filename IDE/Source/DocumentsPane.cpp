@@ -46,11 +46,16 @@ void DocumentsPane::open(Path path)
         if (document != nullptr)
         {
             document->open(path);
-            connect(document, SIGNAL(modified()), this, SLOT(updateTabNames()));
-            addTab(document, document->getName().c_str());
+            addTabForDocument(document);
             setCurrentWidget(document);
         }
     }
+}
+
+void DocumentsPane::addTabForDocument(IDocument* document)
+{
+    connect(document, SIGNAL(modified()), this, SLOT(updateTabNames()));
+    addTab(document, document->getTabName().c_str());
 }
 
 IDocument* DocumentsPane::createDocumentByExtension(std::string extension)
@@ -112,9 +117,13 @@ IDocument* DocumentsPane::getCurrentDocument()
     return (IDocument*)widget(currentIndex());
 }
 
-void DocumentsPane::createNewScene()
+void DocumentsPane::createNewDocument(Path path)
 {
-    open("newDocument.scene");
+    auto extension = path.getExtension();
+    auto document = createDocumentByExtension(extension);
+    document->open(path);
+    addTabForDocument(document);
+    setCurrentWidget(document);
 }
 
 void DocumentsPane::saveCurrentDocument()
@@ -122,6 +131,14 @@ void DocumentsPane::saveCurrentDocument()
     if (count() > 0)
     {
         getCurrentDocument()->save();
+    }
+}
+
+void DocumentsPane::saveCurrentDocumentAs()
+{
+    if (count() > 0)
+    {
+        getCurrentDocument()->saveAs();
     }
 }
 
