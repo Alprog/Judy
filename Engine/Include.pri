@@ -17,7 +17,7 @@ win {
 
     LIBS += -ld3d12 -ldxgi -ld3dCompiler -lhid
     LIBS += -lUser32 -lGdi32 -lOpengl32 -lWs2_32 -lglew32s
-    LIBS += -L"$$(VULKAN_SDK)/bin" -lvulkan-1
+    LIBS += -L"$$(VULKAN_SDK)/lib" -lvulkan-1
 }
 
 linux {
