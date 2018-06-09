@@ -1,0 +1,17 @@
+RootSignature (Tables+Single+StaticSampler)   PipelineLayout
+
+DescriptorHeap              DescriptorPool
+
+-                            DescriptorSet
+
+DescriptorTable     DescriptorSetLayout
+Ranges
+
+Descriptor (SRV+CBV+UAV, Sampler)    Descriptor
+
+
+CommandBuffer (or list) - cpu
+CommandQueue - gpu
+
+Resource = memory + layout
+View = resource+usage
