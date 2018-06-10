@@ -63,7 +63,10 @@ void VulkanRenderer::initInstance()
     std::vector<const char*> extensions = { "VK_KHR_win32_surface", "VK_KHR_surface", "VK_EXT_debug_report" };
     checkExtensions(extensions);
     instanceInfo.enabledExtensionCount = extensions.size();
-    instanceInfo.ppEnabledExtensionNames = &extensions[0];
+    if (extensions.size() > 0)
+    {
+        instanceInfo.ppEnabledExtensionNames = &extensions[0];
+    }
 
     auto err = vkCreateInstance(&instanceInfo, nullptr, &vulkanInstance);
     if (err)

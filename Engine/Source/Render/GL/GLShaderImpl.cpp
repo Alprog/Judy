@@ -14,7 +14,10 @@ Impl<Shader, RendererType::GL>::Impl(GLRenderer* renderer, Shader* shader)
     auto blobType = isVerts ? ShaderBunch::BlobType::GlslVertex : ShaderBunch::BlobType::GlslPixel;
 
     auto defineLine = "#define " + shader->entryPoint + " main\n";
-    auto source = defineLine + shader->bunch->getSourceText(blobType);
+    auto source = shader->bunch->getSourceText(blobType);
+
+    auto index = source.find_first_of('\n');
+    source.replace(index + 1, 0, defineLine.c_str());
 
     auto sourceBuffer = source.c_str();
     id = glCreateShader(isVerts ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);

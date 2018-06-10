@@ -10,8 +10,8 @@ local app = App.getInstance()
 
 local window = Window.create()
 local renderManager = RenderManager.getInstance()
-renderManager:addRenderer(RendererType.GL)
-local renderer = renderManager:getRenderer(RendererType.GL)
+renderManager:addRenderer(RendererType.DX)
+local renderer = renderManager:getRenderer(RendererType.DX)
 window:setRenderer(renderer)
 
 local scene = window.scene
