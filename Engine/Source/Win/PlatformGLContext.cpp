@@ -36,7 +36,11 @@ WinGLContext::WinGLContext(HWND hWnd)
     };
 
     int nPixelFormat = ChoosePixelFormat(hDC, &pfd);
-    SetPixelFormat(hDC, nPixelFormat, &pfd);
+    if (SetPixelFormat(hDC, nPixelFormat, &pfd) == FALSE)
+    {
+        auto l = GetLastError();
+        printf("error opengl %lu", l);
+    }
 
     if (hRC == nullptr)
     {

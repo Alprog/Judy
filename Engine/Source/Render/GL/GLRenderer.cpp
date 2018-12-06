@@ -7,6 +7,7 @@
     #include <windows.h>
     #include <PlatformGLContext.h>
     #include <PlatformRenderTarget.h>
+    #include <PlatformWindow.h>
 #endif
 
 #include "gl.h"
