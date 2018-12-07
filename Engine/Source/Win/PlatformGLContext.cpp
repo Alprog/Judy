@@ -27,7 +27,7 @@ WinGLContext::WinGLContext(HWND hWnd)
         0,                                      //ignore shift bit
         0,                                      //no accumulation buffer
         0, 0, 0, 0,                             //ignore accumulation bits
-        16,                                     //16 bit z-buffer size
+        24,                                     //16 bit z-buffer size
         0,                                      //no stencil buffer
         0,                                      //no aux buffer
         PFD_MAIN_PLANE,                         //main drawing plane
@@ -35,11 +35,19 @@ WinGLContext::WinGLContext(HWND hWnd)
         0, 0, 0                                 //layer masks ignored
     };
 
+    int current = GetPixelFormat(hDC);
+    printf("%i\n", current);
+
     int nPixelFormat = ChoosePixelFormat(hDC, &pfd);
+
+    DescribePixelFormat(hDC, nPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
+
     if (SetPixelFormat(hDC, nPixelFormat, &pfd) == FALSE)
     {
         auto l = GetLastError();
-        printf("error opengl %lu", l);
+        printf("error opengl %lu\n", l);
+        fflush(stdout);
+        exit(0);
     }
 
     if (hRC == nullptr)

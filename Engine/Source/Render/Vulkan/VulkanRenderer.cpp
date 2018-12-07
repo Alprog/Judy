@@ -17,10 +17,23 @@ void VulkanRenderer::clear(Color color)
 
 }
 
+void vkAssert(VkResult result)
+{
+    if (result != VK_SUCCESS)
+    {
+        printf("vulkan assert %i\n", result);
+        fflush(stdout);
+        throw 0;
+    }
+}
+
 VKAPI_ATTR VkBool32 VKAPI_CALL
 DebugCallback(VkFlags msgFlags, VkDebugReportObjectTypeEXT objType, uint64_t srcObject, size_t location,
               int32_t msgCode, const char* pLayerPrefix, const char* pMsg, void* pUserData)
 {
+    printf("MMMM: %s\n", pMsg);
+    fflush(stdout);
+
     return false;
 }
 
@@ -60,7 +73,12 @@ void VulkanRenderer::initInstance()
     instanceInfo.enabledLayerCount = layers.size();
     instanceInfo.ppEnabledLayerNames = &layers[0];
 
-    std::vector<const char*> extensions = { "VK_KHR_win32_surface", "VK_KHR_surface", "VK_EXT_debug_report" };
+    std::vector<const char*> extensions = {
+        "VK_KHR_win32_surface",
+        "VK_KHR_surface",
+        "VK_EXT_debug_report",
+        "VK_EXT_debug_utils"
+    };
     checkExtensions(extensions);
     instanceInfo.enabledExtensionCount = extensions.size();
     if (extensions.size() > 0)
@@ -105,8 +123,8 @@ VkSurfaceKHR VulkanRenderer::createSurface(RenderTarget* renderTarget)
 
     VkSurfaceKHR surface;
 
-    auto err = vkCreateWin32SurfaceKHR(vulkanInstance, &surfaceInfo, nullptr, &surface);
-    assert(!err);
+    auto result = vkCreateWin32SurfaceKHR(vulkanInstance, &surfaceInfo, nullptr, &surface);
+    vkAssert(result);
 
     return surface;
 }
@@ -121,6 +139,10 @@ void VulkanRenderer::initDevice()
         VkPhysicalDevice* physicalDevices = new VkPhysicalDevice[count];
         vkEnumeratePhysicalDevices(vulkanInstance, &count, physicalDevices);
         gpu = physicalDevices[0];
+
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(gpu, &properties);
+
         delete[] physicalDevices;
     }
 
@@ -151,8 +173,8 @@ void VulkanRenderer::initDevice()
     features.shaderClipDistance = VK_TRUE;
     deviceInfo.pEnabledFeatures = &features;
 
-    auto err = vkCreateDevice(gpu, &deviceInfo, nullptr, &device);
-    assert(!err);
+    auto result = vkCreateDevice(gpu, &deviceInfo, nullptr, &device);
+    vkAssert(result);
 
     vkGetPhysicalDeviceMemoryProperties(gpu, &gpuMemoryProperties);
 
@@ -184,8 +206,8 @@ void VulkanRenderer::initDescSetLayout()
         descSetLayoutInfo.bindingCount = 1;
         descSetLayoutInfo.pBindings = &layoutBindings[i];
 
-        auto err = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, nullptr, &descSetLayouts[i]);
-        assert(!err);
+        auto result = vkCreateDescriptorSetLayout(device, &descSetLayoutInfo, nullptr, &descSetLayouts[i]);
+        vkAssert(result);
     }
 }
 
@@ -202,8 +224,8 @@ void VulkanRenderer::initCommandBuffers()
     poolInfo.queueFamilyIndex = this->queueFamilyIndex;
 
     VkCommandPool commandPool;
-    auto err = vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool);
-    assert(!err);
+    auto result = vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool);
+    vkAssert(result);
 
     VkCommandBufferAllocateInfo allocationInfo = {};
     allocationInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -211,11 +233,11 @@ void VulkanRenderer::initCommandBuffers()
     allocationInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     allocationInfo.commandBufferCount = 1;
 
-    err = vkAllocateCommandBuffers(device, &allocationInfo, &setupCommandBuffer);
-    assert(!err);
+    result = vkAllocateCommandBuffers(device, &allocationInfo, &setupCommandBuffer);
+    vkAssert(result);
 
-    err = vkAllocateCommandBuffers(device, &allocationInfo, &drawCommandBuffer);
-    assert(!err);
+    result = vkAllocateCommandBuffers(device, &allocationInfo, &drawCommandBuffer);
+    vkAssert(result);
 }
 
 uint32_t VulkanRenderer::getMemoryTypeIndex(VkMemoryRequirements& requirements, VkMemoryPropertyFlags flags)
@@ -276,8 +298,8 @@ VkShaderModule VulkanRenderer::getShaderModule(std::string fileName)
     moduleInfo.flags = 0;
 
     VkShaderModule module;
-    auto err = vkCreateShaderModule(device, &moduleInfo, nullptr, &module);
-    assert(!err);
+    auto result = vkCreateShaderModule(device, &moduleInfo, nullptr, &module);
+    vkAssert(result);
 
     return module;
 }
@@ -287,11 +309,14 @@ VkSwapchainKHR VulkanRenderer::createSwapChain(RenderTarget* renderTarget)
     auto surface = createSurface(renderTarget);
 
     uint32_t count;
-    auto err = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, nullptr);
-    assert(!err && count > 0);
+    auto result = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, nullptr);
+    vkAssert(result);
+    assert(count > 0);
+
     VkSurfaceFormatKHR* formats = new VkSurfaceFormatKHR[count];
 
-    err = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, formats);
+    result = getPhysicalDeviceSurfaceFormats(gpu, surface, &count, formats);
+    vkAssert(result);
 
     auto colorFormat = formats[0].format;
     VkColorSpaceKHR colorSpace = formats[0].colorSpace;
@@ -301,8 +326,8 @@ VkSwapchainKHR VulkanRenderer::createSwapChain(RenderTarget* renderTarget)
     }
 
     VkSurfaceCapabilitiesKHR capabilities;
-    err = getPhysicalDeviceSurfaceCapabilities(gpu, surface, &capabilities);
-    assert(!err);
+    result = getPhysicalDeviceSurfaceCapabilities(gpu, surface, &capabilities);
+    vkAssert(result);
 
     auto size = renderTarget->getSize();
 
@@ -334,20 +359,20 @@ VkSwapchainKHR VulkanRenderer::createSwapChain(RenderTarget* renderTarget)
     swapChainInfo.clipped = true;
 
     VkSwapchainKHR swapChain;
-    err = vkCreateSwapchainKHR(device, &swapChainInfo, nullptr, &swapChain);
-    assert(!err);
+    result = vkCreateSwapchainKHR(device, &swapChainInfo, nullptr, &swapChain);
+    vkAssert(result);
 
     return swapChain;
 }
 
 void VulkanRenderer::initPresentImages(RenderTargetContext& context)
 {
-    auto err = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, nullptr);
-    assert(!err);
+    auto result = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, nullptr);
+    vkAssert(result);
 
     context.presentImages = new VkImage[context.imageCount];
-    err = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, context.presentImages);
-    assert(!err);
+    result = vkGetSwapchainImagesKHR(device, context.swapChain, &context.imageCount, context.presentImages);
+    vkAssert(result);
 
     context.presentImageViews = new VkImageView[context.imageCount];
 
@@ -371,8 +396,8 @@ void VulkanRenderer::initPresentImages(RenderTargetContext& context)
         viewInfo.flags = 0;
         viewInfo.image = context.presentImages[i];
 
-        err = vkCreateImageView(device, &viewInfo, nullptr, &context.presentImageViews[i]);
-        assert(!err);
+        result = vkCreateImageView(device, &viewInfo, nullptr, &context.presentImageViews[i]);
+        vkAssert(result);
     }
 
     context.bufferIndex = 0;
@@ -469,8 +494,8 @@ void VulkanRenderer::initDepthBuffer(RenderTargetContext& context)
     imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     imageInfo.flags = 0;
 
-    auto err = vkCreateImage(device, &imageInfo, nullptr, &context.depthImage);
-    assert(!err);
+    auto result = vkCreateImage(device, &imageInfo, nullptr, &context.depthImage);
+    vkAssert(result);
 
     //------------
 
@@ -483,11 +508,11 @@ void VulkanRenderer::initDepthBuffer(RenderTargetContext& context)
     allocateInfo.memoryTypeIndex = getMemoryTypeIndex(memoryRequirements, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
     VkDeviceMemory deviceMemory = {};
-    err = vkAllocateMemory(device, &allocateInfo, nullptr, &deviceMemory);
-    assert(!err);
+    result = vkAllocateMemory(device, &allocateInfo, nullptr, &deviceMemory);
+    vkAssert(result);
 
-    err = vkBindImageMemory(device, context.depthImage, deviceMemory, 0);
-    assert(!err);
+    result = vkBindImageMemory(device, context.depthImage, deviceMemory, 0);
+    vkAssert(result);
 
     //---------------
 
@@ -500,8 +525,8 @@ void VulkanRenderer::initDepthBuffer(RenderTargetContext& context)
     viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
     viewInfo.image = context.depthImage;
 
-    err = vkCreateImageView(device, &viewInfo, nullptr, &context.depthImageView);
-    assert(!err);
+    result = vkCreateImageView(device, &viewInfo, nullptr, &context.depthImageView);
+    vkAssert(result);
 }
 
 void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<RenderCommand>& commands)
@@ -572,7 +597,6 @@ void VulkanRenderer::drawHelper(RenderTargetContext& context, std::vector<Render
 
     vkCmdEndRenderPass(drawCommandBuffer);
 
-
     resourceBarrier(context.presentImages[context.bufferIndex], VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT);
     vkEndCommandBuffer(drawCommandBuffer);
 }
@@ -628,8 +652,8 @@ void VulkanRenderer::initRenderPass(RenderTargetContext& context)
     renderPassInfo.dependencyCount = 0;
     renderPassInfo.pDependencies = nullptr;
 
-    auto err = vkCreateRenderPass(device, &renderPassInfo, nullptr, &context.renderPass);
-    assert(!err);
+    auto result = vkCreateRenderPass(device, &renderPassInfo, nullptr, &context.renderPass);
+    vkAssert(result);
 }
 
 void VulkanRenderer::initFrameBuffers(RenderTargetContext& context)
@@ -650,8 +674,8 @@ void VulkanRenderer::initFrameBuffers(RenderTargetContext& context)
     for (auto i = 0; i < context.imageCount; i++)
     {
         attachments[0] = context.presentImageViews[i];
-        auto err = vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &context.frameBuffers[i]);
-        assert(!err);
+        auto result = vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &context.frameBuffers[i]);
+        vkAssert(result);
     }
 }
 
@@ -669,8 +693,8 @@ void VulkanRenderer::sumbitCommamdsToQueue(VkCommandBuffer& commandBuffer, VkQue
     submitInfo.signalSemaphoreCount = 0;
     submitInfo.pSignalSemaphores = nullptr;
 
-    auto err = vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
-    assert(!err);
+    auto result = vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
+    vkAssert(result);
 }
 
 void VulkanRenderer::render(std::vector<RenderCommand> commands, RenderTarget* target)
@@ -680,11 +704,11 @@ void VulkanRenderer::render(std::vector<RenderCommand> commands, RenderTarget* t
     VkSemaphore semaphore;
     VkSemaphoreCreateInfo semaphoreInfo = {};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    auto err = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphore);
-    assert(!err);
+    auto result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &semaphore);
+    vkAssert(result);
 
-    err = vkAcquireNextImageKHR(device, context.swapChain, UINT64_MAX, semaphore, VK_NULL_HANDLE, &context.bufferIndex);
-    assert(!err);
+    result = vkAcquireNextImageKHR(device, context.swapChain, UINT64_MAX, semaphore, VK_NULL_HANDLE, &context.bufferIndex);
+    vkAssert(result);
 
     drawHelper(context, commands);
     sumbitCommamdsToQueue(drawCommandBuffer, queue, semaphore);
@@ -698,11 +722,11 @@ void VulkanRenderer::render(std::vector<RenderCommand> commands, RenderTarget* t
     presentInfo.pSwapchains = &context.swapChain;
     presentInfo.pImageIndices = &context.bufferIndex;
     presentInfo.pResults = nullptr;
-    err = vkQueuePresentKHR(queue, &presentInfo);
-    assert(!err);
+    result = vkQueuePresentKHR(queue, &presentInfo);
+    vkAssert(result);
 
-    err = vkQueueWaitIdle(queue);
-    assert(!err);
+    result = vkQueueWaitIdle(queue);
+    vkAssert(result);
 
     vkDestroySemaphore(device, semaphore, nullptr);
 }

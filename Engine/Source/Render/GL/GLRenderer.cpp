@@ -24,9 +24,10 @@ GLRenderer::GLRenderer()
     auto dummy = new PlatformGLContext();
     dummy->makeCurrent();
     auto result = glewInit();
+
     if (result != GLEW_OK)
     {
-        printf("glew init errror %i", result);
+        printf("glew init error %i\n", result);
     }
     delete dummy;
 
@@ -49,7 +50,6 @@ GLContext* GLRenderer::getContext(RenderTarget* renderTarget)
     }
 
     context->makeCurrent();
-    glewInit();
 
     return context;
 }
