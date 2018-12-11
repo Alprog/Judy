@@ -21,3 +21,5 @@ public:
 private:
     int handle;
 };
+
+using PlatformSocket = UnixSocket;

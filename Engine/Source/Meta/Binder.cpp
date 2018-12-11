@@ -1,6 +1,7 @@
 
 #include <Binder.h>
 
+#include <string.h>
 #include "Source/luainc.h"
 
 #include "Meta.h"
@@ -226,7 +227,7 @@ inline void processResult(lua_State* L, Any& result, ITypeMeta* type)
         }
         else
         {
-            throw std::exception("unknown built in type");
+            throw std::runtime_error("unknown built in type");
         }
     }
     else if (flags & ITypeMeta::Flags::IsPointer)

@@ -5,6 +5,7 @@
 #include "Singleton.h"
 #include <thread>
 #include <atomic>
+#include <functional>
 #include "CallStack.h"
 #include "Breakpoints.h"
 #include "Meta/Binder.h"

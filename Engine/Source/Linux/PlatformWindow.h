@@ -15,6 +15,7 @@ public:
     LinuxWindow();
 
     virtual void processEvents();
+    virtual void switchRenderType();
 
     Display* display;
     XWindow window;

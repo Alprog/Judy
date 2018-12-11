@@ -5,10 +5,11 @@
 
 #if WIN
     #include <windows.h>
-    #include <PlatformGLContext.h>
     #include <PlatformRenderTarget.h>
     #include <PlatformWindow.h>
 #endif
+
+#include <PlatformGLContext.h>
 
 #include "gl.h"
 #include "../Texture.h"

@@ -16,6 +16,7 @@ public:
     LinuxRenderTarget(Display* display, XWindow window);
 
     virtual Vector2 getSize() const override;
+    virtual void onRendering(RendererType type);
 
     Display* display;
     XWindow window;

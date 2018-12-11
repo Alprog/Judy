@@ -57,7 +57,7 @@ SOURCES += \
     lexlib/CharacterCategory.cxx \
     lexlib/Accessor.cxx \
     lexers/LexLua.cxx \
-    lexers/LexCpp.cxx
+    lexers/LexCPP.cxx
 
 HEADERS += \
     qt/ScintillaEdit.h \

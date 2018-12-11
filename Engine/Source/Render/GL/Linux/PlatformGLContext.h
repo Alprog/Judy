@@ -25,3 +25,5 @@ public:
     XWindow window;
     GLXContext glc;
 };
+
+using PlatformGLContext = LinuxGLContext;

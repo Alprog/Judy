@@ -18,7 +18,7 @@ LinuxInputSystem::LinuxInputSystem()
     udev_monitor_enable_receiving(monitor);
     monitorFile = udev_monitor_get_fd(monitor);
 
-    RegisterAllDevices();
+    registerAllDevices();
 }
 
 LinuxInputSystem::~LinuxInputSystem()
@@ -54,7 +54,7 @@ void LinuxInputSystem::registerAllDevices()
                 bool isKnownDevice = isMouse || isKeyboard || isGamepad || (isKey && serial != nullptr);
                 if (isKnownDevice)
                 {
-                    TryAddDevice(filePath);
+                    tryAddDevice(filePath);
                 }
             }
         }
@@ -65,7 +65,7 @@ void LinuxInputSystem::registerAllDevices()
 
 void LinuxInputSystem::tryAddDevice(std::string filePath)
 {
-    auto device = PlatformInputDevice::Create(filePath);
+    auto device = PlatformInputDevice::create(filePath);
     if (device != nullptr)
     {
         printf(">> %s\n", filePath.c_str());
