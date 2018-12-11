@@ -1,8 +1,8 @@
 
-#include "LinuxGLContext.h"
+#include "PlatformGLContext.h"
 #include <PlatformRenderTarget.h>
 
-const GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, 0 };
+int att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, 0 };
 
 LinuxGLContext::LinuxGLContext(RenderTarget* renderTarget)
 {

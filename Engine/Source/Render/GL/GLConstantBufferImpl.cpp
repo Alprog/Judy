@@ -1,4 +1,5 @@
 
+#include <string.h>
 #include "GLConstantBufferImpl.h"
 
 Impl<ConstantBuffer, RendererType::GL>::Impl(GLRenderer* renderer, ConstantBuffer* cb)

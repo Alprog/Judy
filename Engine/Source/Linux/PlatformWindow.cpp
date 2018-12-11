@@ -30,7 +30,7 @@ LinuxWindow::LinuxWindow()
     XFlush(display);
 
     renderTarget = new LinuxRenderTarget(display, window);
-    renderer = RenderManager::getInstance()->getRenderer(RendererType:GL);
+    renderer = RenderManager::getInstance()->getRenderer(RendererType::GL);
     App::getInstance()->addWindow(this);
 }
 
@@ -41,5 +41,10 @@ void LinuxWindow::processEvents()
     while (XCheckWindowEvent(display, window, KeyPressMask, &xev))
     {
     }
+}
+
+void LinuxWindow::switchRenderType()
+{
+
 }
 

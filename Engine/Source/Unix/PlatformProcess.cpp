@@ -1,5 +1,5 @@
 
-#include "UnixProcess.h"
+#include "PlatformProcess.h"
 #include "Utils.h"
 
 #include <unistd.h>
@@ -13,14 +13,14 @@ UnixProcess::UnixProcess()
 
 UnixProcess::~UnixProcess()
 {
-    Stop();
+    stop();
 }
 
-void UnixProcess::Run(std::string path, std::string commandLine, std::string directory)
+void UnixProcess::run(std::string path, std::string commandLine, std::string directory)
 {
-    Stop();
+    stop();
 
-    auto argsVector = Split(commandLine, " ");
+    auto argsVector = split(commandLine, " ");
     auto size = argsVector.size();
     char* argv[size + 1];
     for (auto i = 0; i < size; i++)
@@ -46,7 +46,7 @@ void UnixProcess::Run(std::string path, std::string commandLine, std::string dir
     }
 }
 
-bool UnixProcess::IsRunning()
+bool UnixProcess::isRunning()
 {
     if (pid != 0)
     {
@@ -63,9 +63,9 @@ bool UnixProcess::IsRunning()
     return false;
 }
 
-void UnixProcess::Stop()
+void UnixProcess::stop()
 {
-    if (IsRunning())
+    if (isRunning())
     {
         if (kill(pid, SIGKILL) == 0) // send kill signal
         {

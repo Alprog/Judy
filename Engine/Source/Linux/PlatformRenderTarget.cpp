@@ -12,3 +12,8 @@ Vector2 LinuxRenderTarget::getSize() const
 {
     return Vector2(800, 800);
 }
+
+void LinuxRenderTarget::onRendering(RendererType type)
+{
+
+}
