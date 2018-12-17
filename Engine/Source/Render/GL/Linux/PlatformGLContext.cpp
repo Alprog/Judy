@@ -1,8 +1,10 @@
 
 #include "PlatformGLContext.h"
 #include <PlatformRenderTarget.h>
+#include <GL/glx.h>
 
-int att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, 0 };
+
+using glXCreateContextAttribsARBProc = GLXContext (*)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
 LinuxGLContext::LinuxGLContext(RenderTarget* renderTarget)
 {
@@ -11,21 +13,55 @@ LinuxGLContext::LinuxGLContext(RenderTarget* renderTarget)
     this->display = rt->display;
     this->window = rt->window;
 
-    XVisualInfo* vi = glXChooseVisual(rt->display, 0, att);
-    glc = glXCreateContext(rt->display, vi, NULL, GL_TRUE);
+    init();
 }
 
 LinuxGLContext::LinuxGLContext()
     : window{0}
 {
-    display = XOpenDisplay(0);
-    XVisualInfo* vi = glXChooseVisual(display, 0, att);
-    glc = glXCreateContext(display, vi, NULL, GL_TRUE);
+    this->display = XOpenDisplay(0);
+    init();
+}
+
+void LinuxGLContext::init()
+{
+    static int visual_attribs[] =
+    {
+       GLX_RENDER_TYPE, GLX_RGBA_BIT,
+       GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+       GLX_DOUBLEBUFFER, true,
+       GLX_RED_SIZE, 1,
+       GLX_GREEN_SIZE, 1,
+       GLX_BLUE_SIZE, 1,
+       None
+    };
+
+    static int context_attribs[] =
+    {
+        GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
+        GLX_CONTEXT_MINOR_VERSION_ARB, 4,
+        None
+    };
+
+    int num_fbc = 0;
+    GLXFBConfig* fbc = glXChooseFBConfig(display, DefaultScreen(display), visual_attribs, &num_fbc);
+    auto glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddress((const GLubyte*)"glXCreateContextAttribsARB");
+    static GLXContext lastContext = NULL;
+    lastContext = glXCreateContextAttribsARB(display, fbc[0], lastContext, true, context_attribs);
+    glc = lastContext;
+
+    if (glGetError() != GL_NO_ERROR)
+    {
+        exit(0);
+    }
 }
 
 void LinuxGLContext::makeCurrent()
 {
-    glXMakeCurrent(display, window, glc);
+    if (!glXMakeCurrent(display, window, glc))
+    {
+        throw;
+    }
 }
 
 void LinuxGLContext::swap()

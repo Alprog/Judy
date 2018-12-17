@@ -24,6 +24,9 @@ public:
     Display* display;
     XWindow window;
     GLXContext glc;
+
+private:
+    void init();
 };
 
 using PlatformGLContext = LinuxGLContext;

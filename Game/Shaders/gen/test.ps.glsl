@@ -1,5 +1,4 @@
-#version 320 es
-precision mediump float;
+#version 440
 
 struct PSInput
 {

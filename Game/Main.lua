@@ -14,7 +14,7 @@ renderManager:addRenderer(RendererType.GL)
 local renderer = renderManager:getRenderer(RendererType.GL)
 window:setRenderer(renderer)
 
-print('a2')
+print('a2', renderer, RendererType.GL)
 
 local scene = window.scene
 mainWindow = window

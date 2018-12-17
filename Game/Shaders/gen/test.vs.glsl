@@ -1,4 +1,4 @@
-#version 320 es
+#version 440
 
 struct PSInput
 {

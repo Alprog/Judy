@@ -50,7 +50,7 @@ GLContext* GLRenderer::getContext(RenderTarget* renderTarget)
         contexts[renderTarget] = context;
     }
 
-    context->makeCurrent();
+    //context->makeCurrent();
 
     return context;
 }
@@ -60,8 +60,10 @@ void GLRenderer::draw(RenderCommand command)
     GLenum a = glGetError();
 
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+    a = glGetError();
 
     glDisable(GL_CULL_FACE);
+    a = glGetError();
 
     auto renderState = command.state;
 
@@ -70,10 +72,15 @@ void GLRenderer::draw(RenderCommand command)
     auto location = glGetUniformLocation(programId, "mainTexture");
     glUniform1i(location, 0);
     glActiveTexture(GL_TEXTURE0);
+    a = glGetError();
+
     GLuint id = getImpl(renderState->texture)->id;
     glBindTexture(GL_TEXTURE_2D, id);
+    a = glGetError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    a = glGetError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    a = glGetError();
 
     getImpl(command.state->constantBuffer)->update();
 
