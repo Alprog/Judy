@@ -84,6 +84,12 @@ void GLRenderer::draw(RenderCommand command)
 
     getImpl(command.state->constantBuffer)->update();
 
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    command.mesh->vertexBuffer->Load();
+
     getImpl(command.state->constantBuffer)->bind();
     getImpl(command.mesh->vertexBuffer)->bind();
     getImpl(command.mesh->indexBuffer)->bind();
@@ -91,19 +97,25 @@ void GLRenderer::draw(RenderCommand command)
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
 
     glEnableVertexAttribArray(0);
+    a = glGetError();
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    a = glGetError();
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)12);
 
+    a = glGetError();
     glDrawElements(GL_TRIANGLES, command.mesh->indices.size(), GL_UNSIGNED_INT, 0);
+    a = glGetError();
+
+    fflush(stdout);
 
     glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
 }
 
 void GLRenderer::render(std::vector<RenderCommand> commands, RenderTarget* renderTarget)

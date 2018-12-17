@@ -13,7 +13,10 @@ class Impl<VertexBuffer, RendererType::GL>
 public:
     Impl(GLRenderer* renderer, VertexBuffer* vertexBuffer);
 
-    inline void bind() { glBindBuffer(GL_ARRAY_BUFFER, id); }
+    inline void bind()
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, id);
+    }
 
 private:
     GLuint id;

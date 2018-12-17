@@ -45,9 +45,34 @@ void LinuxGLContext::init()
 
     int num_fbc = 0;
     GLXFBConfig* fbc = glXChooseFBConfig(display, DefaultScreen(display), visual_attribs, &num_fbc);
+    int best_fbc = -1, worst_fbc = -1, best_num_samp = -1, worst_num_samp = 999;
+
+    int i;
+    for (i=0; i < num_fbc; ++i)
+    {
+        XVisualInfo *vi = glXGetVisualFromFBConfig( display, fbc[i] );
+        if ( vi )
+        {
+            int samp_buf, samples;
+            glXGetFBConfigAttrib( display, fbc[i], GLX_SAMPLE_BUFFERS, &samp_buf );
+            glXGetFBConfigAttrib( display, fbc[i], GLX_SAMPLES       , &samples  );
+
+            printf( "  Matching fbconfig %d, visual ID 0x%2x: SAMPLE_BUFFERS = %d,"
+                  " SAMPLES = %d\n",
+                  i, vi -> visualid, samp_buf, samples );
+
+            if ( best_fbc < 0 || samp_buf && samples > best_num_samp )
+                best_fbc = i, best_num_samp = samples;
+            if ( worst_fbc < 0 || !samp_buf || samples < worst_num_samp )
+                worst_fbc = i, worst_num_samp = samples;
+        }
+        XFree( vi );
+    }
+    GLXFBConfig bestFbc = fbc[ best_fbc ];
+
     auto glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddress((const GLubyte*)"glXCreateContextAttribsARB");
     static GLXContext lastContext = NULL;
-    lastContext = glXCreateContextAttribsARB(display, fbc[0], lastContext, true, context_attribs);
+    lastContext = glXCreateContextAttribsARB(display, bestFbc, lastContext, true, context_attribs);
     glc = lastContext;
 
     if (glGetError() != GL_NO_ERROR)
