@@ -4,7 +4,7 @@ require 'ModelDerived'
 --require 'Serializer'
 require 'Enums'
 
-print('a1')
+print(3)
 
 local app = App.getInstance()
 
@@ -14,17 +14,11 @@ renderManager:addRenderer(RendererType.GL)
 local renderer = renderManager:getRenderer(RendererType.GL)
 window:setRenderer(renderer)
 
-print('a2', renderer, RendererType.GL)
-
 local scene = window.scene
 mainWindow = window
 
-print('a3')
-
 function add()
-	print('b1')
-	local model = ModelDerived.new0()
-	print('b2')
+	local model = ModelDerived.new()
 	local scaling = model:getTransform().scaling
 	scaling.x = 0.5
 	scaling.y = 0.5
@@ -34,10 +28,7 @@ function add()
 	--model.foo = 'abr'
 	print(model.foo)
 	scene:addChild(model)
-	print('b3')
 end
-
-print('a4')
 
 local virtualDevice = VirtualDevice.new0()
 virtualDevice:addKeySource(0, nil, 0)
@@ -46,8 +37,6 @@ virtualDevice:addKeySource(0, nil, 1)
 local b = virtualDevice:isPressed(0)
 
 add()
-
-print('a5')
 
 collectgarbage()
 
