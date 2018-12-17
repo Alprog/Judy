@@ -11,6 +11,8 @@ LinuxInputDevice* LinuxInputDevice::create(std::string filePath)
     {
         if (errno == EACCES)
         {
+            printf("access denied\n");
+            fflush(stdout);
             exit(0);
         }
         return nullptr;

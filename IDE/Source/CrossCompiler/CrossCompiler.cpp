@@ -38,7 +38,7 @@ void addShader(glslang::TProgram& program, std::string& hlslText, EShLanguage st
 
     if (!shader->parse(&DefaultResources, defaultVersion, false, messagesType))
     {
-        throw std::exception(shader->getInfoLog());
+        throw std::runtime_error(shader->getInfoLog());
     }
 }
 
@@ -71,7 +71,7 @@ CrossCompiler::Spirv CrossCompiler::hlslToSpirv(std::string hlslText)
     }
 
     if (!program.link(messagesType))
-        throw std::exception(program.getInfoLog());
+        throw std::runtime_error(program.getInfoLog());
 
     Spirv spirv;
     if (entryPoints["vs"].size() > 0)

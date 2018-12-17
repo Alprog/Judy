@@ -10,6 +10,7 @@ function ModelDerived:update(dt)
 	base.update(self, dt)		
 	
 	local inputSystem = InputSystem.getInstance()
+
 	local speed = 0.3
 	if autoRotate or inputSystem:isPressed(Keys.Key_L_Shift) then
 		speed = 1.0

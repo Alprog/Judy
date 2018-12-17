@@ -5,6 +5,8 @@ TEMPLATE = lib
 TARGET = ../libpng
 CONFIG += staticlib
 
+DEFINES += Z_SOLO
+
 INCLUDEPATH += \
     source \
     ../zlib/Source \
@@ -14,8 +16,9 @@ HEADERS += \
     Source/pngconf.h \
     Source/pngdebug.h \
     Source/pnginfo.h \
-    Source/pngstruct.h \
-    Source/pngpriv.h
+    Source/pnglibconf.h \
+    Source/pngpriv.h \
+    Source/pngstruct.h
 
 SOURCES += \
     Source/png.c \

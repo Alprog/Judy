@@ -15,6 +15,7 @@ public:
     LinuxWindow();
 
     virtual void processEvents();
+    virtual void setRenderer(IRenderer* renderer);
     virtual void switchRenderType();
 
     Display* display;

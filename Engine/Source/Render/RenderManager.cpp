@@ -28,7 +28,7 @@ bool RenderManager::addRenderer(RendererType type)
             break;
 #endif
 
-#if WIN || LINUX
+#if WIN
         case RendererType::Vulkan:
             renderer = new VulkanRenderer();
             break;

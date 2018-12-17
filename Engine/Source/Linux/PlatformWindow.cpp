@@ -43,6 +43,11 @@ void LinuxWindow::processEvents()
     }
 }
 
+void LinuxWindow::setRenderer(IRenderer* renderer)
+{
+
+}
+
 void LinuxWindow::switchRenderType()
 {
 

@@ -18,7 +18,7 @@ class CrossCompiler : public Singleton<CrossCompiler>
         QByteArray vs, gs, ps;
     };
 
-private:
+public:
     CrossCompiler();
 
 public:
