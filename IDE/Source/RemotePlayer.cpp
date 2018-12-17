@@ -34,7 +34,7 @@ void RemotePlayer::run()
     auto& settings = IDE::getInstance()->settings;
     auto path = settings.playerPath;
     auto directory = settings.projectPath;
-    auto commandLine = "player -debug";
+    auto commandLine = "-debug";
 
     fprintf(stdout, "%s %s %s\n", path.c_str(), directory.c_str(), commandLine);
     fflush(stdout);

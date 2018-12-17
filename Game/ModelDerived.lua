@@ -7,6 +7,8 @@ local yaw, pitch, roll = 0, 0, 0
 local autoRotate = true
 
 function ModelDerived:update(dt)
+    print('1')
+
 	base.update(self, dt)		
 	
 	local inputSystem = InputSystem.getInstance()

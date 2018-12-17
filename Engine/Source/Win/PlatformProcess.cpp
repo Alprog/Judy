@@ -36,6 +36,11 @@ void WinProcess::run(std::string path, std::string commandLine, std::string dire
     {
         handle = processInfo.hProcess;
     }
+    else
+    {
+        printf("%i\n", GetLastError());
+        fflush(stdout);
+    }
 }
 
 bool WinProcess::isRunning()

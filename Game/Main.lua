@@ -22,7 +22,7 @@ mainWindow = window
 print('a3')
 
 function add()
-        print('b1')
+	print('b1')
 	local model = ModelDerived.new0()
 	print('b2')
 	local scaling = model:getTransform().scaling
