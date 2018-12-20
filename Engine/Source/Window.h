@@ -26,7 +26,7 @@ public:
     virtual void setRenderer(IRenderer* renderer) = 0;
     virtual void switchRenderType() = 0;
 
-protected:
+public:
     Window();
 
     [[Bind]] Ref<Node> scene;

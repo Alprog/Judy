@@ -15,7 +15,13 @@ public:
 
     inline void bind()
     {
+        auto b = glGetError();
         glBindBuffer(GL_ARRAY_BUFFER, id);
+        auto a = glGetError();
+        if (a != 0)
+        {
+            throw b - a;
+        }
     }
 
 private:

@@ -18,7 +18,7 @@ public:
     void addWindow(Window* window);
     void removeWindow(Window* window);
 
-protected:
+public:
     void updateCollection();
 
     Set<Window*> windows;

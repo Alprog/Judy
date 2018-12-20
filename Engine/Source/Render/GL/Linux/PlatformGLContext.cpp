@@ -30,16 +30,23 @@ void LinuxGLContext::init()
        GLX_RENDER_TYPE, GLX_RGBA_BIT,
        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
        GLX_DOUBLEBUFFER, true,
-       GLX_RED_SIZE, 1,
-       GLX_GREEN_SIZE, 1,
-       GLX_BLUE_SIZE, 1,
+       GLX_RED_SIZE, 8,
+       GLX_GREEN_SIZE, 8,
+       GLX_BLUE_SIZE, 8,
+       GLX_ALPHA_SIZE, 8,
+       GLX_DEPTH_SIZE, 24,
+       GLX_STENCIL_SIZE, 8,
+       GLX_X_RENDERABLE, true,
+       GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
        None
     };
 
     static int context_attribs[] =
     {
+        //GLX_RENDER_TYPE, GLX_RGBA_TYPE,
         GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
         GLX_CONTEXT_MINOR_VERSION_ARB, 4,
+        GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_DEBUG_BIT_ARB,
         None
     };
 
@@ -57,9 +64,21 @@ void LinuxGLContext::init()
             glXGetFBConfigAttrib( display, fbc[i], GLX_SAMPLE_BUFFERS, &samp_buf );
             glXGetFBConfigAttrib( display, fbc[i], GLX_SAMPLES       , &samples  );
 
-            printf( "  Matching fbconfig %d, visual ID 0x%2x: SAMPLE_BUFFERS = %d,"
-                  " SAMPLES = %d\n",
-                  i, vi -> visualid, samp_buf, samples );
+            int a, b, c, d, e, f;
+            glXGetFBConfigAttrib( display, fbc[i], GLX_DOUBLEBUFFER, &a);
+            glXGetFBConfigAttrib( display, fbc[i], GLX_RED_SIZE, &b);
+            glXGetFBConfigAttrib( display, fbc[i], GLX_GREEN_SIZE, &c);
+            glXGetFBConfigAttrib( display, fbc[i], GLX_BLUE_SIZE, &d);
+            glXGetFBConfigAttrib( display, fbc[i], GLX_DEPTH_SIZE, &e);
+            glXGetFBConfigAttrib( display, fbc[i], GLX_STENCIL_SIZE, &f);
+
+            printf("%i depth: %i, screen: %i rgb: %i %i %i (%i %i) %i %i %i %i %i, %i\n",
+                   i, vi->depth, vi->screen, vi->red_mask, vi->green_mask, vi->blue_mask, samp_buf, samples, a, b, c, d, e, f);
+            fflush(stdout);
+
+            //printf( "  Matching fbconfig %d, visual ID 0x%2x: SAMPLE_BUFFERS = %d,"
+            //      " SAMPLES = %d\n",
+            //      i, vi -> visualid, samp_buf, samples );
 
             if ( best_fbc < 0 || samp_buf && samples > best_num_samp )
                 best_fbc = i, best_num_samp = samples;
@@ -69,6 +88,8 @@ void LinuxGLContext::init()
         XFree( vi );
     }
     GLXFBConfig bestFbc = fbc[ best_fbc ];
+
+    printf("MATCH %i\n", best_fbc);
 
     auto glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddress((const GLubyte*)"glXCreateContextAttribsARB");
     static GLXContext lastContext = NULL;
